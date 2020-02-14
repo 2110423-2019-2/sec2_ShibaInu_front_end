@@ -1,0 +1,26 @@
+.recent-job-segment {
+  width: 700px;
+  padding: 10px;
+  border-style: 10px solid black;
+  border-radius: 20px;
+  background-color: #c5c5c5;
+}
+.recent-job-table {
+  padding-left: auto;
+  padding-right: auto;
+}
+.recent-job-box {
+  float: left;
+  width: 33.33%;
+  height: auto;
+}
+td {
+    border-bottom: 1px solid rgb(0, 0, 0);
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+tr:hover {
+  background-color: #f5f5f5;
+}
+
