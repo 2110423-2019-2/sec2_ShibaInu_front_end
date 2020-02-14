@@ -1,26 +1,16 @@
-.recent-job-segment {
-  width: 700px;
-  padding: 10px;
-  border-style: 10px solid black;
-  border-radius: 20px;
-  background-color: #c5c5c5;
+html, body, .main-background {
+  background-color: #F5F5F5;
 }
-.recent-job-table {
-  padding-left: auto;
-  padding-right: auto;
+#homeclient-box {
+  margin-top: 30px;
 }
-.recent-job-box {
-  float: left;
-  width: 33.33%;
-  height: auto;
+#recentjob-topic, #balance-topic {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
-td {
-    border-bottom: 1px solid rgb(0, 0, 0);
-    padding: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-tr:hover {
-  background-color: #f5f5f5;
+.balance-box {
+  margin-left: 10px;
 }
-
+.background-blue {
+  background-color: #254380;
+}
