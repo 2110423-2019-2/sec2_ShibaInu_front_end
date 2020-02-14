@@ -4,7 +4,7 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import HomeClient from './HomeClient';
 import Profile from './Profile';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.render(<Profile />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
