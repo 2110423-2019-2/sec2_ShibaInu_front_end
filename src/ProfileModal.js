@@ -187,7 +187,7 @@ const SkillModal = props => {
     return (
       <>
         <SkillListItem
-          key={Math.round(Math.random() * 10)}
+          key={Math.round(Math.random() * 10)} //React use key to check that wheter the item was deleted.
           Skill={item}
           Index={i}
           ListOnly={false}
