@@ -3,6 +3,7 @@ import logo from './material/Logo.png';
 import './NavBar.css';
 import {FaBell,FaPlusCircle,FaUserCircle} from 'react-icons/fa';
 import {Nav,NavDropdown,Navbar} from 'react-bootstrap';
+import {UncontrolledDropdown,DropdownToggle,DropdownMenu,DropdownItem} from 'reactstrap';
 
 class NavBar extends React.Component {
     
@@ -12,7 +13,6 @@ class NavBar extends React.Component {
     }
 
     render(){   
-        var profile = <FaUserCircle className="navbar-icon"/>;
         return (
             <Navbar expand="lg" id="navbar" sticky="top">
                 <Navbar.Brand href="#home">
@@ -25,14 +25,19 @@ class NavBar extends React.Component {
                     <Nav className="ml-auto">
                         <Nav.Link href="#home" id="navbar-create"><FaPlusCircle className="navbar-icon" />Create Job</Nav.Link>
                         <Nav.Link href="#link"><FaBell /></Nav.Link>
-                        <NavDropdown title={profile} id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#action/3.1"><div id="dropdown-item-profile">My Profile</div></NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.2"><div id="dropdown-item-job">My Job</div></NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3"><div id="dropdown-item-balance">My Balance</div></NavDropdown.Item>
-                            <NavDropdown.Item href="#action/3.3"><div id="dropdown-item-switch">Freelancer Mode</div></NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4"><div id="dropdown-item-signout">Sign Out</div></NavDropdown.Item>
-                        </NavDropdown>
+                        <UncontrolledDropdown nav inNavbar>
+                            <DropdownToggle nav caret>
+                                <FaUserCircle className="navbar-icon"/>profile
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <DropdownItem id="dropdown-item-profile">My Profile</DropdownItem>
+                                <DropdownItem id="dropdown-item-job">My Job</DropdownItem>
+                                <DropdownItem id="dropdown-item-balance">My Balance</DropdownItem>
+                                <DropdownItem id="dropdown-item-switch">Switch Freelancer</DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem id="dropdown-item-signout">Sign Out</DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>

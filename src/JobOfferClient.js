@@ -1,9 +1,9 @@
 import React from 'react';
 import NavBar from './NavBar';
-import './HomeClient.css';
+import './JobOfferClient.css';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 
-class HomeClient extends React.Component {
+class JobOfferClient extends React.Component {
     
     constructor(props){
         super(props);
@@ -45,31 +45,13 @@ class HomeClient extends React.Component {
                 <NavBar />
                 <Container id="homeclient-box">
                     <Row>
-                        <Col className="bg-light shadow" xs={8}>
-                            <h2 id="recentjob-topic">Recent Job Offering</h2>
+                        <Col className="bg-light shadow">
+                            <h2 id="recentjob-topic">Job Offering</h2>
                             <Table responsive>
                                 <tbody>
                                     {recentJob}
                                 </tbody>
                             </Table>
-                        </Col>
-                        <Col className="shadow balance-box background-blue">
-                            <div id="balance-topic" className="text-light">
-                                <p className="mb-0">Welcome Back!</p>
-                                <h2 className="mb-0">{this.state.username}</h2>
-                            </div>
-                            <div className="bg-light">
-                                <Container>
-                                    <Row className="rounded shadow">
-                                        <Col xs={7}>
-                                            <h5 className="mb-0 p-3">Account Balance</h5>
-                                        </Col>
-                                        <Col>
-                                            <p className="mb-0 p-3">{this.state.balance} USD</p>
-                                        </Col>
-                                    </Row>
-                                </Container>
-                            </div>
                         </Col>
                     </Row>
                 </Container>
@@ -78,4 +60,4 @@ class HomeClient extends React.Component {
     }
 }
 
-export default HomeClient;
+export default JobOfferClient;
