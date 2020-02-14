@@ -1,0 +1,37 @@
+.job-page {
+  margin: auto;
+  margin-top: 10px;
+  width: 80%;
+}
+
+.job-detail {
+  background-color: white;
+  width: 750px;
+}
+
+.job-des {
+  padding: 20px;
+}
+
+.job-bid {
+  background-color: white;
+  width: 250px;
+}
+
+.job-suggest {
+  background-color: white;
+  width: 250px;
+}
+
+form {
+  padding: 10px;
+}
+
+header {
+  background-color: rgb(46, 46, 209);
+  padding: 10px;
+}
+
+.row {
+  padding: 10px;
+}
