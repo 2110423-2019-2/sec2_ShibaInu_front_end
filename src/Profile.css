@@ -1,0 +1,116 @@
+#pro-bg {
+    background-color: #8e8e8f;
+    height: 200px;
+    padding-left: 15px;
+
+}
+#exp {
+    margin-bottom: 20px;
+}
+#edu {
+    margin-bottom: 20px;
+}
+#skill {
+    margin-bottom: 20px;
+}
+#personal {
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
+    
+}
+#upper-second{
+    margin-top: 15px;
+    position: relative;
+}
+
+.pro-img {
+    padding-left:0 ;
+    position: absolute;
+    max-width: 150px;
+    min-width: 100px;
+    width: 150px;
+    height: 150px;
+    max-height: 150px;
+    min-height: 100px;
+    bottom: 0px;
+}
+.pro-img img{
+    display: inline-block;
+}
+#pro-img-frame {
+    position: relative;
+}
+#edit {
+    position: absolute;
+    right: 0px;
+}
+
+#edit-icon {
+    display: flex;
+    float: right;
+}
+#exp {
+    height: 200px;
+    padding-top:15px;
+    padding-left: 15px;
+}
+
+#edu {
+    height: 200px;
+    padding-top:15px;
+    padding-left: 15px;
+}
+#skill {
+    height: 200px;
+    padding-top:15px;
+    padding-left: 15px;
+}
+#pic-e{
+    position: absolute;
+    top:-50%;
+    left: 55%;
+    
+}
+#pic-edit{
+    position: absolute;
+    top:10px;
+    right: 50px;
+}
+#e-link {
+    position: relative;
+    float: right;
+    margin-right:10px;
+    padding: 0;
+    right: 0;
+}
+#img-f {
+    position: absolute;
+    background-color: black;
+    border-radius: 50%;
+    max-width: 150px;
+    min-width: 100px;
+    width: 150px;
+    height: 150px;
+    max-height: 150px;
+    min-height: 100px;
+    bottom: 0px;
+    overflow: hidden;
+    
+}
+.a {
+    width:66%;
+    margin: auto;
+}
+.modalHead {
+    background-color: #254380;
+    color: cornsilk;
+}
+.modalTittle {
+    color: cornsilk;
+}
+.modalHead > button > span{
+    background-color: #254380;
+    color: cornsilk;
+}

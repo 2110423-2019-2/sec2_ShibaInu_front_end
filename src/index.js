@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import HomeClient from './HomeClient';
-import 'bootstrap/dist/css/bootstrap.css';
-
-ReactDOM.render(<HomeClient />, document.getElementById('root'));
+import Profile from './Profile';
+import 'bootstrap/dist/css/bootstrap.min.css';
+ReactDOM.render(<Profile />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
