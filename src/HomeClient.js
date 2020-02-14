@@ -29,9 +29,9 @@ class HomeClient extends React.Component {
 }
 
 export default HomeClient;
-/*<div className="recent-job-segment">
+/*<div className="card w-50 p-3 rounded-lg">
                     <h1>Recent Job Offering</h1>
-                    <div>
+                    <div className="card-body">
                         <table className="centered">
                             <tbody>
                                 <tr>
@@ -43,4 +43,4 @@ export default HomeClient;
                             </tbody>
                         </table>
                     </div>
-                </div>*/
+                </div> */

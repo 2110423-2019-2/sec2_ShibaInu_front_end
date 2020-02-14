@@ -6,15 +6,18 @@
 #navbar {
     background-color: #254380;
 }
-#navbar a {
-    color: #FFC655;
-}
 .navbar-icon {
     margin-right: 3px;
 }
-#nav-dropdown {
-    margin-right: 100px;
+#navbar a {
+   color: #FFC655;
 }
-.navbar-logo {
-    margin-left: 100px;
+#dropdown-item-profile, #dropdown-item-job, #dropdown-item-balance {
+    color: black;
+}
+#dropdown-item-switch {
+    color: forestgreen;
+}
+#dropdown-item-signout {
+    color: red;
 }
