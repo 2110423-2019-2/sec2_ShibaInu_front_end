@@ -1,7 +1,8 @@
 import React from 'react';
 import NavBar from './NavBar';
 import './HomeFreelancer.css';
-import { Container, Row, Col, Table } from 'react-bootstrap';
+import { Container, Row, Col, Table, } from 'react-bootstrap';
+import {FaClock,FaMoneyBill} from 'react-icons/fa';
 
 class HomeFreelancer extends React.Component {
     
@@ -17,6 +18,8 @@ class HomeFreelancer extends React.Component {
                 freelancerID: "123456789",
                 freelancerName: "-",
                 status: "Open",
+                wage: "300,000 baht",
+                time: "3 month"
             },{
                 id: "00002",
                 name: "Make Website",
@@ -24,6 +27,8 @@ class HomeFreelancer extends React.Component {
                 freelancerID: "55555555",
                 freelancerName: "Shiba",
                 status: "In progress",
+                wage: "150,000 baht",
+                time: "2 month"
             }]
         };
     }
@@ -35,8 +40,8 @@ class HomeFreelancer extends React.Component {
                     {job.name}<br/><br/>
                     {job.type}
                 </td>
-                <td className="align-middle">{job.freelancerName}</td>
-                <td className="align-middle">{job.status}</td>
+                <td className="align-middle"><FaMoneyBill className="job-icon" />{job.wage}</td>
+                <td className="align-middle"><FaClock className="job-icon" />{job.time}</td>
                 <td className="align-middle"><button type="button" className="btn btn-secondary btn-block">Detail</button></td>
             </tr>
         );
@@ -46,7 +51,7 @@ class HomeFreelancer extends React.Component {
                 <Container id="homefreelancer-box">
                     <Row>
                         <Col className="bg-light shadow" xs={8}>
-                            <h2 id="browser-topic">Recent Job Offering</h2>
+                            <h2 id="browser-topic">Recommend</h2>
                             <Table responsive>
                                 <tbody>
                                     {recentJob}

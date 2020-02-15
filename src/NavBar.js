@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './material/Logo.png';
 import './NavBar.css';
-import {FaBell,FaPlusCircle,FaUserCircle} from 'react-icons/fa';
+import {FaBell,FaPlusCircle,FaUserCircle,FaSearch} from 'react-icons/fa';
 import {Nav,Navbar} from 'react-bootstrap';
 import {UncontrolledDropdown,DropdownToggle,DropdownMenu,DropdownItem} from 'reactstrap';
 
@@ -20,12 +20,16 @@ class NavBar extends React.Component {
 
     render(){   
         var switchMode;
+        var createMenu;
         if(this.state.mode == this.state.status.CLIENT){
             switchMode = "Switch" + " " + this.state.status.FREELANCER;
+            createMenu = <Nav.Link href="#home"><FaPlusCircle className="navbar-icon" />Create Job</Nav.Link>;
         } else {
             switchMode = "Switch" + " " + this.state.status.CLIENT;
         }
+        var searchMenu = <Nav.Link href="#home"><FaSearch className="navbar-icon" />Search</Nav.Link>;
         var mode = "YounStar " + this.state.mode;
+
         return (
             <Navbar expand="lg" id="navbar" sticky="top">
                 <Navbar.Brand href="/">
@@ -35,7 +39,8 @@ class NavBar extends React.Component {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link href="#home" id="navbar-create"><FaPlusCircle className="navbar-icon" />Create Job</Nav.Link>
+                        {createMenu}
+                        {searchMenu}
                         <Nav.Link href="#link"><FaBell /></Nav.Link>
                         <UncontrolledDropdown nav inNavbar>
                             <DropdownToggle nav caret>
@@ -58,35 +63,3 @@ class NavBar extends React.Component {
 }
 
 export default NavBar;
-/*<nav className="navbar navbar-expand-xl" id="navbar">
-        <ul className="navbar-nav mr-auto">
-            <li className="nav-item navbar-logo">
-                <a href="/" className="navbar-brand">
-                    <img src={logo} id="logo-img" alt="youngstar logo" />
-                    YoungStar
-                    Client
-                </a>
-            </li>
-        </ul>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-right">
-            <li className="nav-item">
-                <a href="/" className="nav-link"><FaPlusCircle className="navbar-icon" />Create Job</a>
-            </li>
-            <li className="nav-item">
-                <a href="/" className="nav-link"><FaBell /></a>
-            </li>
-            
-            <li className="nav-item dropdown">
-                <NavDropdown title={profile} id="nav-dropdown">
-                    <NavDropdown.Item className="text-dark">My Profile</NavDropdown.Item>
-                    <NavDropdown.Item className="text-dark">My Job</NavDropdown.Item>
-                    <NavDropdown.Item className="text-dark">My Balance</NavDropdown.Item>
-                    <NavDropdown.Item className="text-dark">Switch Freelancer</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item className="text-dark">Sign out</NavDropdown.Item>
-                </NavDropdown>
-            </li>
-        </ul>
-        </div>
-    </nav>*/ 
