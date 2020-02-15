@@ -1,5 +1,5 @@
 import React from 'react';
-import './NavBar.css';
+import NavBar from "./NavBar";
 
 class SignUp extends React.Component {
     
@@ -12,7 +12,10 @@ class SignUp extends React.Component {
     render(){   
 
         return (
-            <div>SignUp</div>
+            <div>
+                <NavBar />
+                SignUp
+                </div>
         );
     }   
 }

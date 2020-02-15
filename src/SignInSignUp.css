@@ -1,0 +1,65 @@
+.SignInSignUp-page {
+    height: 500px;
+    /* background-color: aqua; */
+}
+
+.left-content {
+    float: left;
+    width: 50%;
+    height: 100%;
+    position: relative;
+}
+
+.left-content .seperate-line {
+    border: none;
+    border-right: 1px solid rgb(73, 73, 73);
+    position: absolute;
+    top: 10%;
+    right: 0px;
+    height: 80%;
+}
+
+.left-content .left-logo {
+    height: 50%;
+    width: 50%;
+    top: 25%;
+    left: 25%;
+    position: absolute;
+}
+
+.left-logo #logo-img {
+    height: 100%;
+    width: 100%;
+}
+
+.right-area {
+    float: right;
+    width: 50%;
+    height: 100%;
+    display: table;
+    /* background-color: blue; */
+}
+
+.right-content {
+    width: 50%; 
+    display: table-cell;
+    vertical-align: middle;
+    height: auto;
+    /* background-color: aqua; */
+}
+
+.form-name {
+    text-align: center;
+    font-size: 45px;
+}
+
+.form-container {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    /* background-color: red; */
+}
+
+form p {
+    margin-top: 10px;
+}
