@@ -9,10 +9,13 @@
   width: 750px;
 }
 
-.job-des {
+.non-header {
   padding: 20px;
 }
 
+.inside-box {
+  padding: 10px;
+}
 .job-bid {
   background-color: white;
   width: 250px;
@@ -24,12 +27,13 @@
 }
 
 form {
-  padding: 10px;
+  padding: 20px;
 }
 
 header {
-  background-color: rgb(46, 46, 209);
+  background-color: #254380;
   padding: 10px;
+  color: white;
 }
 
 .row {

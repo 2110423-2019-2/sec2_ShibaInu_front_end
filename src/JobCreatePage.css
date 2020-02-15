@@ -1,0 +1,35 @@
+.job-create-page {
+  margin: auto;
+  margin-top: 10px;
+  width: 60%;
+  background-color: white;
+}
+
+header {
+  background-color: #254380;
+  padding: 10px;
+  color: white;
+}
+
+.non-header {
+  padding: 20px;
+}
+
+.inside-box {
+  padding: 10px;
+}
+
+form {
+  padding: 20px;
+}
+
+.row {
+  padding: auto;
+}
+.col {
+  padding: auto;
+}
+
+.button {
+  float: right;
+}

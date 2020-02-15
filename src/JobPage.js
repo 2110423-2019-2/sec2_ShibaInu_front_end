@@ -1,5 +1,6 @@
 import React from "react";
 import "./JobPage.css";
+import NavBar from "./NavBar";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 
 class JobDetail extends React.Component {
@@ -12,13 +13,19 @@ class JobDetail extends React.Component {
     return (
       <div class="job-detail">
         <header>Build a mobile app</header>
-        <div class="job-des">
-          Hi, I am Husain, an I am just started a startup company. I need an
-          application to connect local electrician, plumbers, mechanics, and
-          many other to the customers in order to fulfilled their need. For
-          example, customer login and search for an electrician nearby. The app
-          will shows result of electricians nearby with the detail provided the
-          customer.
+        <div class="non-header">
+          <div class="inside-box">
+            Hi, I am Husain, an I am just started a startup company. I need an
+            application to connect local electrician, plumbers, mechanics, and
+            many other to the customers in order to fulfilled their need. For
+            example, customer login and search for an electrician nearby. The
+            app will shows result of electricians nearby with the detail
+            provided the customer.
+          </div>
+          <div class="inside-box">Require Skill</div>
+          <div class="inside-box">Optional Skill</div>
+          <div class="inside-box">Picture</div>
+          <div class="inside-box">Client</div>
         </div>
       </div>
     );
@@ -36,7 +43,7 @@ class JobBid extends React.Component {
       <div class="job-bid">
         <header>Bid</header>
         <Form class="form-bid">
-          <Form.Group controlId="fromBidAmount">
+          <Form.Group controlId="bidAmount">
             <InputGroup>
               <Form.Control
                 type="number"
@@ -49,7 +56,7 @@ class JobBid extends React.Component {
               </InputGroup.Prepend>
             </InputGroup>
           </Form.Group>
-          <Form.Group controlId="fromBidDuration">
+          <Form.Group controlId="bidDuration">
             <InputGroup>
               <Form.Control
                 type="number"
@@ -95,24 +102,27 @@ class JobPage extends React.Component {
 
   render() {
     return (
-      <div class="job-page">
-        <Container>
-          <Row>
-            <Col>
-              <Row>
-                <JobDetail />
-              </Row>
-            </Col>
-            <Col>
-              <Row>
-                <JobBid />
-              </Row>
-              <Row>
-                <JobSuggest />
-              </Row>
-            </Col>
-          </Row>
-        </Container>
+      <div>
+        <NavBar />
+        <div class="job-page">
+          <Container>
+            <Row>
+              <Col>
+                <Row>
+                  <JobDetail />
+                </Row>
+              </Col>
+              <Col>
+                <Row>
+                  <JobBid />
+                </Row>
+                <Row>
+                  <JobSuggest />
+                </Row>
+              </Col>
+            </Row>
+          </Container>
+        </div>
       </div>
     );
   }
