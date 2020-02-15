@@ -11,6 +11,8 @@ import JobOfferFreelancer from "./JobOfferFreelancer";
 import JobPage from "./JobPage";
 import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
+import SignIn from './SignIn';
+import SignUp from './SignUp';
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
 const routing = (
   <Router>
@@ -24,6 +26,8 @@ const routing = (
         <Route path="/job" component={JobPage} />
         <Route path="/jobcreate" component={JobCreatePage} />
         <Route path="/jobsearch" component={JobSearchPage} />
+        <Route path="/signin" component={SignIn} />
+        <Route path="/signup" component={SignUp} />
       </div>
     </Switch>
   </Router>
