@@ -15,7 +15,7 @@ class NavBar extends React.Component {
     render(){   
         return (
             <Navbar expand="lg" id="navbar" sticky="top">
-                <Navbar.Brand href="#home">
+                <Navbar.Brand href="/">
                     <img src={logo} id="logo-img" alt="youngstar logo" />
                     YoungStar
                     Client
@@ -30,8 +30,8 @@ class NavBar extends React.Component {
                                 <FaUserCircle className="navbar-icon"/>profile
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <DropdownItem id="dropdown-item-profile">My Profile</DropdownItem>
-                                <DropdownItem id="dropdown-item-job">My Job</DropdownItem>
+                                <DropdownItem id="dropdown-item-profile" href="/profile">My Profile</DropdownItem>
+                                <DropdownItem id="dropdown-item-job" href="/client/job">My Job</DropdownItem>
                                 <DropdownItem id="dropdown-item-balance">My Balance</DropdownItem>
                                 <DropdownItem id="dropdown-item-switch">Switch Freelancer</DropdownItem>
                                 <DropdownItem divider />
