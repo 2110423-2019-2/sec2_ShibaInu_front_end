@@ -31,7 +31,7 @@ class NavBar extends React.Component {
         var mode = "YounStar " + this.state.mode;
 
         return (
-            <Navbar expand="lg" id="navbar" sticky="top">
+            <Navbar expand="lg" id="navbar" sticky="top" className="shadow">
                 <Navbar.Brand href="/">
                     <img src={logo} id="logo-img" alt="youngstar logo" />
                     {mode}

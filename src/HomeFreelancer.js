@@ -1,8 +1,14 @@
 import React from 'react';
 import NavBar from './NavBar';
 import './HomeFreelancer.css';
-import { Container, Row, Col, Table, } from 'react-bootstrap';
+import { Container, Row, Col, Table, CardDeck, } from 'react-bootstrap';
 import {FaClock,FaMoneyBill} from 'react-icons/fa';
+import {
+    Card, CardImg, CardText, CardBody,
+    CardTitle, CardSubtitle, Button
+} from 'reactstrap';
+import logo from './material/Logo.png';
+  
 
 class HomeFreelancer extends React.Component {
     
@@ -29,7 +35,8 @@ class HomeFreelancer extends React.Component {
                 status: "In progress",
                 wage: "150,000 baht",
                 time: "2 month"
-            }]
+            }],
+            interest: ["react","react native","express","mysql","nest.js"]
         };
     }
 
@@ -45,13 +52,21 @@ class HomeFreelancer extends React.Component {
                 <td className="align-middle"><button type="button" className="btn btn-secondary btn-block">Detail</button></td>
             </tr>
         );
+        var interest = this.state.interest.map((type,index)=>
+            <Card className="w-25 p-3 text-center shadow">
+                <CardImg className="bg-dark shadow" src={logo} alt="Card image cap" />
+                <CardBody>
+                    <CardTitle><h5>{type}</h5></CardTitle>
+                </CardBody>
+            </Card>
+        );
         return(
             <div className="main-background">
                 <NavBar mode="freelancer" />
                 <Container id="homefreelancer-box">
                     <Row>
-                        <Col className="bg-light shadow" xs={8}>
-                            <h2 id="browser-topic">Recommend</h2>
+                        <Col className="bg-light shadow" xl={8}>
+                            <h2 id="recommend-topic">Recommend</h2>
                             <Table responsive>
                                 <tbody>
                                     {recentJob}
@@ -75,6 +90,14 @@ class HomeFreelancer extends React.Component {
                                     </Row>
                                 </Container>
                             </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className="background-blue shadow filter-box">
+                            <h2 className="text-light" id="filter-topic">Interested</h2>
+                            <CardDeck>
+                                {interest}
+                            </CardDeck>
                         </Col>
                     </Row>
                 </Container>

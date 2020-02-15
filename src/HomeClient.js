@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from './NavBar';
 import './HomeClient.css';
 import { Container, Row, Col, Table } from 'react-bootstrap';
+import Footer from './Footer';
 
 class HomeClient extends React.Component {
     
@@ -45,7 +46,7 @@ class HomeClient extends React.Component {
                 <NavBar mode="client"/>
                 <Container id="homeclient-box">
                     <Row>
-                        <Col className="bg-light shadow" xs={8}>
+                        <Col className="bg-light shadow" xl={8}>
                             <h2 id="recentjob-topic">Recent Job Offering</h2>
                             <Table responsive>
                                 <tbody>
@@ -73,6 +74,7 @@ class HomeClient extends React.Component {
                         </Col>
                     </Row>
                 </Container>
+                <Footer />
             </div>
         );
     }

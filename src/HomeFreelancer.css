@@ -4,7 +4,7 @@ html, body, .main-background {
   #homefreelancer-box {
     margin-top: 30px;
   }
-  #browser-topic, #balance-topic {
+  #filter-topic, #balance-topic, #recommend-topic {
     margin-top: 20px;
     margin-bottom: 20px;
   }
@@ -16,4 +16,7 @@ html, body, .main-background {
   }
   .job-icon {
     margin-right: 5px;
+  }
+  .filter-box {
+    margin-top: 10px;
   }
