@@ -1,0 +1,16 @@
+html, body, .main-background {
+    background-color: #F5F5F5;
+  }
+  #homefreelancer-box {
+    margin-top: 30px;
+  }
+  #browser-topic, #balance-topic {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .balance-box {
+    margin-left: 10px;
+  }
+  .background-blue {
+    background-color: #254380;
+  }

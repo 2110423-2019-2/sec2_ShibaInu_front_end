@@ -2,23 +2,35 @@ import React from 'react';
 import logo from './material/Logo.png';
 import './NavBar.css';
 import {FaBell,FaPlusCircle,FaUserCircle} from 'react-icons/fa';
-import {Nav,NavDropdown,Navbar} from 'react-bootstrap';
+import {Nav,Navbar} from 'react-bootstrap';
 import {UncontrolledDropdown,DropdownToggle,DropdownMenu,DropdownItem} from 'reactstrap';
 
 class NavBar extends React.Component {
     
     constructor(props){
         super(props);
-        this.state={};
+        this.state={
+            status: {
+                CLIENT: "client",
+                FREELANCER: "freelancer"
+            },
+            mode: this.props.mode
+        };
     }
 
     render(){   
+        var switchMode;
+        if(this.state.mode == this.state.status.CLIENT){
+            switchMode = "Switch" + " " + this.state.status.FREELANCER;
+        } else {
+            switchMode = "Switch" + " " + this.state.status.CLIENT;
+        }
+        var mode = "YounStar " + this.state.mode;
         return (
             <Navbar expand="lg" id="navbar" sticky="top">
                 <Navbar.Brand href="/">
                     <img src={logo} id="logo-img" alt="youngstar logo" />
-                    YoungStar
-                    Client
+                    {mode}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -30,12 +42,12 @@ class NavBar extends React.Component {
                                 <FaUserCircle className="navbar-icon"/>profile
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <DropdownItem id="dropdown-item-profile" href="/profile">My Profile</DropdownItem>
-                                <DropdownItem id="dropdown-item-job" href="/client/job">My Job</DropdownItem>
-                                <DropdownItem id="dropdown-item-balance">My Balance</DropdownItem>
-                                <DropdownItem id="dropdown-item-switch">Switch Freelancer</DropdownItem>
+                                <DropdownItem id="dropdown-item-profile" href="/profile">My profile</DropdownItem>
+                                <DropdownItem id="dropdown-item-job" href="/client/job">My job</DropdownItem>
+                                <DropdownItem id="dropdown-item-balance">My balance</DropdownItem>
+                                <DropdownItem id="dropdown-item-switch">{switchMode}</DropdownItem>
                                 <DropdownItem divider />
-                                <DropdownItem id="dropdown-item-signout">Sign Out</DropdownItem>
+                                <DropdownItem id="dropdown-item-signout">Sign out</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </Nav>

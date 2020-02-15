@@ -6,6 +6,8 @@ import HomeClient from './HomeClient';
 import JobOfferClient from './JobOfferClient';
 import 'bootstrap/dist/css/bootstrap.css';
 import Profile from './Profile'
+import HomeFreelancer from './HomeFreelancer'
+import JobOfferFreelancer from './JobOfferFreelancer';
 import { Route, Link,Switch, BrowserRouter as Router} from 'react-router-dom'
 const routing = (
   <Router>
@@ -14,6 +16,8 @@ const routing = (
         <Route exact path="/" component={HomeClient} />
         <Route path="/profile" component={Profile} />
         <Route path="/client/job" component={JobOfferClient} />
+        <Route path="/freelancer/home" component={HomeFreelancer} />
+        <Route path="/freelancer/job" component={JobOfferFreelancer} />
       </div>
     </Switch>
   </Router>

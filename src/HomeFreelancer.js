@@ -1,9 +1,9 @@
 import React from 'react';
 import NavBar from './NavBar';
-import './HomeClient.css';
+import './HomeFreelancer.css';
 import { Container, Row, Col, Table } from 'react-bootstrap';
 
-class HomeClient extends React.Component {
+class HomeFreelancer extends React.Component {
     
     constructor(props){
         super(props);
@@ -42,11 +42,11 @@ class HomeClient extends React.Component {
         );
         return(
             <div className="main-background">
-                <NavBar mode="client"/>
-                <Container id="homeclient-box">
+                <NavBar mode="freelancer" />
+                <Container id="homefreelancer-box">
                     <Row>
                         <Col className="bg-light shadow" xs={8}>
-                            <h2 id="recentjob-topic">Recent Job Offering</h2>
+                            <h2 id="browser-topic">Recent Job Offering</h2>
                             <Table responsive>
                                 <tbody>
                                     {recentJob}
@@ -78,4 +78,4 @@ class HomeClient extends React.Component {
     }
 }
 
-export default HomeClient;
+export default HomeFreelancer;
