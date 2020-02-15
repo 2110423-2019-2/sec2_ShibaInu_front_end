@@ -1,3 +1,26 @@
+@media only screen and (max-width: 600px) {
+    p{
+      font-size: 10px;
+      margin-left: 10px ;
+    }
+    div.col-5{
+        padding-right: 0 ;
+    }
+    div.col-7{
+        padding-left: 0;
+        padding-right: 0 ;
+    }
+    div.fname{
+        font-size: 15px;
+    }
+    div.lname{
+        font-size: 15px;
+    }
+    .headline{
+        font-size: 10px;
+    }
+
+}
 #pro-bg {
     background-color: #8e8e8f;
     height: 200px;
@@ -113,4 +136,38 @@
 .modalHead > button > span{
     background-color: #254380;
     color: cornsilk;
+}
+.fname {
+    display: inline-block;
+    margin-right:5px ;
+    font-size: 2vw;
+}
+.lname {
+    display: inline-block;
+    font-size: 2vw;
+}
+.tel{
+    display: inline-block;
+    margin-left: 2vw;
+    margin-bottom: 2vw;
+}
+.email{
+    display: inline-block;
+    margin-left: 2vw;
+    margin-bottom: 2vw;
+}
+.web{
+    display: inline-block;
+    margin-left: 2vw;
+    margin-bottom: 2vw;
+}
+.location{
+    display: inline-block;
+    margin-left: 2vw;
+    margin-bottom: 2vw;
+}
+.bd{
+    display: inline-block;
+    margin-left: 2vw;
+    margin-bottom: 2vw;
 }
