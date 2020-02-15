@@ -15,7 +15,13 @@ const ProfileModal = props => {
 
   return (
     <>
-      <button type="button" className="btn" id="e-link" onClick={handleShow}>
+      <button
+        type="button"
+        className="btn"
+        id="e-link"
+        onClick={handleShow}
+        hidden={props.hidden}
+      >
         <FaRegEdit size={20} id="edit-icon" />
       </button>
 
@@ -90,13 +96,59 @@ const ProfileModal = props => {
   );
 };
 
+const About = props => {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  return (
+    <>
+      <button
+        type="button"
+        className="btn"
+        id="e-link"
+        onClick={handleShow}
+        hidden={props.hidden}
+      >
+        <FaRegEdit size={20} id="edit-icon" />
+      </button>
+
+      <Modal size="lg" show={show} onHide={handleClose}>
+        <Modal.Header closeButton className="modalHead">
+          <ModalTitle>About</ModalTitle>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="Headline">
+            <Form.Row>
+              <Form.Control placeholder="about us" as="textarea" />
+            </Form.Row>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
 const ExperienceModal = props => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
     <>
-      <button type="button" className="btn" id="e-link" onClick={handleShow}>
+      <button
+        type="button"
+        className="btn"
+        id="e-link"
+        onClick={handleShow}
+        hidden={props.hidden}
+      >
         <FaRegEdit size={20} id="edit-icon" />
       </button>
 
@@ -124,7 +176,13 @@ const EduacationModal = props => {
   const handleShow = () => setShow(true);
   return (
     <>
-      <button type="button" className="btn" id="e-link" onClick={handleShow}>
+      <button
+        type="button"
+        className="btn"
+        id="e-link"
+        onClick={handleShow}
+        hidden={props.hidden}
+      >
         <FaRegEdit size={20} id="edit-icon" />
       </button>
 
@@ -147,7 +205,7 @@ const EduacationModal = props => {
 };
 
 const SkillModal = props => {
-  let [skills, setSkills] = useState(props.Skills);
+  const [skills, setSkills] = useState(props.Skills);
   const [show, setShow] = useState(false);
   const [dis, setDis] = useState(false);
   const handleClose = () => setShow(false);
@@ -181,7 +239,7 @@ const SkillModal = props => {
 
     setSkills(arr);
   };
-  
+
   const data = skills.map((item, i) => {
     return (
       <>
@@ -191,25 +249,31 @@ const SkillModal = props => {
           Index={i}
           ListOnly={false}
           onEdit={editSkill.bind(this)}
-          onDelete={deleteSkill.bind(this,i)}
+          onDelete={deleteSkill.bind(this, i)}
         />
       </>
     );
   });
-  const fetchData = () =>{
+  const fetchData = () => {
     console.log(skills);
     props.onChange(skills);
     handleClose();
-  }
+  };
   //useEffect(fetchData,);
 
   return (
     <>
-      <button type="button" className="btn" id="e-link" onClick={handleShow}>
+      <button
+        type="button"
+        className="btn"
+        id="e-link"
+        onClick={handleShow}
+        hidden={props.hidden}
+      >
         <FaRegEdit size={20} id="edit-icon" />
       </button>
 
-      <Modal size="lg" show={show} onHide={handleClose}>
+      <Modal size="lg" show={show} onHide={handleClose} onExit={fetchData}>
         <Modal.Header className="modalHead" closeButton>
           <ModalTitle>Skills</ModalTitle>
         </Modal.Header>
@@ -226,7 +290,7 @@ const SkillModal = props => {
               />
             </Col>
             <Col md="1">
-            <Button
+              <Button
                 variant="primary"
                 onClick={() => addSkill(skill)}
                 hidden={dis}
@@ -257,9 +321,7 @@ const SkillListItem = props => {
   if (listOnly) {
     return (
       <>
-        <p style={{ paddingLeft: "2%" }}>
-          {skill}
-        </p>
+        <p className="skill-list">{skill}</p>
       </>
     );
   }
@@ -279,7 +341,7 @@ const SkillListItem = props => {
               className="btn"
               onClick={() => {
                 setEdit(false);
-                props.onEdit(skill,index);
+                props.onEdit(skill, index);
               }}
             >
               edit
@@ -291,7 +353,7 @@ const SkillListItem = props => {
   } else {
     return (
       <>
-        <p>
+        <p >
           {skill}
           <button type="button" className="btn" onClick={() => setEdit(true)}>
             edit
@@ -306,9 +368,6 @@ const SkillListItem = props => {
 };
 
 const ExperienceListItem = props => {
-  const location = this.props.location;
-  const role = this.props.role;
-  const year = this.props.year;
   const [edit, setEdit] = useState(false);
   if (edit) {
     return (
@@ -323,33 +382,34 @@ const ExperienceListItem = props => {
   } else {
     return (
       <>
-        <button
-          type="button"
-          className="btn"
-          id="e-link"
-          onClick={() => setEdit(true)}
-        >
-          <FaRegEdit size={20} id="edit-icon" />
-        </button>
-        <p>{role}</p>
-        <p>{location}</p>
-        <p>{year}</p>
+        <div className="exp-box">
+        <p className="strong">{props.role}</p>
+        <p className="normal">{props.location}</p>
+        <p className="weak">{props.year}</p>
+        </div>
       </>
     );
   }
 };
 
 const EducationListItem = props => {
-  const location = this.props.location;
-  const year = this.props.year;
   return (
     <>
-      <p>{location}</p>
-      <p>{year}</p>
+      <div className="edu-box">
+      <p className="strong">{props.location}</p>
+      <p className="weak">{props.year}</p>
+      </div>
     </>
   );
 };
-export { ProfileModal, SkillListItem, SkillModal };
+export {
+  ProfileModal,
+  SkillListItem,
+  SkillModal,
+  About,
+  EducationListItem,
+  ExperienceListItem
+};
 /*
 {data.Patient.map(items => <CardPatient
   Fname={items.Fname}

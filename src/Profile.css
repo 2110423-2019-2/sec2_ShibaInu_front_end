@@ -1,4 +1,7 @@
-@media only screen and (max-width: 600px) {
+@media  screen and (max-width: 600px) {
+    svg{
+        font-size : 5px;
+    }
     p{
       font-size: 10px;
       margin-left: 10px ;
@@ -19,6 +22,10 @@
     .headline{
         font-size: 10px;
     }
+    div.content{
+        font-size: 15px;
+    }
+    
 
 }
 #pro-bg {
@@ -31,9 +38,6 @@
     margin-bottom: 20px;
 }
 #edu {
-    margin-bottom: 20px;
-}
-#skill {
     margin-bottom: 20px;
 }
 #personal {
@@ -86,9 +90,9 @@
     padding-left: 15px;
 }
 #skill {
-    height: 200px;
-    padding-top:15px;
-    padding-left: 15px;
+    margin-bottom: 5%;
+    margin-top: 5%;
+    padding: 0,0,0,0;
 }
 #pic-e{
     position: absolute;
@@ -170,4 +174,49 @@
     display: inline-block;
     margin-left: 2vw;
     margin-bottom: 2vw;
+}
+svg{
+    font-size :20px;
+}
+h5{
+    display: inline;
+}
+div.content{
+    margin-top: 10px;
+    text-indent: 2.5vw;
+    padding: 10px;
+    padding-right: 3%;
+}
+p.strong{
+    font-weight: normal;
+    margin-left: 3% ;
+    margin-bottom: 0;
+}
+p.normal{
+    font-weight: 300;
+    margin-left: 3% ;
+    margin-bottom: 0;
+}
+p.weak{
+    font-weight:200 ;
+    margin-left: 3% ;
+    margin-bottom: 0;
+
+}
+.exp-box{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+.edu-box{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#exp-edu{
+    margin-top: 5%;
+}
+.skill-list{
+    margin-left: 3% ;
+    margin-top: 1%;
+    margin-bottom: 1%;
+
 }

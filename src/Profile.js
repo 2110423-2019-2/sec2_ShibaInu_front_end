@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import logo from "./material/Logo.png";
 import "./Profile.css";
-import { FaRegEdit,FaGlobe,FaBirthdayCake } from "react-icons/fa";
-import {FiPhoneCall} from "react-icons/fi";
-import {MdEmail,MdMyLocation} from "react-icons/md";
+import { FaRegEdit, FaGlobe, FaBirthdayCake } from "react-icons/fa";
+import { FiPhoneCall } from "react-icons/fi";
+import { MdEmail, MdMyLocation } from "react-icons/md";
 import NavBar from "./NavBar";
-import { ProfileModal, SkillListItem, SkillModal } from "./ProfileModal";
+import {
+  ProfileModal,
+  SkillListItem,
+  SkillModal,
+  About,
+  EducationListItem,
+  ExperienceListItem
+} from "./ProfileModal";
 class Profile extends React.Component {
   constructor(props) {
     super(props);
@@ -23,10 +30,23 @@ class Profile extends React.Component {
         so if someone know send direct message to me please. thank you.",
       birthdate: "21 March 1954",
       exp: [
-        "Royal Thai Army Headquarters (Office of The Command) \n Commander in Chief, Royal Thai Army \n 2010 - 2014",
-        "Office of the Prime Minister \n Prime minister of Thailand \n 2014 - Present"
+        {
+          role: "Royal Thai Army Headquarters (Office of The Command)",
+          at: "Commander in Chief, Royal Thai Army",
+          year: "2010 - 2014"
+        },
+        {
+          role: "Office of the Prime Minister",
+          at: "Prime minister of Thailand ",
+          year: "2014 - Present"
+        }
       ],
-      education: ["Armed Forces Academies Preparatory School \n 1971 - 1974"],
+      education: [
+        {
+          at: "Armed Forces Academies Preparatory School ",
+          year: " 1971 - 1974"
+        }
+      ],
       skills: ["c", "c++", "c#"],
       verified: false,
       upper1: true
@@ -87,49 +107,74 @@ class Profile extends React.Component {
             </div>
             <div className="row">
               <div className="col-7">
-                <div><FiPhoneCall/><p className="tel">{this.state.tel}</p></div>
-                <div><MdEmail/><p className="email">{this.state.email}</p></div>
-                <div><FaGlobe/><p className="web">{this.state.website}</p></div>
+                <div>
+                  <FiPhoneCall />
+                  <p className="tel">{this.state.tel}</p>
+                </div>
+                <div>
+                  <MdEmail />
+                  <p className="email">{this.state.email}</p>
+                </div>
+                <div>
+                  <FaGlobe />
+                  <p className="web"><a href={this.state.website}>{this.state.website}</a></p>
+                </div>
               </div>
               <div className="col-5">
-                <div><MdMyLocation/><p className="location">{this.state.location}</p></div>
-                <div><FaBirthdayCake/><p className="bd">{this.state.birthdate}</p></div>
+                <div>
+                  <MdMyLocation />
+                  <p className="location">{this.state.location}</p>
+                </div>
+                <div>
+                  <FaBirthdayCake />
+                  <p className="bd">{this.state.birthdate}</p>
+                </div>
               </div>
             </div>
           </div>
-          <div className="row-1" id="exp">
+          <div className="row-1" id="about">
             <div className="About">
-              About
-              <button type="button" className="btn" id="e-link">
-                <FaRegEdit size={20} id="edit-icon" />
-              </button>
+              <h5>About</h5>
+              <About />
             </div>
+            <div className="content">{this.state.about}</div>
           </div>
-          <div className="row-1" id="edu">
+          <div className="row-1" id="exp-edu" >
             <div className="Exp">
-              Experience
-              <button type="button" className="btn" id="e-link">
-                <FaRegEdit size={20} id="edit-icon" />
-              </button>
+              <h5>Experience</h5>
+
+            </div>
+            <div className="Exp-content">
+              {this.state.exp.map(item => (
+                <ExperienceListItem
+                  role={item.role}
+                  location={item.at}
+                  year={item.year}
+                />
+              ))}
             </div>
             <div className="Edu">
-              Education
-              <button type="button" className="btn" id="e-link">
-                <FaRegEdit size={20} id="edit-icon" />
-              </button>
+              <h5>Education</h5>
+              
+            </div>
+            <div className="Edu-content">
+              {this.state.education.map(item => (
+                <EducationListItem location={item.at} year={item.year} />
+              ))}
             </div>
           </div>
           <div className="row-1"></div>
           <div className="row-1" id="skill">
             <div className="skill">
-              Skills
+              <h5>Skills</h5>
               <SkillModal
                 Skills={this.state.skills}
                 onChange={this.skillChange}
+                hidden={false}
               />
             </div>
-            {this.state.skills.map((item, idx) => (
-              <SkillListItem Index={idx} Skill={item} ListOnly={true} />
+            {this.state.skills.map(item => (
+              <SkillListItem Skill={item} ListOnly={true} />
             ))}
           </div>
         </div>
