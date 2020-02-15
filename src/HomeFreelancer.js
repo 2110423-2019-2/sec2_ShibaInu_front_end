@@ -54,10 +54,12 @@ class HomeFreelancer extends React.Component {
         );
         var interest = this.state.interest.map((type,index)=>
             <Card className="w-25 p-3 text-center shadow">
+                <a className="text-decoration-none text-dark" href="/freelancer/home">
                 <CardImg className="bg-dark shadow" src={logo} alt="Card image cap" />
                 <CardBody>
                     <CardTitle><h5>{type}</h5></CardTitle>
                 </CardBody>
+                </a>
             </Card>
         );
         return(

@@ -21,14 +21,19 @@ class NavBar extends React.Component {
     render(){   
         var switchMode;
         var createMenu;
+        var modePath;
+        var jobPath = "/"+this.state.mode+"/job";
         if(this.state.mode == this.state.status.CLIENT){
             switchMode = "Switch" + " " + this.state.status.FREELANCER;
             createMenu = <Nav.Link href="#home"><FaPlusCircle className="navbar-icon" />Create Job</Nav.Link>;
+            modePath = "/"+this.state.status.FREELANCER+"/home";
         } else {
             switchMode = "Switch" + " " + this.state.status.CLIENT;
+            modePath = "/";
         }
         var searchMenu = <Nav.Link href="#home"><FaSearch className="navbar-icon" />Search</Nav.Link>;
         var mode = "YounStar " + this.state.mode;
+        
 
         return (
             <Navbar expand="lg" id="navbar" sticky="top" className="shadow">
@@ -48,9 +53,9 @@ class NavBar extends React.Component {
                             </DropdownToggle>
                             <DropdownMenu right>
                                 <DropdownItem id="dropdown-item-profile" href="/profile">My profile</DropdownItem>
-                                <DropdownItem id="dropdown-item-job" href="/client/job">My job</DropdownItem>
+                                <DropdownItem id="dropdown-item-job" href={jobPath}>My job</DropdownItem>
                                 <DropdownItem id="dropdown-item-balance">My balance</DropdownItem>
-                                <DropdownItem id="dropdown-item-switch">{switchMode}</DropdownItem>
+                                <DropdownItem id="dropdown-item-switch" href={modePath}>{switchMode}</DropdownItem>
                                 <DropdownItem divider />
                                 <DropdownItem id="dropdown-item-signout">Sign out</DropdownItem>
                             </DropdownMenu>
