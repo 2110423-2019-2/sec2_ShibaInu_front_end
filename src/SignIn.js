@@ -38,7 +38,7 @@ class SignIn extends React.Component {
                                         <input type="password" class="form-control" id="formGroupPasswordInput" placeholder="Password" />
                                     </div>
 
-                                    <button type="submit" class="btn btn-success">Sign up</button>
+                                    <button type="submit" class="btn btn-success">Sign in</button>
 
                                         <p>Don't have an account? <a href='/signup'>Create account</a></p>
                                 </form>

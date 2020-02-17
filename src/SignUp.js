@@ -48,7 +48,7 @@ class SignUp extends React.Component {
                                         <input type="password" class="form-control" id="formGroupRepeatPasswordInput" placeholder="Repeat password" />
                                     </div>
 
-                                    <button type="submit" class="btn btn-success">Sign in</button>
+                                    <button type="submit" class="btn btn-success">Sign up</button>
 
                                         <p>Already have an account? <a href='/signin'>Sign in</a></p>
                                 </form>
