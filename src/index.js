@@ -18,7 +18,6 @@ import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
 const routing = (
   <Router>
     <Switch>
-      <div>
         <Route exact path="/" component={HomeClient} />
         <Route path="/profile" component={Profile} />
         <Route path="/client/job" component={JobOfferClient} />
@@ -30,7 +29,6 @@ const routing = (
         <Route path="/signin" component={SignIn} />
         <Route path="/signup" component={SignUp} />
         <Route path="/client/dashboard" component={DashboardClient} />
-      </div>
     </Switch>
   </Router>
 );
