@@ -13,6 +13,7 @@ import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import DashboardClient from './DashboardClient';
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
 const routing = (
   <Router>
@@ -28,6 +29,7 @@ const routing = (
         <Route path="/jobsearch" component={JobSearchPage} />
         <Route path="/signin" component={SignIn} />
         <Route path="/signup" component={SignUp} />
+        <Route path="/client/dashboard" component={DashboardClient} />
       </div>
     </Switch>
   </Router>
