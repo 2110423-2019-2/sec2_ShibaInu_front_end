@@ -15,7 +15,7 @@ class Footer extends React.Component {
         return (
             <Navbar bg="dark" expand="lg" sticky="bottom" className="shadow">
                 <Navbar.Brand href="/">
-                    <img src={logo} id="footer-logo" className alt="youngstar logo" />
+                    <img src={logo} id="footer-logo" alt="youngstar logo" />
                 </Navbar.Brand>
             </Navbar>
         );

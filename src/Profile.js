@@ -17,7 +17,7 @@ class Profile extends React.Component {
     
     return (
       <>
-        <NavBar />
+        <NavBar mode="guest"/>
         <div className="container">
           <div className="row-5-xs" id="personal">
             <div className="row" id="pro-bg">

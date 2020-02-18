@@ -1,8 +1,11 @@
 html, body, .main-background {
   background-color: #F5F5F5;
+  height: 100%;
+  width: 100%;
 }
 #homeclient-box {
   margin-top: 30px;
+  height: 100%;
 }
 #recentjob-topic, #balance-topic {
   margin-top: 20px;
