@@ -9,7 +9,7 @@ class SignUp extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            registerpData : { fullname:'', username:'', password:'' },
+            registerData : { fullname:'', username:'', password:'' },
         };
         this.handleChange.bind(this);
         this.handleSubmit.bind(this);
@@ -25,6 +25,8 @@ class SignUp extends React.Component {
     }
 
     handleSubmit = (e) => {
+
+        e.preventDefault();
 
         // axios.post('http://35.198.228.244:10000/users', this.state.registerData)
         //     .then((response) => {
