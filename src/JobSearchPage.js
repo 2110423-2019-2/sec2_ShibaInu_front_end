@@ -74,10 +74,10 @@ class JobSearchPage extends React.Component {
         <div class="job-search-page">
           <Container>
             <Row>
-              <Col lg="4">
+              <Col>
                 <Filter />
               </Col>
-              <Col>
+              <Col lg="8">
                 <header>
                   <Form>
                     <Row>

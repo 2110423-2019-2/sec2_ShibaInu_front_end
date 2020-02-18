@@ -22,10 +22,23 @@ class JobDetail extends React.Component {
             app will shows result of electricians nearby with the detail
             provided the customer.
           </div>
-          <div class="inside-box">Require Skill</div>
-          <div class="inside-box">Optional Skill</div>
-          <div class="inside-box">Picture</div>
-          <div class="inside-box">Client</div>
+          <div class="inside-box">
+            <div>
+              <b>Require Skill</b>
+              <div>Java, Mobile App Development, Android</div>
+            </div>
+          </div>
+          <div class="inside-box">
+            <div>
+              <b>Optional Skill</b>
+              <div> Software Architecture, Software Testing</div>
+            </div>
+          </div>
+          <div class="inside-box">
+            <div>
+              <b>Client</b>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -48,7 +61,6 @@ class JobBid extends React.Component {
               <Form.Control
                 type="number"
                 placeholder="0"
-                // aria-describedby="inputGroupPrepend"
                 required
               />
               <InputGroup.Prepend>
@@ -94,6 +106,22 @@ class JobSuggest extends React.Component {
   }
 }
 
+class InterrestedFreelancer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  render() {
+    return (
+      <div class="interrested-freelancer">
+        <header>Interrested Freelancer</header>
+        <div>1234</div>
+      </div>
+    );
+  }
+}
+
 class JobPage extends React.Component {
   constructor(props) {
     super(props);
@@ -107,18 +135,13 @@ class JobPage extends React.Component {
         <div class="job-page">
           <Container>
             <Row>
-              <Col>
-                <Row>
-                  <JobDetail />
-                </Row>
+              <Col lg="8">
+                <JobDetail />
+                <InterrestedFreelancer />
               </Col>
               <Col>
-                <Row>
-                  <JobBid />
-                </Row>
-                <Row>
-                  <JobSuggest />
-                </Row>
+                <JobBid />
+                <JobSuggest />
               </Col>
             </Row>
           </Container>
