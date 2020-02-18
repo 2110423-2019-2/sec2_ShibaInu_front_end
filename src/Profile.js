@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import logo from "./material/Logo.png";
 import "./Profile.css";
 import { FaRegEdit, FaGlobe, FaBirthdayCake } from "react-icons/fa";
@@ -13,6 +13,7 @@ import {
   EducationListItem,
   ExperienceListItem
 } from "./ProfileModal";
+import { Container } from "react-bootstrap";
 class Profile extends React.Component {
   constructor(props) {
     super(props);
@@ -68,25 +69,25 @@ class Profile extends React.Component {
     return (
       <>
         <NavBar mode="guest"/>
-        <div className="container">
+        <Container className = "container">
           <div className="row-5-xs" id="personal">
             <div className="row" id="pro-bg">
-              ProfileBG
+              <img src={logo} className="pro-bg-img" alt="youngstar logo" />
             </div>
             <div className="row" id="upper-second">
               <div className="col-3 mr" id="pro-img-frame">
+              
                 <div id="img-f">
-                  <img src={logo} className="pro-img" alt="youngstar logo" />
-                  <button
-                    className="btn"
+                <img src={logo} className="pro-img" alt="youngstar logo" />
+                <button
                     id="pic-e"
                     onClick={this.handleUpper1}
-                  >
-                    <FaRegEdit size={20} id="pic-edit" />
+                  >Change Profile
                   </button>
                 </div>
+                
               </div>
-              <div className="col-5">
+              <div className="col-5" >
                 <div className="fname">{this.state.fname}</div>
                 <div className="lname"> {this.state.lname}</div>
                 <div className="headline">{this.state.headline}</div>
@@ -106,7 +107,7 @@ class Profile extends React.Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-7">
+              <div className="col-7" id="sub-second-one">
                 <div>
                   <FiPhoneCall />
                   <p className="tel">{this.state.tel}</p>
@@ -120,7 +121,7 @@ class Profile extends React.Component {
                   <p className="web"><a href={this.state.website}>{this.state.website}</a></p>
                 </div>
               </div>
-              <div className="col-5">
+              <div className="col-5" id="sub-second-two">
                 <div>
                   <MdMyLocation />
                   <p className="location">{this.state.location}</p>
@@ -132,7 +133,7 @@ class Profile extends React.Component {
               </div>
             </div>
           </div>
-          <div className="row-1" id="about">
+          <div className="row-1" id="about-box">
             <div className="About">
               <h5>About</h5>
               <About />
@@ -177,7 +178,7 @@ class Profile extends React.Component {
               <SkillListItem Skill={item} ListOnly={true} />
             ))}
           </div>
-        </div>
+        </Container>
       </>
     );
   }

@@ -1,9 +1,12 @@
-@media  screen and (max-width: 600px) {
+body{
+    background-color: black;
+}
+@media  screen and (max-width: 1200px) {
     svg{
         font-size : 5px;
     }
     p{
-      font-size: 10px;
+      font-size: 12px;
       margin-left: 10px ;
     }
     div.col-5{
@@ -23,22 +26,42 @@
         font-size: 10px;
     }
     div.content{
-        font-size: 15px;
+        font-size: 12px;
+        
     }
-    
-
+    .pro-img{
+        width: 75px;
+        height: 75px;
+    }
+    #img-f{
+        width: 75px;
+        height: 75px
+    }
+}
+@media screen and (min-width: 1201px) {
+    .container{
+        max-width: 60%;
+    }
+    .pro-img{
+        width: 150px;
+        height: 150px;
+    }
+    #img-f{
+        width: 150px;
+        height: 150px;
+    }
 }
 #pro-bg {
+    position: relative;
     background-color: #8e8e8f;
     height: 200px;
     padding-left: 15px;
+    overflow: hidden;
 
 }
-#exp {
-    margin-bottom: 20px;
-}
-#edu {
-    margin-bottom: 20px;
+#pro-bg :hover{
+    cursor: pointer;
+    opacity: 0.5;
 }
 #personal {
     margin-bottom: 20px;
@@ -50,17 +73,11 @@
 #upper-second{
     margin-top: 15px;
     position: relative;
+
 }
 
 .pro-img {
     padding-left:0 ;
-    position: absolute;
-    max-width: 150px;
-    min-width: 100px;
-    width: 150px;
-    height: 150px;
-    max-height: 150px;
-    min-height: 100px;
     bottom: 0px;
 }
 .pro-img img{
@@ -68,6 +85,31 @@
 }
 #pro-img-frame {
     position: relative;
+    padding-left: 4%;
+    padding-bottom: 2% ;
+}
+#img-f {
+    position: absolute;
+    display: block;
+    background-color: white;
+    border: 1px solid rgb(122, 121, 121);
+    border-radius: 50%;
+    bottom: 0px;
+    overflow: hidden;
+    opacity: 1;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    
+}
+
+
+@keyframes myfadeIn {
+    0%   { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+@keyframes myfadeOut {
+    0%   { opacity: 0.5; }
+    100% { opacity: 1; }
 }
 #edit {
     position: absolute;
@@ -79,12 +121,14 @@
     float: right;
 }
 #exp {
+    margin-bottom: 20px;
     height: 200px;
     padding-top:15px;
     padding-left: 15px;
 }
 
 #edu {
+    margin-bottom: 20px;
     height: 200px;
     padding-top:15px;
     padding-left: 15px;
@@ -92,19 +136,27 @@
 #skill {
     margin-bottom: 5%;
     margin-top: 5%;
-    padding: 0,0,0,0;
+    padding: 2%;
+    background-color: white;
 }
 #pic-e{
     position: absolute;
-    top:-50%;
-    left: 55%;
-    
+    bottom: 0;
+    display: block;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    transition-property: all;
+    opacity: 0;
 }
-#pic-edit{
-    position: absolute;
-    top:10px;
-    right: 50px;
+#pic-e:hover{
+    display: block;
+    opacity: 0.8;
 }
+
 #e-link {
     position: relative;
     float: right;
@@ -112,20 +164,7 @@
     padding: 0;
     right: 0;
 }
-#img-f {
-    position: absolute;
-    background-color: black;
-    border-radius: 50%;
-    max-width: 150px;
-    min-width: 100px;
-    width: 150px;
-    height: 150px;
-    max-height: 150px;
-    min-height: 100px;
-    bottom: 0px;
-    overflow: hidden;
-    
-}
+
 .a {
     width:66%;
     margin: auto;
@@ -186,6 +225,7 @@ div.content{
     text-indent: 2.5vw;
     padding: 10px;
     padding-right: 3%;
+    font-weight: 300;
 }
 p.strong{
     font-weight: normal;
@@ -212,11 +252,28 @@ p.weak{
     margin-bottom: 1%;
 }
 #exp-edu{
+    padding : 2%;
     margin-top: 5%;
+    background-color: white;
 }
 .skill-list{
     margin-left: 3% ;
     margin-top: 1%;
     margin-bottom: 1%;
-
+}
+#about-box{
+    background-color: white;
+    padding : 2%;
+}
+#personal{
+    background-color: white;
+}
+#sub-second-one{
+    padding-left: 2%;
+    margin-top: 2% ;
+}
+#sub-second-two{
+    padding-right:2%;
+    padding-left:2%;
+    margin-top: 2% ;
 }

@@ -11,6 +11,10 @@ class SignIn extends React.Component {
         };
     }
 
+    handleSubmit = (event) => {
+        console.log(event.target);
+    }
+
     render() {
 
         return (
@@ -26,7 +30,7 @@ class SignIn extends React.Component {
                         <div className='right-content'>
                             <div className='form-name'>Sign In</div>
                             <div className='form-container'>
-                                <form >
+                                <form onSubmit >
 
                                     <div class="form-group">
                                         <label for="formGroupUsernameInput">Username</label>

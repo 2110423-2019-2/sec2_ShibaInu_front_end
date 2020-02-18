@@ -28,7 +28,7 @@ class HomeClient extends React.Component {
         }
       ],
       userDatas: "",
-      isDataLoad: false,
+      isDataLoad: false
     };
   }
 
@@ -37,7 +37,7 @@ class HomeClient extends React.Component {
       .get("http://35.198.228.244:10000/users/" + this.state.userID)
       .then(res => {
         const userDatas = res.data;
-        this.setState({ userDatas: userDatas , isDataLoad: true});
+        this.setState({ userDatas: userDatas, isDataLoad: true });
         console.log(this.state.userDatas);
       });
   };
@@ -47,7 +47,7 @@ class HomeClient extends React.Component {
   };
 
   render() {
-    if(!this.state.isDataLoad){
+    if (!this.state.isDataLoad) {
       return null;
     }
     var recentJob = this.state.jobList.map((job, index) => (
@@ -83,7 +83,7 @@ class HomeClient extends React.Component {
     );
     return (
       <div className="main-background">
-        <NavBar mode="client" userDatas={this.state.userDatas}/>
+        <NavBar mode="client" userDatas={this.state.userDatas} />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow" xl={8} offset={1}>
