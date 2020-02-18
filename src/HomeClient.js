@@ -2,13 +2,13 @@ import React from 'react';
 import NavBar from './NavBar';
 import './HomeClient.css';
 import { Container, Row, Col, Table } from 'react-bootstrap';
-import Footer from './Footer';
 
 class HomeClient extends React.Component {
     
     constructor(props){
         super(props);
         this.state={
+            userID:"1",
             username:"NeRaMit",
             balance:"0.0",
             jobList:[{
@@ -74,7 +74,6 @@ class HomeClient extends React.Component {
                         </Col>
                     </Row>
                 </Container>
-                <Footer />
             </div>
         );
     }

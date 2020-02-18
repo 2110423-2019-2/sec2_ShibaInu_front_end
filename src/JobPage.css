@@ -1,41 +1,37 @@
 .job-page {
   margin: auto;
   margin-top: 10px;
-  width: 80%;
 }
 
 .job-detail {
   background-color: white;
-  width: 750px;
+  margin-top: 20px;
 }
 
 .non-header {
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .inside-box {
-  padding: 10px;
+  /* padding: 10px; */
 }
+
 .job-bid {
   background-color: white;
-  width: 250px;
+  margin-top: 20px;
 }
 
 .job-suggest {
   background-color: white;
-  width: 250px;
-}
-
-form {
-  padding: 20px;
+  margin-top: 20px;
 }
 
 header {
   background-color: #254380;
-  padding: 10px;
   color: white;
 }
 
-.row {
-  padding: 10px;
+.interrested-freelancer {
+  background-color: white;
+  margin-top: 20px;
 }
