@@ -17,6 +17,8 @@ class NavBar extends React.Component {
             },
             mode: this.props.mode
         };
+        
+
     }
 
     render(){   
