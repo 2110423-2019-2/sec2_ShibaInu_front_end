@@ -11,9 +11,20 @@ class SignUp extends React.Component {
         super(props);
         this.state = {
             registerData: { fullname: '', username: '', password: '' },
+            validated: false,
         };
         this.handleChange.bind(this);
         this.handleSubmit.bind(this);
+        this.checkPassword.bind(this);
+    }
+
+    checkPassword = (e) => {
+        if (e.target.value === this.state.registerData.password) {
+            e.target.setCustomValidity("");
+        } else {
+            e.target.setCustomValidity("Password not match");
+        }
+
     }
 
     handleChange = (e) => {
@@ -27,7 +38,14 @@ class SignUp extends React.Component {
 
     handleSubmit = (e) => {
 
+        this.setState({ validated: true });
         e.preventDefault();
+
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.stopPropagation();
+            return;
+        }
 
         // axios.post('http://35.198.228.244:10000/users', this.state.registerData)
         //     .then((response) => {
@@ -53,28 +71,40 @@ class SignUp extends React.Component {
                         <div className='right-content'>
                             <div className='form-name'>Create an account</div>
                             <div className='form-container'>
-                                <Form>
+                                <Form noValidate={true} validated={this.state.validated} onSubmit={this.handleSubmit}>
                                     <Form.Group controlId="formBasicFullname">
                                         <Form.Label>Full name</Form.Label>
-                                        <Form.Control type="text" placeholder="Full name" name='fullname' onChange={this.handleChange} />
+                                        <Form.Control type="text" placeholder="Full name" name='fullname' onChange={this.handleChange} required />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a valid full name.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
-                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} />
+                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} required />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a valid username.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} />
+                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a valid password.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
-                                    <Form.Group controlId="formBasicRepeatPassword">
-                                        <Form.Label>Repeat password</Form.Label>
-                                        <Form.Control type="password" placeholder="Repeat password" />
+                                    <Form.Group controlId="formBasicConfirmPassword">
+                                        <Form.Label>Confirm password</Form.Label>
+                                        <Form.Control type="password" placeholder="Confirm password" onChange={this.checkPassword} required />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please input the same password as above.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
-                                    <Button variant="success" type="submit" onClick={this.handleSubmit}>
+                                    <Button variant="success" type="submit">
                                         Sign Up
                                     </Button>
                                     <p>Already have an account? <a href='/signin'>Sign in</a></p>

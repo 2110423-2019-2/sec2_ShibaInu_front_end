@@ -12,6 +12,7 @@ class SignIn extends React.Component {
         super(props);
         this.state = {
             loginData: { username: '', password: '' },
+            validated: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,15 +28,38 @@ class SignIn extends React.Component {
 
     handleSubmit = (e) => {
 
+        this.setState({ validated: true });
         e.preventDefault();
+
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.stopPropagation();
+            return;
+        }
 
         axios.post('http://35.198.228.244:10000/auth/login', this.state.loginData)
             .then((response) => {
-                // localStorage.setItem('access_token', response.data.access_token);
-                LocalStorageService.setToken(response.data.access_token);
+
+                switch (response.status) {
+                    // Created
+                    case 201:
+                        LocalStorageService.setToken(response.data.access_token);
+                        console.log('Logged in');
+                        break;
+
+                    // Other case
+                    default:
+                        console.log('Status code is ' + response.status);
+                }
+
             })
             .catch((error) => {
-                console.error(error);
+
+                if (error.response.status === 401) {
+                    console.log('Unauthorization');
+                } else {
+                    console.error(error);
+                }
             })
     }
 
@@ -54,17 +78,23 @@ class SignIn extends React.Component {
                         <div className='right-content'>
                             <div className='form-name'>Sign In</div>
                             <div className='form-container'>
-                                <Form>
+                                <Form noValidate={true} validated={this.state.validated} onSubmit={this.handleSubmit}>
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
-                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange}/>
+                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} required />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a valid username.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange}/>
+                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
+                                        <Form.Control.Feedback type="invalid">
+                                            Please provide a valid password.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Button variant="success" type="submit" onClick={this.handleSubmit}>
+                                    <Button variant="success" type="submit" >
                                         Sign In
                                     </Button>
                                     <p>Don't have an account? <a href='/signup'>Create account</a></p>
