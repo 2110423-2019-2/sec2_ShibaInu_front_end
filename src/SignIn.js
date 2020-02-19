@@ -13,6 +13,7 @@ class SignIn extends React.Component {
         this.state = {
             loginData: { username: '', password: '' },
             validated: false,
+            unauthorized: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,6 +25,7 @@ class SignIn extends React.Component {
         this.setState({
             loginData: tempData
         });
+        this.setState({unauthorized: false});
     }
 
     handleSubmit = (e) => {
@@ -44,7 +46,8 @@ class SignIn extends React.Component {
                     // Created
                     case 201:
                         LocalStorageService.setToken(response.data.access_token);
-                        console.log('Logged in');
+                        console.log('Logged in. Redirecting to HomeClient...');
+                        window.location.href = '/';
                         break;
 
                     // Other case
@@ -57,6 +60,8 @@ class SignIn extends React.Component {
 
                 if (error.response.status === 401) {
                     console.log('Unauthorization');
+                    this.setState({unauthorized: true});
+
                 } else {
                     console.error(error);
                 }
@@ -88,6 +93,7 @@ class SignIn extends React.Component {
                                         <Form.Label>Password</Form.Label>
                                         <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
                                     </Form.Group>
+                                    <p className='unauthorized-message' hidden={!this.state.unauthorized}>Wrong username or password.</p>
                                     <Button variant="success" type="submit" >
                                         Sign In
                                     </Button>

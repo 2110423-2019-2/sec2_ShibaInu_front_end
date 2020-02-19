@@ -64,3 +64,7 @@
 Form p {
     margin-top: 10px;
 }
+
+Form p.unauthorized-message {
+    color: red;
+}
