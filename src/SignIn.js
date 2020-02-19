@@ -3,6 +3,7 @@ import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import axios from 'axios';
+import LocalStorageService from './LocalStorageService';
 
 class SignIn extends React.Component {
 
@@ -29,13 +30,8 @@ class SignIn extends React.Component {
 
         axios.post('http://35.198.228.244:10000/auth/login', this.state.loginData)
             .then((response) => {
-                localStorage.setItem('access_token', response.data.access_token);
-                axios.interceptors.request.use((config) => {
-                    const token = localStorage.getItem('access_token');
-                    config.headers.authorization = token;
-
-                    return config;
-                });
+                // localStorage.setItem('access_token', response.data.access_token);
+                LocalStorageService.setToken(response.data.access_token);
             })
             .catch((error) => {
                 console.error(error);
@@ -46,7 +42,7 @@ class SignIn extends React.Component {
 
         return (
             <div>
-                <NavBar mode='guest' userDatas=''/>
+                <NavBar mode='guest' userDatas='' />
                 <div className='SignInSignUp-page'>
                     <div className='left-content'>
                         <span className='left-logo'><img src={logo} id="logo-img" alt="youngstar logo" /></span>
