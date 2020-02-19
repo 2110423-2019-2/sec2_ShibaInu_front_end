@@ -90,7 +90,7 @@ class HomeFreelancer extends React.Component {
         </td>
       </tr>
     ));
-    var limit5 = this.state.userDatas.skills.slice(0,5);
+    var limit5 = (this.state.userDatas.skills).slice(0,5);
     var interest = limit5.map((type, index) => (
       <Card className="w-25 p-3 text-center shadow">
         <a className="text-decoration-none text-dark" href="/freelancer/home">
