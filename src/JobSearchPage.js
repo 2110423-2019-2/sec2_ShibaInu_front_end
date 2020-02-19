@@ -45,7 +45,7 @@ class JobFilter extends React.Component {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Col lg={{ offset: "4" }}>
+            <Col lg={{ offset: "3" }}>
               <Button variant="secondary" type="reset">
                 Clear
               </Button>
