@@ -69,16 +69,16 @@ class HomeClient extends React.Component {
     ));
     var headTable = (
       <tr className="text-center">
-        <td className="align-middle">
+        <td>
           <h5>Name</h5>
         </td>
-        <td className="align-middle">
+        <td>
           <h5>Freelancer</h5>
         </td>
-        <td className="align-middle">
+        <td>
           <h5>Status</h5>
         </td>
-        <td className="align-middle"></td>
+        <td></td>
       </tr>
     );
     return (
@@ -95,7 +95,7 @@ class HomeClient extends React.Component {
                 <tbody>{recentJob}</tbody>
               </Table>
             </Col>
-            <Col className="shadow balance-box background-blue">
+            <Col className="shadow background-blue">
               <div id="balance-topic" className="text-light">
                 <h5 className="mb-0">Welcome Back!</h5>
                 <h2 className="mb-0">
@@ -103,16 +103,16 @@ class HomeClient extends React.Component {
                   {this.state.userDatas.lastName}
                 </h2>
               </div>
-              <div className="bg-light">
-                <Container>
-                  <Row className="rounded shadow">
-                    <Col xs={6} className="align-left">
-                      <h5 className="p-3">Account</h5>
+              <div className="rounded shadow bg-light">
+                <Container fluid={true}>
+                  <Row>
+                    <Col xs={8}>
+                      <h5>Account</h5>
                       <br />
-                      <h5 className="p-3">Balance</h5>
+                      <h5>Balance</h5>
                     </Col>
                     <Col>
-                      <h5 className="p-3">{this.state.userDatas.money} USD</h5>
+                      <h5>{this.state.userDatas.money} USD</h5>
                     </Col>
                   </Row>
                 </Container>
