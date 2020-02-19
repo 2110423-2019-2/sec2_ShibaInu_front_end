@@ -1,7 +1,15 @@
 import React from "react";
 import "./JobPage.css";
 import NavBar from "./NavBar";
-import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  InputGroup,
+  Table
+} from "react-bootstrap";
 
 class JobDetail extends React.Component {
   constructor(props) {
@@ -58,11 +66,7 @@ class JobBid extends React.Component {
         <Form class="form-bid">
           <Form.Group controlId="bidAmount">
             <InputGroup>
-              <Form.Control
-                type="number"
-                placeholder="0"
-                required
-              />
+              <Form.Control type="number" placeholder="0" required />
               <InputGroup.Prepend>
                 <InputGroup.Text id="inputGroupPrepend">THB</InputGroup.Text>
               </InputGroup.Prepend>
@@ -116,8 +120,54 @@ class InterrestedFreelancer extends React.Component {
     return (
       <div class="interrested-freelancer">
         <header>Interrested Freelancer</header>
-        <div>1234</div>
+        <Table reponsive>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Amount(THB)</th>
+              <th>Duration(Days)</th>
+              <th>Time Stamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <InterFreeRow
+              name="Mark Otto"
+              amount="20000"
+              duration="70"
+              timestamp="19/2/2020 20:20"
+            />
+            <InterFreeRow
+              name="Jacob Thornton"
+              amount="10000"
+              duration="30"
+              timestamp="18/2/2020 10:10"
+            />
+            <InterFreeRow
+              name="Larry the Bird"
+              amount="30000"
+              duration="40"
+              timestamp="19/2/2020 19.55"
+            />
+          </tbody>
+        </Table>
       </div>
+    );
+  }
+}
+
+class InterFreeRow extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    return (
+      <tr>
+        <td>{this.props.name}</td>
+        <td>{this.props.amount}</td>
+        <td>{this.props.duration}</td>
+        <td>{this.props.timestamp}</td>
+      </tr>
     );
   }
 }
@@ -131,17 +181,17 @@ class JobPage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
+        <NavBar mode=" " userDatas={" "} />
         <div class="job-page">
           <Container>
             <Row>
-              <Col lg="8">
+              <Col lg="9">
                 <JobDetail />
                 <InterrestedFreelancer />
               </Col>
               <Col>
                 <JobBid />
-                <JobSuggest />
+                {/* <JobSuggest /> */}
               </Col>
             </Row>
           </Container>
