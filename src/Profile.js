@@ -172,12 +172,12 @@ class Profile extends React.Component {
       <>
         <NavBar mode="client" userDatas="" />
         <Container id="profile-container">
-          <div className="row-5-xs" id="personal">
+          <div className="row-5-xs shadow-sm" id="personal">
             <div className="row" id="pro-bg">
               <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />
             </div>
-            <div className="row" id="upper-second">
-              <div className="col-3 mr" id="pro-img-frame">
+            <div className="row " id="upper-second">
+              <div className="col-3 mr " id="pro-img-frame">
                 <div id="img-f">
                   <img src={profileimage} className="pro-img" alt="youngstar logo" />
                   <button id="profile-img" onClick={this.handleUpper1}>
@@ -211,7 +211,7 @@ class Profile extends React.Component {
                 />
               </div>
             </div>
-            <div className="row">
+            <div className="row ">
               <div className="col-7" id="sub-second-one">
                 <div>
                   <FiPhoneCall hidden={this.state.tel === ""} />
@@ -240,7 +240,7 @@ class Profile extends React.Component {
               </div>
             </div>
           </div>
-          <div className="row-1" id="about-box">
+          <div className="row-1 shadow-sm" id="about-box">
             <div className="About">
               <h5>About</h5>
               <About
@@ -256,7 +256,7 @@ class Profile extends React.Component {
                 : this.state.about}
             </div>
           </div>
-          <div className="row-1" id="exp-edu">
+          <div className="row-1 shadow-sm" id="exp-edu">
             <div className="Exp">
               <h5>Experience</h5>
               <ExperienceModal
@@ -297,8 +297,7 @@ class Profile extends React.Component {
               ))}
             </div>
           </div>
-          <div className="row-1"></div>
-          <div className="row-1" id="skill">
+          <div className="row-1 shadow-sm" id="skill">
             <div className="skill">
               <h5>Skills</h5>
               <SkillModal
