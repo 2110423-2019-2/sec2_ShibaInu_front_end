@@ -1,5 +1,6 @@
 import React from "react";
-import logo from "./material/Logo.png";
+import profileimage from "./material/profileimg.jpg";
+import profilebg from "./material/profilebg.jpg";
 import "./Profile.css";
 import { FaGlobe, FaBirthdayCake } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
@@ -22,6 +23,8 @@ class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isMyProfile:true,
+      isLoaded:false,
       userId: 1,
       data: {
         experience: [
@@ -79,9 +82,9 @@ class Profile extends React.Component {
   }
   
   componentDidMount(){
-    this.fetch(1)
+    this.fetch();
   }
-  fetch(userId) {
+  fetch() {
     let months = [
       "January",
       "Febuary",
@@ -96,8 +99,9 @@ class Profile extends React.Component {
       "November",
       "December"
     ];
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + userId)
+      .get("http://35.198.228.244:10000/users/" + this.state.userId)
       .then(res => {
         console.log(res);
         let body = res.data;
@@ -151,24 +155,31 @@ class Profile extends React.Component {
             verified: this.state.verified
           }
         });
+        this.setState({isLoaded:true});
       })
       .catch(err => {
         console.log(err);
       });
   }
   render() {
+    if(!this.state.isLoaded){
+      return(
+        <>
+        </>
+      );
+    }
     return (
       <>
         <NavBar mode="client" userDatas="" />
         <Container className="container">
           <div className="row-5-xs" id="personal">
             <div className="row" id="pro-bg">
-              <img src={logo} className="pro-bg-img" alt="youngstar logo" />
+              <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />
             </div>
             <div className="row" id="upper-second">
               <div className="col-3 mr" id="pro-img-frame">
                 <div id="img-f">
-                  <img src={logo} className="pro-img" alt="youngstar logo" />
+                  <img src={profileimage} className="pro-img" alt="youngstar logo" />
                   <button id="profile-img" onClick={this.handleUpper1}>
                     <p>Change Profile</p>
                   </button>
@@ -176,7 +187,7 @@ class Profile extends React.Component {
               </div>
               <div className="col-5">
                 <div className="fname">{this.state.fname}</div>
-                <div className="lname"> {this.state.lname}</div>
+                <div className="lname">{this.state.lname}</div>
                 <div className="headline" hidden={this.state.headline === ""}>
                   {this.state.headline}
                 </div>
@@ -186,7 +197,7 @@ class Profile extends React.Component {
                   type="button"
                   className="btn btn-outline-dark"
                   id="verify"
-                  hidden={this.state.verified}
+                  hidden={true}
                 >
                   verify
                 </button>
@@ -196,6 +207,7 @@ class Profile extends React.Component {
                   userId={this.state.userId}
                   data={this.state.data}
                   onUpdate={this.fetch}
+                  hidden={!this.state.isMyProfile}
                 />
               </div>
             </div>
@@ -203,7 +215,7 @@ class Profile extends React.Component {
               <div className="col-7" id="sub-second-one">
                 <div>
                   <FiPhoneCall hidden={this.state.tel === ""} />
-                  <p className="tel">{this.state.tel}</p>
+                  <p className="tel">{this.state.tel === "" ?this.state.tel: (this.state.tel.substr(0,3)+"-"+this.state.tel.substr(3,))}</p>
                 </div>
                 <div>
                   <MdEmail hidden={this.state.email === ""} />
@@ -235,6 +247,7 @@ class Profile extends React.Component {
                 userId={this.state.userId}
                 data={this.state.data}
                 onUpdate={this.fetch}
+                hidden={!this.state.isMyProfile}
               />
             </div>
             <div className="content">
@@ -250,6 +263,8 @@ class Profile extends React.Component {
                 userId={this.state.userId}
                 data={this.state.data}
                 onUpdate={this.fetch}
+                hidden={!this.state.isMyProfile}
+
               />
             </div>
             <div className="Exp-content">
@@ -270,6 +285,8 @@ class Profile extends React.Component {
                 userId={this.state.userId}
                 data={this.state.data}
                 onUpdate={this.fetch}
+                hidden={!this.state.isMyProfile}
+
               />
             </div>
             <div className="Edu-content">
@@ -288,6 +305,8 @@ class Profile extends React.Component {
                 userId={this.state.userId}
                 data={this.state.data}
                 onUpdate={this.fetch}
+                hidden={!this.state.isMyProfile}
+
               />
             </div>
             {this.state.skills.length === 0

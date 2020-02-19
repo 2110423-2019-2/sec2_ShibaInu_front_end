@@ -196,10 +196,10 @@ class ProfileModal extends Component {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="outline-success " onClick={this.handleSave}>
               Save
             </Button>
           </Modal.Footer>
@@ -290,10 +290,10 @@ class About extends Component {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="outline-success" onClick={this.handleSave}>
               Save
             </Button>
           </Modal.Footer>
@@ -487,10 +487,10 @@ class ExperienceModal extends Component {
             <Form.Row></Form.Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="outline-success" onClick={this.handleSave}>
               Save
             </Button>
           </Modal.Footer>
@@ -774,10 +774,10 @@ class EducationModal extends Component {
             <Form.Row></Form.Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="outline-success" onClick={this.handleSave}>
               Save
             </Button>
           </Modal.Footer>
@@ -1019,10 +1019,10 @@ class SkillModal extends Component {
             </Form.Row>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={this.handleSave}>
+            <Button variant="outline-success" onClick={this.handleSave}>
               Save
             </Button>
           </Modal.Footer>
