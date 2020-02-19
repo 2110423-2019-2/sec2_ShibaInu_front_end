@@ -81,14 +81,14 @@ class NavBar extends React.Component {
 
     dropDownMenu = (
       <DropdownMenu right>
-        <DropdownItem id="dropdown-item-profile" href="/profile">
+        <DropdownItem id="dropdown-item-profile" href="/profile" className='color-black'>
           My profile
         </DropdownItem>
-        <DropdownItem id="dropdown-item-job" href={jobPath}>
+        <DropdownItem id="dropdown-item-job" href={jobPath} className='color-black'>
           My job
         </DropdownItem>
-        <DropdownItem id="dropdown-item-balance">My balance</DropdownItem>
-        <DropdownItem id="dropdown-item-switch" href={modePath}>
+        <DropdownItem id="dropdown-item-balance" className='color-black'>My balance</DropdownItem>
+        <DropdownItem id="dropdown-item-switch" href={modePath} >
           {switchMode}
         </DropdownItem>
         <DropdownItem divider />

@@ -16,8 +16,12 @@
     color: black;
 }
 #dropdown-item-switch {
-    color: forestgreen;
+    color: forestgreen !important;
 }
 #dropdown-item-signout {
     color: red;
+}
+
+.color-black {
+    color: black !important;
 }
