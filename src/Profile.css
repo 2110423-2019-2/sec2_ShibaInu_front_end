@@ -1,285 +1,291 @@
-body{
-    background-color: black;
+body {
+  background-color: black;
 }
-@media  screen and (max-width: 1200px) {
-    svg{
-        font-size : 5px;
-    }
-    p{
-      font-size: 12px;
-      margin-left: 10px ;
-    }
-    div.col-5{
-        padding-right: 0 ;
-    }
-    div.col-7{
-        padding-left: 0;
-        padding-right: 0 ;
-    }
-    div.fname{
-        font-size: 15px;
-    }
-    div.lname{
-        font-size: 15px;
-    }
-    .headline{
-        font-size: 10px;
-    }
-    div.content{
-        font-size: 12px;
-        
-    }
-    .pro-img{
-        width: 75px;
-        height: 75px;
-    }
-    #img-f{
-        width: 75px;
-        height: 75px
-    }
+@media screen and (max-width: 1200px) {
+  svg {
+    font-size: 5px;
+  }
+  p {
+    font-size: 12px;
+    margin-left: 10px;
+  }
+  div.col-5 {
+    padding-right: 0;
+  }
+  div.col-7 {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  div.fname {
+    font-size: 15px;
+  }
+  div.lname {
+    font-size: 15px;
+  }
+  .headline {
+    font-size: 10px;
+  }
+  div.content {
+    font-size: 12px;
+  }
+  .pro-img {
+    width: 75px;
+    height: 75px;
+  }
+  #img-f {
+    width: 75px;
+    height: 75px;
+  }
 }
 @media screen and (min-width: 1201px) {
-    .container{
-        max-width: 60%;
-    }
-    .pro-img{
-        width: 150px;
-        height: 150px;
-    }
-    #img-f{
-        width: 150px;
-        height: 150px;
-    }
+  .container {
+    width: 60%;
+  }
+  .pro-img {
+    width: 150px;
+    height: 150px;
+  }
+  #img-f {
+    width: 150px;
+    height: 150px;
+  }
 }
 #pro-bg {
-    position: relative;
-    background-color: #8e8e8f;
-    height: 200px;
-    padding-left: 15px;
-    overflow: hidden;
-
+  position: relative;
+  background-color: #8e8e8f;
+  height: 200px;
+  padding-left: 15px;
+  overflow: hidden;
 }
-#pro-bg :hover{
-    cursor: pointer;
-    opacity: 0.5;
+#pro-bg :hover {
+  cursor: pointer;
+  opacity: 0.5;
 }
 #personal {
-    margin-bottom: 20px;
-    position: relative;
-    padding-left: 15px;
-    padding-right: 15px;
-    
+  margin-bottom: 20px;
+  position: relative;
+  padding-left: 15px;
+  padding-right: 15px;
 }
-#upper-second{
-    margin-top: 15px;
-    position: relative;
-
+#upper-second {
+  margin-top: 15px;
+  position: relative;
 }
 
 .pro-img {
-    padding-left:0 ;
-    bottom: 0px;
+  padding-left: 0;
+  bottom: 0px;
 }
-.pro-img img{
-    display: inline-block;
+.pro-img img {
+  display: inline-block;
 }
 #pro-img-frame {
-    position: relative;
-    padding-left: 4%;
-    padding-bottom: 2% ;
+  position: relative;
+  padding-left: 4%;
+  padding-bottom: 2%;
 }
 #img-f {
-    position: absolute;
-    display: block;
-    background-color: white;
-    border: 5px solid rgb(255, 255, 255);
-    border-radius: 50%;
-    bottom: 0px;
-    overflow: hidden;
-    opacity: 1;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    text-align: center;
-    
+  position: absolute;
+  display: block;
+  background-color: white;
+  border: 5px solid rgb(255, 255, 255);
+  border-radius: 50%;
+  bottom: 0px;
+  overflow: hidden;
+  opacity: 1;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  text-align: center;
 }
-
 
 @keyframes myfadeIn {
-    0%   { opacity: 1; }
-    100% { opacity: 0.5; }
+  0% {
+    opacity: 1;
   }
+  100% {
+    opacity: 0.5;
+  }
+}
 @keyframes myfadeOut {
-    0%   { opacity: 0.5; }
-    100% { opacity: 1; }
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 #edit {
-    position: absolute;
-    right: 0px;
+  position: absolute;
+  right: 0px;
 }
 
 #edit-icon {
-    display: flex;
-    float: right;
+  display: flex;
+  float: right;
 }
 #exp {
-    margin-bottom: 20px;
-    height: 200px;
-    padding-top:15px;
-    padding-left: 15px;
+  margin-bottom: 20px;
+  height: 200px;
+  padding-top: 15px;
+  padding-left: 15px;
 }
 
 #edu {
-    margin-bottom: 20px;
-    height: 200px;
-    padding-top:15px;
-    padding-left: 15px;
+  margin-bottom: 20px;
+  height: 200px;
+  padding-top: 15px;
+  padding-left: 15px;
 }
 #skill {
-    margin-bottom: 5%;
-    margin-top: 5%;
-    padding: 2%;
-    background-color: white;
+  margin-bottom: 5%;
+  margin-top: 5%;
+  padding: 2%;
+  background-color: white;
 }
-#profile-img{
-    position: absolute;
-    bottom: 0;
-    display: block;
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
-    transition-property: all;
-    opacity: 0;
+#profile-img {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  transition-property: all;
+  opacity: 0;
 }
-#profile-img:hover{
-    display: block;
-    opacity: 0.8;
+#profile-img:hover {
+  display: block;
+  opacity: 0.8;
 }
 
 #verify {
-    position: relative;
-    float: right;
-    margin-right:10px;
-    padding: 0;
-    right: 0;
+  position: relative;
+  float: right;
+  margin-right: 10px;
+  padding: 0;
+  right: 0;
 }
-#e-link{
-    position: relative;
-    float: right;
-    margin-right:10px;
-    padding: 0;
-    right: 0;
+#e-link {
+  position: relative;
+  float: right;
+  margin-right: 10px;
+  padding: 0;
+  right: 0;
 }
 .a {
-    width:66%;
-    margin: auto;
+  width: 66%;
+  margin: auto;
 }
 .modalHead {
-    background-color: #254380;
-    color: cornsilk;
+  background-color: #254380;
+  color: cornsilk;
 }
 .modalTittle {
-    color: cornsilk;
+  color: cornsilk;
 }
-.modalHead > button > span{
-    background-color: #254380;
-    color: cornsilk;
+.modalHead > button > span {
+  background-color: #254380;
+  color: cornsilk;
 }
 .fname {
-    display: inline-block;
-    margin-right:5px ;
-    font-size: 2vw;
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 2vw;
 }
 .lname {
-    display: inline-block;
-    font-size: 2vw;
+  display: inline-block;
+  font-size: 2vw;
 }
-.tel{
-    display: inline-block;
-    margin-left: 2vw;
-    margin-bottom: 2vw;
+.tel {
+  display: inline-block;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
 }
-.email{
-    display: inline-block;
-    margin-left: 2vw;
-    margin-bottom: 2vw;
+.email {
+  display: inline-block;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
 }
-.web{
-    display: inline-block;
-    margin-left: 2vw;
-    margin-bottom: 2vw;
+.web {
+  display: inline-block;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
 }
-.location{
-    display: inline-block;
-    margin-left: 2vw;
-    margin-bottom: 2vw;
+.location {
+  display: inline-block;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
 }
-.bd{
-    display: inline-block;
-    margin-left: 2vw;
-    margin-bottom: 2vw;
+.bd {
+  display: inline-block;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
 }
-svg{
-    font-size :20px;
+svg {
+  font-size: 20px;
 }
-h5{
-    display: inline;
+h5 {
+  display: inline;
 }
-div.content{
-    margin-top: 10px;
-    text-indent: 2.5vw;
-    padding: 10px;
-    padding-right: 3%;
-    font-weight: 300;
+div.content {
+  margin-top: 10px;
+  text-indent: 2.5vw;
+  padding: 10px;
+  padding-right: 3%;
+  font-weight: 300;
 }
-p.strong{
-    font-weight: normal;
-    margin-left: 3% ;
-    margin-bottom: 0;
+p.strong {
+  font-weight: normal;
+  margin-left: 3%;
+  margin-bottom: 0;
 }
-p.normal{
-    font-weight: 300;
-    margin-left: 3% ;
-    margin-bottom: 0;
+p.normal {
+  font-weight: 300;
+  margin-left: 3%;
+  margin-bottom: 0;
 }
-p.weak{
-    font-weight:200 ;
-    margin-left: 3% ;
-    margin-bottom: 0;
-
+p.weak {
+  font-weight: 200;
+  margin-left: 3%;
+  margin-bottom: 0;
 }
-.exp-box{
-    margin-top: 1%;
-    margin-bottom: 1%;
+.exp-box {
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
-.edu-box{
-    margin-top: 1%;
-    margin-bottom: 1%;
+.edu-box {
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
-#exp-edu{
-    padding : 2%;
-    margin-top: 5%;
-    background-color: white;
+#exp-edu {
+  padding: 2%;
+  margin-top: 5%;
+  background-color: white;
 }
-.skill-list{
-    margin-left: 3% ;
-    margin-top: 1%;
-    margin-bottom: 1%;
+.skill-list {
+  margin-left: 3%;
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
-#about-box{
-    background-color: white;
-    padding : 2%;
+#about-box {
+  background-color: white;
+  padding: 2%;
 }
-#personal{
-    background-color: white;
+#personal {
+  background-color: white;
 }
-#sub-second-one{
-    padding-left: 2%;
-    margin-top: 2% ;
+#sub-second-one {
+  padding-left: 2%;
+  margin-top: 2%;
 }
-#sub-second-two{
-    padding-right:2%;
-    padding-left:2%;
-    margin-top: 2% ;
+#sub-second-two {
+  padding-right: 2%;
+  padding-left: 2%;
+  margin-top: 2%;
+}
+#Add-btn {
+  flex: 0 1 auto;
+  align-items: flex-end;
+  display: flex;
 }
