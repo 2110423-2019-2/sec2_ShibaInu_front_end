@@ -5,19 +5,23 @@ import { FaRegEdit, FaGlobe, FaBirthdayCake } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
 import { MdEmail, MdMyLocation } from "react-icons/md";
 import NavBar from "./NavBar";
+import axios from "axios";
 import {
   ProfileModal,
   SkillListItem,
   SkillModal,
   About,
   EducationListItem,
-  ExperienceListItem
+  ExperienceListItem,
+  ExperienceModal
 } from "./ProfileModal";
 import { Container } from "react-bootstrap";
+import { fireEvent } from "@testing-library/dom";
 class Profile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      data : {},
       fname: "Prayut",
       lname: "ChanOCha",
       headline: "Prime minister of Thailand",
@@ -48,14 +52,16 @@ class Profile extends React.Component {
           year: " 1971 - 1974"
         }
       ],
-      skills: ["c", "c++", "c#"],
+      skills: [],
       verified: false,
       upper1: true
     };
-    this.handleUpper1 = this.handleUpper1.bind(this);
+    this.onChangeProfileImage = this.onChangeProfileImage.bind(this);
     this.skillChange = this.skillChange.bind(this);
+    this.fetch = this.fetch.bind(this,);
+    this.fetch(1);
   }
-  handleUpper1() {
+  onChangeProfileImage() {
     this.setState({ upper1: true });
   }
   skillChange(e) {
@@ -64,11 +70,54 @@ class Profile extends React.Component {
       console.log("updated : " + this.state.skills)
     );
   }
+  componentDidMount(){
+    fetch(1);
+  }
+  
+  fetch(userId){
+    let months = ["January","Febuary","March","April","May","June","July","August","September","October","November","December"]
+    axios.get("http://35.198.228.244:10000/users/"+userId).then(res =>{
+      console.log(res);
+      let body = res.data;
+      let bdate = new Date(body.dateOfBirth);
+      let formatted_date = bdate.getDate() + " " + months[bdate.getMonth()] + " " + bdate.getFullYear()
 
+      this.setState({
+        userId : 1,
+        data : body,
+        fname: body.firstName,
+        lname: body.lastName,
+        headline: "",
+        tel: body.phone,
+        email: body.email,
+        website: body.website,
+        location: body.location,
+        about:body.about,
+        birthdate: formatted_date,
+        exp: [
+          {
+            role: "Null",
+            at: "CU",
+            year: "2099 - 2100"
+          }
+        ],
+        education: [
+          {
+            at: body.education,
+            year: "2475"
+          }
+        ],
+        skills: body.skills,
+        verified: body.isVerified,
+      })
+    }).catch(err => {
+        console.log(err);
+    });
+  }
   render() {
     return (
       <>
-        <NavBar mode="guest"/>
+        <NavBar mode='client' userDatas=''/>
         <Container className = "container">
           <div className="row-5-xs" id="personal">
             <div className="row" id="pro-bg">
@@ -80,9 +129,9 @@ class Profile extends React.Component {
                 <div id="img-f">
                 <img src={logo} className="pro-img" alt="youngstar logo" />
                 <button
-                    id="pic-e"
+                    id="profile-img"
                     onClick={this.handleUpper1}
-                  >Change Profile
+                  ><p>Change Profile</p>
                   </button>
                 </div>
                 
@@ -90,44 +139,44 @@ class Profile extends React.Component {
               <div className="col-5" >
                 <div className="fname">{this.state.fname}</div>
                 <div className="lname"> {this.state.lname}</div>
-                <div className="headline">{this.state.headline}</div>
+                <div className="headline" hidden={this.state.headline === ""}>{this.state.headline}</div>
               </div>
               <div className="col-1">
                 <button
                   type="button"
                   className="btn btn-outline-dark"
-                  id="e-link"
+                  id="verify"
                   hidden={this.state.verified}
                 >
                   verify
                 </button>
               </div>
               <div className="col-1" id="edit">
-                <ProfileModal />
+                <ProfileModal userId={this.state.userId} data={this.state.data} onUpdate={this.fetch}/>
               </div>
             </div>
             <div className="row">
               <div className="col-7" id="sub-second-one">
                 <div>
-                  <FiPhoneCall />
+                  <FiPhoneCall hidden={this.state.tel === ""}/>
                   <p className="tel">{this.state.tel}</p>
                 </div>
                 <div>
-                  <MdEmail />
+                  <MdEmail hidden={this.state.email === ""}/>
                   <p className="email">{this.state.email}</p>
                 </div>
                 <div>
-                  <FaGlobe />
+                  <FaGlobe hidden={this.state.website === ""}/>
                   <p className="web"><a href={this.state.website}>{this.state.website}</a></p>
                 </div>
               </div>
               <div className="col-5" id="sub-second-two">
                 <div>
-                  <MdMyLocation />
+                  <MdMyLocation hidden={this.state.location === ""}/>
                   <p className="location">{this.state.location}</p>
                 </div>
                 <div>
-                  <FaBirthdayCake />
+                  <FaBirthdayCake hidden={this.state.birthdate === ""}/>
                   <p className="bd">{this.state.birthdate}</p>
                 </div>
               </div>
@@ -136,14 +185,14 @@ class Profile extends React.Component {
           <div className="row-1" id="about-box">
             <div className="About">
               <h5>About</h5>
-              <About />
+              <About userId={this.state.userId} data={this.state.data} onUpdate={this.fetch} />
             </div>
-            <div className="content">{this.state.about}</div>
+            <div className="content">{this.state.about==="" ?"I'm "+this.state.fname:this.state.about}</div>
           </div>
           <div className="row-1" id="exp-edu" >
             <div className="Exp">
               <h5>Experience</h5>
-
+              <ExperienceModal userId={this.state.userId} data={this.state.data} onUpdate={this.fetch}/>
             </div>
             <div className="Exp-content">
               {this.state.exp.map(item => (
@@ -174,7 +223,7 @@ class Profile extends React.Component {
                 hidden={false}
               />
             </div>
-            {this.state.skills.map(item => (
+            {this.state.skills===[]?"No skill yet":this.state.skills.map(item => (
               <SkillListItem Skill={item} ListOnly={true} />
             ))}
           </div>
