@@ -55,10 +55,10 @@
 }
 
 .form-container {
-    width: 50%;
+    width: 100%;
+    max-width: 400px;
     margin-left: auto;
     margin-right: auto;
-    /* background-color: red; */
 }
 
 Form p {
