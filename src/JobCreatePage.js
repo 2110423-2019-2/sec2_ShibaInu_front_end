@@ -12,7 +12,7 @@ class JobCreatePage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
+        <NavBar mode=" " userDatas={" "} />
         <div class="job-create-page">
           <header>Create New Job Offering</header>
           <div>

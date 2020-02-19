@@ -1,9 +1,40 @@
 .job-search-page {
   margin-top: 20px;
 }
-.filter {
+.job-filter {
   background-color: white;
 }
-.search-result {
+.job-result {
   background-color: white;
+}
+
+#low-margin {
+  margin: 10px;
+  max-width: 100%;
+}
+
+.container {
+  max-width: 80%;
+}
+
+.job-result-row {
+  border-bottom: 1px solid gray;
+}
+
+#no-padding{
+  padding: 0px;
+}
+
+#no-margin{
+  margin: 0px;
+}
+
+#job-des{
+  height: 48px;
+  overflow: hidden;
+  color: grey;
+}
+
+#job-name-and-des{
+  margin-bottom: 15px;
 }
