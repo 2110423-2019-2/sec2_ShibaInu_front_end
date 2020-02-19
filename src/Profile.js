@@ -81,7 +81,7 @@ class Profile extends React.Component {
       let body = res.data;
       let bdate = new Date(body.dateOfBirth);
       let formatted_date = bdate.getDate() + " " + months[bdate.getMonth()] + " " + bdate.getFullYear()
-
+      console.log(JSON.parse(body.experience));
       this.setState({
         userId : 1,
         data : body,
@@ -94,13 +94,7 @@ class Profile extends React.Component {
         location: body.location,
         about:body.about,
         birthdate: formatted_date,
-        exp: [
-          {
-            role: "Null",
-            at: "CU",
-            year: "2099 - 2100"
-          }
-        ],
+        exp: JSON.parse(body.experience),
         education: [
           {
             at: body.education,
@@ -198,7 +192,7 @@ class Profile extends React.Component {
               {this.state.exp.map(item => (
                 <ExperienceListItem
                   role={item.role}
-                  location={item.at}
+                  location={item.location}
                   year={item.year}
                 />
               ))}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from "react";
-import { Modal, Button, Form, Col, ModalTitle, InputGroup, FormControl} from "react-bootstrap";
+import { Modal, Button, Form, Col, ModalTitle, Table} from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 
 import DatePicker from "react-datepicker";
@@ -353,6 +353,7 @@ class ExperienceModal extends Component {
       role: "",
       location: "",
       year: "",
+      limit: false,
       experiences: [],
       show: false
     };
@@ -362,6 +363,7 @@ class ExperienceModal extends Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleEdit = this.handleEdit.bind(this,);
     this.showEditList = this.showEditList.bind(this);
+    this.handleDelete = this.handleDelete.bind(this,);
     if (
       this.props.data !== {} &&
       this.props.userId !== undefined &&
@@ -386,8 +388,9 @@ class ExperienceModal extends Component {
     ) {
       let body = this.props.data;
       if (body.experience instanceof Array) {
+        let json_arr = JSON.parse(body.experience);
         this.setState({
-          experiences: body.experience
+          experiences: json_arr
         });
       }
       this.setState({
@@ -404,9 +407,11 @@ class ExperienceModal extends Component {
     this.componentDidMount();
   }
   handleSave() {
+    let json = JSON.stringify(this.state.experiences);
+    console.log(json)
     axios
       .patch("/users/" + this.state.usersId, {
-        about: this.state.about
+        experience: json
       })
       .then(res => {
         console.log(res);
@@ -424,12 +429,18 @@ class ExperienceModal extends Component {
       location: this.state.location,
       year: this.state.year
     });
-    this.setState({ experiences : arr });
+    this.setState({ role : "", location : "", year : "", experiences : arr });
+    if(this.state.experiences.length >= 3){
+      this.setState({limit : true})
+    }
   }
   handleDelete(index) {
     let arr = this.state.experiences;
     arr.splice(index, 1);
-    this.setState({ experience: arr });
+    this.setState({ experiences: arr });
+    if(this.state.experiences.length < 3){
+      this.setState({limit : false})
+    }
   }
   handleEdit(index, word) {
     let arr = this.state.experiences;
@@ -440,11 +451,13 @@ class ExperienceModal extends Component {
   showEditList() {
     return this.state.experiences.length === 0? <h1>Add something</h1> : this.state.experiences.map((item,i) => (
       <ExperienceEditList 
+        key={Math.round(Math.random() * 1000)}
         index = {i}
         location = {item.location}
         role = {item.role}
         year = {item.year}
         onEdit = {this.handleEdit}
+        onDelete = {this.handleDelete}
       />
     ));
   }
@@ -466,13 +479,36 @@ class ExperienceModal extends Component {
             <ModalTitle>Experience</ModalTitle>
           </Modal.Header>
           <Modal.Body>
+          <Table>
           {this.showEditList()}
-          <Form.Row>
+          </Table>
+          <Form.Row hidden={this.state.limit}>
             <Col md="3">
+              <Form.Label>Role</Form.Label>
               <Form.Control
                 defaultValue={this.state.role}
                 onChange={(e) => {
                   this.setState({role : e.target.value});
+                }}
+                hidden={false}
+              />
+            </Col>
+            <Col md="3">
+              <Form.Label>At</Form.Label>
+              <Form.Control
+                defaultValue={this.state.location}
+                onChange={(e) => {
+                  this.setState({location : e.target.value});
+                }}
+                hidden={false}
+              />
+            </Col>
+            <Col md="3">
+            <Form.Label>Since</Form.Label>
+              <Form.Control
+                defaultValue={this.state.year}
+                onChange={(e) => {
+                  this.setState({year : e.target.value});
                 }}
                 hidden={false}
               />
@@ -488,26 +524,10 @@ class ExperienceModal extends Component {
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
-              <Form.Control
-                defaultValue={this.state.location}
-                onChange={(e) => {
-                  this.setState({location : e.target.value});
-                }}
-                hidden={false}
-              />
-            </Col>
+            
           </Form.Row>
           <Form.Row>
-            <Col md="3">
-              <Form.Control
-                defaultValue={this.state.year}
-                onChange={(e) => {
-                  this.setState({year : e.target.value});
-                }}
-                hidden={false}
-              />
-            </Col>
+            
           </Form.Row>
           </Modal.Body>
           <Modal.Footer>
@@ -535,12 +555,16 @@ class ExperienceEditList extends Component{
     };
     this.setState({index : this.props.index, role : this.props.role, location : this.props.location, year : this.props.year})
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.toggle = this.toggle.bind(this);
   }
   handleEdit(){
     let exp = {role : this.state.role,location : this.state.location, year : this.state.year}
-    this.props.onEdit(exp);
+    this.props.onEdit(this.state.index,exp);
     this.toggle();
+  }
+  handleDelete(){
+    this.props.onDelete(this.state.index);
   }
   toggle(){
     let prev = this.state.editable;
@@ -555,27 +579,323 @@ class ExperienceEditList extends Component{
     if (this.state.editable) {
       return (
         <>
-          <Form.Row hidden={this.state.editable}>
+          <tr>
+          <th>
+          <Form.Row md="1">
             <Form.Control placeholder="role" defaultValue ={this.state.role} onChange={(e)=>{this.setState({role : e.target.value})}}/>
             <Form.Control placeholder="location" defaultValue ={this.state.location} onChange={(e)=>{this.setState({location : e.target.value})}}/>
             <Form.Control placeholder="year" defaultValue ={this.state.year} onChange={(e)=>{this.setState({year : e.target.value})}}/>
           </Form.Row>
+          </th>
+          <th>
           <button type="button" className="btn" onClick={this.handleEdit}>
               OK
           </button>
+          </th>
+          <th>
+            <button type="button" className="btn" onClick={this.handleDelete}>
+              Delete
+            </button>
+          </th>
+          </tr>
         </>
       );
   } else {
     return (
       <>
-        <div className="exp-box">
-          <p className="strong">{this.state.role}</p>
-          <p className="normal">{this.state.location}</p>
-          <p className="weak">{this.state.year}</p>
-        </div>
-        <button type="button" className="btn" onClick={this.toggle}>
+        <tr>
+          <th>
+          <p className="strong">Role : {this.state.role}</p>
+          <p className="normal">At : {this.state.location}</p>
+          <p className="weak">Since : {this.state.year}</p>
+          </th>
+          <th>
+            <button type="button" className="btn" onClick={this.toggle}>
               Edit
+            </button>
+          </th>
+          <th>
+            <button type="button" className="btn" onClick={this.handleDelete}>
+              Delete
+            </button>
+          </th>
+        </tr>
+      </>
+    );
+  }
+  }
+}
+///////////////////////////////////////////
+class EducationModal extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usersId: "",
+      location: "",
+      year: "",
+      limit: false,
+      edu: [],
+      show: false
+    };
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
+    this.handleEdit = this.handleEdit.bind(this,);
+    this.showEditList = this.showEditList.bind(this);
+    this.handleDelete = this.handleDelete.bind(this,);
+    if (
+      this.props.data !== {} &&
+      this.props.userId !== undefined &&
+      this.props.userId !== ""
+    ) {
+      let body = this.props.data;
+      if (body.education instanceof Array) {
+        this.setState({
+          edu: body.education
+        });
+      }
+      this.setState({
+        usersId: this.props.userId
+      });
+    }
+  }
+  componentDidMount() {
+    if (
+      this.props.data !== {} &&
+      this.props.userId !== undefined &&
+      this.props.userId !== ""
+    ) {
+      let body = this.props.data;
+      if (body.education instanceof Array) {
+        this.setState({
+          edu: body.education
+        });
+      }
+      this.setState({
+        usersId: this.props.userId
+      });
+    }
+  }
+  handleClose() {
+    this.setState({ show: false });
+  }
+  handleShow() {
+    this.setState({ show: true });
+    this.componentDidMount();
+  }
+  handleSave() {
+    let json = JSON.stringify(this.state.edu);
+    console.log(json)
+    axios
+      .patch("/users/" + this.state.usersId, {
+        education: json
+      })
+      .then(res => {
+        console.log(res);
+        this.handleClose();
+        this.props.onUpdate(this.state.usersId);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  handleAdd() {
+    let arr = this.state.experiences;
+    arr.push({
+      role: this.state.role,
+      location: this.state.location,
+      year: this.state.year
+    });
+    this.setState({ role : "", location : "", year : "", experiences : arr });
+    if(this.state.experiences.length >= 3){
+      this.setState({limit : true})
+    }
+  }
+  handleDelete(index) {
+    let arr = this.state.experiences;
+    arr.splice(index, 1);
+    this.setState({ experiences: arr });
+    if(this.state.experiences.length < 3){
+      this.setState({limit : false})
+    }
+  }
+  handleEdit(index, word) {
+    let arr = this.state.experiences;
+    arr.splice(index, 1, word);
+    this.setState({ experience: arr });
+  }
+
+  showEditList() {
+    return this.state.experiences.length === 0? <h1>Add something</h1> : this.state.experiences.map((item,i) => (
+      <ExperienceEditList 
+        key={Math.round(Math.random() * 1000)}
+        index = {i}
+        location = {item.location}
+        role = {item.role}
+        year = {item.year}
+        onEdit = {this.handleEdit}
+        onDelete = {this.handleDelete}
+      />
+    ));
+  }
+  render() {
+    return (
+      <>
+        <button
+          type="button"
+          className="btn"
+          id="e-link"
+          onClick={this.handleShow}
+          hidden={this.props.hidden}
+        >
+          <FaRegEdit size={20} id="edit-icon" />
+        </button>
+
+        <Modal size="lg" show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <ModalTitle>Experience</ModalTitle>
+          </Modal.Header>
+          <Modal.Body>
+          <Table>
+          {this.showEditList()}
+          </Table>
+          <Form.Row hidden={this.state.limit}>
+            <Col md="3">
+              <Form.Label>Role</Form.Label>
+              <Form.Control
+                defaultValue={this.state.role}
+                onChange={(e) => {
+                  this.setState({role : e.target.value});
+                }}
+                hidden={false}
+              />
+            </Col>
+            <Col md="3">
+              <Form.Label>At</Form.Label>
+              <Form.Control
+                defaultValue={this.state.location}
+                onChange={(e) => {
+                  this.setState({location : e.target.value});
+                }}
+                hidden={false}
+              />
+            </Col>
+            <Col md="3">
+            <Form.Label>Since</Form.Label>
+              <Form.Control
+                defaultValue={this.state.year}
+                onChange={(e) => {
+                  this.setState({year : e.target.value});
+                }}
+                hidden={false}
+              />
+            </Col>
+            <Col md="1">
+              <Button
+                variant="primary"
+                onClick={this.handleAdd}
+                hidden={false}
+              >
+                ADD
+              </Button>
+            </Col>
+          </Form.Row>
+          <Form.Row>
+            
+          </Form.Row>
+          <Form.Row>
+            
+          </Form.Row>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleClose}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={this.handleSave}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+    );
+  }
+}
+class EducationEditList extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      index : "",
+      editable : false,
+      role : "",
+      location : "",
+      year : "",
+    };
+    this.setState({index : this.props.index, location : this.props.location, year : this.props.year})
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.toggle = this.toggle.bind(this);
+  }
+  handleEdit(){
+    let exp = {location : this.state.location, year : this.state.year}
+    this.props.onEdit(this.state.index,exp);
+    this.toggle();
+  }
+  handleDelete(){
+    this.props.onDelete(this.state.index);
+  }
+  toggle(){
+    let prev = this.state.editable;
+    this.setState({editable : !prev});
+  }
+  componentDidMount(){
+    this.setState({index : this.props.index, location : this.props.location, year : this.props.year})
+
+  }
+  render(){
+    console.log(this.state.editable)
+    if (this.state.editable) {
+      return (
+        <>
+          <tr>
+          <th>
+          <Form.Row md="1">
+            <Form.Control placeholder="location" defaultValue ={this.state.location} onChange={(e)=>{this.setState({location : e.target.value})}}/>
+            <Form.Control placeholder="year" defaultValue ={this.state.year} onChange={(e)=>{this.setState({year : e.target.value})}}/>
+          </Form.Row>
+          </th>
+          <th>
+          <button type="button" className="btn" onClick={this.handleEdit}>
+              OK
           </button>
+          </th>
+          <th>
+            <button type="button" className="btn" onClick={this.handleDelete}>
+              Delete
+            </button>
+          </th>
+          </tr>
+        </>
+      );
+  } else {
+    return (
+      <>
+        <tr>
+          <th>
+          <p className="normal">At : {this.state.location}</p>
+          <p className="weak">Since : {this.state.year}</p>
+          </th>
+          <th>
+            <button type="button" className="btn" onClick={this.toggle}>
+              Edit
+            </button>
+          </th>
+          <th>
+            <button type="button" className="btn" onClick={this.handleDelete}>
+              Delete
+            </button>
+          </th>
+        </tr>
       </>
     );
   }
