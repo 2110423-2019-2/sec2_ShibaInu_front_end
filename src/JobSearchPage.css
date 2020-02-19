@@ -21,20 +21,28 @@
   border-bottom: 1px solid gray;
 }
 
-#no-padding{
+#no-padding {
   padding: 0px;
 }
 
-#no-margin{
+#no-margin {
   margin: 0px;
 }
 
-#job-des{
+#job-des {
   height: 48px;
   overflow: hidden;
   color: grey;
 }
 
-#job-name-and-des{
+#job-name-and-des {
   margin-bottom: 15px;
+}
+
+a:hover,
+a:visited,
+a:link,
+a:active {
+  text-decoration: none;
+  color: black;
 }
