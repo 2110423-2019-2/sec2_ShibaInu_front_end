@@ -82,17 +82,11 @@ class SignIn extends React.Component {
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
                                         <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} required />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please provide a valid username.
-                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>Password</Form.Label>
                                         <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please provide a valid password.
-                                        </Form.Control.Feedback>
                                     </Form.Group>
                                     <Button variant="success" type="submit" >
                                         Sign In

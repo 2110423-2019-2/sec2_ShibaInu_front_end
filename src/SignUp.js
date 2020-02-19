@@ -3,14 +3,14 @@ import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import axios from 'axios';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Col } from 'react-bootstrap';
 
 class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            registerData: { fullname: '', username: '', password: '' },
+            registerData: { firstName: '', lastName: '', username: '', password: '' },
             validated: false,
         };
         this.handleChange.bind(this);
@@ -47,13 +47,24 @@ class SignUp extends React.Component {
             return;
         }
 
-        // axios.post('http://35.198.228.244:10000/users', this.state.registerData)
-        //     .then((response) => {
-        //         console.log(response);
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     })
+        axios.post('http://35.198.228.244:10000/users', this.state.registerData)
+            .then((response) => {
+                switch (response.status) {
+
+                    // Created
+                    case 201:
+                        window.location.href = '/signin';
+                        break;
+
+                    // Other case
+                    default:
+                        console.log('Status code is ' + response.status);
+
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            })
     }
 
     render() {
@@ -72,35 +83,33 @@ class SignUp extends React.Component {
                             <div className='form-name'>Create an account</div>
                             <div className='form-container'>
                                 <Form noValidate={true} validated={this.state.validated} onSubmit={this.handleSubmit}>
-                                    <Form.Group controlId="formBasicFullname">
-                                        <Form.Label>Full name</Form.Label>
-                                        <Form.Control type="text" placeholder="Full name" name='fullname' onChange={this.handleChange} required />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please provide a valid full name.
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
+                                    <Form.Row>
+                                        <Form.Group as={Col} controlId="formBasicFirstname">
+                                            <Form.Label>First name</Form.Label>
+                                            <Form.Control type="text" placeholder="First name" name='firstName' onChange={this.handleChange} required />
+                                        </Form.Group>
+
+                                        <Form.Group as={Col} controlId="formBasicLastname">
+                                            <Form.Label>Last name</Form.Label>
+                                            <Form.Control type="text" placeholder="Last name" name='lastName' onChange={this.handleChange} required />
+                                        </Form.Group>
+                                    </Form.Row>
 
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
                                         <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} required />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please provide a valid username.
-                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>Password</Form.Label>
                                         <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
-                                        <Form.Control.Feedback type="invalid">
-                                            Please provide a valid password.
-                                        </Form.Control.Feedback>
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicConfirmPassword">
                                         <Form.Label>Confirm password</Form.Label>
                                         <Form.Control type="password" placeholder="Confirm password" onChange={this.checkPassword} required />
                                         <Form.Control.Feedback type="invalid">
-                                            Please input the same password as above.
+                                            Please provide a match password.
                                         </Form.Control.Feedback>
                                     </Form.Group>
 
