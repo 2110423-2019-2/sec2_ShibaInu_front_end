@@ -1,5 +1,5 @@
 import React from "react";
-import profileimage from "./material/profileimg.jpg";
+import profileimage from "./material/profileimg2.png";
 import profilebg from "./material/profilebg.jpg";
 import "./Profile.css";
 import { FaGlobe, FaBirthdayCake } from "react-icons/fa";
@@ -171,7 +171,7 @@ class Profile extends React.Component {
     return (
       <>
         <NavBar mode="client" userDatas="" />
-        <Container className="container">
+        <Container id="profile-container">
           <div className="row-5-xs" id="personal">
             <div className="row" id="pro-bg">
               <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />

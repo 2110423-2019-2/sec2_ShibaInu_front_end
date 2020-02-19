@@ -36,10 +36,14 @@ body {
     width: 75px;
     height: 75px;
   }
+  #pro-bg.row{
+      height: 10%;
+  }
+
 }
 @media screen and (min-width: 1201px) {
-  .container {
-    width: 60%;
+  #profile-container {
+    width:65%;
   }
   .pro-img {
     width: 150px;
@@ -49,23 +53,20 @@ body {
     width: 150px;
     height: 150px;
   }
+
 }
 #pro-bg {
   position: relative;
   background-color: #8e8e8f;
-  height: 250px;
+  height: 300px;
   padding-left: 0px;
   overflow: hidden;
 }
 #pro-bg img{
-    transform:translate(0%,-8%);
     width: 100%;
-    height: auto;
+    height: 100%;
 }
-#pro-bg :hover {
-  cursor: pointer;
-  opacity: 0.5;
-}
+
 #personal {
   margin-bottom: 20px;
   position: relative;
