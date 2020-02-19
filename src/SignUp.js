@@ -3,13 +3,14 @@ import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import axios from 'axios';
+import { Form, Button } from 'react-bootstrap';
 
 class SignUp extends React.Component {
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
-        this.state={
-            registerData : { fullname:'', username:'', password:'' },
+        this.state = {
+            registerData: { fullname: '', username: '', password: '' },
         };
         this.handleChange.bind(this);
         this.handleSubmit.bind(this);
@@ -21,7 +22,7 @@ class SignUp extends React.Component {
         this.setState({
             registerData: tempData
         });
-        
+
     }
 
     handleSubmit = (e) => {
@@ -37,11 +38,11 @@ class SignUp extends React.Component {
         //     })
     }
 
-    render(){   
+    render() {
 
         return (
             <div>
-                <NavBar mode='guest' userDatas=''/>
+                <NavBar mode='guest' userDatas='' />
                 <div className='SignInSignUp-page'>
                     <div className='left-content'>
                         <span className='left-logo'><img src={logo} id="logo-img" alt="youngstar logo" /></span>
@@ -52,32 +53,32 @@ class SignUp extends React.Component {
                         <div className='right-content'>
                             <div className='form-name'>Create an account</div>
                             <div className='form-container'>
-                                <form >
+                                <Form>
+                                    <Form.Group controlId="formBasicFullname">
+                                        <Form.Label>Full name</Form.Label>
+                                        <Form.Control type="text" placeholder="Full name" name='fullname' onChange={this.handleChange} />
+                                    </Form.Group>
 
-                                    <div class="form-group">
-                                        <label for="formGroupFullNameInput">Full name</label>
-                                        <input type="text" class="form-control" id="formGroupFullNameInput" name='fullname' onChange={this.handleChange} placeholder="Full name" />
-                                    </div>
+                                    <Form.Group controlId="formBasicUsername">
+                                        <Form.Label>Username</Form.Label>
+                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} />
+                                    </Form.Group>
 
-                                    <div class="form-group">
-                                        <label for="formGroupUsernameInput">Username</label>
-                                        <input type="text" class="form-control" id="formGroupUsernameInput" name='username' onChange={this.handleChange} placeholder="Username" />
-                                    </div>
+                                    <Form.Group controlId="formBasicPassword">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} />
+                                    </Form.Group>
 
-                                    <div class="form-group">
-                                        <label for="formGroupPasswordInput">Password</label>
-                                        <input type="password" class="form-control" id="formGroupPasswordInput" name='password' onChange={this.handleChange} placeholder="Password" />
-                                    </div>
+                                    <Form.Group controlId="formBasicRepeatPassword">
+                                        <Form.Label>Repeat password</Form.Label>
+                                        <Form.Control type="password" placeholder="Repeat password" />
+                                    </Form.Group>
 
-                                    <div class="form-group">
-                                        <label for="formGroupRepeatPasswordInput">Repeat password</label>
-                                        <input type="password" class="form-control" id="formGroupRepeatPasswordInput" placeholder="Repeat password" />
-                                    </div>
-
-                                    <button type="submit" class="btn btn-success" onClick={this.handleSubmit}>Sign up</button>
-
-                                        <p>Already have an account? <a href='/signin'>Sign in</a></p>
-                                </form>
+                                    <Button variant="success" type="submit" onClick={this.handleSubmit}>
+                                        Sign Up
+                                    </Button>
+                                    <p>Already have an account? <a href='/signin'>Sign in</a></p>
+                                </Form>
                             </div>
                         </div>
                     </div>
@@ -85,7 +86,7 @@ class SignUp extends React.Component {
                 </div>
             </div>
         );
-    }   
+    }
 }
 
 export default SignUp;

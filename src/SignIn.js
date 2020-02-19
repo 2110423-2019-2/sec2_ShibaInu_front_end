@@ -4,6 +4,7 @@ import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
+import { Button, Form } from 'react-bootstrap';
 
 class SignIn extends React.Component {
 
@@ -53,22 +54,21 @@ class SignIn extends React.Component {
                         <div className='right-content'>
                             <div className='form-name'>Sign In</div>
                             <div className='form-container'>
-                                <form >
+                                <Form>
+                                    <Form.Group controlId="formBasicUsername">
+                                        <Form.Label>Username</Form.Label>
+                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange}/>
+                                    </Form.Group>
 
-                                    <div class="form-group">
-                                        <label for="formGroupUsernameInput">Username</label>
-                                        <input type="text" class="form-control" id="formGroupUsernameInput" name='username' onChange={this.handleChange} placeholder="Username" />
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="formGroupPasswordInput">Password</label>
-                                        <input type="password" class="form-control" id="formGroupPasswordInput" name='password' onChange={this.handleChange} placeholder="Password" />
-                                    </div>
-
-                                    <button type="submit" class="btn btn-success" onClick={this.handleSubmit}>Sign in</button>
-
+                                    <Form.Group controlId="formBasicPassword">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange}/>
+                                    </Form.Group>
+                                    <Button variant="success" type="submit" onClick={this.handleSubmit}>
+                                        Sign In
+                                    </Button>
                                     <p>Don't have an account? <a href='/signup'>Create account</a></p>
-                                </form>
+                                </Form>
                             </div>
                         </div>
                     </div>
