@@ -11,13 +11,14 @@ import {
   FormControl,
   Button
 } from "react-bootstrap";
+import axios from 'axios';
+import LocalStorageService from './LocalStorageService';
 
 class JobOfferFreelancer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "NeRaMit",
-      balance: "0.0",
+      userID: this.props.userID,
       status: {
         ALL: "all",
         INTERESTED: "interested",
@@ -42,12 +43,38 @@ class JobOfferFreelancer extends React.Component {
           freelancerName: "Shiba",
           status: "contract"
         }
-      ]
+      ],
+      userDatas: "",
+      jobDatas: "",
+      isDataLoad: false,
+      isJobDataLoad: false
     };
   }
 
   statusHandler = (event, status) => {
     this.setState({ statusFilter: status });
+  };
+
+  fetchDatas = () => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    axios
+      .get("http://35.198.228.244:10000/users/" + this.state.userID)
+      .then(res => {
+        const userDatas = res.data;
+        this.setState({ userDatas: userDatas, isUserDataLoad: true });
+        console.log(this.state.userDatas);
+      });
+    axios
+      .get("http://35.198.228.244:10000/jobs/user/" + this.state.userID)
+      .then(res => {
+        const jobDatas = res.data;
+        this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
+        console.log(this.state.jobDatas);
+      });
+  };
+
+  componentDidMount = () => {
+    this.fetchDatas();
   };
 
   render() {
@@ -108,7 +135,7 @@ class JobOfferFreelancer extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="freelancer" />
+        <NavBar mode="freelancer" userDatas={this.state.userDatas}/>
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow">

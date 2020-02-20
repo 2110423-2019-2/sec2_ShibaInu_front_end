@@ -15,6 +15,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import DashboardClient from './DashboardClient';
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
+import App from './App';
 const routing = (
   <Router>
     <Switch>
@@ -32,7 +33,7 @@ const routing = (
     </Switch>
   </Router>
 );
-ReactDOM.render(routing, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

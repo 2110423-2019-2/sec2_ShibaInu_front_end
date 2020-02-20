@@ -1,24 +1,44 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import HomeClient from "./HomeClient";
+import JobOfferClient from "./JobOfferClient";
+import Profile from "./Profile";
+import HomeFreelancer from "./HomeFreelancer";
+import JobOfferFreelancer from "./JobOfferFreelancer";
+import JobPage from "./JobPage";
+import JobCreatePage from "./JobCreatePage";
+import JobSearchPage from "./JobSearchPage";
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import DashboardClient from './DashboardClient';
+import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userID: "1",
+    };
+  }
+
+  render() {
+    return (
+      <Router>
+      <Switch>
+          <Route exact path="/" component={()=><HomeClient userID={this.state.userID}/>} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/client/job" component={()=><JobOfferClient userID={this.state.userID}/>} />
+          <Route path="/freelancer/home" component={()=><HomeFreelancer userID={this.state.userID}/>} />
+          <Route path="/freelancer/job" component={()=><JobOfferFreelancer userID={this.state.userID}/>} />
+          <Route path="/job" component={JobPage} />
+          <Route path="/jobcreate" component={JobCreatePage} />
+          <Route path="/jobsearch" component={JobSearchPage} />
+          <Route path="/signin" component={SignIn} />
+          <Route path="/signup" component={SignUp} />
+          <Route path="/client/dashboard" component={DashboardClient} />
+      </Switch>
+    </Router>
+    );
+  }
 }
 
 export default App;

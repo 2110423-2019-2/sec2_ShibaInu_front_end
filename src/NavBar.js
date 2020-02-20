@@ -46,7 +46,7 @@ class NavBar extends React.Component {
       </Nav.Link>
     );
     searchMenu = (
-      <Nav.Link href="#home">
+      <Nav.Link href="/jobsearch">
         <FaSearch className="navbar-icon" />
         Search
       </Nav.Link>
@@ -55,7 +55,7 @@ class NavBar extends React.Component {
 
     if (this.state.mode === this.state.status.CLIENT) {
       createMenu = (
-        <Nav.Link href="#home">
+        <Nav.Link href="/jobcreate">
           <FaPlusCircle className="navbar-icon" />
           Create Job
         </Nav.Link>

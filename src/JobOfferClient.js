@@ -11,13 +11,14 @@ import {
   FormControl,
   Button
 } from "react-bootstrap";
+import axios from 'axios';
+import LocalStorageService from './LocalStorageService';
 
 class JobOfferClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "NeRaMit",
-      balance: "0.0",
+      userID: this.props.userID,
       status: {
         ALL: "all",
         OPEN: "open",
@@ -42,7 +43,11 @@ class JobOfferClient extends React.Component {
           freelancerName: "Shiba",
           status: "in progress"
         }
-      ]
+      ],
+      userDatas: "",
+      jobDatas: "",
+      isDataLoad: false,
+      isJobDataLoad: false
     };
   }
 
@@ -50,18 +55,43 @@ class JobOfferClient extends React.Component {
     this.setState({ statusFilter: status });
   };
 
+  fetchDatas = () => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    axios
+      .get("http://35.198.228.244:10000/users/" + this.state.userID)
+      .then(res => {
+        const userDatas = res.data;
+        this.setState({ userDatas: userDatas, isUserDataLoad: true });
+        console.log(this.state.userDatas);
+      });
+    axios
+      .get("http://35.198.228.244:10000/jobs/user/" + this.state.userID)
+      .then(res => {
+        const jobDatas = res.data;
+        this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
+        console.log(this.state.jobDatas);
+      });
+  };
+
+  componentDidMount = () => {
+    this.fetchDatas();
+  };
+
   render() {
+    if (!this.state.isDataLoad && !this.state.isJobDataLoad) {
+      return null;
+    }
     var recentJob;
     if (this.state.statusFilter === this.state.status.ALL) {
-      recentJob = this.state.jobList.map((job, index) => (
+      recentJob = this.state.jobDatas.map((job, index) => (
         <tr key={index} className="text-center">
           <td className="align-middle">
             {job.name}
             <br />
             <br />
-            {job.type}
+            {job.category}
           </td>
-          <td className="align-middle">{job.freelancerName}</td>
+          <td className="align-middle">-</td>
           <td className="align-middle">{job.status}</td>
           <td className="align-middle">
             <button type="button" className="btn btn-secondary btn-block">
@@ -71,17 +101,14 @@ class JobOfferClient extends React.Component {
         </tr>
       ));
     } else {
-      recentJob = this.state.jobList
+      recentJob = this.state.jobDatas
         .filter(job => job.status === this.state.statusFilter)
         .map((job, index) => (
           <tr key={index} className="text-center">
             <td className="align-middle">
               {job.name}
-              <br />
-              <br />
-              {job.type}
             </td>
-            <td className="align-middle">{job.freelancerName}</td>
+            <td className="align-middle">-</td>
             <td className="align-middle">{job.status}</td>
             <td className="align-middle">
               <button type="button" className="btn btn-secondary btn-block">
@@ -108,7 +135,7 @@ class JobOfferClient extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="client" />
+        <NavBar mode="client" userDatas={this.state.userDatas}/>
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow">

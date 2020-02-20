@@ -10,13 +10,14 @@ import {
   CardTitle,
 } from "reactstrap";
 import logo from "./material/Logo.png";
+import axios from 'axios';
+import LocalStorageService from './LocalStorageService';
 
 class HomeFreelancer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "NeRaMit",
-      balance: "0.0",
+      userID: this.props.userID,
       jobList: [
         {
           id: "00001",
@@ -24,9 +25,7 @@ class HomeFreelancer extends React.Component {
           type: "Android App",
           freelancerID: "123456789",
           freelancerName: "-",
-          status: "Open",
-          wage: "300,000 baht",
-          time: "3 month"
+          status: "Open"
         },
         {
           id: "00002",
@@ -34,31 +33,55 @@ class HomeFreelancer extends React.Component {
           type: "Frontend Backend",
           freelancerID: "55555555",
           freelancerName: "Shiba",
-          status: "In progress",
-          wage: "150,000 baht",
-          time: "2 month"
+          status: "In progress"
         }
       ],
+      userDatas: "",
+      jobDatas: "",
+      isDataLoad: false,
+      isJobDataLoad: false,
       interest: ["react", "react native", "express", "mysql", "nest.js"]
     };
   }
 
+  fetchDatas = () => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    axios
+      .get("http://35.198.228.244:10000/users/" + this.state.userID)
+      .then(res => {
+        const userDatas = res.data;
+        this.setState({ userDatas: userDatas, isUserDataLoad: true });
+        console.log(this.state.userDatas);
+      });
+    axios
+      .get("http://35.198.228.244:10000/jobs/user/" + this.state.userID)
+      .then(res => {
+        const jobDatas = res.data;
+        this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
+        console.log(this.state.jobDatas);
+      });
+  };
+
+  componentDidMount = () => {
+    this.fetchDatas();
+  };
+
   render() {
-    var recentJob = this.state.jobList.map((job, index) => (
+    if (!this.state.isDataLoad && !this.state.isJobDataLoad) {
+      return null;
+    }
+    var recentJob = this.state.jobDatas.map((job, index) => (
       <tr key={index} className="text-center">
         <td className="align-middle">
           {job.name}
-          <br />
-          <br />
-          {job.type}
         </td>
         <td className="align-middle">
           <FaMoneyBill className="job-icon" />
-          {job.wage}
+          {job.estimatedWage}
         </td>
         <td className="align-middle">
           <FaClock className="job-icon" />
-          {job.time}
+          {job.estimatedDuration}
         </td>
         <td className="align-middle">
           <button type="button" className="btn btn-secondary btn-block">
@@ -67,8 +90,9 @@ class HomeFreelancer extends React.Component {
         </td>
       </tr>
     ));
+    //var limit5 = (typeof(this.state.userDatas.skills) === 'string')?(this.state.interest):(this.state.userDatas.skills).slice(0,5);
     var interest = this.state.interest.map((type, index) => (
-      <Card className="w-25 p-3 text-center shadow">
+      <Card className="w-25 p-3 text-center shadow" key={index}>
         <a className="text-decoration-none text-dark" href="/freelancer/home">
           <CardImg className="bg-dark shadow" src={logo} alt="Card image cap" />
           <CardBody>
@@ -96,10 +120,10 @@ class HomeFreelancer extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="freelancer" />
+        <NavBar mode="freelancer" userDatas={this.state.userDatas}/>
         <Container id="homefreelancer-box">
           <Row>
-            <Col className="bg-light shadow" xl={8}>
+            <Col className="bg-light shadow" xl={8} offset={1}>
               <h2 id="recommend-topic">Recommend</h2>
               <Table responsive>
                 <thead className="background-blue text-light">
@@ -111,16 +135,19 @@ class HomeFreelancer extends React.Component {
             <Col className="shadow balance-box background-blue">
               <div id="balance-topic" className="text-light">
                 <p className="mb-0">Welcome Back!</p>
-                <h2 className="mb-0">{this.state.username}</h2>
+                <h2 className="mb-0">{this.state.userDatas.firstName}{" "}
+                  {this.state.userDatas.lastName}</h2>
               </div>
-              <div className="bg-light">
-                <Container>
-                  <Row className="rounded shadow">
-                    <Col xs={7}>
-                      <h5 className="mb-0 p-3">Account Balance</h5>
+              <div className="bg-light rounded shadow">
+                <Container fluid={true}>
+                  <Row>
+                    <Col xs={8}>
+                      <h5>Account</h5>
+                      <br />
+                      <h5>Balance</h5>
                     </Col>
                     <Col>
-                      <p className="mb-0 p-3">{this.state.balance} USD</p>
+                      <h5>{this.state.userDatas.money} USD</h5>
                     </Col>
                   </Row>
                 </Container>

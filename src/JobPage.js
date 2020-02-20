@@ -45,6 +45,7 @@ class JobDetail extends React.Component {
           <div class="inside-box">
             <div>
               <b>Client</b>
+              <div>Shiba Shiba</div>
             </div>
           </div>
         </div>

@@ -45,7 +45,7 @@ class JobFilter extends React.Component {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Col lg={{ offset: "4" }}>
+            <Col lg={{ offset: "3" }}>
               <Button variant="secondary" type="reset">
                 Clear
               </Button>
@@ -87,13 +87,21 @@ class JobResult extends React.Component {
           </Form>
         </header>
         <div>
+          <a href="/job">
+            <JobResultRow
+              jobName="Build a mobile app"
+              jobDes="Hi, I am Husain, an I am just started a startup company. I need an application to connect local electrician, plumbers, mechanics, and many other to the customers in order to fulfilled their need. For example, customer login and search for an electrician nearby. The app will shows result of electricians nearby with the detail provided the customer."
+              wage="80,000"
+              duration="30"
+              requireSkill="Java, Mobile App Development, Android"
+            />
+          </a>
           <JobResultRow
             jobName="3d face 360 view create from any picture software"
             jobDes="We want software which can extract 3d face from any picture. The process will be automatically completed.. I need you to develop this for me. I would like this software to be developed for Windows."
-          />
-          <JobResultRow
-            jobName="MSN SHOP 12"
-            jobDes="A project that will help many people earn more profits."
+            wage="50,000"
+            duration="30"
+            requireSkill="Windows Desktop, Software Architecture"
           />
           <JobResultRow
             jobName="Extract data from Memory block of NFC Card and provide the code -- 2"
@@ -116,6 +124,9 @@ class JobResult extends React.Component {
             We need someone who can write the code to read the data present in the memory block of the card and give us as an output string (UTF-8).We need thr code in Kotlin and need a basic test sample app for test the code's functioning. We need the code on the urgent basis. ( removed by admins )
             
             Secrenshots of the card readed data by TAGINFO app are attached for your reference."
+            wage="25,000"
+            duration="20"
+            requireSkill="Mobile App Development, Android, Kotlin, Near Field Communication (NFC)"
           />
           <JobResultRow
             jobName="required gynaecologist"
@@ -124,6 +135,9 @@ class JobResult extends React.Component {
             Minimum 6 month experienced candidate also can apply
             Send ur resume on whatsapp or mail..
             dheerendrakumar1991@ymail.com"
+            wage="10,000"
+            duration="10"
+            requireSkill="Health"
           />
         </div>
       </div>
@@ -154,19 +168,17 @@ class JobResultRow extends React.Component {
               </div>
               <div>
                 <div>
-                  <b>Require :</b>
-                </div>
-                <div>
-                  <b>Optional :</b>
+                  <b>Require : </b>
+                  {this.props.requireSkill}
                 </div>
               </div>
             </Col>
             <Col>
               <div>
-                <FaBtc /> 10000 THB
+                <FaBtc /> {this.props.wage} THB
               </div>
               <div>
-                <FaClock /> 10 Days
+                <FaClock /> {this.props.duration} Days
               </div>
             </Col>
           </Row>
