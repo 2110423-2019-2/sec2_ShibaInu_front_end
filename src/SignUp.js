@@ -86,7 +86,7 @@ class SignUp extends React.Component {
 
                     // Created
                     case 201:
-                        window.location.href = '/signin';
+                        this.submitLogin();
                         break;
 
                     // Other case
