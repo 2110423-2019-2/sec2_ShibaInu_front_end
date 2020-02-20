@@ -4,6 +4,7 @@ import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import axios from 'axios';
 import { Form, Button, Col } from 'react-bootstrap';
+import LocalStorageService from './LocalStorageService';
 
 class SignUp extends React.Component {
 
@@ -17,6 +18,37 @@ class SignUp extends React.Component {
         this.handleChange.bind(this);
         this.handleSubmit.bind(this);
         this.checkPassword.bind(this);
+    }
+
+    submitLogin() {
+
+        axios.post('http://35.198.228.244:10000/auth/login', this.state.registerData)
+            .then((response) => {
+
+                switch (response.status) {
+                    // Created
+                    case 201:
+                        LocalStorageService.setToken(response.data.access_token);
+                        console.log('Logged in. Redirecting to HomeClient...');
+                        window.location.href = '/';
+                        break;
+
+                    // Other case
+                    default:
+                        console.log('Status code is ' + response.status);
+                }
+
+            })
+            .catch((error) => {
+
+                if (error.response.status === 401) {
+                    console.log('Unauthorization');
+
+                } else {
+                    console.error(error);
+                }
+                window.location.href = '/login';
+            })
     }
 
     checkPassword = (e) => {
@@ -66,7 +98,7 @@ class SignUp extends React.Component {
             .catch((error) => {
                 if (error.response.status === 400) {
                     console.log('Error 400');
-                    this.setState({errorMessage: error.response.data.message});
+                    this.setState({ errorMessage: error.response.data.message });
 
                 } else {
                     console.error(error);
