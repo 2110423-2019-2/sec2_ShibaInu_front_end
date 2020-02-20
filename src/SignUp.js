@@ -12,6 +12,7 @@ class SignUp extends React.Component {
         this.state = {
             registerData: { firstName: '', lastName: '', username: '', password: '' },
             validated: false,
+            errorMessage: '',
         };
         this.handleChange.bind(this);
         this.handleSubmit.bind(this);
@@ -63,7 +64,13 @@ class SignUp extends React.Component {
                 }
             })
             .catch((error) => {
-                console.error(error);
+                if (error.response.status === 400) {
+                    console.log('Error 400');
+                    this.setState({errorMessage: error.response.data.message});
+
+                } else {
+                    console.error(error);
+                }
             })
     }
 
@@ -112,7 +119,7 @@ class SignUp extends React.Component {
                                             Please provide a match password.
                                         </Form.Control.Feedback>
                                     </Form.Group>
-
+                                    <p className='unauthorized-message' hidden={this.state.errorMessage === ''}>{this.state.errorMessage}</p>
                                     <Button variant="success" type="submit">
                                         Sign Up
                                     </Button>
