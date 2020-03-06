@@ -1,0 +1,6 @@
+#home-guest {
+    position: fixed;
+}
+#navbar-guest {
+    z-index: 1;
+}

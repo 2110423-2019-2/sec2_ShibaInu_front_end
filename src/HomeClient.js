@@ -1,11 +1,12 @@
 import React from "react";
 import NavBar from "./NavBar";
 import "./HomeClient.css";
+import "./HomeFreelancer.css";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
 
-class HomeClient extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,8 +31,9 @@ class HomeClient extends React.Component {
       ],
       userDatas: "",
       jobDatas: "",
-      isDataLoad: false,
-      isJobDataLoad: false
+      isUserDataLoad: false,
+      isJobDataLoad: false,
+      mode:"client"
     };
   }
 
@@ -58,7 +60,7 @@ class HomeClient extends React.Component {
   };
 
   render() {
-    if (!this.state.isDataLoad && !this.state.isJobDataLoad) {
+    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
       return null;
     }
     var recentJob = this.state.jobDatas.map((job, index) => (
@@ -89,9 +91,10 @@ class HomeClient extends React.Component {
         <td></td>
       </tr>
     );
+
     return (
       <div className="main-background">
-        <NavBar mode="client" userDatas={this.state.userDatas} />
+        <NavBar mode={this.state.mode} userDatas={this.state.userDatas} />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow" xl={8} offset={1}>
@@ -133,4 +136,4 @@ class HomeClient extends React.Component {
   }
 }
 
-export default HomeClient;
+export default Home;

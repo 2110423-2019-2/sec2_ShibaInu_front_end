@@ -47,7 +47,7 @@ class SignIn extends React.Component {
                     case 201:
                         LocalStorageService.setToken(response.data.access_token);
                         console.log('Logged in. Redirecting to HomeClient...');
-                        window.location.href = '/';
+                        window.location.href = '/client/home';
                         break;
 
                     // Other case

@@ -38,7 +38,7 @@ class HomeFreelancer extends React.Component {
       ],
       userDatas: "",
       jobDatas: "",
-      isDataLoad: false,
+      isUserDataLoad: false,
       isJobDataLoad: false,
       interest: ["react", "react native", "express", "mysql", "nest.js"]
     };
@@ -67,7 +67,7 @@ class HomeFreelancer extends React.Component {
   };
 
   render() {
-    if (!this.state.isDataLoad && !this.state.isJobDataLoad) {
+    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
       return null;
     }
     var recentJob = this.state.jobDatas.map((job, index) => (

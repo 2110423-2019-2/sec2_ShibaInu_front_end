@@ -11,6 +11,8 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import DashboardClient from './DashboardClient';
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import HomeGuest from "./HomeGuest";
+import AdminHome from "./AdminHome";
 
 class App extends React.Component {
   constructor(props) {
@@ -24,7 +26,8 @@ class App extends React.Component {
     return (
       <Router>
       <Switch>
-          <Route exact path="/" component={()=><HomeClient userID={this.state.userID}/>} />
+          <Route exact path="/" component={()=><HomeGuest />} />
+          <Route path="/client/home" component={()=><HomeClient userID={this.state.userID}/>} />
           <Route path="/profile" component={Profile} />
           <Route path="/client/job" component={()=><JobOfferClient userID={this.state.userID}/>} />
           <Route path="/freelancer/home" component={()=><HomeFreelancer userID={this.state.userID}/>} />
@@ -35,6 +38,7 @@ class App extends React.Component {
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
           <Route path="/client/dashboard" component={DashboardClient} />
+          <Route path="/admin" component={AdminHome} />
       </Switch>
     </Router>
     );

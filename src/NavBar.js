@@ -17,7 +17,8 @@ class NavBar extends React.Component {
       status: {
         CLIENT: "client",
         FREELANCER: "freelancer",
-        GUEST: "guest"
+        GUEST: "guest",
+        ADMIN: "admin"
       },
       mode: this.props.mode,
       userDatas: this.props.userDatas
@@ -37,7 +38,8 @@ class NavBar extends React.Component {
       signInMenu,
       signUpMenu,
       memberMenu,
-      guestMenu;
+      guestMenu,
+      homePath;
     var jobPath = "/" + this.state.mode + "/job";
 
     notiMenu = (
@@ -60,12 +62,14 @@ class NavBar extends React.Component {
           Create Job
         </Nav.Link>
       );
+      homePath = "/client/home";
       modePath = "/" + this.state.status.FREELANCER + "/home";
       switchMode = "Switch " + this.state.status.FREELANCER;
     } else if (this.state.mode === this.state.status.FREELANCER) {
-      modePath = "/";
+      modePath = "/" + this.state.status.CLIENT + "/home";;
       switchMode = "Switch " + this.state.status.CLIENT;
-    } else {
+      homePath = "/freelancer/home";
+    } else if (this.state.mode === this.state.status.GUEST){
       userMode = YOUNGSTAR;
       signInMenu = (
         <Nav.Link href="/signin" className="border-right border-warning">
@@ -113,6 +117,7 @@ class NavBar extends React.Component {
 
     guestMenu = (
       <Nav className="ml-auto">
+        {searchMenu}
         {signInMenu}
         {signUpMenu}
       </Nav>
@@ -121,8 +126,10 @@ class NavBar extends React.Component {
     navbarMenu =
       this.state.mode === this.state.status.GUEST ? guestMenu : memberMenu;
 
+    
+
     var logoBrand = (
-      <Navbar.Brand href="/">
+      <Navbar.Brand href={homePath} id="logo">
         <img src={logo} id="logo-img" alt="youngstar logo" />
         {userMode}
       </Navbar.Brand>

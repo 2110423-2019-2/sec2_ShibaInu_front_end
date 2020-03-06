@@ -46,7 +46,7 @@ class JobOfferFreelancer extends React.Component {
       ],
       userDatas: "",
       jobDatas: "",
-      isDataLoad: false,
+      isUserDataLoad: false,
       isJobDataLoad: false
     };
   }
@@ -78,6 +78,9 @@ class JobOfferFreelancer extends React.Component {
   };
 
   render() {
+    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
+      return null;
+    }
     var recentJob;
     if (this.state.statusFilter === this.state.status.ALL) {
       recentJob = this.state.jobList.map((job, index) => (
