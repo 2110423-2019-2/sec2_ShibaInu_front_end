@@ -5,6 +5,7 @@ import './SignInSignUp.css';
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
 import { Button, Form } from 'react-bootstrap';
+var utilities = require('./Utilities.json');
 
 class SignIn extends React.Component {
 
@@ -39,7 +40,7 @@ class SignIn extends React.Component {
             return;
         }
 
-        axios.post('http://35.198.228.244:10000/auth/login', this.state.loginData)
+        axios.post(utilities['backend-url'] + '/auth/login', this.state.loginData)
             .then((response) => {
 
                 switch (response.status) {
