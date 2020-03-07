@@ -23,7 +23,7 @@ class SignUp extends React.Component {
 
     submitLogin() {
 
-        axios.post('http://35.198.228.244:10000/auth/login', this.state.registerData)
+        axios.post(utilities['backend-url'] + '/auth/login', this.state.registerData)
             .then((response) => {
 
                 switch (response.status) {
