@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from "./NavBar";
-import "./DashBoardClient.css"
+import "./DashboardClient.css"
 import { Table, Container, Row, Col } from 'react-bootstrap';
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
@@ -11,7 +11,7 @@ class DashboardClient extends React.Component {
         super(props);
         this.state={
             mode : "client"
-        };
+        }; 
     }
 
     render(){   
