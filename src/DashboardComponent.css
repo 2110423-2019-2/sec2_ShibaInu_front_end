@@ -1,0 +1,17 @@
+.dashboard-box {
+    width: auto;
+    margin: 10px;
+}
+
+.dashboard-box.small-box {
+    height: 300px;
+}
+
+.dashboard-box.large-box {
+    height: 600px;
+}
+
+.dashboard-box .box-topic {
+    background-color: #254380;
+    color: white;
+}
