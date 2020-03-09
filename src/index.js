@@ -13,7 +13,7 @@ import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import DashboardClient from './DashBoardClient';
+import DashboardClient from './DashboardClient';
 import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
 import App from './App';
 const routing = (

@@ -9,7 +9,7 @@ import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import DashboardClient from './DashBoardClient';
+import DashboardClient from './DashboardClient';
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
