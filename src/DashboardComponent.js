@@ -34,7 +34,7 @@ export class DashboardStatus extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: 'Open',
+            status: 'Accepted',
         };
     }
 
@@ -137,15 +137,52 @@ export class DashboardTimeline extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            data: [
+                { status: 'Open', datetime: '8 Jun 2019' },
+                { status: 'Accepted', datetime: '' },
+                { status: 'Working', datetime: '' },
+                { status: 'Done', datetime: '' },
+            ],
+            currentStatus: 'Accepted'
         };
+    }
+
+    getBadgeStyle(status, datetime) {
+        if (status == this.state.currentStatus) {
+            return 'success'
+        } else if (datetime != '') {
+            return 'success'
+        } else {
+            return 'secondary'
+        }
+    }
+
+    getTimelineBody() {
+        return this.state.data.map(item => (
+            <tr key={'timeline-' + item.status}>
+                <td><h2><Badge pill variant={this.getBadgeStyle(item.status, item.datetime)}>{item.status}</Badge></h2></td>
+                <td>{item.datetime}</td>
+            </tr>
+        ));
     }
 
     getTimelineComponent() {
         return (
-            <div className='component-status'>
-                {/* <h2><Badge pill variant={this.getBadgeStyle()}>{this.state.status}</Badge></h2> */}
-                Due in 3 months
-            </div>
+            <Table className="component-timeline" responsive="sm" hover>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.getTimelineBody()}
+                    {/* <tr key='timeline-open'>
+                        <td><h2><Badge pill variant='success'>Open</Badge></h2></td>
+                        <td>{}</td>
+                    </tr> */}
+                </tbody>
+            </Table>
         );
     }
 
