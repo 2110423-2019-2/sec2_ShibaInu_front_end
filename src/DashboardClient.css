@@ -27,4 +27,17 @@
     position: sticky;
     top:70px;
 }
-
+.table-container-f {
+    height: 90%;
+    overflow: auto;
+}
+.footer{
+    width: 100%;
+    height: 10%;
+    background-color: white;
+    padding-top: 15px;
+}
+.footer .btn{
+    width: 100%;
+    margin: auto;
+}

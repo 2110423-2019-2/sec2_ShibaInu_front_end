@@ -68,7 +68,7 @@ class FreelancerBox extends React.Component {
         <td>{item.fname+" "+item.lname}</td>
         <td>{item.score}</td>
         <td>
-          <button type="button" className="btn btn-secondary" onClick={""}>
+          <button type="button" className="btn btn-primary" onClick={""}>
             Chat
           </button>
         </td>
@@ -85,6 +85,7 @@ class FreelancerBox extends React.Component {
           this.state.freelancerList.length === 0 ? (
             "No one interested yet"
           ) : (
+            <>
             <div className="table-container-f">
             <Table className="table-freelancer" responsive = "sm" hover>
                 <thead>
@@ -98,6 +99,12 @@ class FreelancerBox extends React.Component {
                 <tbody>{this.showInterestedList()}</tbody>
             </Table>
             </div>
+            <div className="footer">
+              <button type="button" className="btn btn-success" onClick={""}>
+                invite
+              </button>
+            </div>
+            </>
           )
         }
       />
