@@ -15,6 +15,19 @@
     width: 50px;
     height: 50px;
     margin: 0;
+    display: block;
+    background-color: white;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 50%;
+    bottom: 0px;
+    overflow: hidden;
+    opacity: 1;
+    text-align: center;
+}
+.profile-img img{
+    align-self: auto;
+    width: 50px;
+    height: 50px;
 }
 .box-body td {
     text-align: center;
