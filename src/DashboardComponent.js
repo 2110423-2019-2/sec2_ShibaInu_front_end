@@ -115,10 +115,44 @@ export class DashboardContract extends React.Component {
         };
     }
 
+    getContractComponent() {
+        return (
+            <button type="button" className="btn btn-warning" onClick={""}>
+                SHOW CONTRACT
+            </button>
+        )
+    }
+
     render() {
 
         return (
-            <DashboardBox topic='Contract' size='small-box' />
+            <DashboardBox topic='Contract' size='small-box' component={this.getContractComponent()} />
+        );
+    }
+
+}
+
+export class DashboardTimeline extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
+
+    getTimelineComponent() {
+        return (
+            <div className='component-status'>
+                {/* <h2><Badge pill variant={this.getBadgeStyle()}>{this.state.status}</Badge></h2> */}
+                Due in 3 months
+            </div>
+        );
+    }
+
+    render() {
+
+        return (
+            <DashboardBox topic='Timeline' size='large-box' component={this.getTimelineComponent()} />
         );
     }
 

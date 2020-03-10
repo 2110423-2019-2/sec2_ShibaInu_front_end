@@ -2,7 +2,7 @@ import React from "react";
 import NavBar from "./NavBar";
 import "./DashboardClient.css";
 import { Table, Container, Row, Col } from "react-bootstrap";
-import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract } from "./DashboardComponent";
+import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
 
@@ -21,14 +21,14 @@ class DashboardClient extends React.Component {
         <Container>
           <header></header>
           <Row>
-            <Col sm={3}>
+            <Col sm={4}>
                 <Row><DashboardStatus /></Row>
                 <Row><DashboardResponsible /></Row>
                 <Row><DashboardContract /></Row>
             </Col>
-            <Col sm={9}>
+            <Col sm={8}>
                 <Row><FreelancerBox /></Row>
-                <Row>Timeline</Row>
+                <Row><DashboardTimeline /></Row>
             </Col>
           
             </Row>
