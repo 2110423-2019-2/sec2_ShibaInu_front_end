@@ -79,6 +79,7 @@ class FreelancerBox extends React.Component {
   render() {
     return (
       <DashboardBox
+        hidden={this.props.hidden}
         topic="Interested Freelancer"
         size="large-box"
         component={
