@@ -24,8 +24,8 @@
     text-align: center;
 }
 .left-col{
-    position: sticky;
-    top:70px;
+    /*position: sticky;
+    top:70px;*/
 }
 .table-container-f {
     height: 90%;

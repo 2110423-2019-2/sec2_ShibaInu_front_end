@@ -23,13 +23,13 @@ class DashboardClient extends React.Component {
           <Row>
             <Col sm={4} >
                 <div className="left-col">
-                <Row><DashboardStatus /></Row>
+                <Row><DashboardStatus hidden={true} /></Row>
                 <Row><DashboardResponsible /></Row>
                 <Row><DashboardContract /></Row>
                 </div>
             </Col>
             <Col sm={8}>
-                <Row><FreelancerBox /></Row>
+                <Row><FreelancerBox hidden ={true} /></Row>
                 <Row><DashboardTimeline /></Row>
             </Col>
           

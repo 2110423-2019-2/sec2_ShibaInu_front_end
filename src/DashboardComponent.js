@@ -19,7 +19,7 @@ export class DashboardBox extends React.Component {
     render() {
 
         return (
-            <Card className={'dashboard-box ' + this.state.size}>
+            <Card className={'dashboard-box ' + this.state.size} hidden={this.props.hidden}>
                 <Card.Header as="h5" className='box-topic'>
                     {this.state.topic}
                 </Card.Header>
