@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from "./NavBar";
 import "./DashboardClient.css"
 import { Table, Container, Row, Col } from 'react-bootstrap';
+import {DashboardBox} from './DashboardComponent';
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
 
@@ -51,6 +52,7 @@ class FreelancerBox extends React.Component{
     
 
     showInterestedList(){
+
         return this.state.freelancerList.length === 0 ? "No one interested yet" : this.state.freelancerList.map(item => 
             <tr key={item.userId}>
                 <td>{item.fname}</td>
@@ -65,10 +67,11 @@ class FreelancerBox extends React.Component{
 
     render(){
         return (
-            <div className="freelancerBox">
-                <header>Interested Freelancer</header>
-                <Table responsive><tbody>{this.showInterestedList()}</tbody></Table>
-            </div>
+            <DashboardBox topic='Interested Freelancer' size='large-box' component={<Table responsive><tbody>{this.showInterestedList()}</tbody></Table>} />
+            // <div className="freelancerBox">
+            //     <header>Interested Freelancer</header>
+            //     <Table responsive><tbody>{this.showInterestedList()}</tbody></Table>
+            // </div>
         )
     }
 }
