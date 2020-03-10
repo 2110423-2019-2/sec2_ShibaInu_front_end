@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "./NavBar";
 import "./DashboardClient.css";
+import profileimage from "./material/profileimg2.png";
 import { Table, Container, Row, Col } from "react-bootstrap";
 import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -23,7 +24,7 @@ class DashboardClient extends React.Component {
           <Row>
             <Col sm={4} >
                 <div className="left-col">
-                <Row><DashboardStatus /></Row>
+                <Row><DashboardStatus/></Row>
                 <Row><DashboardResponsible /></Row>
                 <Row><DashboardContract /></Row>
                 </div>
@@ -45,13 +46,13 @@ class FreelancerBox extends React.Component {
     super(props);
     this.state = {
       freelancerList: [
-        { userId: "1", fname: "Irma", lname: "Williamson", score: 10, img: "" },
-        { userId: "2", fname: "Irma", lname: "Williamson", score: 10, img: "" },
-        { userId: "3", fname: "Irma", lname: "Williamson", score: 10, img: "" },
-        { userId: "4", fname: "Irma", lname: "Williamson", score: 10, img: "" },
-        { userId: "5", fname: "Irma", lname: "Williamson", score: 10, img: "" },
-        { userId: "6", fname: "Irma", lname: "Williamson", score: 10, img: "" },
-        { userId: "7", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "1", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
+        { userId: "2", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
+        { userId: "3", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
+        { userId: "4", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
+        { userId: "5", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
+        { userId: "6", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
+        { userId: "7", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
       ]
     };
     this.showInterestedList = this.showInterestedList.bind(this);
@@ -63,12 +64,12 @@ class FreelancerBox extends React.Component {
     return this.state.freelancerList.map(item => (
       <tr key={item.userId}>
         <td>
-          <div className="profile-img"></div>
+          <div className="profile-img"><img src={item.img} alt="youngstar logo" /></div>
         </td>
         <td>{item.fname+" "+item.lname}</td>
         <td>{item.score}</td>
         <td>
-          <button type="button" className="btn btn-secondary" onClick={""}>
+          <button type="button" className="btn btn-primary" onClick={""}>
             Chat
           </button>
         </td>
@@ -79,12 +80,14 @@ class FreelancerBox extends React.Component {
   render() {
     return (
       <DashboardBox
+        hidden={this.props.hidden}
         topic="Interested Freelancer"
         size="large-box"
         component={
           this.state.freelancerList.length === 0 ? (
             "No one interested yet"
           ) : (
+            <>
             <div className="table-container-f">
             <Table className="table-freelancer" responsive = "sm" hover>
                 <thead>
@@ -98,6 +101,12 @@ class FreelancerBox extends React.Component {
                 <tbody>{this.showInterestedList()}</tbody>
             </Table>
             </div>
+            <div className="footer">
+              <button type="button" className="btn btn-success" onClick={""}>
+                invite
+              </button>
+            </div>
+            </>
           )
         }
       />

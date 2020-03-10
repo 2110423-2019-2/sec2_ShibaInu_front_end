@@ -1,8 +1,9 @@
 import React from 'react';
 import './DashboardComponent.css';
+import profileimage from "./material/profileimg2.png";
 import { Card, Badge, Table } from 'react-bootstrap';
-import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
+//import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
+//import 'react-vertical-timeline-component/style.min.css';
 // import logo from './material/Logo.png';
 
 export class DashboardBox extends React.Component {
@@ -19,7 +20,7 @@ export class DashboardBox extends React.Component {
     render() {
 
         return (
-            <Card className={'dashboard-box ' + this.state.size}>
+            <Card className={'dashboard-box ' + this.state.size} hidden={this.props.hidden}>
                 <Card.Header as="h5" className='box-topic'>
                     {this.state.topic}
                 </Card.Header>
@@ -76,7 +77,7 @@ export class DashboardResponsible extends React.Component {
         super(props);
         this.state = {
             // user: null,
-            user: { userid: 1, fname: 'Melvin', lname: 'Macaranas', img: '' },
+            user: { userid: 1, fname: 'Melvin', lname: 'Macaranas', img: profileimage },
         };
     }
 
@@ -86,7 +87,7 @@ export class DashboardResponsible extends React.Component {
                 <tbody>
                     <tr key={this.state.user.userid}>
                         <td>
-                            <div className='profile-img'>{this.state.user.img}</div>
+                            <div className='profile-img'><img src={this.state.user.img} /></div>
                         </td>
                         <td>{this.state.user.fname + ' ' + this.state.user.lname}</td>
                         <td>
