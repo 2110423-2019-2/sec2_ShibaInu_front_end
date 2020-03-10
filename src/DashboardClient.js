@@ -1,96 +1,116 @@
-import React from 'react';
+import React from "react";
 import NavBar from "./NavBar";
-import "./DashboardClient.css"
-import { Table, Container, Row, Col } from 'react-bootstrap';
-import {DashboardBox} from './DashboardComponent';
+import "./DashboardClient.css";
+import { Table, Container, Row, Col } from "react-bootstrap";
+import { DashboardBox } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
 
 class DashboardClient extends React.Component {
-    
-    constructor(props){
-        super(props);
-        this.state={
-            mode : "client"
-        }; 
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      mode: "client"
+    };
+  }
 
-    render(){   
+  render() {
+    return (
+      <div>
+        <NavBar mode={this.state.mode} userDatas={""} />
+        <Container>
+          <header></header>
+          <Row>
+            <Col sm={8}>
+              <FreelancerBox />
+            </Col>
+            <Col sm={4}></Col>
+          </Row>
+          <Row>Timeline</Row>
+        </Container>
+      </div>
+    );
+  }
+}
 
-        return (
-            <div>
-                <NavBar mode={this.state.mode} userDatas={""} />
-                <Container>
-                    <header></header>
-                    <Row>
-                        <Col sm={8}>
-                            <FreelancerBox/>
-                        </Col>
-                        <Col sm={4}>
-                        
-                        </Col>
-                    </Row>
-                    <Row>
-                        Timeline
-                    </Row>
-                </Container>
-                
+class FreelancerBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      freelancerList: [
+        { userId: "1", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "2", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "3", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "4", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "5", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "6", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+        { userId: "7", fname: "Irma", lname: "Williamson", score: 10, img: "" },
+      ]
+    };
+    this.showInterestedList = this.showInterestedList.bind(this);
+  }
+
+  showInterestedList() {
+    return this.state.freelancerList.map(item => (
+      <tr key={item.userId}>
+        <td>
+          <div className="profile-img"></div>
+        </td>
+        <td>{item.fname+" "+item.lname}</td>
+        <td>{item.score}</td>
+        <td>
+          <button type="button" className="btn btn-secondary" onClick={""}>
+            Chat
+          </button>
+        </td>
+      </tr>
+    ));
+  }
+
+  render() {
+    return (
+      <DashboardBox
+        topic="Interested Freelancer"
+        size="large-box"
+        component={
+          this.state.freelancerList.length === 0 ? (
+            "No one interested yet"
+          ) : (
+            <div className="table-container-f">
+            <Table className="table-freelancer" responsive = "sm" hover>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>score</th>
+                        <th>chat</th>
+                    </tr>
+                </thead>
+                <tbody>{this.showInterestedList()}</tbody>
+            </Table>
             </div>
-        );
-    }   
+          )
+        }
+      />
+      // <div className="freelancerBox">
+      //     <header>Interested Freelancer</header>
+      //     <Table responsive><tbody>{this.showInterestedList()}</tbody></Table>
+      // </div>
+    );
+  }
 }
 
-class FreelancerBox extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            freelancerList : [{userId : "1", fname : "Irma", lname : "Williamson", score : 10},]
-        }
-        this.showInterestedList = this.showInterestedList.bind(this);
-    }
-
-    
-
-    showInterestedList(){
-
-        return this.state.freelancerList.length === 0 ? "No one interested yet" : this.state.freelancerList.map(item => 
-            <tr key={item.userId}>
-                <td>{item.fname}</td>
-                <td>{item.lname}</td>
-                <td>
-                    <button type="button" className="btn btn-secondary btn-block" onClick={""}>
-                    Delete </button>
-                </td>
-            </tr>
-        )
-    }
-
-    render(){
-        return (
-            <DashboardBox topic='Interested Freelancer' size='large-box' component={<Table responsive><tbody>{this.showInterestedList()}</tbody></Table>} />
-            // <div className="freelancerBox">
-            //     <header>Interested Freelancer</header>
-            //     <Table responsive><tbody>{this.showInterestedList()}</tbody></Table>
-            // </div>
-        )
-    }
+class StatusBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 }
 
-class StatusBox extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-
-        }
-    }
-}
-
-class ContractBox extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-
-        }
-    }
+class ContractBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 }
 export default DashboardClient;

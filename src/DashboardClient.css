@@ -9,3 +9,16 @@
     padding: 10px;
     color: white;
 }
+.profile-img{
+    border-radius: 50%;
+    background-color: #254380;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+}
+.table-freelancer td {
+    align-items: center;
+    vertical-align: middle;
+}
+
+

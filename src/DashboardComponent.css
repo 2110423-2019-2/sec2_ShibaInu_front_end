@@ -1,6 +1,7 @@
 .dashboard-box {
     width: auto;
     margin: 10px;
+    
 }
 
 .dashboard-box.small-box {
@@ -14,4 +15,7 @@
 .dashboard-box .box-topic {
     background-color: #254380;
     color: white;
+}
+.dashboard-box .box-body{
+    overflow: auto;
 }
