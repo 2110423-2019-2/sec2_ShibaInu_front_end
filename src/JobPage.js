@@ -11,6 +11,7 @@ import {
   InputGroup,
   Table
 } from "react-bootstrap";
+var utilities = require("./Utilities.json");
 
 class JobDetail extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class JobDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("http://35.198.228.244:10000/jobs/1").then(res => {
+    axios.get(utilities["backend-url"] + "/jobs/1").then(res => {
       const details = res.data;
       this.setState({ details });
     });
@@ -119,7 +120,7 @@ class InterrestedFreelancer extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("http://35.198.228.244:10000/bids/bidId/1").then(res => {
+    axios.get(utilities["backend-url"] + "/bids/bidId/1").then(res => {
       const bids = res.data;
       this.setState({ bids });
     });
@@ -162,7 +163,7 @@ class InterFreeRow extends React.Component {
 
   componentDidMount() {
     axios
-      .get("http://35.198.228.244:10000/users/" + this.props.userId)
+      .get(utilities["backend-url"] + "/users" + this.props.userId)
       .then(res => {
         const user = res.data;
         this.setState({ user });
