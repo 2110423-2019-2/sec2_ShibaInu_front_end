@@ -55,6 +55,22 @@
     margin: auto;
 }
 .job-header{
-    padding-top:20px;
+    margin-top:20px;
     padding-left:2% ;
 }
+.breadcrumb {
+    margin-top: 20px;
+    background-color: #254380;
+    
+}
+.breadcrumb .breadcrumb-item{
+    color: white;
+}
+.breadcrumb .breadcrumb-item a{
+    color: khaki;
+    font-weight: bold;
+}
+.breadcrumb  .breadcrumb-item+.breadcrumb-item:before {
+    content: "/"; 
+    color: honeydew;
+  }

@@ -2,7 +2,7 @@ import React from "react";
 import NavBar from "./NavBar";
 import "./DashboardClient.css";
 import profileimage from "./material/profileimg2.png";
-import { Table, Container, Row, Col } from "react-bootstrap";
+import { Table, Container, Row, Col, Breadcrumb } from "react-bootstrap";
 import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
@@ -12,7 +12,7 @@ class DashboardClient extends React.Component {
     super(props);
     this.state = {
       mode: "client",
-      eventname : "Build a mobile application"
+      jobname : "Build a mobile application"
     };
   }
 
@@ -21,7 +21,11 @@ class DashboardClient extends React.Component {
       <div>
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
-          <h1 className="job-header">{this.state.eventname}</h1>
+        <Breadcrumb>
+          <Breadcrumb.Item href={"/"+this.state.mode+"/job"}>My job</Breadcrumb.Item>
+          <Breadcrumb.Item active>{this.state.jobname}</Breadcrumb.Item>
+        </Breadcrumb>
+          <h1 className="job-header">{this.state.jobname}</h1>
           <hr/>
           <Row>
             <Col sm={4} >
