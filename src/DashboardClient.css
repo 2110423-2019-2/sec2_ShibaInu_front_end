@@ -16,11 +16,11 @@
     height: 50px;
     margin: 0;
 }
-.table-freelancer td {
+.box-body td {
     text-align: center;
     vertical-align: middle;
 }
-.table-freelancer thead{
+.box-body thead{
     text-align: center;
 }
 
