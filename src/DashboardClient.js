@@ -20,7 +20,7 @@ class DashboardClient extends React.Component {
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
           <header></header>
-          
+          <Row>
             <Col >
                 <Row><DashboardStatus /></Row>
                 <Row><DashboardResponsible /></Row>
@@ -31,7 +31,7 @@ class DashboardClient extends React.Component {
                 <Row>Timeline</Row>
             </Col>
           
-          
+            </Row>
         </Container>
       </div>
     );
