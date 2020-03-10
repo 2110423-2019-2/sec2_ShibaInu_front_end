@@ -1,5 +1,6 @@
 import React from "react";
 import "./JobPage.css";
+import axios from "axios";
 import NavBar from "./NavBar";
 import {
   Container,
@@ -14,22 +15,22 @@ import {
 class JobDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { details: {} };
+  }
+
+  componentDidMount() {
+    axios.get("http://35.198.228.244:10000/jobs/1").then(res => {
+      const details = res.data;
+      this.setState({ details });
+    });
   }
 
   render() {
     return (
       <div class="job-detail">
-        <header>Build a mobile app</header>
+        <header>{this.state.details.name}</header>
         <div class="non-header">
-          <div class="inside-box">
-            Hi, I am Husain, an I am just started a startup company. I need an
-            application to connect local electrician, plumbers, mechanics, and
-            many other to the customers in order to fulfilled their need. For
-            example, customer login and search for an electrician nearby. The
-            app will shows result of electricians nearby with the detail
-            provided the customer.
-          </div>
+          <div class="inside-box">{this.state.details.description}</div>
           <div class="inside-box">
             <div>
               <b>Require Skill</b>
@@ -95,26 +96,33 @@ class JobBid extends React.Component {
   }
 }
 
-class JobSuggest extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+// class JobSuggest extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {};
+//   }
 
-  render() {
-    return (
-      <div class="job-suggest">
-        <header>Relate Job</header>
-        <div>1234</div>
-      </div>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <div class="job-suggest">
+//         <header>Relate Job</header>
+//         <div>1234</div>
+//       </div>
+//     );
+//   }
+// }
 
 class InterrestedFreelancer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { bids: [] };
+  }
+
+  componentDidMount() {
+    axios.get("http://35.198.228.244:10000/bids/bidId/1").then(res => {
+      const bids = res.data;
+      this.setState({ bids });
+    });
   }
 
   render() {
@@ -131,24 +139,14 @@ class InterrestedFreelancer extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <InterFreeRow
-              name="Mark Otto"
-              amount="20000"
-              duration="70"
-              timestamp="19/2/2020 20:20"
-            />
-            <InterFreeRow
-              name="Jacob Thornton"
-              amount="10000"
-              duration="30"
-              timestamp="18/2/2020 10:10"
-            />
-            <InterFreeRow
-              name="Larry the Bird"
-              amount="30000"
-              duration="40"
-              timestamp="19/2/2020 19.55"
-            />
+            {this.state.bids.map(bid => (
+              <InterFreeRow
+                userId={bid.userId}
+                amount={bid.biddedWage}
+                duration={bid.biddedDuration}
+                timestamp={bid.createdTime}
+              />
+            ))}
           </tbody>
         </Table>
       </div>
@@ -159,12 +157,22 @@ class InterrestedFreelancer extends React.Component {
 class InterFreeRow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { user: "" };
   }
+
+  componentDidMount() {
+    axios
+      .get("http://35.198.228.244:10000/users/" + this.props.userId)
+      .then(res => {
+        const user = res.data;
+        this.setState({ user });
+      });
+  }
+
   render() {
     return (
       <tr>
-        <td>{this.props.name}</td>
+        <td>{this.state.user.firstName + " " + this.state.user.lastName}</td>
         <td>{this.props.amount}</td>
         <td>{this.props.duration}</td>
         <td>{this.props.timestamp}</td>
