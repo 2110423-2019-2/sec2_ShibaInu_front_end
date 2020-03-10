@@ -82,7 +82,6 @@ class NavBar extends React.Component {
         </Nav.Link>
       );
     }
-
     dropDownMenu = (
       <DropdownMenu right>
         <DropdownItem id="dropdown-item-profile" href="/profile" className='color-black'>
@@ -99,6 +98,20 @@ class NavBar extends React.Component {
         <DropdownItem id="dropdown-item-signout">Sign out</DropdownItem>
       </DropdownMenu>
     );
+
+    if(this.state.mode === this.state.status.ADMIN){
+      dropDownMenu = (
+        <DropdownMenu right>
+          <DropdownItem id="dropdown-item-signout">Sign out</DropdownItem>
+        </DropdownMenu>
+      );
+      notiMenu = (
+        <Nav.Link href="/admin/announcement">
+          <FaBell />
+          Create Announcement
+      </Nav.Link>
+      );
+    }
 
     memberMenu = (
       <Nav className="ml-auto">

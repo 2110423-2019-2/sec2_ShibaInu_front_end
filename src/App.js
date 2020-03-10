@@ -9,10 +9,11 @@ import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import DashboardClient from './DashBoardClient';
+import DashboardClient from './DashboardClient';
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
+import AdminAnnouncement from "./AdminAnnouncement";
 
 class App extends React.Component {
   constructor(props) {
@@ -38,7 +39,8 @@ class App extends React.Component {
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
           <Route path="/client/dashboard" component={DashboardClient} />
-          <Route path="/admin" component={AdminHome} />
+          <Route path="/admin/home" component={AdminHome} />
+          <Route path="/admin/announcement" component={AdminAnnouncement} />
       </Switch>
     </Router>
     );

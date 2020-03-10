@@ -35,7 +35,7 @@ class AdminHome extends React.Component {
     }
     var headTable, detailTable;
     headTable = (
-      <tr className="text-center">
+      <tr className="text-center background-blue text-light">
         <td>
           <h5>Name</h5>
         </td>
@@ -46,6 +46,8 @@ class AdminHome extends React.Component {
           <h5>Selfie</h5>
         </td>
         <td>National ID Card</td>
+        <td></td>
+        <td></td>
       </tr>
     );
     detailTable = this.state.userDatas.map((user,index)=>(
