@@ -12,7 +12,9 @@ class AdminAnnouncement extends React.Component {
     this.state = {
       isDataLoad: false,
       userDatas: {},
-      isUserDataLoad: false
+      isUserDataLoad: false,
+      header:"",
+      detail:""
     };
   }
 
@@ -30,6 +32,14 @@ class AdminAnnouncement extends React.Component {
     this.fetchDatas();
   };
 
+  setAnnounce = () => {
+    alert(this.state.header + " " + this.state.detail);
+  }
+
+  cancelAnnounce = () => {
+    this.setState({header: "", detail: ""});
+  }
+
   render() {
     return (
       <div className="main-background">
@@ -46,7 +56,7 @@ class AdminAnnouncement extends React.Component {
             </Col>
             <Col xs={4}>
               <Form.Group controlId="headerArea">
-                <Form.Control as="textarea" />
+                <Form.Control as="textarea" onChange={(e)=>{this.setState({header: e.target.value})}} />
               </Form.Group>
             </Col>
           </Row>
@@ -56,13 +66,14 @@ class AdminAnnouncement extends React.Component {
             </Col>
             <Col xs={6}>
               <Form.Group controlId="detailArea">
-                <Form.Control as="textarea" rows="5" />
+                <Form.Control as="textarea" rows="5" onChange={(e)=>{this.setState({detail: e.target.value})}} />
               </Form.Group>
             </Col>
           </Row>
           <Row>
             <Col className="text-right pt-5">
-              <Button className="shadow" variant="success"><h5><FaBullhorn /> Announce</h5></Button>
+              <Button className="shadow mr-5" variant="danger" onClick={()=>this.cancelAnnounce()}><h5>Cancel</h5></Button>
+              <Button className="shadow" variant="success" onClick={()=>this.setAnnounce()}><h5><FaBullhorn /> Announce</h5></Button>
             </Col>
           </Row>
         </Container>
