@@ -35,6 +35,7 @@ export class DashboardStatus extends React.Component {
         super(props);
         this.state = {
             status: 'Accepted',
+            message: 'Due in 3 months'
         };
     }
 
@@ -43,7 +44,7 @@ export class DashboardStatus extends React.Component {
         return (
             <div className='component-status'>
                 <h2><Badge pill variant={this.getBadgeStyle()}>{this.state.status}</Badge></h2>
-                Due in 3 months
+                {this.state.message}
             </div>
         );
     }
