@@ -23,5 +23,8 @@
 .box-body thead{
     text-align: center;
 }
-
+.left-col{
+    position: sticky;
+    top:70px;
+}
 

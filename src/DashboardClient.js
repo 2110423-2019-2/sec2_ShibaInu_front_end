@@ -21,10 +21,12 @@ class DashboardClient extends React.Component {
         <Container>
           <header></header>
           <Row>
-            <Col sm={4}>
+            <Col sm={4} >
+                <div className="left-col">
                 <Row><DashboardStatus /></Row>
                 <Row><DashboardResponsible /></Row>
                 <Row><DashboardContract /></Row>
+                </div>
             </Col>
             <Col sm={8}>
                 <Row><FreelancerBox /></Row>
