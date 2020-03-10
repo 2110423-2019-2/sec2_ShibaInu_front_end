@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
-html, body, .main-background {
+html, body, .main-background ,#root{
   background-color: #F5F5F5;
-  height: 100%;
-  width: 100%;
   font-family: 'Roboto', sans-serif;
 }
 #homeclient-box {
