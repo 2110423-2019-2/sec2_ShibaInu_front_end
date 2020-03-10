@@ -151,9 +151,9 @@ export class DashboardTimeline extends React.Component {
     }
 
     getBadgeStyle(status, datetime) {
-        if (status == this.state.currentStatus) {
+        if (status === this.state.currentStatus) {
             return 'success'
-        } else if (datetime != '') {
+        } else if (datetime !== '') {
             return 'success'
         } else {
             return 'secondary'
