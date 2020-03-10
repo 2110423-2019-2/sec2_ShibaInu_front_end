@@ -11,7 +11,8 @@ class DashboardClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: "client"
+      mode: "client",
+      eventname : "Build a mobile application"
     };
   }
 
@@ -20,7 +21,8 @@ class DashboardClient extends React.Component {
       <div>
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
-          <header></header>
+          <h1 className="job-header">{this.state.eventname}</h1>
+          <hr/>
           <Row>
             <Col sm={4} >
                 <div className="left-col">
