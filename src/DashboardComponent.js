@@ -28,3 +28,54 @@ export class DashboardBox extends React.Component {
         );
     }   
 }
+
+export class DashboardStatus extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state={
+        };
+    }
+
+    render(){   
+
+        return (
+            <DashboardBox topic='Status' size='small-box' />
+        );
+    } 
+
+}
+
+export class DashboardResponsible extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state={
+        };
+    }
+
+    render(){   
+
+        return (
+            <DashboardBox topic='Responsible' size='small-box' />
+        );
+    } 
+
+}
+
+export class DashboardContract extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state={
+        };
+    }
+
+    render(){   
+
+        return (
+            <DashboardBox topic='Contract' size='small-box' />
+        );
+    } 
+
+}
