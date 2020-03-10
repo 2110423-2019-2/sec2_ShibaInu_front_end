@@ -17,8 +17,11 @@
     margin: 0;
 }
 .table-freelancer td {
-    align-items: center;
+    text-align: center;
     vertical-align: middle;
+}
+.table-freelancer thead{
+    text-align: center;
 }
 
 

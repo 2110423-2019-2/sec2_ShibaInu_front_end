@@ -20,13 +20,14 @@ class DashboardClient extends React.Component {
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
           <header></header>
-          <Row>
-            <Col sm={8}>
-              <FreelancerBox />
+          
+            <Col ></Col>
+            <Col >
+                <Row><FreelancerBox /></Row>
+                <Row>Timeline</Row>
             </Col>
-            <Col sm={4}></Col>
-          </Row>
-          <Row>Timeline</Row>
+          
+          
         </Container>
       </div>
     );
@@ -49,7 +50,9 @@ class FreelancerBox extends React.Component {
     };
     this.showInterestedList = this.showInterestedList.bind(this);
   }
-
+  componentDidUpdate(prevProps){
+    
+  }
   showInterestedList() {
     return this.state.freelancerList.map(item => (
       <tr key={item.userId}>
