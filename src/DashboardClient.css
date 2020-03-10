@@ -60,17 +60,17 @@
 }
 .breadcrumb {
     margin-top: 20px;
-    background-color: #254380;
+    background-color: #F5F5F5;
     
 }
 .breadcrumb .breadcrumb-item{
-    color: white;
+    /*color: white;*/
 }
 .breadcrumb .breadcrumb-item a{
-    color: khaki;
+    color: gray;
     font-weight: bold;
 }
 .breadcrumb  .breadcrumb-item+.breadcrumb-item:before {
-    content: "/"; 
-    color: honeydew;
+    content: ">"; 
+    /*color: honeydew;*/
   }

@@ -147,6 +147,12 @@ body {
   padding: 2%;
   background-color: white;
 }
+#review{
+  margin-bottom: 5%;
+  margin-top: 5%;
+  padding: 2%;
+  background-color: white;
+}
 #profile-img {
   position: absolute;
   bottom: 0;

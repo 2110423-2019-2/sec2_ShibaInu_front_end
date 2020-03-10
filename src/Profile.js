@@ -312,6 +312,9 @@ class Profile extends React.Component {
               ? "No skill yet"
               : this.state.skills.map((item,idx) => <SkillListItem key={idx} skill={item} />)}
           </div>
+          <div className="row-1 shadow-sm" id="review">
+            <h5>Review</h5>
+          </div>
         </Container>
       </>
     );
