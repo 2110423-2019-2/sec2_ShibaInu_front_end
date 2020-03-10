@@ -1,7 +1,7 @@
 import React from "react";
 import "./JobSearchPage.css";
 import NavBar from "./NavBar";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FaCode, FaBtc, FaClock } from "react-icons/fa";
 
 class JobFilter extends React.Component {
@@ -11,53 +11,55 @@ class JobFilter extends React.Component {
   }
   render() {
     return (
-      <div class="job-filter">
-        <header>Filter</header>
-        <Form>
-          <Form.Label>Skill</Form.Label>
-          <Form.Group controlId="java">
-            <Form.Check type="checkbox" label="Java" />
-          </Form.Group>
-          <Form.Group controlId="python">
-            <Form.Check type="checkbox" label="Python" />
-          </Form.Group>
-          <Form.Group controlId="C++">
-            <Form.Check type="checkbox" label="C++" />
-          </Form.Group>
-          <Form.Label>Wage</Form.Label>
-          <Form.Row>
-            <Form.Group as={Col} controlId="minWage">
-              <Form.Control placeholder="Min" />
+      <Card class="job-filter">
+        <Card.Header>Filter</Card.Header>
+        <Card.Body>
+          <Form>
+            <Form.Label>Skill</Form.Label>
+            <Form.Group controlId="java">
+              <Form.Check type="checkbox" label="Java" />
             </Form.Group>
-            <Col lg="1">-</Col>
-            <Form.Group as={Col} controlId="maxWage">
-              <Form.Control placeholder="Max" />
+            <Form.Group controlId="python">
+              <Form.Check type="checkbox" label="Python" />
             </Form.Group>
-          </Form.Row>
-          <Form.Label>Duration</Form.Label>
-          <Form.Row>
-            <Form.Group as={Col} controlId="minWage">
-              <Form.Control placeholder="Min" />
+            <Form.Group controlId="C++">
+              <Form.Check type="checkbox" label="C++" />
             </Form.Group>
-            <Col lg="1">-</Col>
-            <Form.Group as={Col} controlId="maxWage">
-              <Form.Control placeholder="Max" />
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Col lg={{ offset: "3" }}>
-              <Button variant="secondary" type="reset">
-                Clear
-              </Button>
-            </Col>
-            <Col>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-            </Col>
-          </Form.Row>
-        </Form>
-      </div>
+            <Form.Label>Wage</Form.Label>
+            <Form.Row>
+              <Form.Group as={Col} controlId="minWage">
+                <Form.Control placeholder="Min" />
+              </Form.Group>
+              <Col lg="1">-</Col>
+              <Form.Group as={Col} controlId="maxWage">
+                <Form.Control placeholder="Max" />
+              </Form.Group>
+            </Form.Row>
+            <Form.Label>Duration</Form.Label>
+            <Form.Row>
+              <Form.Group as={Col} controlId="minWage">
+                <Form.Control placeholder="Min" />
+              </Form.Group>
+              <Col lg="1">-</Col>
+              <Form.Group as={Col} controlId="maxWage">
+                <Form.Control placeholder="Max" />
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Col lg={{ offset: "3" }}>
+                <Button variant="secondary" type="reset">
+                  Clear
+                </Button>
+              </Col>
+              <Col>
+                <Button variant="primary" type="submit">
+                  Submit
+                </Button>
+              </Col>
+            </Form.Row>
+          </Form>
+        </Card.Body>
+      </Card>
     );
   }
 }
@@ -69,8 +71,8 @@ class JobResult extends React.Component {
   }
   render() {
     return (
-      <div class="job-result">
-        <header>
+      <Card class="job-result">
+        <Card.Header>
           <Form id="no-padding">
             <Form.Row>
               <Col>
@@ -85,8 +87,8 @@ class JobResult extends React.Component {
               </Col>
             </Form.Row>
           </Form>
-        </header>
-        <div>
+        </Card.Header>
+        <Card.Body>
           <a href="/job">
             <JobResultRow
               jobName="Build a mobile app"
@@ -139,8 +141,8 @@ class JobResult extends React.Component {
             duration="10"
             requireSkill="Health"
           />
-        </div>
-      </div>
+        </Card.Body>
+      </Card>
     );
   }
 }

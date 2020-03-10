@@ -9,7 +9,8 @@ import {
   Form,
   Button,
   InputGroup,
-  Table
+  Table,
+  Card
 } from "react-bootstrap";
 var utilities = require("./Utilities.json");
 
@@ -28,30 +29,30 @@ class JobDetail extends React.Component {
 
   render() {
     return (
-      <div class="job-detail">
-        <header>{this.state.details.name}</header>
-        <div class="non-header">
-          <div class="inside-box">{this.state.details.description}</div>
-          <div class="inside-box">
+      <Card id="job-detail">
+        <Card.Header>{this.state.details.name}</Card.Header>
+        <Card.Body>
+          <div class="inside-body">{this.state.details.description}</div>
+          <div class="inside-body">
             <div>
               <b>Require Skill</b>
               <div>Java, Mobile App Development, Android</div>
             </div>
           </div>
-          <div class="inside-box">
+          <div class="inside-body">
             <div>
               <b>Optional Skill</b>
               <div> Software Architecture, Software Testing</div>
             </div>
           </div>
-          <div class="inside-box">
+          <div class="inside-body">
             <div>
               <b>Client</b>
               <div>Shiba Shiba</div>
             </div>
           </div>
-        </div>
-      </div>
+        </Card.Body>
+      </Card>
     );
   }
 }
@@ -64,35 +65,37 @@ class JobBid extends React.Component {
 
   render() {
     return (
-      <div class="job-bid">
-        <header>Bid</header>
-        <Form class="form-bid">
-          <Form.Group controlId="bidAmount">
-            <InputGroup>
-              <Form.Control type="number" placeholder="0" required />
-              <InputGroup.Prepend>
-                <InputGroup.Text id="inputGroupPrepend">THB</InputGroup.Text>
-              </InputGroup.Prepend>
-            </InputGroup>
-          </Form.Group>
-          <Form.Group controlId="bidDuration">
-            <InputGroup>
-              <Form.Control
-                type="number"
-                placeholder="0"
-                // aria-describedby="inputGroupPrepend"
-                required
-              />
-              <InputGroup.Prepend>
-                <InputGroup.Text id="inputGroupPrepend">Day</InputGroup.Text>
-              </InputGroup.Prepend>
-            </InputGroup>
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
-        </Form>
-      </div>
+      <Card id="job-bid">
+        <Card.Header>Bid</Card.Header>
+        <Card.Body>
+          <Form class="form-bid">
+            <Form.Group controlId="bidAmount">
+              <InputGroup>
+                <Form.Control type="number" placeholder="0" required />
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">THB</InputGroup.Text>
+                </InputGroup.Prepend>
+              </InputGroup>
+            </Form.Group>
+            <Form.Group controlId="bidDuration">
+              <InputGroup>
+                <Form.Control
+                  type="number"
+                  placeholder="0"
+                  // aria-describedby="inputGroupPrepend"
+                  required
+                />
+                <InputGroup.Prepend>
+                  <InputGroup.Text id="inputGroupPrepend">Day</InputGroup.Text>
+                </InputGroup.Prepend>
+              </InputGroup>
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
     );
   }
 }
@@ -128,29 +131,32 @@ class InterrestedFreelancer extends React.Component {
 
   render() {
     return (
-      <div class="interrested-freelancer">
-        <header>Interrested Freelancer</header>
-        <Table reponsive>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Amount(THB)</th>
-              <th>Duration(Days)</th>
-              <th>Time Stamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.bids.map(bid => (
-              <InterFreeRow
-                userId={bid.userId}
-                amount={bid.biddedWage}
-                duration={bid.biddedDuration}
-                timestamp={bid.createdTime}
-              />
-            ))}
-          </tbody>
-        </Table>
-      </div>
+      <Card id="interrested-freelancer">
+        <Card.Header>Interrested Freelancer</Card.Header>
+        <Card.Body>
+          <Table reponsive>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Amount(THB)</th>
+                <th>Duration(Days)</th>
+                <th>Time Stamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.bids.map(bid => (
+                <InterFreeRow
+                  key={bid.userId}
+                  userId={bid.userId}
+                  amount={bid.biddedWage}
+                  duration={bid.biddedDuration}
+                  timestamp={bid.createdTime}
+                />
+              ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
     );
   }
 }
@@ -163,7 +169,7 @@ class InterFreeRow extends React.Component {
 
   componentDidMount() {
     axios
-      .get(utilities["backend-url"] + "/users" + this.props.userId)
+      .get(utilities["backend-url"] + "/users/" + this.props.userId)
       .then(res => {
         const user = res.data;
         this.setState({ user });

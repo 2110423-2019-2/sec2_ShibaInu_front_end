@@ -1,4 +1,4 @@
-.job-create-page {
+#job-create-page {
   margin: auto;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -6,31 +6,27 @@
   background-color: white;
 }
 
-.job-create-page header {
+#job-create-page .card-header {
   background-color: #254380;
   padding: 10px;
   color: white;
 }
 
-.job-create-page .non-header {
+#job-create-page .non-header {
   padding: 20px;
 }
 
-.job-create-page .inside-box {
+#job-create-page .inside-box {
   padding: 10px;
 }
 
-.job-create-page form {
-  padding: 20px;
-}
-
-.job-create-page .row {
+#job-create-page .row {
   padding: auto;
 }
-.job-create-page .col {
+#job-create-page .col {
   padding: auto;
 }
 
-.job-create-page .button {
+#job-create-page .button {
   float: right;
 }

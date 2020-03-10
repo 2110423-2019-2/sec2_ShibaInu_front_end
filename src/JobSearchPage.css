@@ -1,5 +1,6 @@
 .job-search-page {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 .job-search-page .job-filter {
   background-color: white;
@@ -47,12 +48,8 @@ a:active {
   color: black;
 }
 
-.job-search-page header {
+.job-search-page .card-header{
   background-color: #254380;
   padding: 10px;
   color: white;
-}
-
-.job-search-page form {
-  padding: 20px;
 }

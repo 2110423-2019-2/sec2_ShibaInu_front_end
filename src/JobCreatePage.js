@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "./JobCreatePage.css";
-import { Form, Row, Col, InputGroup, Button } from "react-bootstrap";
+import { Form, Row, Col, InputGroup, Button, Card } from "react-bootstrap";
 import NavBar from "./NavBar";
 var utilities = require("./Utilities.json");
 
@@ -63,9 +63,9 @@ class JobCreatePage extends React.Component {
     return (
       <div>
         <NavBar mode=" " userDatas={" "} />
-        <div class="job-create-page">
-          <header>Create New Job Offering</header>
-          <div>
+        <Card id="job-create-page">
+          <Card.Header>Create New Job Offering</Card.Header>
+          <Card.Body>
             <Form onSubmit={this.handleSubmit}>
               <Form.Group controlId="jobname">
                 <Form.Label>Job Offering Name</Form.Label>
@@ -162,8 +162,8 @@ class JobCreatePage extends React.Component {
                 Create
               </Button>
             </Form>
-          </div>
-        </div>
+          </Card.Body>
+        </Card>
       </div>
     );
   }
