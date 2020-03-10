@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "./NavBar";
 import Background from "./material/GuestBackground.jpg";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Jumbotron } from "react-bootstrap";
 import './HomeGuest.css';
 
 class HomeGuest extends React.Component {
@@ -12,15 +12,22 @@ class HomeGuest extends React.Component {
 
   render() {
     return (
-      <div className="main-background" id="home-guest">
+      <div className="main-background" id="home-guest" >
+        <NavBar mode="guest" userDatas="" />
         <div id="navbar-guest">
-            <NavBar mode="guest" userDatas="" />
         </div>
-        <Container>
-            <Row>
-                <img src={Background} alt="bg" className="img-fluid" id="bg-guest" />
-            </Row>
-        </Container>
+          <div id="bg-overlay" style={{backgroundImage:`linear-gradient(rgba(0, 0, 0, 0.7),rgba(0, 0, 0, 0.5)),url(${Background})`}}>
+            <div id="content">
+              <h1>Hire expert freelancers for any job, online</h1>
+              <p>Millions of small businesses use Freelancer to turn their ideas into reality.</p>
+              <div id="btn-group">
+              <button type="button" class="btn btn-outline-light btn-lg">Start Hiring</button>
+              <button type="button" class="btn btn-outline-light btn-lg">Start working</button>
+              </div>
+            </div>
+          </div>
+          
+    
       </div>
     );
   }
