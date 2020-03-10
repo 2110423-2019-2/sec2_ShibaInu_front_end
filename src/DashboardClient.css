@@ -1,0 +1,30 @@
+.freelancerBox {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 60%;
+    background-color: white;
+}
+.freelancerBox header {
+    background-color: #254380;
+    padding: 10px;
+    color: white;
+}
+.profile-img{
+    border-radius: 50%;
+    background-color: #254380;
+    width: 50px;
+    height: 50px;
+    margin: 0;
+}
+.box-body td {
+    text-align: center;
+    vertical-align: middle;
+}
+.box-body thead{
+    text-align: center;
+}
+.left-col{
+    position: sticky;
+    top:70px;
+}
+

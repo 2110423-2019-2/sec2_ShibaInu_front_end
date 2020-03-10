@@ -1,10 +1,12 @@
 .dashboard-box {
-    width: auto;
+    width: 100%;
     margin: 10px;
+    /* background-color: lightgray; */
+    
 }
 
 .dashboard-box.small-box {
-    height: 300px;
+    height: 200px;
 }
 
 .dashboard-box.large-box {
@@ -14,4 +16,7 @@
 .dashboard-box .box-topic {
     background-color: #254380;
     color: white;
+}
+.dashboard-box .box-body{
+    overflow: auto;
 }
