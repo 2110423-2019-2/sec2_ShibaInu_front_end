@@ -3,6 +3,7 @@ import NavBar from "./NavBar";
 import Background from "./material/GuestBackground.jpg";
 import { Container, Row, Jumbotron } from "react-bootstrap";
 import './HomeGuest.css';
+import LocalStorageService from "./LocalStorageService";
 
 class HomeGuest extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class HomeGuest extends React.Component {
   }
 
   render() {
+    LocalStorageService.setUserMode('guest');
     return (
       <div className="main-background" id="home-guest" >
         <NavBar mode="guest" userDatas="" />

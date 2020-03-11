@@ -20,16 +20,17 @@ import {
 } from "./ProfileModal";
 import { Container } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
+var utilities = require("./Utilities.json");
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    /*if(!LocalStorageService.getUserID()){
+    if(!LocalStorageService.getUserID()){
       window.location.href = '/';
-    }*/
+    }
     this.state = {
-      isMyProfile:true,
+      isMyProfile: false,
       isLoaded:false,
-      userId: 1,
+      userId: this.props.userId == null? LocalStorageService.getUserID():this.props.userId.userId,
       data: {
         experience: [
           {
@@ -84,10 +85,19 @@ class Profile extends React.Component {
       upper1: true
     };
     this.fetch = this.fetch.bind(this);
+    
+     
+      
   }
   
   componentDidMount(){
     this.fetch();
+  }
+  componentDidUpdate(prevProps){
+    if(this.props !== prevProps){
+      this.setState({userId : LocalStorageService.getUserID()})
+      console.log(2)
+    }
   }
   fetch() {
     let months = [
@@ -104,10 +114,14 @@ class Profile extends React.Component {
       "November",
       "December"
     ];
-
+    if(this.state.userId === LocalStorageService.getUserID()){
+      this.setState({isMyProfile : true})
+    }else{
+      this.setState({isMyProfile : false})
+    }
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + LocalStorageService.getUserID())
+      .get(utilities["backend-url"]+"/users/" + this.state.userId)
       .then(res => {
         console.log(res);
         let body = res.data;
@@ -127,7 +141,6 @@ class Profile extends React.Component {
           exp_json = JSON.parse(body.experience);
         }
         this.setState({
-          userId: LocalStorageService.getUserID(),
           data: body,
           fname: body.firstName,
           lname: body.lastName,
@@ -140,7 +153,7 @@ class Profile extends React.Component {
           birthdate: formatted_date === null ? new Date() : formatted_date,
           exp: exp_json === null ? [] : exp_json,
           education: edu_json === null ? [] : edu_json,
-          skills: body.skills == null ? [] : body.skills,
+          skills: body.skill == null ? [] : body.skill,
           verified: body.isVerified
         });
         this.setState({

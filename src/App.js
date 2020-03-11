@@ -20,35 +20,39 @@ import PrivateRoute from "./utilities/PrivateRoute";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
-import LocalStorageService from './LocalStorageService';
+import LocalStorageService from "./LocalStorageService";
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userID: "1"
     };
   }
-  componentDidMount(){
-    this.setState({userID : LocalStorageService.getUserID()})
-  }
+
   render() {
     return (
       <Router>
         <Switch>
           <Route exact path="/" component={() => <HomeGuest />} />
           <Route path="/client/home" component={() => <HomeClient />} />
-          <Route path="/profile" component={Profile} />
+          <Route
+            path="/profile/:userId"
+            component={() => <Profile userId={useParams()} />}
+          />
+          <Route
+            path="/profile/"
+            component={() => <Profile userId={null} />}
+          />
           <Route
             path="/client/job"
-            component={() => <JobOfferClient userID={this.state.userID} />}
+            component={() => <JobOfferClient  />}
           />
           <Route
             path="/freelancer/home"
-            component={() => <HomeFreelancer userID={this.state.userID} />}
+            component={() => <HomeFreelancer  />}
           />
           <Route
             path="/freelancer/job"
-            component={() => <JobOfferFreelancer userID={this.state.userID} />}
+            component={() => <JobOfferFreelancer />}
           />
           <Route
             path="/job/:jobid"

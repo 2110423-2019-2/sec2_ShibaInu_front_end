@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
+import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
 
 class NavBar extends React.Component {
@@ -21,10 +22,26 @@ class NavBar extends React.Component {
         GUEST: "guest",
         ADMIN: "admin"
       },
-      mode: this.props.mode,
-      userDatas: this.props.userDatas
+      mode: LocalStorageService.getUserMode(),
+      userID: LocalStorageService.getUserID(),
+      userDatas: {},
     };
   }
+
+  fetchDatas = () => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    axios
+      .get("http://35.198.228.244:10000/users/" + LocalStorageService.getUserID())
+      .then(res => {
+        const userDatas = res.data;
+        this.setState({ userDatas: userDatas });
+        console.log(this.state.userDatas);
+      });
+  };
+
+  componentDidMount = () => {
+    this.fetchDatas();
+  };
 
   render() {
     const YOUNGSTAR = "YoungStar ";
@@ -40,7 +57,8 @@ class NavBar extends React.Component {
       signUpMenu,
       memberMenu,
       guestMenu,
-      homePath;
+      homePath,
+      changeMode;
     var jobPath = "/" + this.state.mode + "/job";
 
     notiMenu = (
@@ -66,10 +84,12 @@ class NavBar extends React.Component {
       homePath = "/client/home";
       modePath = "/" + this.state.status.FREELANCER + "/home";
       switchMode = "Switch " + this.state.status.FREELANCER;
+      changeMode = "freelancer";
     } else if (this.state.mode === this.state.status.FREELANCER) {
       modePath = "/" + this.state.status.CLIENT + "/home";;
       switchMode = "Switch " + this.state.status.CLIENT;
       homePath = "/freelancer/home";
+      changeMode = "client";
     } else if (this.state.mode === this.state.status.GUEST) {
       userMode = YOUNGSTAR;
       signInMenu = (
@@ -93,7 +113,7 @@ class NavBar extends React.Component {
           My job
         </DropdownItem>
         <DropdownItem id="dropdown-item-balance" className='color-black'>My balance</DropdownItem>
-        <DropdownItem id="dropdown-item-switch" href={modePath} >
+        <DropdownItem id="dropdown-item-switch" href={modePath} onClick={()=>{LocalStorageService.setUserMode(changeMode)}}>
           {switchMode}
         </DropdownItem>
         <DropdownItem divider />
