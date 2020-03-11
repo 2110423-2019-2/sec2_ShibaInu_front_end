@@ -331,7 +331,7 @@ class Profile extends React.Component {
               ? "No skill yet"
             : this.state.skills.map((item,idx) => <SkillListItem key={idx} skill={item} />)}
           </div>
-          <div className="row-1 shadow-sm" id="review">
+          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode()==="client"}>
             <h5>Review</h5>
             <div className="review">
               {this.state.reviewlist.length === 0
