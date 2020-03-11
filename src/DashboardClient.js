@@ -14,7 +14,7 @@ class DashboardClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      jobID: this.props.jobID || 1,
+      jobID: this.props.params.jobId || 1,
       freelancerList: [],
       loadFreelancer: false,
       mode: "client",
