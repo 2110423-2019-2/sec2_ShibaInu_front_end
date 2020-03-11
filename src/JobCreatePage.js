@@ -17,7 +17,7 @@ class JobCreatePage extends React.Component {
         estimatedWage: 0,
         catergory: "web",
         // "web" / "software" / "mobile" / "game" / "other"
-        client: 1,
+        client: LocalStorageService.getUserID(),
         requiredSkills: [],
         optianalSkills: []
       }
@@ -61,8 +61,14 @@ class JobCreatePage extends React.Component {
     axios
       .post(utilities["backend-url"] + "/jobs", this.state.postData)
       .then(res => {
-        console.log(res);
-        console.log(res.data);
+        switch (res.status) {
+          case 201:
+            console.log("Created,Logged in. Redirecting to /client/job ...");
+            window.location.href = "/client/job";
+            break;
+          default:
+            console.log("Status code is " + res.status);
+        }
       })
       .catch(error => {
         if (error.response.status === 400) {
