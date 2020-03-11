@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
-
+var utilities = require('./Utilities.json');
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +31,7 @@ class NavBar extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + LocalStorageService.getUserID())
+      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
