@@ -12,6 +12,7 @@ import {
   Table,
   Card
 } from "react-bootstrap";
+import { FaBtc, FaClock } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
 var utilities = require("./Utilities.json");
 
@@ -46,11 +47,14 @@ class JobDetail extends React.Component {
   }
 
   render() {
-    console.log(this.state.details);
     return (
       <Card id="job-detail">
         <Card.Header>{this.state.details.name}</Card.Header>
         <Card.Body>
+          <div>
+            <FaBtc color="Blue" /> {this.state.details.estimatedWage} THB &emsp;
+            <FaClock color="Blue" /> {this.state.details.estimatedDuration} Days
+          </div>
           <div class="inside-body">{this.state.details.description}</div>
           <div class="inside-body">
             <div>

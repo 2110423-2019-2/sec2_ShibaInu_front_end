@@ -21,3 +21,8 @@
 #job-detail .inside-body {
   padding: 5px;
 }
+
+#job-detail .card-header {
+  font-size: 24px;
+  background-color: #00297c;
+}

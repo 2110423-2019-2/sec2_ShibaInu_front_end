@@ -265,7 +265,7 @@ class DashboardResponsible extends React.Component {
   getResponsibleComponent() {
     return (
       <Table className="component-responsible" responsive="sm" hover>
-        <tbody>
+        {/* <tbody>
           <tr key={this.state.user.userid}>
             <td>
               <div className='profile-img'><img src={this.state.user.img} alt='user-img' /></div>
@@ -277,7 +277,7 @@ class DashboardResponsible extends React.Component {
                       </button>
             </td>
           </tr>
-        </tbody>
+        </tbody> */}
       </Table>
     )
   }
