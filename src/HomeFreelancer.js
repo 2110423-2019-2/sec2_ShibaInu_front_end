@@ -119,7 +119,7 @@ class HomeFreelancer extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="freelancer" userDatas={this.state.userDatas}/>
+        <NavBar />
         <Container id="homefreelancer-box">
           <Row>
             <Col className="bg-light shadow" xl={8} offset={1}>

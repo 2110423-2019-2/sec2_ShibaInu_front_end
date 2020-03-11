@@ -40,15 +40,15 @@ class App extends React.Component {
           <Route path="/profile" component={Profile} />
           <Route
             path="/client/job"
-            component={() => <JobOfferClient userID={this.state.userID} />}
+            component={() => <JobOfferClient />}
           />
           <Route
             path="/freelancer/home"
-            component={() => <HomeFreelancer userID={this.state.userID} />}
+            component={() => <HomeFreelancer />}
           />
           <Route
             path="/freelancer/job"
-            component={() => <JobOfferFreelancer userID={this.state.userID} />}
+            component={() => <JobOfferFreelancer />}
           />
           <Route
             path="/job/:jobid"
