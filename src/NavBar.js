@@ -79,7 +79,7 @@ class NavBar extends React.Component {
       changeMode;
     var jobPath = "/" + this.state.mode + "/job";
 
-    var newNotiDetail,oldNotiDetail;
+    var newNotiDetail, oldNotiDetail, hasNewNoti;
     if(this.state.isNotiLoad){
       newNotiDetail = this.state.notiDatas.filter((noti)=>(noti.isRead===false)).map((noti,idx)=>(
         <DropdownItem
@@ -90,6 +90,11 @@ class NavBar extends React.Component {
             <p>{noti.description}</p>
           </DropdownItem>
       ));
+      if(newNotiDetail !== null){
+        hasNewNoti="new-noti";
+      } else {
+        hasNewNoti="";
+      }
       oldNotiDetail = this.state.notiDatas.filter((noti)=>(noti.isRead===true)).map((noti,idx)=>(
         <DropdownItem
             className="color-black noti"
@@ -102,9 +107,10 @@ class NavBar extends React.Component {
     }
     
 
+
     notiMenu = (
       <UncontrolledDropdown nav inNavbar>
-          <DropdownToggle nav caret>
+          <DropdownToggle nav className={hasNewNoti}>
             <FaBell />
           </DropdownToggle>
           <DropdownMenu right>
