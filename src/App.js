@@ -20,7 +20,6 @@ import PrivateRoute from "./utilities/PrivateRoute";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
-import LocalStorageService from "./LocalStorageService";
 class App extends React.Component {
   constructor(props) {
     super(props);
