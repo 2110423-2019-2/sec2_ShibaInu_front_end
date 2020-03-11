@@ -41,7 +41,7 @@ class DashboardClient extends React.Component {
   }
 
   async getInterestedFreelancer() {
-    let freelancerList = new Array();
+    let freelancerList = [];
 
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios
