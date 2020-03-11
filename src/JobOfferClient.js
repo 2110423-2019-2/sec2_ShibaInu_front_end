@@ -135,7 +135,7 @@ class JobOfferClient extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="client" userDatas={this.state.userDatas}/>
+        <NavBar />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow">

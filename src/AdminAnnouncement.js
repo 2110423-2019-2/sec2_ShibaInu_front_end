@@ -15,8 +15,8 @@ class AdminAnnouncement extends React.Component {
       isDataLoad: false,
       userDatas: {},
       isUserDataLoad: false,
-      topic:"",
-      description:"",
+      title:"",
+      content:"",
       directToHome: false,
     };
   }
@@ -38,10 +38,8 @@ class AdminAnnouncement extends React.Component {
   pushAnnounce = () => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
-    axios.get("http://35.198.228.244:10000/notification").then(res => {
-      const userDatas = res.data;
-      this.setState({ userDatas: userDatas, isUserDataLoad: true });
-      console.log(this.state.userDatas);
+    axios.post("http://35.198.228.244:10000/notification/" + LocalStorageService.getUserID()).then(res => {
+      
     });
   };
 
@@ -76,7 +74,7 @@ class AdminAnnouncement extends React.Component {
         swal("Deleted draft!", {
           icon: "success",
         });
-        this.setState({topic:"",description:""});
+        this.setState({title:"",content:""});
       }
     });
   }
@@ -96,21 +94,21 @@ class AdminAnnouncement extends React.Component {
           </Row>
           <Row className="bg-light shadow pt-5 pb-5">
             <Col xs={2} className="text-center">
-              <h5>topic</h5>
+              <h5>title</h5>
             </Col>
             <Col xs={4}>
-              <Form.Group controlId="topicArea">
-                <Form.Control as="textarea" onChange={(e)=>{this.setState({topic: e.target.value})}} value={this.state.topic} />
+              <Form.Group controlId="titleArea">
+                <Form.Control as="textarea" onChange={(e)=>{this.setState({title: e.target.value})}} value={this.state.title} />
               </Form.Group>
             </Col>
           </Row>
           <Row className="bg-light shadow pt-5 pb-5">
             <Col xs={2} className="text-center">
-              <h5>Description</h5>
+              <h5>content</h5>
             </Col>
             <Col xs={6}>
-              <Form.Group controlId="descriptionArea">
-                <Form.Control as="textarea" rows="5" onChange={(e)=>{this.setState({description: e.target.value})}} value={this.state.description} />
+              <Form.Group controlId="contentArea">
+                <Form.Control as="textarea" rows="5" onChange={(e)=>{this.setState({content: e.target.value})}} value={this.state.content} />
               </Form.Group>
             </Col>
           </Row>

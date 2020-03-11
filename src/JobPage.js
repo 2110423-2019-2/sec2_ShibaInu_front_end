@@ -62,18 +62,70 @@ class JobDetail extends React.Component {
 class JobBid extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      postData: {
+        jobId: this.props.jobid.jobid,
+        userId: 1,
+        biddedWage: 0,
+        biddedDuration: 0
+      }
+    };
+    this.handleChange.bind(this);
+    this.handleSubmit.bind(this);
   }
+
+  handleChange = e => {
+    let tempData = this.state.postData;
+    tempData[e.target.name] = parseInt(e.target.value);
+
+    this.setState({
+      postData: tempData
+    });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    axios
+      .post(utilities["backend-url"] + "/bids", this.state.postData)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        if (error.response.status === 400) {
+          console.log("Error 400");
+          this.setState({ errorMessage: error.response.data.message });
+        } else {
+          console.error(error);
+        }
+      });
+
+    this.setState({
+      postData: {
+        jobId: this.props.jobid.jobid,
+        userId: 1,
+        biddedWage: 0,
+        biddedDuration: 0
+      }
+    });
+  };
 
   render() {
     return (
       <Card id="job-bid">
         <Card.Header>Bid</Card.Header>
         <Card.Body>
-          <Form class="form-bid">
+          <Form onSubmit={this.handleSubmit}>
             <Form.Group controlId="bidAmount">
               <InputGroup>
-                <Form.Control type="number" placeholder="0" required />
+                <Form.Control
+                  type="number"
+                  placeholder="0"
+                  name="biddedWage"
+                  onChange={this.handleChange}
+                  value={this.state.postData.biddedWage}
+                  required
+                />
                 <InputGroup.Prepend>
                   <InputGroup.Text id="inputGroupPrepend">THB</InputGroup.Text>
                 </InputGroup.Prepend>
@@ -84,7 +136,9 @@ class JobBid extends React.Component {
                 <Form.Control
                   type="number"
                   placeholder="0"
-                  // aria-describedby="inputGroupPrepend"
+                  name="biddedDuration"
+                  onChange={this.handleChange}
+                  value={this.state.postData.biddedDuration}
                   required
                 />
                 <InputGroup.Prepend>
@@ -150,7 +204,7 @@ class InterrestedFreelancer extends React.Component {
             <tbody>
               {this.state.bids.map(bid => (
                 <InterFreeRow
-                  key={bid.userId}
+                  key={bid.bidId}
                   userId={bid.userId}
                   amount={bid.biddedWage}
                   duration={bid.biddedDuration}
@@ -211,7 +265,7 @@ class JobPage extends React.Component {
                 <InterrestedFreelancer jobid={jobid} />
               </Col>
               <Col>
-                <JobBid />
+                <JobBid jobid={jobid} />
                 {/* <JobSuggest /> */}
               </Col>
             </Row>

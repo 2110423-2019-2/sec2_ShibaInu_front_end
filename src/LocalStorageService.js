@@ -28,6 +28,16 @@ const LocalStorageService = (function () {
         localStorage.removeItem('userID');
     }
 
+    function _setUserMode(mode) {
+        localStorage.setItem('userMode', mode);
+    }
+    function _getUserMode() {
+        return localStorage.getItem('userMode') || '';
+    }
+    function _clearUserMode() {
+        localStorage.removeItem('userMode');
+    }
+
     function _signOut() {
         _clearToken();
         _clearUserID();
@@ -40,6 +50,9 @@ const LocalStorageService = (function () {
         setUserID: _setUserID,
         getUserID: _getUserID,
         clearUserID: _clearUserID,
+        setUserMode: _setUserMode,
+        getUserMode: _getUserMode,
+        clearUserMode: _clearUserMode,
         signOut: _signOut
     }
 })();

@@ -75,7 +75,7 @@ class Home extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode={this.state.mode} userDatas={this.state.userDatas} />
+        <NavBar />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow" xl={8} offset={1}>
