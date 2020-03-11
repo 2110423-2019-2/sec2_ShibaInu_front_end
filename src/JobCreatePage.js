@@ -14,7 +14,7 @@ class JobCreatePage extends React.Component {
         description: "",
         estimatedDuration: 0,
         estimatedWage: 0,
-        catergory: "Web",
+        catergory: "web",
         // "web" / "software" / "mobile" / "game" / "other"
         client: 1,
         requiredSkills: [],
@@ -32,6 +32,8 @@ class JobCreatePage extends React.Component {
       e.target.name === "estimatedWage"
     ) {
       tempData[e.target.name] = parseInt(e.target.value);
+    } else if (e.target.name === "catergory") {
+      tempData[e.target.name] = e.target.value.toLowerCase();
     } else {
       tempData[e.target.name] = e.target.value;
     }
