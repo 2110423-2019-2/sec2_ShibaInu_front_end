@@ -31,8 +31,9 @@ class SignUp extends React.Component {
                     case 201:
                         LocalStorageService.setToken(response.data.access_token || '');
                         LocalStorageService.setUserID(response.data.userId || '');
-                        console.log('Logged in. Redirecting to HomeClient...');
-                        window.location.href = '/';
+                        response.data.isAdmin ? LocalStorageService.setUserMode('admin') : LocalStorageService.setUserMode('client');
+                        console.log('Logged in. Redirecting...');
+                        response.data.isAdmin ? window.location.href = '/admin/home' : window.location.href = '/client/home';
                         break;
 
                     // Other case
