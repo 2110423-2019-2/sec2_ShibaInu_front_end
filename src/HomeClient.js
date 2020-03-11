@@ -5,6 +5,7 @@ import "./HomeFreelancer.css";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
+import { FaBullhorn, FaInfoCircle } from "react-icons/fa";
 var utilities = require('./Utilities.json');
 class Home extends React.Component {
   constructor(props) {
@@ -14,25 +15,35 @@ class Home extends React.Component {
       jobDatas: "",
       isUserDataLoad: false,
       isJobDataLoad: false,
-      mode: "client"
+      mode: "client",
+      announce: "",
+      userID: LocalStorageService.getUserID(),
+      isAnnounceLoad: false,
     };
   }
 
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
+      .get(utilities['backend-url'] + "/users/" + this.state.userID)
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get(utilities['backend-url'] + "/jobs/user/" + LocalStorageService.getUserID())
+      .get(utilities['backend-url'] + "/jobs/user/" + this.state.userID)
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
         console.log(this.state.jobDatas);
+      });
+    axios
+      .get(utilities['backend-url'] + "/announcement")
+      .then(res => {
+        const announce = res.data;
+        this.setState({ announce: announce, isAnnounceLoad:true });
+        console.log(this.state.announce);
       });
   };
 
@@ -76,12 +87,30 @@ class Home extends React.Component {
         <td></td>
       </tr>
     );
+    
+    var announce;
+    if(this.state.isAnnounceLoad){
+      announce = this.state.announce.map((announce)=>(
+        <Row>
+          <Col className="bg-light shadow pt-2">
+            <h5 className="announce-title"><FaBullhorn /> {announce.title}</h5>
+            <p className="announce-content"><FaInfoCircle /> {announce.content}</p>
+          </Col>
+        </Row>
+      ));
+    }
 
     return (
       <div className="main-background">
         <NavBar />
         <Container id="homeclient-box">
           <Row>
+            <Col className="background-blue text-light pt-2 pb-2">
+              <h3><FaBullhorn /> Announcement</h3>
+            </Col>
+          </Row>
+          {announce}
+          <Row className="mt-3">
             <Col className="bg-light shadow" xl={8} offset={1}>
               <h2 id="recentjob-topic">Recent Job Offering</h2>
               <Table responsive>
