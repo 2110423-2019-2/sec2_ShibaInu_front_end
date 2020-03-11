@@ -1,5 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import axios from 'axios';
+import LocalStorageService from "../LocalStorageService";
 var utilities = require('../Utilities.json');
 
 function PrivateRoute({ component: Component, ...rest }) {
