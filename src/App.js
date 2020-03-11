@@ -30,10 +30,10 @@ class App extends React.Component {
           <Route exact path="/" component={()=><HomeGuest />} />
           <Route path="/client/home" component={()=><HomeClient />} />
           <Route path="/profile" component={Profile} />
-          <Route path="/client/job" component={()=><JobOfferClient userID={this.state.userID}/>} />
-          <Route path="/freelancer/home" component={()=><HomeFreelancer userID={this.state.userID}/>} />
-          <Route path="/freelancer/job" component={()=><JobOfferFreelancer userID={this.state.userID}/>} />
-          <Route path="/job/:jobid" component={()=><JobPage jobid={()=>useParams()} />} />
+          <Route path="/client/job" component={()=><JobOfferClient />} />
+          <Route path="/freelancer/home" component={()=><HomeFreelancer />} />
+          <Route path="/freelancer/job" component={()=><JobOfferFreelancer />} />
+          <Route path="/job/:jobid" component={()=><JobPage jobid={useParams()} />} />
           <Route path="/jobcreate" component={JobCreatePage} />
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
