@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
+import LocalStorageService from "./LocalStorageService";
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -69,7 +70,7 @@ class NavBar extends React.Component {
       modePath = "/" + this.state.status.CLIENT + "/home";;
       switchMode = "Switch " + this.state.status.CLIENT;
       homePath = "/freelancer/home";
-    } else if (this.state.mode === this.state.status.GUEST){
+    } else if (this.state.mode === this.state.status.GUEST) {
       userMode = YOUNGSTAR;
       signInMenu = (
         <Nav.Link href="/signin" className="border-right border-warning">
@@ -96,21 +97,21 @@ class NavBar extends React.Component {
           {switchMode}
         </DropdownItem>
         <DropdownItem divider />
-        <DropdownItem id="dropdown-item-signout">Sign out</DropdownItem>
+        <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>Sign out</DropdownItem>
       </DropdownMenu>
     );
 
-    if(this.state.mode === this.state.status.ADMIN){
+    if (this.state.mode === this.state.status.ADMIN) {
       dropDownMenu = (
         <DropdownMenu right>
-          <DropdownItem id="dropdown-item-signout">Sign out</DropdownItem>
+          <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>Sign out</DropdownItem>
         </DropdownMenu>
       );
       notiMenu = (
         <Nav.Link href="/admin/announcement">
           <FaBell />
           Create Announcement
-      </Nav.Link>
+        </Nav.Link>
       );
       homePath = "/admin/home";
     }
@@ -141,7 +142,7 @@ class NavBar extends React.Component {
     navbarMenu =
       this.state.mode === this.state.status.GUEST ? guestMenu : memberMenu;
 
-    
+
 
     var logoBrand = (
       <Navbar.Brand href={homePath} id="logo">
@@ -158,6 +159,14 @@ class NavBar extends React.Component {
       </Navbar>
     );
   }
+
+
+  signOut() {
+    console.log('signout');
+    LocalStorageService.signOut();
+    window.location.href = '/';
+  }
 }
+
 
 export default NavBar;

@@ -24,8 +24,13 @@ const LocalStorageService = (function () {
     function _getUserID() {
         return localStorage.getItem('userID') || '';
     }
-    function _removeUserID() {
+    function _clearUserID() {
         localStorage.removeItem('userID');
+    }
+
+    function _signOut() {
+        _clearToken();
+        _clearUserID();
     }
     return {
         getService: _getService,
@@ -34,7 +39,8 @@ const LocalStorageService = (function () {
         clearToken: _clearToken,
         setUserID: _setUserID,
         getUserID: _getUserID,
-        removeUserID: _removeUserID
+        clearUserID: _clearUserID,
+        signOut: _signOut
     }
 })();
 export default LocalStorageService;

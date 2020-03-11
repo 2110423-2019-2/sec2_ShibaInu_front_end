@@ -88,12 +88,12 @@ class SignIn extends React.Component {
                                 <Form noValidate={true} validated={this.state.validated} onSubmit={this.handleSubmit}>
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
-                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} required />
+                                        <Form.Control type="username" placeholder="Username" name='username' value={this.state.loginData.username} onChange={this.handleChange} required />
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
+                                        <Form.Control type="password" placeholder="Password" name='password' value={this.state.loginData.password} onChange={this.handleChange} required />
                                     </Form.Group>
                                     <p className='unauthorized-message' hidden={!this.state.unauthorized}>Wrong username or password.</p>
                                     <Button variant="success" type="submit" >

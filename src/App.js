@@ -24,11 +24,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-<<<<<<< HEAD
-      userID: "",
-=======
       userID: "1"
->>>>>>> cf344b7ed382f1041c4213689eb31301cac544de
     };
   }
   componentDidMount(){
