@@ -41,6 +41,7 @@ const LocalStorageService = (function () {
     function _signOut() {
         _clearToken();
         _clearUserID();
+        _clearUserMode();
     }
     return {
         getService: _getService,

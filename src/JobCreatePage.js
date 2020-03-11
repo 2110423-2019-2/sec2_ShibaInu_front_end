@@ -3,6 +3,7 @@ import axios from "axios";
 import "./JobCreatePage.css";
 import { Form, Row, Col, InputGroup, Button, Card } from "react-bootstrap";
 import NavBar from "./NavBar";
+import LocalStorageService from "./LocalStorageService";
 var utilities = require("./Utilities.json");
 
 class JobCreatePage extends React.Component {
@@ -16,7 +17,7 @@ class JobCreatePage extends React.Component {
         estimatedWage: 0,
         catergory: "web",
         // "web" / "software" / "mobile" / "game" / "other"
-        client: 1,
+        client: LocalStorageService.getUserID(),
         requiredSkills: [],
         optianalSkills: []
       }
@@ -34,22 +35,40 @@ class JobCreatePage extends React.Component {
       tempData[e.target.name] = parseInt(e.target.value);
     } else if (e.target.name === "catergory") {
       tempData[e.target.name] = e.target.value.toLowerCase();
+    } else if (
+      e.target.name === "requiredSkills" ||
+      e.target.name === "optianalSkills"
+    ) {
+      tempData[e.target.name] = e.target.value.split(",").map(s => {
+        let t = {};
+        t["skill"] = s;
+        return t;
+      });
     } else {
       tempData[e.target.name] = e.target.value;
     }
     this.setState({
       postData: tempData
     });
+
+    console.log(this.state.postData);
   };
 
   handleSubmit = event => {
     event.preventDefault();
-
+    axios.defaults.headers.common["Authorization"] =
+      "Bearer " + LocalStorageService.getAccessToken();
     axios
       .post(utilities["backend-url"] + "/jobs", this.state.postData)
       .then(res => {
-        console.log(res);
-        console.log(res.data);
+        switch (res.status) {
+          case 201:
+            console.log("Created,Logged in. Redirecting to /client/job ...");
+            window.location.href = "/client/job";
+            break;
+          default:
+            console.log("Status code is " + res.status);
+        }
       })
       .catch(error => {
         if (error.response.status === 400) {
@@ -64,7 +83,7 @@ class JobCreatePage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar mode=" " userDatas={" "} />
+        <NavBar />
         <Card id="job-create-page">
           <Card.Header>Create New Job Offering</Card.Header>
           <Card.Body>
@@ -90,7 +109,6 @@ class JobCreatePage extends React.Component {
               </Form.Group>
               <Row>
                 <Col>
-                  {" "}
                   <Form.Group controlId="bidAmount">
                     <Form.Label>Essimate Wage</Form.Label>
                     <InputGroup>
@@ -110,7 +128,6 @@ class JobCreatePage extends React.Component {
                   </Form.Group>
                 </Col>
                 <Col>
-                  {" "}
                   <Form.Group controlId="bidDuration">
                     <Form.Label>Essimate Duration</Form.Label>
                     <InputGroup>

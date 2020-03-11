@@ -199,7 +199,7 @@ class JobSearchPage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar mode=" " userDatas={" "} />
+        <NavBar />
         <div class="job-search-page">
           <Container>
             <Row>
