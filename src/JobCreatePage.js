@@ -50,8 +50,6 @@ class JobCreatePage extends React.Component {
     this.setState({
       postData: tempData
     });
-
-    console.log(this.state.postData);
   };
 
   handleSubmit = event => {
