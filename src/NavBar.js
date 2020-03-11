@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require('./Utilities.json');
+var utilities = require("./Utilities.json");
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
@@ -25,17 +25,27 @@ class NavBar extends React.Component {
       mode: LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: {},
+      notiDatas: {},
+      isNotiLoad: false,
     };
   }
 
   fetchDatas = () => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    axios.defaults.headers.common["Authorization"] =
+      "Bearer " + LocalStorageService.getAccessToken();
     axios
-      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
+      .get(utilities["backend-url"] + "/users/" + this.state.userID)
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
+      });
+    axios
+      .get(utilities["backend-url"] + "/notification/" + this.state.userID)
+      .then(res => {
+        const notiDatas = res.data;
+        this.setState({ notiDatas: notiDatas, isNotiLoad: true });
+        console.log(this.state.notiDatas);
       });
   };
 
@@ -61,11 +71,31 @@ class NavBar extends React.Component {
       changeMode;
     var jobPath = "/" + this.state.mode + "/job";
 
+    var notiDetail;
+    if(this.state.isNotiLoad){
+      notiDetail = this.state.notiDatas.map((noti)=>(
+        <DropdownItem
+            id="dropdown-item-profile"
+            className="color-black"
+          >
+            <h5>{noti.topic}</h5>
+            <p>{noti.description}</p>
+          </DropdownItem>
+      ));
+    }
+    
+
     notiMenu = (
-      <Nav.Link href="#link">
-        <FaBell />
-      </Nav.Link>
+      <UncontrolledDropdown nav inNavbar>
+          <DropdownToggle nav caret>
+            <FaBell />
+          </DropdownToggle>
+          <DropdownMenu right>
+            {notiDetail}
+          </DropdownMenu>
+        </UncontrolledDropdown>
     );
+
     searchMenu = (
       <Nav.Link href="/jobsearch">
         <FaSearch className="navbar-icon" />
@@ -86,7 +116,7 @@ class NavBar extends React.Component {
       switchMode = "Switch " + this.state.status.FREELANCER;
       changeMode = "freelancer";
     } else if (this.state.mode === this.state.status.FREELANCER) {
-      modePath = "/" + this.state.status.CLIENT + "/home";;
+      modePath = "/" + this.state.status.CLIENT + "/home";
       switchMode = "Switch " + this.state.status.CLIENT;
       homePath = "/freelancer/home";
       changeMode = "client";
@@ -106,25 +136,45 @@ class NavBar extends React.Component {
     }
     dropDownMenu = (
       <DropdownMenu right>
-        <DropdownItem id="dropdown-item-profile" href="/profile" className='color-black'>
+        <DropdownItem
+          id="dropdown-item-profile"
+          href="/profile"
+          className="color-black"
+        >
           My profile
         </DropdownItem>
-        <DropdownItem id="dropdown-item-job" href={jobPath} className='color-black'>
+        <DropdownItem
+          id="dropdown-item-job"
+          href={jobPath}
+          className="color-black"
+        >
           My job
         </DropdownItem>
-        <DropdownItem id="dropdown-item-balance" className='color-black'>My balance</DropdownItem>
-        <DropdownItem id="dropdown-item-switch" href={modePath} onClick={()=>{LocalStorageService.setUserMode(changeMode)}}>
+        <DropdownItem id="dropdown-item-balance" className="color-black">
+          My balance
+        </DropdownItem>
+        <DropdownItem
+          id="dropdown-item-switch"
+          href={modePath}
+          onClick={() => {
+            LocalStorageService.setUserMode(changeMode);
+          }}
+        >
           {switchMode}
         </DropdownItem>
         <DropdownItem divider />
-        <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>Sign out</DropdownItem>
+        <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
+          Sign out
+        </DropdownItem>
       </DropdownMenu>
     );
 
     if (this.state.mode === this.state.status.ADMIN) {
       dropDownMenu = (
         <DropdownMenu right>
-          <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>Sign out</DropdownItem>
+          <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
+            Sign out
+          </DropdownItem>
         </DropdownMenu>
       );
       notiMenu = (
@@ -162,8 +212,6 @@ class NavBar extends React.Component {
     navbarMenu =
       this.state.mode === this.state.status.GUEST ? guestMenu : memberMenu;
 
-
-
     var logoBrand = (
       <Navbar.Brand href={homePath} id="logo">
         <img src={logo} id="logo-img" alt="youngstar logo" />
@@ -180,13 +228,11 @@ class NavBar extends React.Component {
     );
   }
 
-
   signOut() {
-    console.log('signout');
+    console.log("signout");
     LocalStorageService.signOut();
-    window.location.href = '/';
+    window.location.href = "/";
   }
 }
-
 
 export default NavBar;
