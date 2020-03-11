@@ -918,10 +918,11 @@ class SkillModal extends Component {
       this.props.userId !== ""
     ) {
       let body = this.props.data;
+      console.log(this.props.data)
       if (body.skills instanceof Array) {
         this.setState({
           skills: body.skills
-        });
+        },console.log(body.skills));
       }
       this.setState({
         usersId: this.props.userId
@@ -931,15 +932,17 @@ class SkillModal extends Component {
   }
   handleClose() {
     this.setState({ show: false });
+    
   }
   handleShow() {
     this.setState({ show: true });
     this.componentDidMount();
   }
   handleSave() {
+    console.log(this.state.usersId)
     axios
-      .patch("/users/skill/" + this.state.usersId, {
-        skill: this.state.skills
+      .patch("/users/" + this.state.usersId, {
+        skills: this.state.skills
       })
       .then(res => {
         console.log(res);
@@ -953,7 +956,7 @@ class SkillModal extends Component {
   handleAdd() {
     if (this.state.skill === "") return;
     let arr = this.state.skills;
-    arr.push(this.state.skill);
+    arr.push({skill:this.state.skill});
     this.setState({ skill: "", skills: arr });
     if (this.state.skills.length >= this.state.numOflimit) {
       this.setState({ limit: true });
@@ -969,7 +972,7 @@ class SkillModal extends Component {
   }
   handleEdit(index, word) {
     let arr = this.state.skills;
-    arr.splice(index, 1, word);
+    arr.splice(index, 1, {skill:word});
     this.setState({ skills: arr });
   }
 
@@ -981,7 +984,7 @@ class SkillModal extends Component {
         <SkillEditList
           key={Math.round(Math.random() * 1000)}
           index={i}
-          skill={item}
+          skill={item.skill}
           onEdit={this.handleEdit}
           onDelete={this.handleDelete}
         />
@@ -1066,6 +1069,7 @@ class SkillEditList extends Component {
   toggle() {
     let prev = this.state.editable;
     this.setState({ editable: !prev });
+    
   }
   componentDidMount() {
     this.setState({ index: this.props.index, skill: this.props.skill });
@@ -1128,7 +1132,7 @@ class SkillListItem extends Component {
   render() {
     return (
       <>
-        <p className="skill-list">{this.props.skill}</p>
+        <p className="skill-list">{this.props.skill.skill}</p>
       </>
     );
   }

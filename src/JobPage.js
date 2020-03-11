@@ -17,7 +17,13 @@ var utilities = require("./Utilities.json");
 class JobDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { details: {} };
+    this.state = {
+      details: {
+        requiredSkills: [],
+        optionalSkills: [],
+        client: { firstName: "", lastName: "" }
+      }
+    };
   }
 
   componentDidMount() {
@@ -29,7 +35,17 @@ class JobDetail extends React.Component {
       });
   }
 
+  skilltostring(i) {
+    let out = [];
+    if (i.length == 0) {
+      return "-";
+    }
+    i.map(s => out.push(" " + s["skill"]));
+    return out.toString();
+  }
+
   render() {
+    console.log(this.state.details);
     return (
       <Card id="job-detail">
         <Card.Header>{this.state.details.name}</Card.Header>
@@ -38,19 +54,22 @@ class JobDetail extends React.Component {
           <div class="inside-body">
             <div>
               <b>Require Skill</b>
-              <div>Java, Mobile App Development, Android</div>
+              <div>{this.skilltostring(this.state.details.requiredSkills)}</div>
             </div>
           </div>
           <div class="inside-body">
             <div>
               <b>Optional Skill</b>
-              <div> Software Architecture, Software Testing</div>
+              <div>{this.skilltostring(this.state.details.optionalSkills)}</div>
             </div>
           </div>
           <div class="inside-body">
             <div>
               <b>Client</b>
-              <div>Shiba Shiba</div>
+              <div>
+                {this.state.details.client.firstName}{" "}
+                {this.state.details.client.lastName}
+              </div>
             </div>
           </div>
         </Card.Body>

@@ -5,7 +5,7 @@ import "./HomeFreelancer.css";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-
+var utilities = require('./Utilities.json');
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -21,14 +21,14 @@ class Home extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + LocalStorageService.getUserID())
+      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get("http://35.198.228.244:10000/jobs/user/" + LocalStorageService.getUserID())
+      .get(utilities['backend-url'] + "/jobs/user/" + LocalStorageService.getUserID())
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });

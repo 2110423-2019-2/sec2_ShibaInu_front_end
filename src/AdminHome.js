@@ -5,7 +5,7 @@ import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 import LocalStorageService from "./LocalStorageService";
-
+var utilities = require('./Utilities.json');
 class AdminHome extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +19,7 @@ class AdminHome extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
-    axios.get("http://35.198.228.244:10000/users").then(res => {
+    axios.get(utilities['backend-url'] + "/users").then(res => {
       const userDatas = res.data;
       this.setState({ userDatas: userDatas, isUserDataLoad: true });
       console.log(this.state.userDatas);
@@ -42,7 +42,7 @@ class AdminHome extends React.Component {
         swal("Disapproved success!", {
           icon: "success",
         });
-
+        
       }
     });
   }
