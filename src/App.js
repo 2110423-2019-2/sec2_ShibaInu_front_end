@@ -43,11 +43,11 @@ class App extends React.Component {
           />
           <Route
             path="/client/job"
-            component={() => <JobOfferClient  />}
+            component={() => <JobOfferClient />}
           />
           <Route
             path="/freelancer/home"
-            component={() => <HomeFreelancer  />}
+            component={() => <HomeFreelancer />}
           />
           <Route
             path="/freelancer/job"
@@ -61,7 +61,7 @@ class App extends React.Component {
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
-          <Route path="/client/dashboard" component={DashboardClient} />
+          <Route path="/client/dashboard/:jobId" component={() => <DashboardClient params={useParams()} />} />
           <Route path="/admin/home" component={AdminHome} />
           <Route path="/admin/announcement" component={AdminAnnouncement} />
         </Switch>

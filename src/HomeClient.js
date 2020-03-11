@@ -14,7 +14,7 @@ class Home extends React.Component {
       jobDatas: "",
       isUserDataLoad: false,
       isJobDataLoad: false,
-      mode:"client"
+      mode: "client"
     };
   }
 
@@ -40,6 +40,10 @@ class Home extends React.Component {
     this.fetchDatas();
   };
 
+  handleClickJobDetail(e) {
+    window.location.href = '/client/dashboard/' + e.target.id;
+  }
+
   render() {
     if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
       return null;
@@ -52,7 +56,7 @@ class Home extends React.Component {
         <td className="align-middle">-</td>
         <td className="align-middle">{job.status}</td>
         <td className="align-middle">
-          <button type="button" className="btn btn-secondary btn-block">
+          <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
             Detail
           </button>
         </td>
