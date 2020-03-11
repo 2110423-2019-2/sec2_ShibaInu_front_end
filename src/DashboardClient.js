@@ -14,17 +14,30 @@ class DashboardClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      jobID: 1,
+      jobID: this.props.jobID || 1,
       freelancerList: [],
       loadFreelancer: false,
       mode: "client",
-      jobname: "Build a mobile application"
+      jobname: "Default job name",
+      loadJob: false,
+      jobStatus: null,
+      timelineDetail: {
+        openTime: null,
+        acceptedTime: null,
+        workingTime: null,
+        doneTime: null
+      }
     };
 
   }
 
+  loadAllData() {
+    return this.state.loadFreelancer && this.state.loadJob;
+  }
+
   componentWillMount() {
     this.getInterestedFreelancer();
+    this.getjobDetail();
   }
 
   async getInterestedFreelancer() {
@@ -56,8 +69,47 @@ class DashboardClient extends React.Component {
       });
   }
 
+  async getjobDetail() {
+
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    await axios
+      .get(utilities["backend-url"] + "/jobs/" + this.state.jobID)
+      .then(res => {
+        this.setState({
+          jobname: res.data.name,
+          jobStatus: res.data.status,
+        })
+
+        let timelineDetail = {
+          openTime: res.data.createdTime,
+          acceptedTime: res.data.acceptedTime,
+          workingTime: res.data.startWorkingTime,
+          doneTime: res.data.doneTime
+        };
+
+        this.setState({
+          timelineDetail: timelineDetail
+        });
+
+        this.setState({
+          loadJob: true
+        });
+
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          console.log('Unauthorization');
+          alert('Please login first!')
+          window.location.href = '/signin';
+
+        } else {
+          console.error(error);
+        }
+      });
+  }
+
   render() {
-    return (
+    return this.loadAllData() ? (
       <div>
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
@@ -70,20 +122,20 @@ class DashboardClient extends React.Component {
           <Row>
             <Col sm={4} >
               <div className="left-col">
-                <Row><DashboardStatus /></Row>
+                <Row><DashboardStatus status={this.state.jobStatus} /></Row>
                 <Row><DashboardResponsible /></Row>
                 <Row><DashboardContract /></Row>
               </div>
             </Col>
             <Col sm={8}>
-              <Row>{this.state.loadFreelancer ? <FreelancerBox freelancerList={this.state.freelancerList} /> : ''}</Row>
-              <Row><DashboardTimeline /></Row>
+              <Row><FreelancerBox freelancerList={this.state.freelancerList} /></Row>
+              <Row><DashboardTimeline timelineDetail={this.state.timelineDetail} status={this.state.jobStatus} /></Row>
             </Col>
 
           </Row>
         </Container>
       </div>
-    );
+    ) : '';
   }
 }
 
@@ -166,7 +218,7 @@ class DashboardStatus extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: 'Accepted',
+      status: this.props.status || null,
       message: 'Due in 3 months'
     };
   }
@@ -183,10 +235,10 @@ class DashboardStatus extends React.Component {
 
   getBadgeStyle() {
     switch (this.state.status) {
-      case 'Open': return 'success';
-      case 'Accepted': return 'primary';
-      case 'Working': return 'warning';
-      case 'Done': return 'Danger';
+      case 'open': return 'success';
+      case 'accepted': return 'primary';
+      case 'working': return 'warning';
+      case 'done': return 'Danger';
       default: return 'primary';
     }
   }
@@ -271,13 +323,17 @@ class DashboardTimeline extends React.Component {
     super(props);
     this.state = {
       data: [
-        { status: 'Open', datetime: '8 Jun 2019' },
-        { status: 'Accepted', datetime: '' },
-        { status: 'Working', datetime: '' },
-        { status: 'Done', datetime: '' },
+        { status: 'open', datetime: this.setDateFormat(this.props.timelineDetail.openTime) },
+        { status: 'accepted', datetime: this.setDateFormat(this.props.timelineDetail.acceptedTime) },
+        { status: 'working', datetime: this.setDateFormat(this.props.timelineDetail.workingTime) },
+        { status: 'done', datetime: this.setDateFormat(this.props.timelineDetail.doneTime) },
       ],
-      currentStatus: 'Accepted'
+      currentStatus: this.props.status || 'default'
     };
+  }
+
+  setDateFormat(date) {
+    return date ? (new Date(date)).toLocaleString() : '';
   }
 
   getBadgeStyle(status, datetime) {
