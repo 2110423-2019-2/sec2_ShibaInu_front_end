@@ -22,28 +22,11 @@ class JobOfferClient extends React.Component {
       status: {
         ALL: "all",
         OPEN: "open",
-        INPROGRESS: "in progress",
-        FINISHED: "finished"
+        ACCEPTED: "accepted",
+        WORKING: "working",
+        DONE: "done"
       },
       statusFilter: "all",
-      jobList: [
-        {
-          id: "00001",
-          name: "Make Android App",
-          type: "Android App",
-          freelancerID: "123456789",
-          freelancerName: "-",
-          status: "open"
-        },
-        {
-          id: "00002",
-          name: "Make Website",
-          type: "Frontend Backend",
-          freelancerID: "55555555",
-          freelancerName: "Shiba",
-          status: "in progress"
-        }
-      ],
       userDatas: "",
       jobDatas: "",
       isUserDataLoad: false,
@@ -169,20 +152,29 @@ class JobOfferClient extends React.Component {
                   <Nav.Link
                     eventKey="link-3"
                     onClick={e =>
-                      this.statusHandler(e, this.state.status.INPROGRESS)
-                    }
+                      this.statusHandler(e, this.state.status.ACCEPTED)}
                   >
-                    In progress
+                    Accepted
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link
                     eventKey="link-4"
                     onClick={e =>
-                      this.statusHandler(e, this.state.status.FINISHED)
+                      this.statusHandler(e, this.state.status.WORKING)
                     }
                   >
-                    Finished
+                    Working
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-5"
+                    onClick={e =>
+                      this.statusHandler(e, this.state.status.DONE)
+                    }
+                  >
+                    Done
                   </Nav.Link>
                 </Nav.Item>
               </Nav>

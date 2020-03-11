@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
+
 var utilities = require("./Utilities.json");
 class NavBar extends React.Component {
   constructor(props) {
