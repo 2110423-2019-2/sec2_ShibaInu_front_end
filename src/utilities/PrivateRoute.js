@@ -21,21 +21,25 @@ function PrivateRoute({ component: Component, ...rest }) {
 }
 
 function auth() {
+    let returnBool = false;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios.get(utilities['backend-url'] + "/users/fromtoken")
         .then(res => {
-            return true;
+            returnBool = true;
         }).catch((error) => {
 
             if (error.response.status === 401) {
                 console.log('Unauthorization');
-                return false;
+                returnBool = false;
 
             } else {
                 console.error(error);
-                return false;
+                returnBool = false;
             }
         });
+
+    console.log(returnBool);
+    return returnBool;
 }
 
 export default PrivateRoute;
