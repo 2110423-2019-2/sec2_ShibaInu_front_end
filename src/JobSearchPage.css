@@ -10,12 +10,13 @@
 }
 
 .job-search-page #low-margin {
-  margin: 10px;
+  margin-bottom: 20px;
+  margin-top: 20px;
   max-width: 100%;
 }
 
 .job-search-page .container {
-  width: 80%;
+  width: 90%;
 }
 
 .job-search-page .job-result-row {
@@ -48,8 +49,16 @@
   color: black;
 }
 
-.job-search-page .card-header{
+.job-search-page .card-header {
   background-color: #254380;
   padding: 10px;
   color: white;
+}
+
+.job-search-page .card-body {
+  padding: 10px;
+}
+
+.job-search-page #wage {
+  margin-bottom: 10px;
 }
