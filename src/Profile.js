@@ -15,13 +15,17 @@ import {
   EducationListItem,
   ExperienceListItem,
   ExperienceModal,
-  EducationModal
+  EducationModal,
+  ReviewListItem
 } from "./ProfileModal";
 import { Container } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
 class Profile extends React.Component {
   constructor(props) {
     super(props);
+    /*if(!LocalStorageService.getUserID()){
+      window.location.href = '/';
+    }*/
     this.state = {
       isMyProfile:true,
       isLoaded:false,
@@ -75,6 +79,7 @@ class Profile extends React.Component {
         }
       ],
       skills: ["C", "C++", "C#"],
+      reviewlist:[{reviewername:"itthi", description:"awesome!",score:10,jobname:"Building mobile application"}],
       verified: false,
       upper1: true
     };
@@ -99,9 +104,10 @@ class Profile extends React.Component {
       "November",
       "December"
     ];
+
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + this.state.userId)
+      .get("http://35.198.228.244:10000/users/" + LocalStorageService.getUserID())
       .then(res => {
         console.log(res);
         let body = res.data;
@@ -121,11 +127,11 @@ class Profile extends React.Component {
           exp_json = JSON.parse(body.experience);
         }
         this.setState({
-          userId: body.userId,
+          userId: LocalStorageService.getUserID(),
           data: body,
           fname: body.firstName,
           lname: body.lastName,
-          headline: "",
+          headline: body.headline,
           tel: body.phone === null ? "" : body.phone,
           email: body.email === null ? "" : body.email,
           website: body.website === null ? "" : body.website,
@@ -134,7 +140,7 @@ class Profile extends React.Component {
           birthdate: formatted_date === null ? new Date() : formatted_date,
           exp: exp_json === null ? [] : exp_json,
           education: edu_json === null ? [] : edu_json,
-          skills: body.skills === null ? [] : body.skills,
+          skills: body.skills == null ? [] : body.skills,
           verified: body.isVerified
         });
         this.setState({
@@ -142,7 +148,7 @@ class Profile extends React.Component {
             userId: this.state.userId,
             firstName: this.state.fname,
             lastName: this.state.lname,
-            headline: "",
+            headline: this.state.headline,
             phone: this.state.tel,
             email: this.state.email,
             website: this.state.website,
@@ -162,15 +168,15 @@ class Profile extends React.Component {
       });
   }
   render() {
-    if(!this.state.isLoaded){
+    /*if(!this.state.isLoaded){
       return(
         <>
         </>
       );
-    }
+    }*/
     return (
       <>
-        <NavBar mode="client" userDatas="" />
+        <NavBar mode="client" userDatas={this.state.data} />
         <Container id="profile-container">
           <div className="row-5-xs shadow-sm" id="personal">
             <div className="row" id="pro-bg">
@@ -310,10 +316,22 @@ class Profile extends React.Component {
             </div>
             {this.state.skills.length === 0
               ? "No skill yet"
-              : this.state.skills.map((item,idx) => <SkillListItem key={idx} skill={item} />)}
+            : this.state.skills.map((item,idx) => <SkillListItem key={idx} skill={item} />)}
           </div>
           <div className="row-1 shadow-sm" id="review">
             <h5>Review</h5>
+            <div className="review">
+              {this.state.reviewlist.length === 0
+              ? "No skill yet"
+              : this.state.reviewlist.map((item,idx) => 
+                <ReviewListItem
+                  reviewername={item.reviewername}
+                  description={item.description}
+                  score={item.score}
+                  jobname={item.jobname}
+                />
+              )}
+            </div>
           </div>
         </Container>
       </>

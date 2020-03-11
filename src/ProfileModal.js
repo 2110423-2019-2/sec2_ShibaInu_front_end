@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import { Modal, Button, Form, Col, ModalTitle, Table } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 
@@ -53,7 +53,7 @@ class ProfileModal extends Component {
         usersId: this.props.userId,
         fname: body.firstName,
         lname: body.lastName,
-        headline: "",
+        headline: body.headline,
         tel: body.phone,
         email: body.email,
         website: body.website,
@@ -73,6 +73,7 @@ class ProfileModal extends Component {
       .patch("/users/" + this.state.usersId, {
         firstName: this.state.fname,
         lastName: this.state.lname,
+        headline: this.state.headline,
         phone: this.state.tel,
         email: this.state.email,
         website: this.state.website,
@@ -132,7 +133,13 @@ class ProfileModal extends Component {
               <Form.Group controlId="Headline">
                 <Form.Row>
                   <Form.Label>Headline</Form.Label>
-                  <Form.Control defaultValue="" as="textarea" />
+                  <Form.Control
+                    defaultValue=""
+                    as="textarea"
+                    onChange={e => {
+                      this.setState({ headline: e.target.value });
+                    }}
+                  />
                 </Form.Row>
               </Form.Group>
               <Form.Label>Date of birth</Form.Label>
@@ -220,7 +227,6 @@ class About extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    
   }
   componentDidMount() {
     if (
@@ -322,7 +328,6 @@ class ExperienceModal extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.showEditList = this.showEditList.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    
   }
   componentDidMount() {
     if (
@@ -438,7 +443,9 @@ class ExperienceModal extends Component {
             <ModalTitle>Experience</ModalTitle>
           </Modal.Header>
           <Modal.Body>
-            <Table><tbody>{this.showEditList()}</tbody></Table>
+            <Table>
+              <tbody>{this.showEditList()}</tbody>
+            </Table>
             <Form.Row hidden={this.state.limit}>
               <Col md="3">
                 <Form.Label>Role</Form.Label>
@@ -633,7 +640,6 @@ class EducationModal extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.showEditList = this.showEditList.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    
   }
   componentDidMount() {
     if (
@@ -736,7 +742,9 @@ class EducationModal extends Component {
             <ModalTitle>Education</ModalTitle>
           </Modal.Header>
           <Modal.Body>
-            <Table><tbody>{this.showEditList()}</tbody></Table>
+            <Table>
+              <tbody>{this.showEditList()}</tbody>
+            </Table>
             <Form.Row hidden={this.state.limit}>
               <Col md="3">
                 <Form.Label>At</Form.Label>
@@ -902,7 +910,6 @@ class SkillModal extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.showEditList = this.showEditList.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    
   }
   componentDidMount() {
     if (
@@ -931,8 +938,8 @@ class SkillModal extends Component {
   }
   handleSave() {
     axios
-      .patch("/users/" + this.state.usersId, {
-        skills: this.state.skills
+      .patch("/users/skill/" + this.state.usersId, {
+        skill: this.state.skills
       })
       .then(res => {
         console.log(res);
@@ -999,7 +1006,9 @@ class SkillModal extends Component {
             <ModalTitle>Skill</ModalTitle>
           </Modal.Header>
           <Modal.Body>
-            <Table><tbody>{this.showEditList()}</tbody></Table>
+            <Table>
+              <tbody>{this.showEditList()}</tbody>
+            </Table>
             <Form.Row hidden={this.state.limit}>
               <Col md="3">
                 <Form.Label>Skill</Form.Label>
@@ -1150,6 +1159,20 @@ class EducationListItem extends Component {
   }
 }
 
+class ReviewListItem extends Component {
+  render() {
+    return (
+      <>
+        <div className="review-box">
+          <p>{this.props.reviewername}</p>
+          <p>{this.props.description}</p>
+          <p>score : {this.props.score}</p>
+          <p>{this.props.jobname}</p>
+        </div>
+      </>
+    );
+  }
+}
 export {
   ProfileModal,
   SkillListItem,
@@ -1158,7 +1181,8 @@ export {
   EducationListItem,
   ExperienceListItem,
   ExperienceModal,
-  EducationModal
+  EducationModal,
+  ReviewListItem
 };
 
 /*

@@ -14,15 +14,17 @@ import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
-
+import LocalStorageService from './LocalStorageService';
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userID: "1",
+      userID: "",
     };
   }
-
+  componentDidMount(){
+    this.setState({userID : LocalStorageService.getUserID()})
+  }
   render() {
     return (
       <Router>
