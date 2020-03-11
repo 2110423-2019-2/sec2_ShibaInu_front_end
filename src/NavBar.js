@@ -53,6 +53,14 @@ class NavBar extends React.Component {
     this.fetchDatas();
   };
 
+  readNoti = (notiID,idx) => {
+    let notiDatas = this.state.notiDatas;
+    notiDatas[idx].isRead = true;
+    this.setState({notiDatas: notiDatas});
+    axios
+      .patch(utilities["backend-url"] + "/notification/" + this.state.userID);
+  }
+
   render() {
     const YOUNGSTAR = "YoungStar ";
     var switchMode,
@@ -71,12 +79,21 @@ class NavBar extends React.Component {
       changeMode;
     var jobPath = "/" + this.state.mode + "/job";
 
-    var notiDetail;
+    var newNotiDetail,oldNotiDetail;
     if(this.state.isNotiLoad){
-      notiDetail = this.state.notiDatas.map((noti)=>(
+      newNotiDetail = this.state.notiDatas.filter((noti)=>(noti.isRead===false)).map((noti,idx)=>(
         <DropdownItem
-            id="dropdown-item-profile"
-            className="color-black"
+            className="color-black background-yellow noti"
+            onClick={()=>{this.readNoti(noti.notificationId,idx)}}
+          >
+            <h5>{noti.topic}</h5>
+            <p>{noti.description}</p>
+          </DropdownItem>
+      ));
+      oldNotiDetail = this.state.notiDatas.filter((noti)=>(noti.isRead===true)).map((noti,idx)=>(
+        <DropdownItem
+            className="color-black noti"
+            onClick={()=>{this.readNoti(noti.notificationId,idx)}}
           >
             <h5>{noti.topic}</h5>
             <p>{noti.description}</p>
@@ -91,7 +108,8 @@ class NavBar extends React.Component {
             <FaBell />
           </DropdownToggle>
           <DropdownMenu right>
-            {notiDetail}
+            {newNotiDetail}
+            {oldNotiDetail}
           </DropdownMenu>
         </UncontrolledDropdown>
     );
