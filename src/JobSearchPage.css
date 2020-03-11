@@ -41,9 +41,9 @@
 }
 
 .job-search-page a:hover,
-a:visited,
-a:link,
-a:active {
+.job-search-page a:visited,
+.job-search-page a:link,
+.job-search-page a:active {
   text-decoration: none;
   color: black;
 }

@@ -21,10 +21,12 @@ class JobDetail extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(utilities["backend-url"] + "/jobs/1").then(res => {
-      const details = res.data;
-      this.setState({ details });
-    });
+    axios
+      .get(utilities["backend-url"] + "/jobs/" + this.props.jobid.jobid)
+      .then(res => {
+        const details = res.data;
+        this.setState({ details });
+      });
   }
 
   render() {
@@ -123,10 +125,12 @@ class InterrestedFreelancer extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(utilities["backend-url"] + "/bids/bidId/1").then(res => {
-      const bids = res.data;
-      this.setState({ bids });
-    });
+    axios
+      .get(utilities["backend-url"] + "/bids/bidId/" + this.props.jobid.jobid)
+      .then(res => {
+        const bids = res.data;
+        this.setState({ bids });
+      });
   }
 
   render() {
@@ -195,6 +199,7 @@ class JobPage extends React.Component {
   }
 
   render() {
+    let jobid = this.props.jobid;
     return (
       <div>
         <NavBar mode=" " userDatas={" "} />
@@ -202,8 +207,8 @@ class JobPage extends React.Component {
           <Container>
             <Row>
               <Col lg="9">
-                <JobDetail />
-                <InterrestedFreelancer />
+                <JobDetail jobid={jobid} />
+                <InterrestedFreelancer jobid={jobid} />
               </Col>
               <Col>
                 <JobBid />
