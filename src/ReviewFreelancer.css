@@ -1,0 +1,51 @@
+.review-box {
+    width: 500px;
+    margin: 10px;
+    height: 300px;
+    /* background-color: lightgray; */
+}
+
+.review-box.small-box {
+    height: 200px;
+}
+
+.review-box.large-box {
+    height: 600px;
+}
+
+.review-box .box-topic {
+    background-color: #254380;
+    color: white;
+    font-size: 16px;
+}
+
+.review-box .box-body {
+    height: 300px;
+
+}
+.review-box form-group{
+    width: 40px;
+    height: 500pxs;
+    
+}
+.txtinput  textarea {
+    flex: 1  ;
+    min-height: 100px;
+    resize: none;
+}
+.txtinput {
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    padding-right: 20px;
+}
+.txtinput .title{
+    margin-right: 20px;
+}
+.review-box .col-md-4 {
+    display: flex;
+    flex-direction: column;
+}
+.review-box .button-container{
+    margin-top:auto ;
+}   

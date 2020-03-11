@@ -20,6 +20,7 @@ import PrivateRoute from "./utilities/PrivateRoute";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
+import ReviewFreelancer from "./ReviewFreelancer";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -64,6 +65,7 @@ class App extends React.Component {
           <Route path="/client/dashboard/:jobId" component={() => <DashboardClient params={useParams()} />} />
           <Route path="/admin/home" component={AdminHome} />
           <Route path="/admin/announcement" component={AdminAnnouncement} />
+          <Route path="/client/review" component={ReviewFreelancer}/>
         </Switch>
       </Router>
     );

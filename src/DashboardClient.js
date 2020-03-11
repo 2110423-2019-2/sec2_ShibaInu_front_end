@@ -385,7 +385,7 @@ class DashboardTimeline extends React.Component {
 
 // DEFAULT COMPONENT -----------------------------------------------------------------------------
 
-class DashboardBox extends React.Component {
+export class DashboardBox extends React.Component {
 
   constructor(props) {
     super(props);
