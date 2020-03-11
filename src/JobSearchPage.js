@@ -236,7 +236,9 @@ class JobResultRow extends React.Component {
             <Col lg="9">
               <div id="job-name-and-des">
                 <div>
-                  <b>{this.props.jobName}</b>
+                  <a href={"/job/" + this.props.jobId}>
+                    <b>{this.props.jobName}</b>
+                  </a>
                 </div>
                 <div id="job-des">{this.props.jobDes}</div>
               </div>
