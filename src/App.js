@@ -16,6 +16,7 @@ import {
   BrowserRouter as Router,
   useParams
 } from "react-router-dom";
+import PrivateRoute from "./utilities/PrivateRoute";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
@@ -53,7 +54,7 @@ class App extends React.Component {
             path="/job/:jobid"
             component={() => <JobPage jobid={useParams()} />}
           />
-          <Route path="/jobcreate" component={JobCreatePage} />
+          <PrivateRoute path="/jobcreate" component={JobCreatePage} />
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
