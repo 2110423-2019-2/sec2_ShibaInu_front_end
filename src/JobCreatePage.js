@@ -3,6 +3,7 @@ import axios from "axios";
 import "./JobCreatePage.css";
 import { Form, Row, Col, InputGroup, Button, Card } from "react-bootstrap";
 import NavBar from "./NavBar";
+import LocalStorageService from "./LocalStorageService";
 var utilities = require("./Utilities.json");
 
 class JobCreatePage extends React.Component {
@@ -34,17 +35,29 @@ class JobCreatePage extends React.Component {
       tempData[e.target.name] = parseInt(e.target.value);
     } else if (e.target.name === "catergory") {
       tempData[e.target.name] = e.target.value.toLowerCase();
+    } else if (
+      e.target.name === "requiredSkills" ||
+      e.target.name === "optianalSkills"
+    ) {
+      tempData[e.target.name] = e.target.value.split(",").map(s => {
+        let t = {};
+        t["skill"] = s;
+        return t;
+      });
     } else {
       tempData[e.target.name] = e.target.value;
     }
     this.setState({
       postData: tempData
     });
+
+    console.log(this.state.postData);
   };
 
   handleSubmit = event => {
     event.preventDefault();
-
+    axios.defaults.headers.common["Authorization"] =
+      "Bearer " + LocalStorageService.getAccessToken();
     axios
       .post(utilities["backend-url"] + "/jobs", this.state.postData)
       .then(res => {
@@ -90,7 +103,6 @@ class JobCreatePage extends React.Component {
               </Form.Group>
               <Row>
                 <Col>
-                  {" "}
                   <Form.Group controlId="bidAmount">
                     <Form.Label>Essimate Wage</Form.Label>
                     <InputGroup>
@@ -110,7 +122,6 @@ class JobCreatePage extends React.Component {
                   </Form.Group>
                 </Col>
                 <Col>
-                  {" "}
                   <Form.Group controlId="bidDuration">
                     <Form.Label>Essimate Duration</Form.Label>
                     <InputGroup>
