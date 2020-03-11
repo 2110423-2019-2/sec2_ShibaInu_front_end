@@ -87,7 +87,7 @@ export class DashboardResponsible extends React.Component {
                 <tbody>
                     <tr key={this.state.user.userid}>
                         <td>
-                            <div className='profile-img'><img src={this.state.user.img} /></div>
+                            <div className='profile-img'><img src={this.state.user.img} alt='user-img'/></div>
                         </td>
                         <td>{this.state.user.fname + ' ' + this.state.user.lname}</td>
                         <td>
