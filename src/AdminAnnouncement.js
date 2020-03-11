@@ -5,6 +5,8 @@ import axios from "axios";
 import "./AdminAnnouncement.css";
 import { FaBullhorn } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
+import swal from 'sweetalert';
+import {Redirect} from "react-router-dom";
 
 class AdminAnnouncement extends React.Component {
   constructor(props) {
@@ -14,7 +16,8 @@ class AdminAnnouncement extends React.Component {
       userDatas: {},
       isUserDataLoad: false,
       header:"",
-      detail:""
+      detail:"",
+      directToHome: false,
     };
   }
 
@@ -33,14 +36,46 @@ class AdminAnnouncement extends React.Component {
   };
 
   setAnnounce = () => {
-    alert(this.state.header + " " + this.state.detail);
+    swal({
+      title: "Are you sure to announce?",
+      text: "Everybody will see this message!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willAnnounce) => {
+      if (willAnnounce) {
+        swal("Announce!", {
+          icon: "success",
+        });
+        this.setState({directToHome: true});
+
+      }
+
+    });
   }
 
   cancelAnnounce = () => {
-    this.setState({header: "", detail: ""});
+    swal({
+      title: "Are you sure to delete draft?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDelete) => {
+      if (willDelete) {
+        swal("Deleted draft!", {
+          icon: "success",
+        });
+        this.setState({header:"",detail:""});
+      }
+    });
   }
 
   render() {
+    if(this.state.directToHome){
+      return <Redirect to="/admin/home"/>;
+    }
     return (
       <div className="main-background">
         <NavBar mode="admin" userDatas={this.state.userDatas} />
@@ -56,7 +91,7 @@ class AdminAnnouncement extends React.Component {
             </Col>
             <Col xs={4}>
               <Form.Group controlId="headerArea">
-                <Form.Control as="textarea" onChange={(e)=>{this.setState({header: e.target.value})}} />
+                <Form.Control as="textarea" onChange={(e)=>{this.setState({header: e.target.value})}} value={this.state.header} />
               </Form.Group>
             </Col>
           </Row>
@@ -66,7 +101,7 @@ class AdminAnnouncement extends React.Component {
             </Col>
             <Col xs={6}>
               <Form.Group controlId="detailArea">
-                <Form.Control as="textarea" rows="5" onChange={(e)=>{this.setState({detail: e.target.value})}} />
+                <Form.Control as="textarea" rows="5" onChange={(e)=>{this.setState({detail: e.target.value})}} value={this.state.detail} />
               </Form.Group>
             </Col>
           </Row>

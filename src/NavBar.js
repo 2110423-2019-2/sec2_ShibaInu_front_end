@@ -81,6 +81,7 @@ class NavBar extends React.Component {
           Sign up
         </Nav.Link>
       );
+      homePath = "/";
     }
     dropDownMenu = (
       <DropdownMenu right>
@@ -111,6 +112,7 @@ class NavBar extends React.Component {
           Create Announcement
       </Nav.Link>
       );
+      homePath = "/admin/home";
     }
 
     memberMenu = (
