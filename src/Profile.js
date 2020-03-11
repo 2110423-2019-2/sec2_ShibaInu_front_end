@@ -153,7 +153,7 @@ class Profile extends React.Component {
           birthdate: formatted_date === null ? new Date() : formatted_date,
           exp: exp_json === null ? [] : exp_json,
           education: edu_json === null ? [] : edu_json,
-          skills: body.skill == null ? [] : body.skill,
+          skills: body.skills == null ? [] : body.skills,
           verified: body.isVerified
         });
         this.setState({

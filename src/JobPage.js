@@ -256,7 +256,7 @@ class JobPage extends React.Component {
     let jobid = this.props.jobid;
     return (
       <div>
-        <NavBar mode=" " userDatas={" "} />
+        <NavBar />
         <div class="job-page">
           <Container>
             <Row>

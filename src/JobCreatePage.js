@@ -83,7 +83,7 @@ class JobCreatePage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar mode=" " userDatas={" "} />
+        <NavBar />
         <Card id="job-create-page">
           <Card.Header>Create New Job Offering</Card.Header>
           <Card.Body>
