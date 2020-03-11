@@ -82,12 +82,12 @@ class AdminAnnouncement extends React.Component {
         <Container id="admin-announce-box">
           <Row>
             <Col className="background-blue text-light">
-              <h2 className="mt-3 mb-3">Announcement</h2>
+              <h3 className="mt-3 mb-3">Announcement</h3>
             </Col>
           </Row>
           <Row className="bg-light shadow pt-5 pb-5">
             <Col xs={2} className="text-center">
-              <h3>Header</h3>
+              <h5>Header</h5>
             </Col>
             <Col xs={4}>
               <Form.Group controlId="headerArea">
@@ -97,7 +97,7 @@ class AdminAnnouncement extends React.Component {
           </Row>
           <Row className="bg-light shadow pt-5 pb-5">
             <Col xs={2} className="text-center">
-              <h3>Detail</h3>
+              <h5>Detail</h5>
             </Col>
             <Col xs={6}>
               <Form.Group controlId="detailArea">

@@ -11,24 +11,6 @@ class Home extends React.Component {
     super(props);
     this.state = {
       userID: this.props.userID,
-      jobList: [
-        {
-          id: "00001",
-          name: "Make Android App",
-          type: "Android App",
-          freelancerID: "123456789",
-          freelancerName: "-",
-          status: "Open"
-        },
-        {
-          id: "00002",
-          name: "Make Website",
-          type: "Frontend Backend",
-          freelancerID: "55555555",
-          freelancerName: "Shiba",
-          status: "In progress"
-        }
-      ],
       userDatas: "",
       jobDatas: "",
       isUserDataLoad: false,

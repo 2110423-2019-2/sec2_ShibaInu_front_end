@@ -10,7 +10,7 @@ import JobSearchPage from "./JobSearchPage";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import DashboardClient from './DashboardClient';
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { Route, Switch, BrowserRouter as Router, useParams } from "react-router-dom";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
@@ -28,12 +28,12 @@ class App extends React.Component {
       <Router>
       <Switch>
           <Route exact path="/" component={()=><HomeGuest />} />
-          <Route path="/client/home" component={()=><HomeClient userID={this.state.userID}/>} />
+          <Route path="/client/home" component={()=><HomeClient />} />
           <Route path="/profile" component={Profile} />
           <Route path="/client/job" component={()=><JobOfferClient userID={this.state.userID}/>} />
           <Route path="/freelancer/home" component={()=><HomeFreelancer userID={this.state.userID}/>} />
           <Route path="/freelancer/job" component={()=><JobOfferFreelancer userID={this.state.userID}/>} />
-          <Route path="/job" component={JobPage} />
+          <Route path="/job/:jobid" component={()=><JobPage jobid={()=>useParams()} />} />
           <Route path="/jobcreate" component={JobCreatePage} />
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
