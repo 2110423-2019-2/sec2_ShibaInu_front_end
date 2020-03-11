@@ -3,6 +3,7 @@ import NavBar from "./NavBar";
 import './AdminHome.css';
 import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
+import swal from "sweetalert";
 import LocalStorageService from "./LocalStorageService";
 
 class AdminHome extends React.Component {
@@ -28,6 +29,40 @@ class AdminHome extends React.Component {
   componentDidMount = () => {
     this.fetchDatas();
   };
+
+  disapproveHandler = () => {
+    swal({
+      title: "Are you sure to disapprove?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willDisapprove) => {
+      if (willDisapprove) {
+        swal("Disapproved success!", {
+          icon: "success",
+        });
+
+      }
+    });
+  }
+
+  approveHandler = () => {
+    swal({
+      title: "Are you sure to approve?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willApprove) => {
+      if (willApprove) {
+        swal("Approved success!", {
+          icon: "success",
+        });
+
+      }
+    });
+  }
 
   render() {
     if (!this.state.isUserDataLoad) {
@@ -60,12 +95,12 @@ class AdminHome extends React.Component {
         <td className="align-middle">{user.identificationCardWithFacePic}</td>
         <td className="align-middle">{user.identificationCardPic}</td>
         <td className="align-middle">
-          <button type="button" className="btn btn-danger btn-block">
+          <button type="button" className="btn btn-danger btn-block" onClick={()=>this.disapproveHandler(index)}>
             Disapprove
           </button>
         </td>
         <td className="align-middle">
-          <button type="button" className="btn btn-success btn-block">
+          <button type="button" className="btn btn-success btn-block" onClick={()=>this.approveHandler(index)}>
             Approve
           </button>
         </td>

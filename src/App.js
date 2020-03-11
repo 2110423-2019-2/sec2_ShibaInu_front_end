@@ -7,10 +7,15 @@ import JobOfferFreelancer from "./JobOfferFreelancer";
 import JobPage from "./JobPage";
 import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import DashboardClient from './DashboardClient';
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+import DashboardClient from "./DashboardClient";
+import {
+  Route,
+  Switch,
+  BrowserRouter as Router,
+  useParams
+} from "react-router-dom";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
@@ -19,7 +24,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+<<<<<<< HEAD
       userID: "",
+=======
+      userID: "1"
+>>>>>>> cf344b7ed382f1041c4213689eb31301cac544de
     };
   }
   componentDidMount(){
@@ -28,14 +37,26 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-      <Switch>
-          <Route exact path="/" component={()=><HomeGuest />} />
-          <Route path="/client/home" component={()=><HomeClient userID={this.state.userID}/>} />
+        <Switch>
+          <Route exact path="/" component={() => <HomeGuest />} />
+          <Route path="/client/home" component={() => <HomeClient />} />
           <Route path="/profile" component={Profile} />
-          <Route path="/client/job" component={()=><JobOfferClient userID={this.state.userID}/>} />
-          <Route path="/freelancer/home" component={()=><HomeFreelancer userID={this.state.userID}/>} />
-          <Route path="/freelancer/job" component={()=><JobOfferFreelancer userID={this.state.userID}/>} />
-          <Route path="/job" component={JobPage} />
+          <Route
+            path="/client/job"
+            component={() => <JobOfferClient userID={this.state.userID} />}
+          />
+          <Route
+            path="/freelancer/home"
+            component={() => <HomeFreelancer userID={this.state.userID} />}
+          />
+          <Route
+            path="/freelancer/job"
+            component={() => <JobOfferFreelancer userID={this.state.userID} />}
+          />
+          <Route
+            path="/job/:jobid"
+            component={() => <JobPage jobid={useParams()} />}
+          />
           <Route path="/jobcreate" component={JobCreatePage} />
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
@@ -43,8 +64,8 @@ class App extends React.Component {
           <Route path="/client/dashboard" component={DashboardClient} />
           <Route path="/admin/home" component={AdminHome} />
           <Route path="/admin/announcement" component={AdminAnnouncement} />
-      </Switch>
-    </Router>
+        </Switch>
+      </Router>
     );
   }
 }
