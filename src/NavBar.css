@@ -6,6 +6,9 @@
 #navbar {
     background-color: #254380;
 }
+#logo{
+    color: #FFC655;
+}
 .navbar-icon {
     margin-right: 3px;
 }
@@ -21,7 +24,16 @@
 #dropdown-item-signout {
     color: red;
 }
-
 .color-black {
     color: black !important;
+}
+.background-yellow {
+    background-color: #FFC655;
+}
+.noti:hover {
+    background-color: #254380;
+    color: white !important;
+}
+.new-noti {
+    color: rgb(255, 70, 70) !important;
 }

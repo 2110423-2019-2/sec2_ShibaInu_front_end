@@ -5,6 +5,7 @@ import './SignInSignUp.css';
 import axios from 'axios';
 import { Form, Button, Col } from 'react-bootstrap';
 import LocalStorageService from './LocalStorageService';
+var utilities = require('./Utilities.json');
 
 class SignUp extends React.Component {
 
@@ -22,15 +23,17 @@ class SignUp extends React.Component {
 
     submitLogin() {
 
-        axios.post('http://35.198.228.244:10000/auth/login', this.state.registerData)
+        axios.post(utilities['backend-url'] + '/auth/login', this.state.registerData)
             .then((response) => {
 
                 switch (response.status) {
                     // Created
                     case 201:
-                        LocalStorageService.setToken(response.data.access_token);
-                        console.log('Logged in. Redirecting to HomeClient...');
-                        window.location.href = '/';
+                        LocalStorageService.setToken(response.data.access_token || '');
+                        LocalStorageService.setUserID(response.data.userId || '');
+                        response.data.isAdmin ? LocalStorageService.setUserMode('admin') : LocalStorageService.setUserMode('client');
+                        console.log('Logged in. Redirecting...');
+                        response.data.isAdmin ? window.location.href = '/admin/home' : window.location.href = '/client/home';
                         break;
 
                     // Other case
@@ -80,7 +83,7 @@ class SignUp extends React.Component {
             return;
         }
 
-        axios.post('http://35.198.228.244:10000/users', this.state.registerData)
+        axios.post(utilities['backend-url'] + '/users', this.state.registerData)
             .then((response) => {
                 switch (response.status) {
 

@@ -1,82 +1,164 @@
 import React from "react";
 import "./JobSearchPage.css";
 import NavBar from "./NavBar";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import axios from "axios";
+import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FaCode, FaBtc, FaClock } from "react-icons/fa";
+var utilities = require("./Utilities.json");
 
 class JobFilter extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      sort: 0
+    };
+    this.handleChange.bind(this);
+    this.handleSubmit.bind(this);
+    this.handleReset.bind(this);
   }
-  render() {
-    return (
-      <div class="job-filter">
-        <header>Filter</header>
-        <Form>
-          <Form.Label>Skill</Form.Label>
-          <Form.Group controlId="java">
-            <Form.Check type="checkbox" label="Java" />
-          </Form.Group>
-          <Form.Group controlId="python">
-            <Form.Check type="checkbox" label="Python" />
-          </Form.Group>
-          <Form.Group controlId="C++">
-            <Form.Check type="checkbox" label="C++" />
-          </Form.Group>
-          <Form.Label>Wage</Form.Label>
-          <Form.Row>
-            <Form.Group as={Col} controlId="minWage">
-              <Form.Control placeholder="Min" />
-            </Form.Group>
-            <Col lg="1">-</Col>
-            <Form.Group as={Col} controlId="maxWage">
-              <Form.Control placeholder="Max" />
-            </Form.Group>
-          </Form.Row>
-          <Form.Label>Duration</Form.Label>
-          <Form.Row>
-            <Form.Group as={Col} controlId="minWage">
-              <Form.Control placeholder="Min" />
-            </Form.Group>
-            <Col lg="1">-</Col>
-            <Form.Group as={Col} controlId="maxWage">
-              <Form.Control placeholder="Max" />
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Col lg={{ offset: "3" }}>
-              <Button variant="secondary" type="reset">
-                Clear
-              </Button>
-            </Col>
-            <Col>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
-            </Col>
-          </Form.Row>
-        </Form>
-      </div>
-    );
-  }
-}
+  handleChange = e => {
+    var k = e.target.name;
+    var v = e.target.value;
+    if (k === "w1" || k === "w2" || k == "t1" || k === "t2") {
+      v = parseInt(v);
+    } else if (k === "sort") {
+      switch (v) {
+        default:
+          v = 1;
+        case "Newest":
+          v = 0;
+          break;
+        case "Oldest":
+          v = 1;
+          break;
+        case "Max wage first":
+          v = 2;
+          break;
+        case "Min wage first":
+          v = 3;
+          break;
+        case "Longer duration first":
+          v = 4;
+          break;
+        case "Shorter duration first":
+          v = 5;
+          break;
+      }
+    }
+    var obj = {};
+    obj[k] = v;
+    this.setState(obj);
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    var tmp1 = [];
+    Object.entries(this.state).map(a => {
+      tmp1.push(a.join("="));
+    });
+    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    console.log(ApiUrl);
+    this.props.parentCallback(ApiUrl);
+  };
 
-class JobResult extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  handleReset = e => {
+    this.setState();
+  };
+
   render() {
     return (
-      <div class="job-result">
-        <header>
-          <Form id="no-padding">
+      <Card class="job-filter">
+        <Card.Header>Filter</Card.Header>
+        <Card.Body>
+          <Form onSubmit={this.handleSubmit}>
+            <Form.Group>
+              <Form.Label>Keyword</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Keyword"
+                name="name"
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Require Skill</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Require Skill"
+                name="r1"
+                onChange={this.handleChange}
+              />
+            </Form.Group>
+            <Form.Label>Wage</Form.Label>
             <Form.Row>
-              <Col>
-                <Form.Group id="no-margin" controlId="searchKeyword">
-                  <Form.Control placeholder="Search for Job Offering" />
-                </Form.Group>
+              <Form.Group as={Col}>
+                <Form.Control
+                  placeholder="Min"
+                  name="w1"
+                  onChange={this.handleChange}
+                />
+              </Form.Group>
+              <Col lg="1">-</Col>
+              <Form.Group as={Col}>
+                <Form.Control
+                  placeholder="Max"
+                  name="w2"
+                  onChange={this.handleChange}
+                />
+              </Form.Group>
+            </Form.Row>
+            <Form.Label>Duration</Form.Label>
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Control
+                  placeholder="Min"
+                  name="t1"
+                  onChange={this.handleChange}
+                />
+              </Form.Group>
+              <Col lg="1">-</Col>
+              <Form.Group as={Col}>
+                <Form.Control
+                  placeholder="Max"
+                  name="t2"
+                  onChange={this.handleChange}
+                />
+              </Form.Group>
+            </Form.Row>
+            <Form.Group>
+              <Form.Label>Catergory</Form.Label>
+              <Form.Control as="select" name="cat" onChange={this.handleChange}>
+                <option>---</option>
+                <option>Web</option>
+                <option>Software</option>
+                <option>Mobile</option>
+                <option>Game</option>
+                <option>Other</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Sort by</Form.Label>
+              <Form.Control
+                as="select"
+                name="sort"
+                onChange={this.handleChange}
+              >
+                <option>Newest</option>
+                <option>Oldest</option>
+                <option>Max wage first</option>
+                <option>Min wage first</option>
+                <option>Longer duration first</option>
+                <option>Shorter duration first</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Row>
+              <Col lg={{ offset: "3" }}>
+                <Button
+                  variant="secondary"
+                  type="reset"
+                  onClick={this.handleReset}
+                >
+                  Clear
+                </Button>
               </Col>
               <Col>
                 <Button variant="primary" type="submit">
@@ -85,62 +167,54 @@ class JobResult extends React.Component {
               </Col>
             </Form.Row>
           </Form>
-        </header>
-        <div>
-          <a href="/job">
-            <JobResultRow
-              jobName="Build a mobile app"
-              jobDes="Hi, I am Husain, an I am just started a startup company. I need an application to connect local electrician, plumbers, mechanics, and many other to the customers in order to fulfilled their need. For example, customer login and search for an electrician nearby. The app will shows result of electricians nearby with the detail provided the customer."
-              wage="80,000"
-              duration="30"
-              requireSkill="Java, Mobile App Development, Android"
-            />
-          </a>
-          <JobResultRow
-            jobName="3d face 360 view create from any picture software"
-            jobDes="We want software which can extract 3d face from any picture. The process will be automatically completed.. I need you to develop this for me. I would like this software to be developed for Windows."
-            wage="50,000"
-            duration="30"
-            requireSkill="Windows Desktop, Software Architecture"
-          />
-          <JobResultRow
-            jobName="Extract data from Memory block of NFC Card and provide the code -- 2"
-            jobDes="Hi we need someone with good NFC App (KOTLIN) development knowledge. We are using card with IC code SLIX(SK2S2002). We want to read the content present in the memory location of the NFC tag.
+        </Card.Body>
+      </Card>
+    );
+  }
+}
 
-            Type of card:
-            
-            Nfcv Card
-            NDEF formatable
-            
-            We tried developing an app where are filtering the intent with 3 Actions when a Card is scanned:
-            1. ACTION_NDEF_DISCOVERED
-            2. ACTION_TAG_DISCOVERED
-            3. ACTION_TECH_DISCOVERED
-            
-            If the intent action is 1st one, then we are following the github link ( https://github.com/andijakl/NfcDemo),
-            
-            If the intent action is the 2nd one, we are checking the techList (in which we found the given carf is using NfcV & NdefFormatable), for reading that kind of tags , we are running an AsyncTask for using transreceive funcion on the tag, but we don't know the parameters/command that is required to call transreceive function, i googled it but every where the command is different and the command may be provided in card datasheet
-            
-            We need someone who can write the code to read the data present in the memory block of the card and give us as an output string (UTF-8).We need thr code in Kotlin and need a basic test sample app for test the code's functioning. We need the code on the urgent basis. ( removed by admins )
-            
-            Secrenshots of the card readed data by TAGINFO app are attached for your reference."
-            wage="25,000"
-            duration="20"
-            requireSkill="Mobile App Development, Android, Kotlin, Near Field Communication (NFC)"
-          />
-          <JobResultRow
-            jobName="required gynaecologist"
-            jobDes="We require gynaecologist at our 25 beded hospital if anyone please suggest us 9782300558
-            Good pkg +accommodation
-            Minimum 6 month experienced candidate also can apply
-            Send ur resume on whatsapp or mail..
-            dheerendrakumar1991@ymail.com"
-            wage="10,000"
-            duration="10"
-            requireSkill="Health"
-          />
-        </div>
-      </div>
+class JobResult extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { jobList: [] };
+  }
+
+  componentDidMount() {
+    axios.get(this.props.ApiUrl).then(res => {
+      this.setState({ jobList: res.data });
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.ApiUrl !== this.props.ApiUrl) {
+      axios.get(this.props.ApiUrl).then(res => {
+        this.setState({ jobList: res.data });
+      });
+    }
+  }
+
+  render() {
+    return (
+      <Card class="job-result">
+        <Card.Header>Result</Card.Header>
+        <Card.Body>
+          {this.state.jobList.map(j => {
+            var tmp = [];
+            j.requiredSkills.map(s => tmp.push(s.skill));
+            if (tmp.length == 0) tmp.push("-");
+            return (
+              <JobResultRow
+                jobId={j.jobId}
+                jobName={j.name}
+                jobDes={j.description}
+                requireSkill={tmp.join(", ")}
+                wage={j.estimatedWage}
+                duration={j.estimatedDuration}
+              />
+            );
+          })}
+        </Card.Body>
+      </Card>
     );
   }
 }
@@ -162,7 +236,9 @@ class JobResultRow extends React.Component {
             <Col lg="9">
               <div id="job-name-and-des">
                 <div>
-                  <b>{this.props.jobName}</b>
+                  <a href={"/job/" + this.props.jobId}>
+                    <b>{this.props.jobName}</b>
+                  </a>
                 </div>
                 <div id="job-des">{this.props.jobDes}</div>
               </div>
@@ -174,8 +250,8 @@ class JobResultRow extends React.Component {
               </div>
             </Col>
             <Col>
-              <div>
-                <FaBtc /> {this.props.wage} THB
+              <div id="wage">
+                <FaBtc /> {parseInt(this.props.wage)} THB
               </div>
               <div>
                 <FaClock /> {this.props.duration} Days
@@ -191,21 +267,25 @@ class JobResultRow extends React.Component {
 class JobSearchPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { ApiUrl: utilities["backend-url"] + "/jobs?sort=0" };
   }
+
+  callbackFunction = childData => {
+    this.setState({ ApiUrl: childData });
+  };
 
   render() {
     return (
       <div>
-        <NavBar mode=" " userDatas={" "} />
+        <NavBar />
         <div class="job-search-page">
           <Container>
             <Row>
               <Col>
-                <JobFilter />
+                <JobFilter parentCallback={this.callbackFunction} />
               </Col>
               <Col lg="9">
-                <JobResult />
+                <JobResult ApiUrl={this.state.ApiUrl} />
               </Col>
             </Row>
           </Container>

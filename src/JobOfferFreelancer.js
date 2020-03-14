@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
-
+var utilities = require('./Utilities.json');
 class JobOfferFreelancer extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +46,7 @@ class JobOfferFreelancer extends React.Component {
       ],
       userDatas: "",
       jobDatas: "",
-      isDataLoad: false,
+      isUserDataLoad: false,
       isJobDataLoad: false
     };
   }
@@ -58,14 +58,14 @@ class JobOfferFreelancer extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + this.state.userID)
+      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get("http://35.198.228.244:10000/jobs/user/" + this.state.userID)
+      .get(utilities['backend-url'] + "/jobs/user/" + LocalStorageService.getUserID())
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
@@ -78,6 +78,9 @@ class JobOfferFreelancer extends React.Component {
   };
 
   render() {
+    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
+      return null;
+    }
     var recentJob;
     if (this.state.statusFilter === this.state.status.ALL) {
       recentJob = this.state.jobList.map((job, index) => (
@@ -135,7 +138,7 @@ class JobOfferFreelancer extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="freelancer" userDatas={this.state.userDatas}/>
+        <NavBar />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow">

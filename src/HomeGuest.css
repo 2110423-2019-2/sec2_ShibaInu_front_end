@@ -1,0 +1,48 @@
+#home-guest {
+    /*position: fixed;*/
+    
+}
+#navbar-guest {
+    z-index: 0;
+}
+#bg-guest{
+   
+    filter: brightness(30%);
+    z-index: 1;
+}
+#bg-overlay{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    color: white;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+    align-content: center;
+    flex-direction: column;
+
+}
+#content{
+    text-align: justify;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+#content h1{
+    font-weight: bold;
+    letter-spacing: 2px;
+    word-spacing: normal;
+}
+
+#content .btn{
+    margin-top: 1%;
+    margin-left: 10px;
+}
+#btn-group{
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+}

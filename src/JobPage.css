@@ -3,35 +3,26 @@
   margin-top: 10px;
 }
 
-.job-detail {
-  background-color: white;
-  margin-top: 20px;
-}
-
-.non-header {
-  /* padding: 20px; */
-}
-
-.inside-box {
-  /* padding: 10px; */
-}
-
-.job-bid {
-  background-color: white;
-  margin-top: 20px;
-}
-
-.job-suggest {
-  background-color: white;
-  margin-top: 20px;
-}
-
-header {
+.job-page .card-header {
   background-color: #254380;
   color: white;
 }
 
-.interrested-freelancer {
-  background-color: white;
-  margin-top: 20px;
+.job-page header {
+  background-color: #254380;
+  padding: 10px;
+  color: white;
+}
+
+.job-page .card {
+  margin-bottom: 20px;
+}
+
+#job-detail .inside-body {
+  padding: 5px;
+}
+
+#job-detail .card-header {
+  font-size: 24px;
+  background-color: #00297c;
 }

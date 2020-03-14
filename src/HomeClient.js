@@ -1,55 +1,49 @@
 import React from "react";
 import NavBar from "./NavBar";
 import "./HomeClient.css";
+import "./HomeFreelancer.css";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-
-class HomeClient extends React.Component {
+import { FaBullhorn, FaInfoCircle } from "react-icons/fa";
+var utilities = require('./Utilities.json');
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userID: this.props.userID,
-      jobList: [
-        {
-          id: "00001",
-          name: "Make Android App",
-          type: "Android App",
-          freelancerID: "123456789",
-          freelancerName: "-",
-          status: "Open"
-        },
-        {
-          id: "00002",
-          name: "Make Website",
-          type: "Frontend Backend",
-          freelancerID: "55555555",
-          freelancerName: "Shiba",
-          status: "In progress"
-        }
-      ],
       userDatas: "",
       jobDatas: "",
-      isDataLoad: false,
-      isJobDataLoad: false
+      isUserDataLoad: false,
+      isJobDataLoad: false,
+      mode: "client",
+      announce: "",
+      userID: LocalStorageService.getUserID(),
+      isAnnounceLoad: false,
     };
   }
 
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + this.state.userID)
+      .get(utilities['backend-url'] + "/users/" + this.state.userID)
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get("http://35.198.228.244:10000/jobs/user/" + this.state.userID)
+      .get(utilities['backend-url'] + "/jobs/user/" + this.state.userID)
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
         console.log(this.state.jobDatas);
+      });
+    axios
+      .get(utilities['backend-url'] + "/announcement")
+      .then(res => {
+        const announce = res.data;
+        this.setState({ announce: announce, isAnnounceLoad:true });
+        console.log(this.state.announce);
       });
   };
 
@@ -57,8 +51,12 @@ class HomeClient extends React.Component {
     this.fetchDatas();
   };
 
+  handleClickJobDetail(e) {
+    window.location.href = '/client/dashboard/' + e.target.id;
+  }
+
   render() {
-    if (!this.state.isDataLoad && !this.state.isJobDataLoad) {
+    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
       return null;
     }
     var recentJob = this.state.jobDatas.map((job, index) => (
@@ -69,7 +67,7 @@ class HomeClient extends React.Component {
         <td className="align-middle">-</td>
         <td className="align-middle">{job.status}</td>
         <td className="align-middle">
-          <button type="button" className="btn btn-secondary btn-block">
+          <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
             Detail
           </button>
         </td>
@@ -89,11 +87,30 @@ class HomeClient extends React.Component {
         <td></td>
       </tr>
     );
+    
+    var announce;
+    if(this.state.isAnnounceLoad){
+      announce = this.state.announce.map((announce)=>(
+        <Row>
+          <Col className="bg-light shadow pt-2">
+            <h5 className="announce-title"><FaBullhorn /> {announce.title}</h5>
+            <p className="announce-content"><FaInfoCircle /> {announce.content}</p>
+          </Col>
+        </Row>
+      ));
+    }
+
     return (
       <div className="main-background">
-        <NavBar mode="client" userDatas={this.state.userDatas} />
+        <NavBar />
         <Container id="homeclient-box">
           <Row>
+            <Col className="background-blue text-light pt-2 pb-2">
+              <h3><FaBullhorn /> Announcement</h3>
+            </Col>
+          </Row>
+          {announce}
+          <Row className="mt-3">
             <Col className="bg-light shadow" xl={8} offset={1}>
               <h2 id="recentjob-topic">Recent Job Offering</h2>
               <Table responsive>
@@ -133,4 +150,4 @@ class HomeClient extends React.Component {
   }
 }
 
-export default HomeClient;
+export default Home;

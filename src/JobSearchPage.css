@@ -1,48 +1,64 @@
 .job-search-page {
   margin-top: 20px;
+  margin-bottom: 20px;
 }
-.job-filter {
+.job-search-page .job-filter {
   background-color: white;
 }
-.job-result {
+.job-search-page .job-result {
   background-color: white;
 }
 
-#low-margin {
-  margin: 10px;
+.job-search-page #low-margin {
+  margin-bottom: 20px;
+  margin-top: 20px;
   max-width: 100%;
 }
 
-.container {
-  width: 80%;
+.job-search-page .container {
+  width: 90%;
 }
 
-.job-result-row {
+.job-search-page .job-result-row {
   border-bottom: 1px solid gray;
 }
 
-#no-padding {
+.job-search-page #no-padding {
   padding: 0px;
 }
 
-#no-margin {
+.job-search-page #no-margin {
   margin: 0px;
 }
 
-#job-des {
+.job-search-page #job-des {
   height: 48px;
   overflow: hidden;
   color: grey;
 }
 
-#job-name-and-des {
+.job-search-page #job-name-and-des {
   margin-bottom: 15px;
 }
 
-a:hover,
-a:visited,
-a:link,
-a:active {
+.job-search-page a:hover,
+.job-search-page a:visited,
+.job-search-page a:link,
+.job-search-page a:active {
   text-decoration: none;
   color: black;
+}
+
+.job-search-page .card-header {
+  background-color: #254380;
+  padding: 10px;
+  color: white;
+}
+
+.job-search-page .card-body {
+  padding: 10px;
+}
+
+.job-search-page #wage {
+  margin-bottom: 10px;
 }

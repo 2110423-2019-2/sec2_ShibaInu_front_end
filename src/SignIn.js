@@ -5,6 +5,7 @@ import './SignInSignUp.css';
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
 import { Button, Form } from 'react-bootstrap';
+var utilities = require('./Utilities.json');
 
 class SignIn extends React.Component {
 
@@ -39,15 +40,17 @@ class SignIn extends React.Component {
             return;
         }
 
-        axios.post('http://35.198.228.244:10000/auth/login', this.state.loginData)
+        axios.post(utilities['backend-url'] + '/auth/login', this.state.loginData)
             .then((response) => {
 
                 switch (response.status) {
                     // Created
                     case 201:
-                        LocalStorageService.setToken(response.data.access_token);
-                        console.log('Logged in. Redirecting to HomeClient...');
-                        window.location.href = '/';
+                        LocalStorageService.setToken(response.data.access_token || '');
+                        LocalStorageService.setUserID(response.data.userId || '');
+                        response.data.isAdmin ? LocalStorageService.setUserMode('admin') : LocalStorageService.setUserMode('client');
+                        console.log('Logged in. Redirecting...');
+                        response.data.isAdmin ? window.location.href = '/admin/home' : window.location.href = '/client/home';
                         break;
 
                     // Other case
@@ -86,12 +89,12 @@ class SignIn extends React.Component {
                                 <Form noValidate={true} validated={this.state.validated} onSubmit={this.handleSubmit}>
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
-                                        <Form.Control type="username" placeholder="Username" name='username' onChange={this.handleChange} required />
+                                        <Form.Control type="username" placeholder="Username" name='username' value={this.state.loginData.username} onChange={this.handleChange} required />
                                     </Form.Group>
 
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" placeholder="Password" name='password' onChange={this.handleChange} required />
+                                        <Form.Control type="password" placeholder="Password" name='password' value={this.state.loginData.password} onChange={this.handleChange} required />
                                     </Form.Group>
                                     <p className='unauthorized-message' hidden={!this.state.unauthorized}>Wrong username or password.</p>
                                     <Button variant="success" type="submit" >

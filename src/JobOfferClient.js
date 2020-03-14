@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap";
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
-
+var utilities = require('./Utilities.json');
 class JobOfferClient extends React.Component {
   constructor(props) {
     super(props);
@@ -22,31 +22,14 @@ class JobOfferClient extends React.Component {
       status: {
         ALL: "all",
         OPEN: "open",
-        INPROGRESS: "in progress",
-        FINISHED: "finished"
+        ACCEPTED: "accepted",
+        WORKING: "working",
+        DONE: "done"
       },
       statusFilter: "all",
-      jobList: [
-        {
-          id: "00001",
-          name: "Make Android App",
-          type: "Android App",
-          freelancerID: "123456789",
-          freelancerName: "-",
-          status: "open"
-        },
-        {
-          id: "00002",
-          name: "Make Website",
-          type: "Frontend Backend",
-          freelancerID: "55555555",
-          freelancerName: "Shiba",
-          status: "in progress"
-        }
-      ],
       userDatas: "",
       jobDatas: "",
-      isDataLoad: false,
+      isUserDataLoad: false,
       isJobDataLoad: false
     };
   }
@@ -58,14 +41,14 @@ class JobOfferClient extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get("http://35.198.228.244:10000/users/" + this.state.userID)
+      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get("http://35.198.228.244:10000/jobs/user/" + this.state.userID)
+      .get(utilities['backend-url'] + "/jobs/user/" + LocalStorageService.getUserID())
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
@@ -77,8 +60,12 @@ class JobOfferClient extends React.Component {
     this.fetchDatas();
   };
 
+  handleClickJobDetail(e) {
+    window.location.href = '/client/dashboard/' + e.target.id;
+  }
+
   render() {
-    if (!this.state.isDataLoad && !this.state.isJobDataLoad) {
+    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
       return null;
     }
     var recentJob;
@@ -94,7 +81,7 @@ class JobOfferClient extends React.Component {
           <td className="align-middle">-</td>
           <td className="align-middle">{job.status}</td>
           <td className="align-middle">
-            <button type="button" className="btn btn-secondary btn-block">
+            <button type="button" className="btn btn-secondary btn-block"  id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
               Detail
             </button>
           </td>
@@ -111,7 +98,7 @@ class JobOfferClient extends React.Component {
             <td className="align-middle">-</td>
             <td className="align-middle">{job.status}</td>
             <td className="align-middle">
-              <button type="button" className="btn btn-secondary btn-block">
+              <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
                 Detail
               </button>
             </td>
@@ -135,7 +122,7 @@ class JobOfferClient extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar mode="client" userDatas={this.state.userDatas}/>
+        <NavBar />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow">
@@ -169,20 +156,29 @@ class JobOfferClient extends React.Component {
                   <Nav.Link
                     eventKey="link-3"
                     onClick={e =>
-                      this.statusHandler(e, this.state.status.INPROGRESS)
-                    }
+                      this.statusHandler(e, this.state.status.ACCEPTED)}
                   >
-                    In progress
+                    Accepted
                   </Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                   <Nav.Link
                     eventKey="link-4"
                     onClick={e =>
-                      this.statusHandler(e, this.state.status.FINISHED)
+                      this.statusHandler(e, this.state.status.WORKING)
                     }
                   >
-                    Finished
+                    Working
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-5"
+                    onClick={e =>
+                      this.statusHandler(e, this.state.status.DONE)
+                    }
+                  >
+                    Done
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
