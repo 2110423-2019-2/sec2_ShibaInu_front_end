@@ -68,3 +68,27 @@ Form p {
 Form p.unauthorized-message {
     color: red;
 }
+
+.socialmedia-login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 10px 10px;
+}
+
+.socialmedia-login-container * {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.socialmedia-login-container .seperating-line {
+    border: none;
+    border-bottom: 1px solid rgb(114, 114, 114);
+    width: 100%;
+    margin: 20px 0px;
+}
+
+Form Button {
+    width: 100%;
+}

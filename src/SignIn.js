@@ -1,10 +1,11 @@
 import React from 'react';
+import axios from 'axios';
+import { Button, Form } from 'react-bootstrap';
+
 import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
-import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
-import { Button, Form } from 'react-bootstrap';
 var utilities = require('./Utilities.json');
 
 class SignIn extends React.Component {
@@ -26,7 +27,7 @@ class SignIn extends React.Component {
         this.setState({
             loginData: tempData
         });
-        this.setState({unauthorized: false});
+        this.setState({ unauthorized: false });
     }
 
     handleSubmit = (e) => {
@@ -63,7 +64,7 @@ class SignIn extends React.Component {
 
                 if (error.response.status === 401) {
                     console.log('Unauthorization');
-                    this.setState({unauthorized: true});
+                    this.setState({ unauthorized: true });
 
                 } else {
                     console.error(error);
@@ -87,6 +88,7 @@ class SignIn extends React.Component {
                             <div className='form-name'>Sign In</div>
                             <div className='form-container'>
                                 <Form noValidate={true} validated={this.state.validated} onSubmit={this.handleSubmit}>
+
                                     <Form.Group controlId="formBasicUsername">
                                         <Form.Label>Username</Form.Label>
                                         <Form.Control type="username" placeholder="Username" name='username' value={this.state.loginData.username} onChange={this.handleChange} required />
@@ -100,6 +102,13 @@ class SignIn extends React.Component {
                                     <Button variant="success" type="submit" >
                                         Sign In
                                     </Button>
+
+                                    <Form.Group className='socialmedia-login-container'>
+                                    <div className='seperating-line'>or</div>
+                                        <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="true"></div>
+                                    </Form.Group>
+
+
                                     <p>Don't have an account? <a href='/signup'>Create account</a></p>
                                 </Form>
                             </div>
