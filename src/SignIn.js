@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Button, Form } from 'react-bootstrap';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import NavBar from "./NavBar";
 import logo from './material/Logo.png';
@@ -19,6 +20,7 @@ class SignIn extends React.Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleFacebookLogin = this.handleFacebookLogin.bind(this);
     }
 
     handleChange = (e) => {
@@ -72,6 +74,15 @@ class SignIn extends React.Component {
             })
     }
 
+    responseFacebook = (response) => {
+        console.log("FB LOGIN");
+        console.log(response);
+    }
+
+    componentClicked = (data) => {
+        console.warn(data);
+    }
+
     render() {
 
         return (
@@ -103,9 +114,24 @@ class SignIn extends React.Component {
                                         Sign In
                                     </Button>
 
+                                    <div className='social-seperator-container'>
+                                        <span className='social-seperator'>
+                                            or
+                                        </span>
+                                    </div>
+
                                     <Form.Group className='socialmedia-login-container'>
-                                    <div className='seperating-line'>or</div>
-                                        <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="true"></div>
+
+                                        <FacebookLogin
+                                            appId="3019159754810357"
+                                            autoLoad={false}
+                                            fields="name,email,picture"
+                                            onClick={this.componentClicked}
+                                            callback={this.responseFacebook}
+                                            render={renderProps => (
+                                                <Button variant='primary' onClick={renderProps.onClick}>Login with Facebook</Button>
+                                              )} />
+
                                     </Form.Group>
 
 

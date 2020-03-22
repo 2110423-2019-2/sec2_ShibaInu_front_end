@@ -1,9 +1,11 @@
 import React from 'react';
+import axios from 'axios';
+import { Form, Button, Col } from 'react-bootstrap';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+
 import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
-import axios from 'axios';
-import { Form, Button, Col } from 'react-bootstrap';
 import LocalStorageService from './LocalStorageService';
 var utilities = require('./Utilities.json');
 
@@ -158,6 +160,26 @@ class SignUp extends React.Component {
                                     <Button variant="success" type="submit">
                                         Sign Up
                                     </Button>
+
+                                    <div className='social-seperator-container'>
+                                        <span className='social-seperator'>
+                                            or
+                                        </span>
+                                    </div>
+
+                                    <Form.Group className='socialmedia-login-container'>
+
+                                    <FacebookLogin
+                                            appId="3019159754810357"
+                                            autoLoad={false}
+                                            fields="name,email,picture"
+                                            onClick={this.componentClicked}
+                                            callback={this.responseFacebook}
+                                            render={renderProps => (
+                                                <Button variant='primary' onClick={renderProps.onClick}>Register with Facebook</Button>
+                                              )} />
+                                    </Form.Group>
+
                                     <p>Already have an account? <a href='/signin'>Sign in</a></p>
                                 </Form>
                             </div>
