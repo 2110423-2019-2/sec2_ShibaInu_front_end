@@ -18,6 +18,7 @@ import {
   EducationModal,
   ReviewListItem
 } from "./ProfileModal";
+import ImageUploader from './ImageUploader';
 import { Container } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
 var utilities = require("./Utilities.json");
@@ -82,12 +83,10 @@ class Profile extends React.Component {
       skills: ["C", "C++", "C#"],
       reviewlist:[{reviewername:"itthi", description:"awesome!",score:10,jobname:"Building mobile application"}],
       verified: false,
-      upper1: true
+      upper1: true,
+      uploadImage: null
     };
     this.fetch = this.fetch.bind(this);
-    
-     
-      
   }
   
   componentDidMount(){
@@ -191,6 +190,7 @@ class Profile extends React.Component {
       <>
         <NavBar mode="client" userDatas={this.state.data} />
         <Container id="profile-container">
+          <ImageUploader/>
           <div className="row-5-xs shadow-sm" id="personal">
             <div className="row" id="pro-bg">
               <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />

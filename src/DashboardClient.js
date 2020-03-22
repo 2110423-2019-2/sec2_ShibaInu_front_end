@@ -41,7 +41,7 @@ class DashboardClient extends React.Component {
   }
 
   async getInterestedFreelancer() {
-    let freelancerList = [];
+    let freelancerList = new Array();
 
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios
@@ -265,7 +265,7 @@ class DashboardResponsible extends React.Component {
   getResponsibleComponent() {
     return (
       <Table className="component-responsible" responsive="sm" hover>
-        {/* <tbody>
+        <tbody>
           <tr key={this.state.user.userid}>
             <td>
               <div className='profile-img'><img src={this.state.user.img} alt='user-img' /></div>
@@ -274,10 +274,10 @@ class DashboardResponsible extends React.Component {
             <td>
               <button type="button" className="btn btn-secondary" onClick={""}>
                 Chat
-                      </button>
+              </button>
             </td>
           </tr>
-        </tbody> */}
+        </tbody>
       </Table>
     )
   }
@@ -385,7 +385,7 @@ class DashboardTimeline extends React.Component {
 
 // DEFAULT COMPONENT -----------------------------------------------------------------------------
 
-export class DashboardBox extends React.Component {
+class DashboardBox extends React.Component {
 
   constructor(props) {
     super(props);
