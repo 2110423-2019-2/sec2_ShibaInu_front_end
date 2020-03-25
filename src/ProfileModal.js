@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Modal, Button, Form, Col, ModalTitle, Table } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
-
+import ImageUploader from "./ImageUploader"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -1177,6 +1177,61 @@ class ReviewListItem extends Component {
     );
   }
 }
+
+class ProfileImageModal extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      upload : false,
+      show:false
+    }
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+  }
+  handleClose(){
+    this.setState({show:false})
+  }
+  handleShow(){
+    this.setState({show:true})
+  }
+  handleSave(){
+    this.setState({upload:true})
+  }
+  render(){
+    if(this.state.upload){
+      this.setState({upload:false})
+    }
+    return (
+      <>
+      <button
+          type="button"
+          id= {this.props.id}
+          onClick={this.handleShow}
+          hidden={this.props.hidden}
+        >
+          change profile image
+        </button>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header className="modalHead" closeButton>
+            <ModalTitle>Profile Image</ModalTitle>
+          </Modal.Header>
+          <Modal.Body>
+            <ImageUploader upload={this.state.upload}/>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-danger" onClick={this.handleClose}>
+              Cancel
+            </Button>
+            <Button variant="outline-success" onClick={this.handleSave}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+    </>
+    )
+  }
+}
 export {
   ProfileModal,
   SkillListItem,
@@ -1186,7 +1241,8 @@ export {
   ExperienceListItem,
   ExperienceModal,
   EducationModal,
-  ReviewListItem
+  ReviewListItem,
+  ProfileImageModal
 };
 
 /*
