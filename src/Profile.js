@@ -16,7 +16,8 @@ import {
   ExperienceListItem,
   ExperienceModal,
   EducationModal,
-  ReviewListItem
+  ReviewListItem,
+  ProfileImageModal
 } from "./ProfileModal";
 import ImageUploader from './ImageUploader';
 import { Container } from "react-bootstrap";
@@ -190,7 +191,6 @@ class Profile extends React.Component {
       <>
         <NavBar mode="client" userDatas={this.state.data} />
         <Container id="profile-container">
-          <ImageUploader/>
           <div className="row-5-xs shadow-sm" id="personal">
             <div className="row" id="pro-bg">
               <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />
@@ -199,9 +199,7 @@ class Profile extends React.Component {
               <div className="col-3 mr " id="pro-img-frame">
                 <div id="img-f">
                   <img src={profileimage} className="pro-img" alt="youngstar logo" />
-                  <button id="profile-img" onClick={this.handleUpper1}>
-                    <p>Change Profile</p>
-                  </button>
+                  <ProfileImageModal id="profile-img"/>
                 </div>
               </div>
               <div className="col-5">
@@ -216,7 +214,7 @@ class Profile extends React.Component {
                   type="button"
                   className="btn btn-outline-dark"
                   id="verify"
-                  hidden={true}
+                  hidden={this.state.verified}
                 >
                   verify
                 </button>
