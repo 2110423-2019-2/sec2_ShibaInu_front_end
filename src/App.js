@@ -21,6 +21,8 @@ import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
 import ReviewFreelancer from "./ReviewFreelancer";
+import walletPage from './WalletPage';
+import WalletPage from "./WalletPage";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -65,7 +67,8 @@ class App extends React.Component {
           <Route path="/client/dashboard/:jobId" component={() => <DashboardClient params={useParams()} />} />
           <Route path="/admin/home" component={AdminHome} />
           <Route path="/admin/announcement" component={AdminAnnouncement} />
-          <Route path="/client/review" component={ReviewFreelancer}/>
+          <Route path="/client/review" component={ReviewFreelancer} />
+          <Route path="/wallet" component={WalletPage} />
         </Switch>
       </Router>
     );
