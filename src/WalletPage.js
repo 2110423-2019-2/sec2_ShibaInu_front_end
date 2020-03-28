@@ -1,5 +1,7 @@
 import React from 'react';
 
+import NavBar from './NavBar';
+
 class WalletPage extends React.Component {
 
     constructor(props) {
@@ -10,6 +12,7 @@ class WalletPage extends React.Component {
 
         return (
             <div>
+                <NavBar mode='guest' userDatas='' />
 
             </div>
         );
