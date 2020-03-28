@@ -2,6 +2,7 @@ import React from 'react';
 import { Nav, Container, Row, Col, Table, Button } from 'react-bootstrap';
 
 import NavBar from './NavBar';
+import PaymentModal from './PaymentModal';
 
 class WalletPage extends React.Component {
 
@@ -10,19 +11,6 @@ class WalletPage extends React.Component {
         this.state = {
 
         };
-    }
-
-    componentDidMount() {
-
-        const {OmiseCard} = window;
-        OmiseCard.configureButton('#checkout-button', {
-            publicKey: 'OMISE_PUBLIC_KEY',
-            amount: 10000,
-            frameLabel: 'YoungStar',
-            submitLabel: 'Pay',
-        });
-
-        OmiseCard.attach();
     }
 
     getHeadTable() {
@@ -63,6 +51,7 @@ class WalletPage extends React.Component {
 
         return (
             <div>
+                <PaymentModal />
                 <NavBar mode='guest' userDatas='' />
                 <Container id="homeclient-box">
                     <Container className="bg-light shadow">
@@ -121,11 +110,6 @@ class WalletPage extends React.Component {
                         </Row>
                     </Container>
                 </Container>
-
-                <form action='/checkout.php' method="post">
-                    <Button id='checkout-button'>PAY</Button>
-                    <input type='submit' value='pay' id='checkout-button' />
-                </form>
 
             </div>
         );
