@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import NavBar from "./NavBar";
@@ -14,13 +14,13 @@ class SignIn extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
             loginData: { username: '', password: '' },
             validated: false,
             unauthorized: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        // this.handleFacebookLogin = this.handleFacebookLogin.bind(this);
     }
 
     handleChange = (e) => {
@@ -42,6 +42,10 @@ class SignIn extends React.Component {
             e.stopPropagation();
             return;
         }
+
+        this.setState({
+            isLoading: true
+        });
 
         axios.post(utilities['backend-url'] + '/auth/login', this.state.loginData)
             .then((response) => {
@@ -71,16 +75,16 @@ class SignIn extends React.Component {
                 } else {
                     console.error(error);
                 }
-            })
+            }).finally(() => {
+                this.setState({
+                    isLoading: false
+                });
+            });
     }
 
     responseFacebook = (response) => {
         console.log("FB LOGIN");
         console.log(response);
-    }
-
-    componentClicked = (data) => {
-        console.warn(data);
     }
 
     render() {
@@ -110,8 +114,16 @@ class SignIn extends React.Component {
                                         <Form.Control type="password" placeholder="Password" name='password' value={this.state.loginData.password} onChange={this.handleChange} required />
                                     </Form.Group>
                                     <p className='unauthorized-message' hidden={!this.state.unauthorized}>Wrong username or password.</p>
-                                    <Button variant="success" type="submit" >
-                                        Sign In
+                                    <Button variant="success" type="submit" disabled={this.state.isLoading}>
+                                        <Spinner
+                                            as="span"
+                                            animation="border"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                            hidden={!this.state.isLoading}
+                                        />
+                                        {' '}Sign In
                                     </Button>
 
                                     <div className='social-seperator-container'>
@@ -125,12 +137,20 @@ class SignIn extends React.Component {
                                         <FacebookLogin
                                             appId="3019159754810357"
                                             autoLoad={false}
-                                            fields="name,email,picture"
-                                            onClick={this.componentClicked}
+                                            fields="first_name,last_name,email,picture"
                                             callback={this.responseFacebook}
                                             render={renderProps => (
-                                                <Button variant='primary' onClick={renderProps.onClick}>Login with Facebook</Button>
-                                              )} />
+                                                <Button variant='primary' onClick={renderProps.onClick} disabled={this.state.isLoading} >
+                                                    {!this.state.isLoading ? '' : (<Spinner
+                                                        as="span"
+                                                        animation="border"
+                                                        size="sm"
+                                                        role="status"
+                                                        aria-hidden="true"
+                                                    />)}
+                                                    {' '}Login with Facebook
+                                                </Button>
+                                            )} />
 
                                     </Form.Group>
 
