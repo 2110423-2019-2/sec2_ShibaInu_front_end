@@ -36,7 +36,7 @@ class ImageUploader extends React.Component{
                         imageUrl: resizedImageUrl
                     })
                 }
-                //this.setState({selectedImage : image},console.log(image))
+                this.setState({selectedImage : image},console.log(image))
                 
             }
             reader.onloadend = ()=>{
@@ -70,9 +70,9 @@ class ImageUploader extends React.Component{
     
         var ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, width, height);
-        canvas.toBlob((blob)=>{
+        /*canvas.toBlob((blob)=>{
             this.setState({selectedImage: blob})
-        }, "image/jpg",quality);
+        }, "image/jpg",quality);*/
         return canvas.toDataURL("image/jpg", quality);
     }
     componentDidUpdate(prevProps){
@@ -88,7 +88,8 @@ class ImageUploader extends React.Component{
         }
         const timestamp = new Date();
         const fd = new FormData();
-        fd.append('image',this.state.selectedImage,this.userId+timestamp.toString());
+        fd.append('image',this.state.selectedImage,this.userId+timestamp.toString()+".jpg");
+        console.log(this.state.selectedImage)
         this.props.handlerUpload(fd);
         this.setState({uploadstate : false/*selectedImage:null,imageUrl:null*/});
     }
