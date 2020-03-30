@@ -1,10 +1,12 @@
 import React from 'react';
 import {Spinner,Badge} from 'react-bootstrap';
 import swal from 'sweetalert'
+
 class ImageUploader extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            userId : null,
             selectedImage : null,
             imageUrl : null,
             onloadUpload : false,
@@ -34,7 +36,7 @@ class ImageUploader extends React.Component{
                         imageUrl: resizedImageUrl
                     })
                 }
-                this.setState({selectedImage : image},console.log(image))
+                //this.setState({selectedImage : image},console.log(image))
                 
             }
             reader.onloadend = ()=>{
@@ -46,10 +48,10 @@ class ImageUploader extends React.Component{
         
     }
     resizeImage(image, maxWidth, maxHeight, quality) {
-        var canvas = document.createElement('canvas');
+        let canvas = document.createElement('canvas');
     
-        var width = image.width;
-        var height = image.height;
+        let width = image.width;
+        let height = image.height;
     
         if (width > height) {
             if (width > maxWidth) {
@@ -68,7 +70,10 @@ class ImageUploader extends React.Component{
     
         var ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, width, height);
-        return canvas.toDataURL("image/*", quality);
+        canvas.toBlob((blob)=>{
+            this.setState({selectedImage: blob})
+        }, "image/jpg",quality);
+        return canvas.toDataURL("image/jpg", quality);
     }
     componentDidUpdate(prevProps){
         if(this.props.upload !== prevProps.upload){
@@ -81,7 +86,11 @@ class ImageUploader extends React.Component{
             swal("Error","Image file cannot be null","error");
             return;
         }
-        this.setState({uploadstate : false,selectedImage:null,imageUrl:null})
+        const timestamp = new Date();
+        const fd = new FormData();
+        fd.append('image',this.state.selectedImage,this.userId+timestamp.toString());
+        this.props.handlerUpload(fd);
+        this.setState({uploadstate : false/*selectedImage:null,imageUrl:null*/});
     }
     render(){
         if(this.state.uploadstate){

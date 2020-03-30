@@ -5,7 +5,8 @@ import ImageUploader from "./ImageUploader"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-axios.defaults.baseURL = "http://35.198.228.244:10000";
+import LocalStorageService from './LocalStorageService';
+var utilities = require("./Utilities.json");
 class ProfileModal extends Component {
   constructor(props) {
     super(props);
@@ -70,7 +71,7 @@ class ProfileModal extends Component {
   }
   handleSave() {
     axios
-      .patch("/users/" + this.state.usersId, {
+      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
         firstName: this.state.fname,
         lastName: this.state.lname,
         headline: this.state.headline,
@@ -252,7 +253,7 @@ class About extends Component {
   handleSave() {
     console.log(this.state.about);
     axios
-      .patch("/users/" + this.state.usersId, {
+      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
         about: this.state.about
       })
       .then(res => {
@@ -364,7 +365,7 @@ class ExperienceModal extends Component {
     let json = JSON.stringify(this.state.experiences);
     console.log(json);
     axios
-      .patch("/users/" + this.state.usersId, {
+      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
         experience: json
       })
       .then(res => {
@@ -669,7 +670,7 @@ class EducationModal extends Component {
     let json = JSON.stringify(this.state.edu);
     console.log(json);
     axios
-      .patch("/users/" + this.state.usersId, {
+      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
         education: json
       })
       .then(res => {
@@ -941,7 +942,7 @@ class SkillModal extends Component {
   handleSave() {
     console.log(this.state.usersId)
     axios
-      .patch("/users/" + this.state.usersId, {
+      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
         skills: this.state.skills
       })
       .then(res => {
@@ -1183,11 +1184,13 @@ class ProfileImageModal extends Component {
     super(props);
     this.state={
       upload : false,
-      show:false
+      show:false,
+      userId:null
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handlerUpload = this.handlerUpload.bind(this,);
   }
   handleClose(){
     this.setState({show:false})
@@ -1197,6 +1200,28 @@ class ProfileImageModal extends Component {
   }
   handleSave(){
     this.setState({upload:true})
+  }
+  componentDidMount(){
+    this.setState({userId : this.props.userId})
+  }
+  handlerUpload(fd){
+        if(!(fd instanceof FormData)){
+          return;
+        }
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        axios({
+          method: 'post',
+          url: utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,
+          data: fd,
+          headers: {'Content-Type': 'multipart/form-data' }
+          })
+        .then(res => {
+            console.log(res);
+            this.handleClose();
+          })
+          .catch(err => {
+            console.log(err);
+        });
   }
   render(){
     if(this.state.upload){
@@ -1217,7 +1242,7 @@ class ProfileImageModal extends Component {
             <ModalTitle>Profile Image</ModalTitle>
           </Modal.Header>
           <Modal.Body>
-            <ImageUploader upload={this.state.upload}/>
+            <ImageUploader upload={this.state.upload} handlerUpload={this.handlerUpload}/>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="outline-danger" onClick={this.handleClose}>
