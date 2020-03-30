@@ -19,7 +19,6 @@ import {
   ReviewListItem,
   ProfileImageModal
 } from "./ProfileModal";
-import ImageUploader from './ImageUploader';
 import { Container } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
 var utilities = require("./Utilities.json");
@@ -84,8 +83,7 @@ class Profile extends React.Component {
       skills: ["C", "C++", "C#"],
       reviewlist:[{reviewername:"itthi", description:"awesome!",score:10,jobname:"Building mobile application"}],
       verified: false,
-      upper1: true,
-      uploadImage: null
+      imageProfileURL: profileimage
     };
     this.fetch = this.fetch.bind(this);
   }
@@ -140,6 +138,13 @@ class Profile extends React.Component {
         if (body.experience !== null) {
           exp_json = JSON.parse(body.experience);
         }
+        axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId)
+        .then(res=>{
+          console.log(res);
+        })
+        .catch(err=>{
+          console.log(err);
+        })
         this.setState({
           data: body,
           fname: body.firstName,
@@ -179,8 +184,25 @@ class Profile extends React.Component {
       .catch(err => {
         console.log(err);
       });
+      
   }
   render() {
+    let invite_btn = <button
+    type="button"
+    className="btn btn-outline-success"
+    id="verify"
+    hidden={this.state.verified}
+    >
+    invite
+    </button>
+    let verify_btn = <button
+    type="button"
+    className="btn btn-outline-dark"
+    id="verify"
+    hidden={this.state.verified}
+    >
+    verify
+    </button>
     /*if(!this.state.isLoaded){
       return(
         <>
@@ -198,11 +220,11 @@ class Profile extends React.Component {
             <div className="row " id="upper-second">
               <div className="col-3 mr " id="pro-img-frame">
                 <div id="img-f">
-                  <img src={profileimage} className="pro-img" alt="youngstar logo" />
-                  <ProfileImageModal id="profile-img"/>
+                  <img src={this.state.imageProfileURL} className="pro-img" alt="youngstar logo" />
+                  <ProfileImageModal id="profile-img" userId={this.state.userId} hidden={!this.state.isMyProfile}/>
                 </div>
               </div>
-              <div className="col-5">
+              <div className="col-4">
                 <div className="fname">{this.state.fname}</div>
                 <div className="lname">{this.state.lname}</div>
                 <div className="headline" hidden={this.state.headline === ""}>
@@ -210,14 +232,10 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className="col-1">
-                <button
-                  type="button"
-                  className="btn btn-outline-dark"
-                  id="verify"
-                  hidden={this.state.verified}
-                >
-                  verify
-                </button>
+              {this.state.isMyProfile&&!this.state.verified?verify_btn:null}
+              </div>
+              <div className="col-1">
+              {!this.state.isMyProfile?invite_btn:null}
               </div>
               <div className="col-1" id="edit">
                 <ProfileModal
