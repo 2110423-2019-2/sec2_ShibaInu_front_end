@@ -138,8 +138,15 @@ class Profile extends React.Component {
         if (body.experience !== null) {
           exp_json = JSON.parse(body.experience);
         }
-        axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId)
+        axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,{ responseType: 'arraybuffer' },)
         .then(res=>{
+          const base64 = btoa(
+            new Uint8Array(res.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          );
+          this.setState({ imageProfileURL: "data:;base64," + base64 });
           console.log(res);
         })
         .catch(err=>{
