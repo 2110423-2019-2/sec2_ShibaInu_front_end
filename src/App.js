@@ -23,6 +23,7 @@ import AdminAnnouncement from "./AdminAnnouncement";
 import ChatSystem from "./ChatSystem";
 import ReviewFreelancer from "./ReviewFreelancer";
 import WalletPage from "./WalletPage";
+import Contract from "./Contract";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -63,6 +64,7 @@ class App extends React.Component {
           <Route path="/client/review" component={ReviewFreelancer} />
           <Route path="/wallet" component={WalletPage} />
           <Route path="/chat" component={ChatSystem} />
+          <Route path="/contract" component={Contract} />
         </Switch>
       </Router>
     );
