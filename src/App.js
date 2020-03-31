@@ -20,11 +20,11 @@ import PrivateRoute from "./utilities/PrivateRoute";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
+import ChatSystem from "./ChatSystem";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
@@ -37,18 +37,9 @@ class App extends React.Component {
             path="/profile/:userId"
             component={() => <Profile userId={useParams()} />}
           />
-          <Route
-            path="/profile/"
-            component={() => <Profile userId={null} />}
-          />
-          <Route
-            path="/client/job"
-            component={() => <JobOfferClient />}
-          />
-          <Route
-            path="/freelancer/home"
-            component={() => <HomeFreelancer />}
-          />
+          <Route path="/profile/" component={() => <Profile userId={null} />} />
+          <Route path="/client/job" component={() => <JobOfferClient />} />
+          <Route path="/freelancer/home" component={() => <HomeFreelancer />} />
           <Route
             path="/freelancer/job"
             component={() => <JobOfferFreelancer />}
@@ -61,9 +52,13 @@ class App extends React.Component {
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
-          <Route path="/client/dashboard/:jobId" component={() => <DashboardClient params={useParams()} />} />
+          <Route
+            path="/client/dashboard/:jobId"
+            component={() => <DashboardClient params={useParams()} />}
+          />
           <Route path="/admin/home" component={AdminHome} />
           <Route path="/admin/announcement" component={AdminAnnouncement} />
+          <Route path="/chat" component={()=><ChatSystem />} />
         </Switch>
       </Router>
     );
