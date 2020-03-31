@@ -5,6 +5,8 @@ import profileimage from "./material/profileimg2.png";
 import { Table, Container, Row, Col, Breadcrumb, Card, Badge } from "react-bootstrap";
 import axios from 'axios';
 import LocalStorageService from "./LocalStorageService";
+import firebase from './firebase';
+import { FaMaxcdn } from "react-icons/fa";
 let utilities = require('./Utilities.json');
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -159,6 +161,42 @@ class FreelancerBox extends React.Component {
     this.showInterestedList = this.showInterestedList.bind(this);
   }
 
+  checkChatRoom = (friendId,friendName) => {
+    const userId = LocalStorageService.getUserID();
+    var ids = [friendId,userId].sort();
+    var chatroom = ids[0]+"-"+ids[1];
+    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
+    docRef.get().then(function(doc) {
+      if (doc.exists) {
+        LocalStorageService.setChatroom(chatroom);
+        window.location.href = '/chat';
+      } else {
+        // doc.data() will be undefined in this case
+        this.addChatRoom(userId,friendId,chatroom,friendName);
+      }
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+  }
+
+  addChatRoom = (userId,friendId,chatroom,friendName) => {
+    const time = firebase.firestore.FieldValue.serverTimestamp();
+    firebase.firestore().collection('message').doc('chatroom').collection(userId).doc(chatroom).set({
+      name: friendName,
+      lasttime: time,
+    });
+    var name;
+    axios
+      .get(utilities["backend-url"] + "/users/" + userId)
+      .then(res => {
+        name = res.data.firstName;
+        firebase.firestore().collection('message').doc('chatroom').collection(friendId).doc(chatroom).set({
+          name: name,
+          lasttime: time,
+        });
+    });
+  }
+
   showInterestedList() {
     return this.state.freelancerList.map(item => (
       <tr key={item.userId}>
@@ -168,7 +206,7 @@ class FreelancerBox extends React.Component {
         <td>{item.fname + " " + item.lname}</td>
         <td>{item.score}</td>
         <td>
-          <button type="button" className="btn btn-primary" onClick={""}>
+          <button type="button" className="btn btn-primary" onClick={()=>this.checkChatRoom(item.userId,item.fname)}>
             Chat
           </button>
         </td>
