@@ -1,70 +1,115 @@
 .SignInSignUp-page {
-    height: 650px;
-    /* height: 100%; */
-    /* background-color: aqua; */
+  height: 650px;
+  /* height: 100%; */
+  /* background-color: aqua; */
 }
 
 .left-content {
-    float: left;
-    width: 50%;
-    height: 100%;
-    position: relative;
+  float: left;
+  width: 50%;
+  height: 100%;
+  position: relative;
 }
 
 .left-content .seperate-line {
-    border: none;
-    border-right: 1px solid rgb(73, 73, 73);
-    position: absolute;
-    top: 10%;
-    right: 0px;
-    height: 80%;
+  border: none;
+  border-right: 1px solid rgb(73, 73, 73);
+  position: absolute;
+  top: 10%;
+  right: 0px;
+  height: 80%;
 }
 
 .left-content .left-logo {
-    height: 50%;
-    width: 50%;
-    top: 25%;
-    left: 25%;
-    position: absolute;
+  height: 50%;
+  width: 50%;
+  top: 25%;
+  left: 25%;
+  position: absolute;
 }
 
 .left-logo #logo-img {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 }
 
 .right-area {
-    float: right;
-    width: 50%;
-    height: 100%;
-    display: table;
-    /* background-color: blue; */
+  float: right;
+  width: 50%;
+  height: 100%;
+  display: table;
+  /* background-color: blue; */
 }
 
 .right-content {
-    width: 50%; 
-    display: table-cell;
-    vertical-align: middle;
-    height: auto;
-    /* background-color: aqua; */
+  width: 50%;
+  display: table-cell;
+  vertical-align: middle;
+  height: auto;
+  /* background-color: aqua; */
 }
 
 .form-name {
-    text-align: center;
-    font-size: 45px;
+  text-align: center;
+  font-size: 45px;
 }
 
 .form-container {
-    width: 100%;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
+  width: 100%;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-Form p {
-    margin-top: 10px;
+form button {
+  width: 100%;
 }
 
-Form p.unauthorized-message {
-    color: red;
+form p {
+  margin-top: 10px;
+}
+
+form p.unauthorized-message {
+  color: red;
+}
+
+.socialmedia-login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 0px;
+}
+
+.socialmedia-login-container * {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.social-seperator-container {
+  text-align: center;
+  position: relative;
+}
+
+.social-seperator-container .social-seperator {
+  display: inline-block;
+  color: rgb(189, 189, 189);
+  margin: 10px 0px;
+}
+
+.social-seperator::before,
+.social-seperator::after {
+  border-top: 1px solid rgb(189, 189, 189);
+  display: block;
+  height: 1px;
+  content: " ";
+  width: 40%;
+  position: absolute;
+  left: 0;
+  top: 50%;
+}
+
+.social-seperator::after {
+  right: 0;
+  left: auto;
 }

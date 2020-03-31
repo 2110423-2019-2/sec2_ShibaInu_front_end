@@ -21,6 +21,8 @@ import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
 import ChatSystem from "./ChatSystem";
+import ReviewFreelancer from "./ReviewFreelancer";
+import WalletPage from "./WalletPage";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -58,7 +60,9 @@ class App extends React.Component {
           />
           <Route path="/admin/home" component={AdminHome} />
           <Route path="/admin/announcement" component={AdminAnnouncement} />
-          <Route path="/chat" component={()=><ChatSystem />} />
+          <Route path="/client/review" component={ReviewFreelancer} />
+          <Route path="/wallet" component={WalletPage} />
+          <Route path="/chat" component={ChatSystem} />
         </Switch>
       </Router>
     );

@@ -41,7 +41,7 @@ class DashboardClient extends React.Component {
   }
 
   async getInterestedFreelancer() {
-    let freelancerList = [];
+    let freelancerList = new Array();
 
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios
@@ -274,7 +274,7 @@ class DashboardResponsible extends React.Component {
             <td>
               <button type="button" className="btn btn-secondary" onClick={""}>
                 Chat
-                      </button>
+              </button>
             </td>
           </tr>
         </tbody>

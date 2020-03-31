@@ -12,6 +12,8 @@ import {
   Table,
   Card
 } from "react-bootstrap";
+import { FaBtc, FaClock } from "react-icons/fa";
+import LocalStorageService from "./LocalStorageService";
 var utilities = require("./Utilities.json");
 
 class JobDetail extends React.Component {
@@ -45,11 +47,14 @@ class JobDetail extends React.Component {
   }
 
   render() {
-    console.log(this.state.details);
     return (
       <Card id="job-detail">
         <Card.Header>{this.state.details.name}</Card.Header>
         <Card.Body>
+          <div>
+            <FaBtc color="Blue" /> {this.state.details.estimatedWage} THB &emsp;
+            <FaClock color="Blue" /> {this.state.details.estimatedDuration} Days
+          </div>
           <div class="inside-body">{this.state.details.description}</div>
           <div class="inside-body">
             <div>
@@ -84,9 +89,9 @@ class JobBid extends React.Component {
     this.state = {
       postData: {
         jobId: this.props.jobid.jobid,
-        userId: 1,
-        biddedWage: 0,
-        biddedDuration: 0
+        userId: LocalStorageService.getUserID(),
+        biddedWage: "",
+        biddedDuration: ""
       }
     };
     this.handleChange.bind(this);
@@ -121,12 +126,11 @@ class JobBid extends React.Component {
 
     this.setState({
       postData: {
-        jobId: this.props.jobid.jobid,
-        userId: 1,
-        biddedWage: 0,
-        biddedDuration: 0
+        biddedWage: "",
+        biddedDuration: ""
       }
     });
+    this.props.parentCallback(1);
   };
 
   render() {
@@ -206,6 +210,18 @@ class InterrestedFreelancer extends React.Component {
       });
   }
 
+  componentDidUpdate() {
+    if (this.props.refresh == 1) {
+      axios
+        .get(utilities["backend-url"] + "/bids/bidId/" + this.props.jobid.jobid)
+        .then(res => {
+          const bids = res.data;
+          this.setState({ bids });
+        });
+      this.props.parentCallback(0);
+    }
+  }
+
   render() {
     return (
       <Card id="interrested-freelancer">
@@ -268,8 +284,11 @@ class InterFreeRow extends React.Component {
 class JobPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { refresh: 0 };
   }
+  callbackFunction = childData => {
+    this.setState({ refresh: childData });
+  };
 
   render() {
     let jobid = this.props.jobid;
@@ -281,10 +300,18 @@ class JobPage extends React.Component {
             <Row>
               <Col lg="9">
                 <JobDetail jobid={jobid} />
-                <InterrestedFreelancer jobid={jobid} />
+                <InterrestedFreelancer
+                  jobid={jobid}
+                  parentCallback={this.callbackFunction}
+                  refresh={this.state.refresh}
+                />
               </Col>
               <Col>
-                <JobBid jobid={jobid} />
+                <JobBid
+                  jobid={jobid}
+                  parentCallback={this.callbackFunction}
+                  refresh={this.state.refresh}
+                />
                 {/* <JobSuggest /> */}
               </Col>
             </Row>
