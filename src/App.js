@@ -24,6 +24,7 @@ import AdminAnnouncement from "./AdminAnnouncement";
 import ChatSystem from "./ChatSystem";
 import ReviewFreelancer from "./ReviewFreelancer";
 import WalletPage from "./WalletPage";
+import FreelancerSearchPage from "./FreelancerSearchPage";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -41,8 +42,14 @@ class App extends React.Component {
             component={() => <Profile userId={useParams()} />}
           />
           <Route path="/profile/" component={() => <Profile userId={null} />} />
-          <PrivateRoute path="/client/job" component={() => <JobOfferClient />} />
-          <PrivateRoute path="/freelancer/home" component={() => <HomeFreelancer />} />
+          <PrivateRoute
+            path="/client/job"
+            component={() => <JobOfferClient />}
+          />
+          <PrivateRoute
+            path="/freelancer/home"
+            component={() => <HomeFreelancer />}
+          />
           <PrivateRoute
             path="/freelancer/job"
             component={() => <JobOfferFreelancer />}
@@ -53,6 +60,7 @@ class App extends React.Component {
           />
           <PrivateRoute path="/jobcreate" component={JobCreatePage} />
           <Route path="/jobsearch" component={JobSearchPage} />
+          <Route path="/freelancersearch" component={FreelancerSearchPage} />
           <GuestRoute path="/signin" component={SignIn} />
           <GuestRoute path="/signup" component={SignUp} />
           <PrivateRoute
@@ -60,7 +68,10 @@ class App extends React.Component {
             component={() => <DashboardClient params={useParams()} />}
           />
           <PrivateRoute path="/admin/home" component={AdminHome} />
-          <PrivateRoute path="/admin/announcement" component={AdminAnnouncement} />
+          <PrivateRoute
+            path="/admin/announcement"
+            component={AdminAnnouncement}
+          />
           <PrivateRoute path="/client/review" component={ReviewFreelancer} />
           <PrivateRoute path="/wallet" component={WalletPage} />
           <PrivateRoute path="/chat" component={ChatSystem} />

@@ -264,7 +264,7 @@ class ResultRow extends React.Component {
   }
 }
 
-class JobSearchPage extends React.Component {
+class FreelancerSearchPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { ApiUrl: utilities["backend-url"] + "/jobs?sort=0" };
@@ -295,4 +295,4 @@ class JobSearchPage extends React.Component {
   }
 }
 
-export default JobSearchPage;
+export default FreelancerSearchPage;

@@ -1,0 +1,64 @@
+.search-page {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.search-page .filter {
+  background-color: white;
+}
+.search-page .result {
+  background-color: white;
+}
+
+.search-page #low-margin {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+.search-page .container {
+  width: 90%;
+}
+
+.search-page .result-row {
+  border-bottom: 1px solid gray;
+}
+
+.search-page #no-padding {
+  padding: 0px;
+}
+
+.search-page #no-margin {
+  margin: 0px;
+}
+
+.search-page #des {
+  height: 48px;
+  overflow: hidden;
+  color: grey;
+}
+
+.search-page #name-and-des {
+  margin-bottom: 15px;
+}
+
+.search-page a:hover,
+.search-page a:visited,
+.search-page a:link,
+.search-page a:active {
+  text-decoration: none;
+  color: black;
+}
+
+.search-page .card-header {
+  background-color: #254380;
+  padding: 10px;
+  color: white;
+}
+
+.search-page .card-body {
+  padding: 10px;
+}
+
+.search-page #wage {
+  margin-bottom: 10px;
+}
