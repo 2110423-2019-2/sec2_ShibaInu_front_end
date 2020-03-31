@@ -1,7 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
 import Background from "./material/GuestBackground.jpg";
-import { Container, Row, Jumbotron } from "react-bootstrap";
 import './HomeGuest.css';
 import LocalStorageService from "./LocalStorageService";
 

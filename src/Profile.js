@@ -149,6 +149,7 @@ class Profile extends React.Component {
           this.setState({ imageProfileURL: "data:;base64," + base64 });
           console.log(res);
         })
+        
         .catch(err=>{
           console.log(err);
         })
@@ -228,7 +229,10 @@ class Profile extends React.Component {
               <div className="col-3 mr " id="pro-img-frame">
                 <div id="img-f">
                   <img src={this.state.imageProfileURL} className="pro-img" alt="youngstar logo" />
-                  <ProfileImageModal id="profile-img" userId={this.state.userId} hidden={!this.state.isMyProfile}/>
+                  <ProfileImageModal id="profile-img" 
+                  userId={this.state.userId} 
+                  hidden={!this.state.isMyProfile}
+                  onUpdate={this.fetch}/>
                 </div>
               </div>
               <div className="col-4">

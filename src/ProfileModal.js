@@ -1218,6 +1218,7 @@ class ProfileImageModal extends Component {
         .then(res => {
             console.log(res);
             this.handleClose();
+            this.props.onUpdate();
           })
           .catch(err => {
             console.log(err);
