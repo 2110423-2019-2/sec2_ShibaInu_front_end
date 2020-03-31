@@ -19,9 +19,7 @@ class Filter extends React.Component {
   handleChange = e => {
     var k = e.target.name;
     var v = e.target.value;
-    if (k === "w1" || k === "w2" || k == "t1" || k === "t2") {
-      v = parseInt(v);
-    } else if (k === "sort") {
+    if (k === "sort") {
       switch (v) {
         default:
           v = 1;
@@ -71,10 +69,10 @@ class Filter extends React.Component {
         <Card.Body>
           <Form onSubmit={this.handleSubmit}>
             <Form.Group>
-              <Form.Label>Keyword</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Keyword"
+                placeholder="Name"
                 name="name"
                 onChange={this.handleChange}
               />
@@ -88,46 +86,10 @@ class Filter extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-            <Form.Label>Wage</Form.Label>
-            <Form.Row>
-              <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Min"
-                  name="w1"
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
-              <Col lg="1">-</Col>
-              <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Max"
-                  name="w2"
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
-            </Form.Row>
-            <Form.Label>Duration</Form.Label>
-            <Form.Row>
-              <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Min"
-                  name="t1"
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
-              <Col lg="1">-</Col>
-              <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Max"
-                  name="t2"
-                  onChange={this.handleChange}
-                />
-              </Form.Group>
-            </Form.Row>
             <Form.Group>
-              <Form.Label>Catergory</Form.Label>
+              <Form.Label>Interested Catergory</Form.Label>
               <Form.Control as="select" name="cat" onChange={this.handleChange}>
-                <option>---</option>
+                <option>All</option>
                 <option>Web</option>
                 <option>Software</option>
                 <option>Mobile</option>
@@ -250,12 +212,7 @@ class ResultRow extends React.Component {
               </div>
             </Col>
             <Col>
-              <div id="wage">
-                <FaBtc /> {parseInt(this.props.wage)} THB
-              </div>
-              <div>
-                <FaClock /> {this.props.duration} Days
-              </div>
+              <Button variant="primary">Invite to...</Button>
             </Col>
           </Row>
         </Container>
