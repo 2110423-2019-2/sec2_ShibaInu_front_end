@@ -34,15 +34,15 @@ class App extends React.Component {
       <Router>
         <Switch>
           <Route exact path="/" component={() => <HomeGuest />} />
-          <Route path="/client/home" component={() => <HomeClient />} />
+          <PrivateRoute path="/client/home" component={() => <HomeClient />} />
           <Route
             path="/profile/:userId"
             component={() => <Profile userId={useParams()} />}
           />
           <Route path="/profile/" component={() => <Profile userId={null} />} />
-          <Route path="/client/job" component={() => <JobOfferClient />} />
-          <Route path="/freelancer/home" component={() => <HomeFreelancer />} />
-          <Route
+          <PrivateRoute path="/client/job" component={() => <JobOfferClient />} />
+          <PrivateRoute path="/freelancer/home" component={() => <HomeFreelancer />} />
+          <PrivateRoute
             path="/freelancer/job"
             component={() => <JobOfferFreelancer />}
           />
@@ -54,15 +54,15 @@ class App extends React.Component {
           <Route path="/jobsearch" component={JobSearchPage} />
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
-          <Route
+          <PrivateRoute
             path="/client/dashboard/:jobId"
             component={() => <DashboardClient params={useParams()} />}
           />
-          <Route path="/admin/home" component={AdminHome} />
-          <Route path="/admin/announcement" component={AdminAnnouncement} />
-          <Route path="/client/review" component={ReviewFreelancer} />
-          <Route path="/wallet" component={WalletPage} />
-          <Route path="/chat" component={ChatSystem} />
+          <PrivateRoute path="/admin/home" component={AdminHome} />
+          <PrivateRoute path="/admin/announcement" component={AdminAnnouncement} />
+          <PrivateRoute path="/client/review" component={ReviewFreelancer} />
+          <PrivateRoute path="/wallet" component={WalletPage} />
+          <PrivateRoute path="/chat" component={ChatSystem} />
         </Switch>
       </Router>
     );
