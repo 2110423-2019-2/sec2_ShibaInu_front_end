@@ -113,10 +113,6 @@ class DashboardClient extends React.Component {
       <div>
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
-          <Breadcrumb>
-            <Breadcrumb.Item href={"/" + this.state.mode + "/home"}>My job</Breadcrumb.Item>
-            <Breadcrumb.Item active>{this.state.jobname}</Breadcrumb.Item>
-          </Breadcrumb>
           <h1 className="job-header">{this.state.jobname}</h1>
           <hr />
           <Row>
