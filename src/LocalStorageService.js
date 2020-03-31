@@ -38,10 +38,21 @@ const LocalStorageService = (function () {
         localStorage.removeItem('userMode');
     }
 
+    function _setChatroom(chatroom) {
+        localStorage.setItem('chatroom', chatroom);
+    }
+    function _getChatroom() {
+        return localStorage.getItem('chatroom') || '';
+    }
+    function _clearChatroom() {
+        localStorage.removeItem('chatroom');
+    }
+
     function _signOut() {
         _clearToken();
         _clearUserID();
         _clearUserMode();
+        _clearChatroom();
     }
     return {
         getService: _getService,
@@ -54,6 +65,9 @@ const LocalStorageService = (function () {
         setUserMode: _setUserMode,
         getUserMode: _getUserMode,
         clearUserMode: _clearUserMode,
+        setChatroom: _setChatroom,
+        getChatroom: _getChatroom,
+        clearChatroom: _clearChatroom,
         signOut: _signOut
     }
 })();

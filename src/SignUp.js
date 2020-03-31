@@ -222,34 +222,6 @@ class SignUp extends React.Component {
                                         {' '}Sign Up
                                     </Button>
 
-                                    <div className='social-seperator-container'>
-                                        <span className='social-seperator'>
-                                            or
-                                        </span>
-                                    </div>
-
-                                    <Form.Group className='socialmedia-login-container'>
-
-                                        <FacebookLogin
-                                            appId="3019159754810357"
-                                            autoLoad={false}
-                                            fields="first_name,last_name,email,picture"
-                                            onClick={this.clickFB.bind(this)}
-                                            callback={this.responseFacebook}
-                                            render={renderProps => (
-                                                <Button variant='primary' onClick={renderProps.onClick} disabled={this.state.isLoading} >
-                                                    {!this.state.isLoading ? '' : (<Spinner
-                                                        as="span"
-                                                        animation="border"
-                                                        size="sm"
-                                                        role="status"
-                                                        aria-hidden="true"
-                                                    />)}
-                                                    {' '}Register with Facebook
-                                                </Button>
-                                            )} />
-                                    </Form.Group>
-
                                     <p>Already have an account? <a href='/signin'>Sign in</a></p>
                                 </Form>
                             </div>

@@ -82,9 +82,44 @@ class SignIn extends React.Component {
             });
     }
 
-    responseFacebook = (response) => {
+    responseFacebook = (fb_response) => {
         console.log("FB LOGIN");
-        console.log(response);
+        console.log(fb_response);
+
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + fb_response.accessToken;
+        axios.post(utilities['backend-url'] + '/auth/login-fb', fb_response)
+            .then((response) => {
+
+                switch (response.status) {
+                    // Created
+                    case 201:
+                        LocalStorageService.setToken(response.data.access_token || '');
+                        LocalStorageService.setUserID(response.data.userId || '');
+                        response.data.isAdmin ? LocalStorageService.setUserMode('admin') : LocalStorageService.setUserMode('client');
+                        console.log('Logged in. Redirecting...');
+                        response.data.isAdmin ? window.location.href = '/admin/home' : window.location.href = '/client/home';
+                        break;
+
+                    // Other case
+                    default:
+                        console.log('Status code is ' + response.status);
+                }
+
+            })
+            .catch((error) => {
+
+                if (error.response.status === 401) {
+                    console.log('Unauthorization');
+                    this.setState({ unauthorized: true });
+
+                } else {
+                    console.error(error);
+                }
+            }).finally(() => {
+                this.setState({
+                    isLoading: false
+                });
+            });
     }
 
     render() {
