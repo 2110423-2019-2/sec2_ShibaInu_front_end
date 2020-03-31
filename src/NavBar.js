@@ -77,7 +77,7 @@ class NavBar extends React.Component {
       memberMenu,
       guestMenu,
       homePath,
-      changeMode;
+      changeMode; 
     var jobPath = "/" + this.state.mode + "/job";
 
     var newNotiDetail, oldNotiDetail, hasNewNoti;
@@ -175,8 +175,11 @@ class NavBar extends React.Component {
         >
           My job
         </DropdownItem>
-        <DropdownItem id="dropdown-item-balance" className="color-black">
-          My balance
+        <DropdownItem href="/wallet" id="dropdown-item-balance" className="color-black">
+          My wallet
+        </DropdownItem>
+        <DropdownItem href="/chat" id="dropdown-item-chat" className="color-black">
+          Chat
         </DropdownItem>
         <DropdownItem
           id="dropdown-item-switch"
