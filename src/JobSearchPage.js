@@ -10,6 +10,13 @@ class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: "",
+      r1: "",
+      w1: "",
+      w2: "",
+      t1: "",
+      t2: "",
+      cat: "",
       sort: 0
     };
     this.handleChange.bind(this);
@@ -61,7 +68,23 @@ class Filter extends React.Component {
   };
 
   handleReset = e => {
-    this.setState();
+    this.setState({
+      name: "",
+      r1: "",
+      w1: "",
+      w2: "",
+      t1: "",
+      t2: "",
+      cat: "",
+      sort: 0
+    });
+    var tmp1 = [];
+    Object.entries(this.state).map(a => {
+      tmp1.push(a.join("="));
+    });
+    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    console.log(ApiUrl);
+    this.props.parentCallback(ApiUrl);
   };
 
   render() {
@@ -196,7 +219,7 @@ class Result extends React.Component {
   render() {
     return (
       <Card class="result">
-        <Card.Header>Result</Card.Header>
+        <Card.Header>Search Job</Card.Header>
         <Card.Body>
           {this.state.jobList.map(j => {
             var tmp = [];
