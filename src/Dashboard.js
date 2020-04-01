@@ -251,13 +251,12 @@ class FreelancerBox extends React.Component {
     var chatroom = ids[0]+"-"+ids[1];
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
     docRef.get().then(function(doc) {
-      if (doc.exists) {
-        LocalStorageService.setChatroom(chatroom);
-        window.location.href = '/chat';
-      } else {
-        // doc.data() will be undefined in this case
+      LocalStorageService.setChatroom(chatroom);
+      LocalStorageService.setChatName(friendName);
+      if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
       }
+      window.location.href = '/chat';
     }).catch(function(error) {
       console.log("Error getting document:", error);
     });

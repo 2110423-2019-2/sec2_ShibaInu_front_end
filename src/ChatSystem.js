@@ -17,12 +17,14 @@ class ChatSystem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRoom: "2-3",
-      chatwith: "",
+      selectedRoom: LocalStorageService.getChatroom(),
+      chatwith: LocalStorageService.getChatName(),
       msg: "Hello",
       userID: LocalStorageService.getUserID(),
       chatrooms: [],
-      chatmsgs: []
+      chatmsgs: [],
+      sentComplete: false,
+      firstLoadMsg: true,
     };
   }
 
@@ -88,21 +90,27 @@ class ChatSystem extends React.Component {
 
     // Start listening to the query.
     query.onSnapshot(snapshot => {
-      var chatmsgs = [];
+      var chatmsgs = this.state.chatmsgs;
+      if(this.state.firstLoadMsg){
+        chatmsgs = [];
+      }
       snapshot.docChanges().forEach(change => {
         var message = change.doc.data();
         var pos = "text-left w-100";
         if (message.sender == this.state.userID) {
           var pos = "text-right w-100";
         }
-        chatmsgs.push({
-          sender: message.sender,
-          msg: message.msg,
-          timesent: message.timesent,
-          pos: pos
-        });
+        if(message.timesent !== null){
+          chatmsgs.push({
+            sender: message.sender,
+            msg: message.msg,
+            pos: pos,
+          });
+        }
       });
-      this.setState({ chatmsgs: chatmsgs });
+      this.setState({ chatmsgs: chatmsgs, firstLoadMsg: false},()=>{
+        console.log(this.state.chatmsgs);
+      });
     });
   };
 
@@ -114,10 +122,19 @@ class ChatSystem extends React.Component {
           className="w-100 text-left"
           id="chatroom"
           onClick={() => {
-            this.setState({
-              selectedRoom: chatroom.id,
-              chatwith: chatroom.chatwith
-            });
+            LocalStorageService.setChatroom(chatroom.id);
+            LocalStorageService.setChatName(chatroom.chatwith);
+            this.setState(
+              {
+                selectedRoom: chatroom.id,
+                chatwith: chatroom.chatwith,
+                firstLoadMsg: true
+              },
+              () => {
+                this.loadMsg();
+              }
+            );
+            console.log(this.state.selectedRoom);
           }}
         >
           <h4>{chatroom.chatwith}</h4>
@@ -129,13 +146,11 @@ class ChatSystem extends React.Component {
   chatMsg = () => {
     return this.state.chatmsgs.map(chatmsg => (
       <div key={chatmsg.id} className="ml-3 mt-3 mr-4 ">
-        <Row>
-          <div className={chatmsg.pos}>
-            <Badge pill variant="info" className="pl-3 pr-3 pt-1 pb-1">
-              <h5>{chatmsg.msg}</h5>
-            </Badge>
-          </div>
-        </Row>
+        <div className={chatmsg.pos}>
+          <Badge pill variant="info" className="pl-3 pr-3 pt-1 pb-1">
+            <h5>{chatmsg.msg}</h5>
+          </Badge>
+        </div>
       </div>
     ));
   };
@@ -152,11 +167,10 @@ class ChatSystem extends React.Component {
               aria-describedby="basic-addon2"
               onChange={e => {
                 this.setState({ msg: e.target.value });
-                console.log(this.state.msg);
               }}
             />
             <InputGroup.Append>
-              <Button variant="dark" onClick={() => this.makeData()}>
+              <Button variant="dark" onClick={() => this.sendMsg()}>
                 Send
               </Button>
             </InputGroup.Append>
@@ -167,7 +181,7 @@ class ChatSystem extends React.Component {
   };
 
   chatWith = () => {
-    return <h2>{'Chat with ' + this.state.chatwith}</h2>;
+    return <h2>{"Chat with " + this.state.chatwith}</h2>;
   };
 
   makeData = () => {
@@ -207,7 +221,7 @@ class ChatSystem extends React.Component {
               </Row>
               {this.chatRoom()}
             </Col>
-            <Col xs={7} className="shadow ml-3 text-center">
+            <Col xs={7} className="bg-white shadow ml-3 text-center">
               <Row className="background-blue text-light pt-3 pl-3">
                 {this.chatWith()}
               </Row>
