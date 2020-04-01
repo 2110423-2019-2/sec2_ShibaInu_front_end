@@ -78,8 +78,7 @@ class JobOfferFreelancer extends React.Component {
   }
 
   handleClickJobDetail = (e) =>{
-    //window.location.href = '/dashboard/' + e.target.id;
-    console.log(e.target);
+    window.location.href = '/dashboard/' + e.target.id;
   }
 
   render() {
@@ -88,7 +87,7 @@ class JobOfferFreelancer extends React.Component {
     }
     var recentJob;
     if (this.state.statusFilter === this.state.status.ALL) {
-      recentJob = this.state.jobList.map((job, index) => (
+      recentJob = this.state.jobDatas.map((job, index) => (
         <tr key={index} className="text-center">
           <td className="align-middle">
             {job.name}
@@ -99,16 +98,16 @@ class JobOfferFreelancer extends React.Component {
           <td className="align-middle">{job.freelancerName}</td>
           <td className="align-middle">{job.status}</td>
           <td className="align-middle">
-            <button type="button" id={job.jobId} className="btn btn-secondary btn-block"  onClick={this.handleClickJobDetail.bind(this)}>
+            <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
               Detail
             </button>
           </td>
         </tr>
       ));
     } else {
-      recentJob = this.state.jobList
+      recentJob = this.state.jobDatas
         .filter(job => job.status === this.state.statusFilter)
-        .map((job, index) => (
+        .map((job, index) =>  (
           <tr key={index} className="text-center">
             <td className="align-middle">
               {job.name}
