@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useRef } from "react";
 import NavBar from "./NavBar";
 import "./ChatSystem.css";
 import {
@@ -19,12 +19,12 @@ class ChatSystem extends React.Component {
     this.state = {
       selectedRoom: LocalStorageService.getChatroom(),
       chatwith: LocalStorageService.getChatName(),
-      msg: "Hello",
+      msg: "",
       userID: LocalStorageService.getUserID(),
       chatrooms: [],
       chatmsgs: [],
-      sentComplete: false,
       firstLoadMsg: true,
+      ref: React.createRef()
     };
   }
 
@@ -34,6 +34,10 @@ class ChatSystem extends React.Component {
       this.loadMsg();
     }
   };
+
+  scrollToBottom = () => {
+    this.state.ref.current.scrollIntoView({ behavior: 'smooth' });
+  }
 
   /*updateTimeChatRoom = () => {
     firebase.firestore().collection('message').doc('chatroom').collection(this.state.userID).doc("2-3").update({
@@ -77,6 +81,7 @@ class ChatSystem extends React.Component {
       .catch(function(error) {
         console.error("Error writing new message to database", error);
       });
+      this.setState({msg: ""});
   };
 
   loadMsg = () => {
@@ -110,6 +115,7 @@ class ChatSystem extends React.Component {
       });
       this.setState({ chatmsgs: chatmsgs, firstLoadMsg: false},()=>{
         console.log(this.state.chatmsgs);
+        this.scrollToBottom();
       });
     });
   };
@@ -158,7 +164,7 @@ class ChatSystem extends React.Component {
   sendMsgDisp = () => {
     return (
       <div>
-        <div id="msgarea">{this.chatMsg()}</div>
+        <div id="msgarea">{this.chatMsg()}<div ref={this.state.ref} /></div>
         <div id="sendmsg">
           <InputGroup className="mb-3 mt-3 ml-1">
             <FormControl
@@ -168,6 +174,7 @@ class ChatSystem extends React.Component {
               onChange={e => {
                 this.setState({ msg: e.target.value });
               }}
+              value={this.state.msg}
             />
             <InputGroup.Append>
               <Button variant="dark" onClick={() => this.sendMsg()}>
@@ -183,7 +190,7 @@ class ChatSystem extends React.Component {
   chatWith = () => {
     return <h2>{"Chat with " + this.state.chatwith}</h2>;
   };
-
+  /*
   makeData = () => {
     /*const time = firebase.firestore.FieldValue.serverTimestamp();
     firebase.firestore().collection('message').doc('chatroom').collection('2').doc('2-3').set({
@@ -193,7 +200,7 @@ class ChatSystem extends React.Component {
     firebase.firestore().collection('message').doc('chatroom').collection('3').doc('2-3').set({
       name: 'ITTHITHEES',
       lasttime: time
-    });*/
+    });
     firebase
       .firestore()
       .collection("message")
@@ -207,7 +214,7 @@ class ChatSystem extends React.Component {
       .catch(function(error) {
         console.error("Error writing new message to database", error);
       });
-  };
+  };*/
 
   render() {
     return (
