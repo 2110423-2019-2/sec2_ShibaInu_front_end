@@ -204,6 +204,7 @@ class Result extends React.Component {
             if (tmp.length == 0) tmp.push("-");
             return (
               <ResultRow
+                key={j.jobId}
                 jobId={j.jobId}
                 jobName={j.name}
                 jobDes={j.description}
