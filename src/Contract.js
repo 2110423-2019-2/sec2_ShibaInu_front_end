@@ -13,6 +13,7 @@ class Contract extends React.Component{
         super(props)
         this.state={
             jobId: this.props.params.jobId,
+            bidwage : -1,
             clientId: null,
             clientName: "",
             freelancerName: "",
@@ -90,7 +91,7 @@ class Contract extends React.Component{
     handleAccept(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         axios
-        .post(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+        .patch(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
             status : "accepted"
         })
         .then(res=>{
@@ -103,7 +104,7 @@ class Contract extends React.Component{
     handleDecline(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         axios
-        .post(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+        .patch(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
             status : "rejected"
         })
         .then(res=>{
@@ -117,9 +118,12 @@ class Contract extends React.Component{
         this.setState({mode : LocalStorageService.getUserMode()});
         await this.getJobDetail();
         await this.getUserName();
-        this.getContractDetail();
+        await this.getContractDetail();
+        if(this.state.bidwage != -1 && this.state.currData.price ==0){
+            this.setState({currData : {price : this.state.bidwage , text : example}})
 
-        console.log(this.state.clientId)
+            this.setState({editedData : {price : this.state.bidwage , text : example}})
+        }
     }
     async getJobDetail(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
@@ -153,31 +157,34 @@ class Contract extends React.Component{
             this.setState({freelancerName : res.data.firstName+" "+res.data.lastName})
         })
         .catch(err=>{
+            this.setState({freelancerId : null})
             console.log(err)
         })
-        
-    }
-    async getContractDetail(){
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        let price = 0;
         await axios
         .get(utilities["backend-url"] + "/bids/bidId/" + this.state.jobId)
         .then(res =>{
+            let bid = [];
             for(let i=0; i<res.data.length;i++){
-                if(res.data[i].userId === this.state.freelancerId){
-                    price = res.data.length[i].biddedWage;
+                if(res.data[i].userId == this.state.freelancerId){
+                   bid.push(res.data[i].biddedWage)
                 }
+            }
+            if(bid.length != 0){
+                this.setState({bidwage : bid[bid.length-1]})
             }
         })
         .catch(err =>{
             console.log(err);
         })
+    }
+    async getContractDetail(){
+        
         await axios
         .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
         .then(res =>{
             this.setState({
-                currData:{price : price||0, text : res.data.description||example},
-                editedData:{price : price||0, text : res.data.description||example},
+                currData:{price : res.data.price||0, text : res.data.description||example},
+                editedData:{price : res.data.price||0, text : res.data.description||example},
                 modifiedTime : res.data.updatedTime,
                 loadContractData:true
             })
@@ -195,7 +202,6 @@ class Contract extends React.Component{
             freelancerId:this.state.freelancerId,
             price : this.state.editedData.price,
             description : this.state.editedData.text,
-            status : "null",
         })
         .then(res=>{
             console.log(res);
@@ -220,7 +226,7 @@ class Contract extends React.Component{
         })
     }
     render(){
-        if(!this.state.loadContractData || !this.state.loadJobData){
+        if(!this.state.loadContractData || !this.state.loadJobData || this.state.bidwage===-1){
             return(
                 <>
                 </>
