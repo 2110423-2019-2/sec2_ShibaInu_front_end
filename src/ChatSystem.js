@@ -39,12 +39,6 @@ class ChatSystem extends React.Component {
     this.state.ref.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  /*updateTimeChatRoom = () => {
-    firebase.firestore().collection('message').doc('chatroom').collection(this.state.userID).doc("2-3").update({
-      lasttime: firebase.firestore.FieldValue.serverTimestamp(),
-    });
-  }*/
-
   loadChatRoom = () => {
     var query = firebase
       .firestore()
@@ -198,31 +192,6 @@ class ChatSystem extends React.Component {
   chatWith = () => {
     return <h2>{"Chat with " + this.state.chatwith}</h2>;
   };
-  /*
-  makeData = () => {
-    /*const time = firebase.firestore.FieldValue.serverTimestamp();
-    firebase.firestore().collection('message').doc('chatroom').collection('2').doc('2-3').set({
-      name: 'inuyama',
-      lasttime: time
-    });
-    firebase.firestore().collection('message').doc('chatroom').collection('3').doc('2-3').set({
-      name: 'ITTHITHEES',
-      lasttime: time
-    });
-    firebase
-      .firestore()
-      .collection("message")
-      .doc("message")
-      .collection("2-3")
-      .add({
-        msg: "Hello, My name is Inuyama",
-        sender: "3",
-        timesent: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .catch(function(error) {
-        console.error("Error writing new message to database", error);
-      });
-  };*/
 
   render() {
     return (
