@@ -42,18 +42,61 @@ class DashboardClient extends React.Component {
     this.getjobDetail();
   }
 
+  formatJPGtopath(res){
+    return btoa(
+      new Uint8Array(res.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        '',
+      ),
+    );
+  }
+
+  to(promise) {
+    return promise.then(data => {
+       return {
+         error: null,
+         result: data
+       }
+    })
+    .catch(err => {
+      return {
+        error: err
+      }
+    })
+ }
+
+  async getUserImage(userId){
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+  
+      let {result,error} = await this.to(axios.get(utilities["backend-url"] + "/users/profilePicture/" + userId,{ responseType: 'arraybuffer' },))
+      if(error!==null){
+        return {error : error, data:null};
+      }
+      return {error : null, data: "data:;base64,"+this.formatJPGtopath(result)};  
+  }
   async getInterestedFreelancer() {
     let freelancerList = new Array();
 
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios
       .get(utilities["backend-url"] + "/jobs/freelancers/" + this.state.jobID)
-      .then(res => {
+      .then(async res => {
         for (let i = 0; i < res.data.length; i++) {
           let item = res.data[i];
-          freelancerList.push({ userId: item.userId, fname: item.firstName, lname: item.lastName, score: 0, img: profileimage });
+          let d = { userId: item.userId, fname: item.firstName, lname: item.lastName, score: 0, img: profileimage };
+          let img =  await this.getUserImage(item.userId);
+          if(img.error===null){
+            d.img = img.data;
+          }      
+          freelancerList.push(d);
+          
         }
-
+        console.log(freelancerList)
+        return freelancerList;
+        
+      })
+      .then(freelancerList=>{
+        console.log("do",freelancerList)
         this.setState({
           freelancerList: freelancerList,
           loadFreelancer: true
@@ -69,6 +112,8 @@ class DashboardClient extends React.Component {
           console.error(error);
         }
       });
+      
+
   }
 
   async getjobDetail() {
@@ -206,6 +251,11 @@ class FreelancerBox extends React.Component {
             Chat
           </button>
         </td>
+        <td>
+          <button type="button" className="btn btn-primary" >
+            select
+          </button>
+        </td>
       </tr>
     ));
   }
@@ -229,6 +279,7 @@ class FreelancerBox extends React.Component {
                         <th>Name</th>
                         <th>score</th>
                         <th>chat</th>
+                        <th>select</th>
                       </tr>
                     </thead>
                     <tbody>{this.showInterestedList()}</tbody>
