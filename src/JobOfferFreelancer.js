@@ -75,7 +75,11 @@ class JobOfferFreelancer extends React.Component {
 
   componentDidMount = () => {
     this.fetchDatas();
-  };
+  }
+
+  handleClickJobDetail(e) {
+    window.location.href = '/dashboard/' + e.target.name;
+  }
 
   render() {
     if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
@@ -94,7 +98,7 @@ class JobOfferFreelancer extends React.Component {
           <td className="align-middle">{job.freelancerName}</td>
           <td className="align-middle">{job.status}</td>
           <td className="align-middle">
-            <button type="button" className="btn btn-secondary btn-block">
+            <button type="button" className="btn btn-secondary btn-block" name={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
               Detail
             </button>
           </td>
@@ -114,7 +118,7 @@ class JobOfferFreelancer extends React.Component {
             <td className="align-middle">{job.freelancerName}</td>
             <td className="align-middle">{job.status}</td>
             <td className="align-middle">
-              <button type="button" className="btn btn-secondary btn-block">
+              <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
                 Detail
               </button>
             </td>

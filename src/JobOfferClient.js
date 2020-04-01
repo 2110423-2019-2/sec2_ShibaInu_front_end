@@ -61,7 +61,7 @@ class JobOfferClient extends React.Component {
   };
 
   handleClickJobDetail(e) {
-    window.location.href = '/client/dashboard/' + e.target.id;
+    window.location.href = '/dashboard/' + e.target.id;
   }
 
   render() {
