@@ -60,20 +60,12 @@ class App extends React.Component {
             path="/client/dashboard/:jobId"
             component={() => <DashboardClient params={useParams()} />}
           />
-<<<<<<< HEAD
-          <Route path="/admin/home" component={AdminHome} />
-          <Route path="/admin/announcement" component={AdminAnnouncement} />
-          <Route path="/client/review" component={ReviewFreelancer} />
-          <Route path="/wallet" component={WalletPage} />
-          <Route path="/chat" component={ChatSystem} />
-          <Route path="/contract" component={Contract} />
-=======
           <PrivateRoute path="/admin/home" component={AdminHome} />
           <PrivateRoute path="/admin/announcement" component={AdminAnnouncement} />
           <PrivateRoute path="/client/review" component={ReviewFreelancer} />
           <PrivateRoute path="/wallet" component={WalletPage} />
           <PrivateRoute path="/chat" component={ChatSystem} />
->>>>>>> 591f6f38dfa111109a687a156109e0e4ec6cde97
+          <Route path="/contract" component={Contract} />
         </Switch>
       </Router>
     );
