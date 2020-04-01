@@ -1,4 +1,4 @@
-import React,{ useRef } from "react";
+import React, { useRef } from "react";
 import NavBar from "./NavBar";
 import "./ChatSystem.css";
 import {
@@ -36,8 +36,8 @@ class ChatSystem extends React.Component {
   };
 
   scrollToBottom = () => {
-    this.state.ref.current.scrollIntoView({ behavior: 'smooth' });
-  }
+    this.state.ref.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   /*updateTimeChatRoom = () => {
     firebase.firestore().collection('message').doc('chatroom').collection(this.state.userID).doc("2-3").update({
@@ -81,7 +81,7 @@ class ChatSystem extends React.Component {
       .catch(function(error) {
         console.error("Error writing new message to database", error);
       });
-      this.setState({msg: ""});
+    this.setState({ msg: "" });
   };
 
   loadMsg = () => {
@@ -96,7 +96,7 @@ class ChatSystem extends React.Component {
     // Start listening to the query.
     query.onSnapshot(snapshot => {
       var chatmsgs = this.state.chatmsgs;
-      if(this.state.firstLoadMsg){
+      if (this.state.firstLoadMsg) {
         chatmsgs = [];
       }
       snapshot.docChanges().forEach(change => {
@@ -105,15 +105,15 @@ class ChatSystem extends React.Component {
         if (message.sender == this.state.userID) {
           var pos = "text-right w-100";
         }
-        if(message.timesent !== null){
+        if (message.timesent !== null) {
           chatmsgs.push({
             sender: message.sender,
             msg: message.msg,
-            pos: pos,
+            pos: pos
           });
         }
       });
-      this.setState({ chatmsgs: chatmsgs, firstLoadMsg: false},()=>{
+      this.setState({ chatmsgs: chatmsgs, firstLoadMsg: false }, () => {
         console.log(this.state.chatmsgs);
         this.scrollToBottom();
       });
@@ -164,7 +164,10 @@ class ChatSystem extends React.Component {
   sendMsgDisp = () => {
     return (
       <div>
-        <div id="msgarea">{this.chatMsg()}<div ref={this.state.ref} /></div>
+        <div id="msgarea">
+          {this.chatMsg()}
+          <div ref={this.state.ref} />
+        </div>
         <div id="sendmsg">
           <InputGroup className="mb-3 mt-3 ml-1">
             <FormControl
@@ -175,6 +178,11 @@ class ChatSystem extends React.Component {
                 this.setState({ msg: e.target.value });
               }}
               value={this.state.msg}
+              onKeyDown={e => {
+                if (e.keyCode === 13) {
+                  this.sendMsg();
+                }
+              }}
             />
             <InputGroup.Append>
               <Button variant="dark" onClick={() => this.sendMsg()}>
