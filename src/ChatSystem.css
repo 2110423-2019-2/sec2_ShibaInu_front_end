@@ -1,3 +1,25 @@
 #chatsystem-box {
     margin-top: 30px;
+    height: 80vh;
+}
+#chatroom {
+    text-decoration: none;
+    color: black;
+}
+#chatroom:hover {
+    background-color: #d8d8d8;
+}
+#chatroom:checked {
+    background-color: #d8d8d8;
+}
+#sendmsg {
+    width: 95%;
+}
+#chatarea {
+    position: absolute;
+    height: 70vh;
+    bottom: 1vh;
+    width: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
 }
