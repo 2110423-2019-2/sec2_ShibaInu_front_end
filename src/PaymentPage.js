@@ -29,9 +29,7 @@ class PaymentPage extends React.Component {
                     !isNaN(this.sumTransfer) &&
                     this.transaction &&
                     this.transactionCharge &&
-                    this.transactionTransfer &&
-                    this.bankAccount &&
-                    this.creditCard
+                    this.transactionTransfer
             },
         };
     }
@@ -50,6 +48,9 @@ class PaymentPage extends React.Component {
                 this.setState({ sum: res.data.sum * -1 });
             }).catch((err) => {
                 console.error(err);
+                if (err.response.status === 400) {
+                    this.setState({ sum: 0 });
+                }
             });
 
         axios.get(utilities['backend-url'] + "/payment/sum/charge")
@@ -57,6 +58,9 @@ class PaymentPage extends React.Component {
                 this.setState({ sumCharge: res.data.sum * -1 });
             }).catch((err) => {
                 console.error(err);
+                if (err.response.status === 400) {
+                    this.setState({ sumCharge: 0 });
+                }
             });
 
         axios.get(utilities['backend-url'] + "/payment/sum/transfer")
@@ -64,6 +68,9 @@ class PaymentPage extends React.Component {
                 this.setState({ sumTransfer: res.data.sum * -1 });
             }).catch((err) => {
                 console.error(err);
+                if (err.response.status === 400) {
+                    this.setState({ sumTransfer: 0 });
+                }
             });
 
     }
@@ -76,6 +83,9 @@ class PaymentPage extends React.Component {
                 this.setState({ transaction: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
                 console.error(err);
+                if (err.response.status === 400) {
+                    this.setState({ transaction: [] });
+                }
             });
 
         axios.get(utilities['backend-url'] + "/payment/charge")
@@ -83,6 +93,9 @@ class PaymentPage extends React.Component {
                 this.setState({ transactionCharge: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
                 console.error(err);
+                if (err.response.status === 400) {
+                    this.setState({ transactionCharge: [] });
+                }
             });
 
         axios.get(utilities['backend-url'] + "/payment/transfer")
@@ -90,6 +103,9 @@ class PaymentPage extends React.Component {
                 this.setState({ transactionTransfer: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
                 console.error(err);
+                if (err.response.status === 400) {
+                    this.setState({ transactionTransfer: [] });
+                }
             });
     }
 
@@ -138,7 +154,19 @@ class PaymentPage extends React.Component {
                 break;
         }
 
-        return data.map(item => (
+        return data.length === 0 ? (
+            <tr className="text-center">
+                <td className="align-middle">
+                    NO RECORD
+                    </td>
+                <td className="align-middle">
+                    NO RECORD
+                    </td>
+                <td className="align-middle">
+                    NO RECORD
+                    </td>
+            </tr>
+        ) : data.map(item => (
             <tr className="text-center">
                 <td className="align-middle">
                     {item.jobName}
@@ -176,7 +204,7 @@ class PaymentPage extends React.Component {
                     <Card.Header>
                         Credit Card
                     </Card.Header>
-                    {!this.state.creditCard ? '' :
+                    {!this.state.creditCard ? (<Card.Body>NO CREDIT CARD. ADD ONE ?</Card.Body>) :
                         <Card.Body>
                             <h3>{this.state.creditCard.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.creditCard.cardNumber.substring(12)}</h3><br />
                             <h5>{this.state.creditCard.name}</h5>
@@ -198,7 +226,7 @@ class PaymentPage extends React.Component {
                     <Card.Header>
                         Bank Account
                     </Card.Header>
-                    {!this.state.bankAccount ? '' : (
+                    {!this.state.bankAccount ? (<Card.Body>NO BANK ACCOUNT. ADD ONE ?</Card.Body>) : (
                         <Card.Body>
                             <h3>{this.state.bankAccount.accountNumber}</h3><br />
                             <h5>{this.state.bankAccount.bankCode.toUpperCase() + ' ' + this.state.bankAccount.branchName}</h5><br />
