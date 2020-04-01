@@ -1,0 +1,19 @@
+.contract-box{
+    margin-top: 2%;
+    margin-bottom:2% ;
+   
+}
+.contract-box .header{
+    background-color: #254380;
+    color: white;
+    font-size: 16px;
+}
+.contract-box-body{
+    padding-left : 3%;
+}
+.contract-box-footer{
+    display: flex;
+}
+.contract-box-footer .col1{
+    flex: 10;
+}
