@@ -48,11 +48,13 @@ class Dashboard extends React.Component {
     if(this.state.mode === "client"){
       this.getInterestedFreelancer();
       this.getjobDetail();
+      this.checkContract();
     }
-    if(this.state.mode=="freelancer"){
+    if(this.state.mode==="freelancer"){
       this.getjobDetail();
+      this.checkContract();
     }
-    this.checkContract();
+    
   }
 
   formatJPGtopath(res){
@@ -77,6 +79,16 @@ class Dashboard extends React.Component {
       }
     })
  }
+ async getUserImage(userId){
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+    let {result,error} = await this.to(axios.get(utilities["backend-url"] + "/users/profilePicture/" + userId,{ responseType: 'arraybuffer' },))
+    if(error!==null){
+      return {error : error, data:null};
+    }
+    return {error : null, data: "data:;base64,"+this.formatJPGtopath(result)};  
+}
+
  async checkContract(){
   await axios
   .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobID)
@@ -94,15 +106,7 @@ class Dashboard extends React.Component {
      }
   });
 }
-  async getUserImage(userId){
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-  
-      let {result,error} = await this.to(axios.get(utilities["backend-url"] + "/users/profilePicture/" + userId,{ responseType: 'arraybuffer' },))
-      if(error!==null){
-        return {error : error, data:null};
-      }
-      return {error : null, data: "data:;base64,"+this.formatJPGtopath(result)};  
-  }
+
   async getInterestedFreelancer() {
     let freelancerList = new Array();
 
@@ -192,7 +196,7 @@ class Dashboard extends React.Component {
           <Col sm={4} >
             <div className="left-col">
               <Row><DashboardStatus status={this.state.jobStatus} /></Row>
-              <Row><DashboardResponsible /></Row>
+              <Row><DashboardResponsible topic={"Responsible"} contract={this.state.contract} jobId={this.state.jobID}/></Row>
               <Row><DashboardContract jobId={this.state.jobID} contract={this.state.contract}/></Row>
             </div>
           </Col>
@@ -215,12 +219,12 @@ class Dashboard extends React.Component {
             <Col sm={4} >
               <div className="left-col">
                 <Row><DashboardStatus status={this.state.jobStatus} /></Row>
-                <Row><DashboardResponsible /></Row>
+                <Row><DashboardResponsible topic={"Client"} contract={this.state.contract} jobId={this.state.jobID}/></Row>
                 <Row><DashboardContract jobId={this.state.jobID} contract={this.state.contract}/></Row>
               </div>
             </Col>
             <Col sm={8}>
-              <Row><DashboardFeed /></Row>
+              <Row><DashboardFeed  contract={this.state.contract} /></Row>
               <Row><DashboardTimeline timelineDetail={this.state.timelineDetail} status={this.state.jobStatus}/></Row>
             </Col>
 
@@ -355,7 +359,7 @@ class FreelancerBox extends React.Component {
   render() {
     return (
       <DashboardBox
-        hidden={this.props.hidden}
+        hidden={(this.state.contract!==null&&this.state.contract.status==="accepted")}
         topic="Interested Freelancer"
         size="large-box"
         component={
@@ -435,21 +439,156 @@ class DashboardResponsible extends React.Component {
     super(props);
     this.state = {
       // user: null,
-      user: { userid: 1, fname: 'Melvin', lname: 'Macaranas', img: profileimage },
+      contract: this.props.contract,
+      userId: null, 
+      fname: "", 
+      lname: "", 
+      img: profileimage ,
+      mode : LocalStorageService.getUserMode(),
+      load : false,
+      loadImg : false,
+      jobId : this.props.jobId,
     };
+  }
+
+  async componentDidMount(){
+    if(this.state.mode ==="client" && this.props.contract!==null){
+      await this.setState({contract: this.props.contract,userId : this.props.contract.freelancerId})
+      await this.getUserDetail()
+    }
+    if(this.state.mode ==="freelancer"){
+      this.setState({jobId: this.props.jobId})
+      await this.getUserFromJob();
+      await this.getUserImage()
+    }
+  }
+
+  formatJPGtopath(res){
+    return btoa(
+      new Uint8Array(res.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        '',
+      ),
+    );
+  }
+
+  to(promise) {
+    return promise.then(data => {
+       return {
+         error: null,
+         result: data
+       }
+    })
+    .catch(err => {
+      return {
+        error: err
+      }
+    })
+ }
+  async getUserImage(){
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    await axios.get(utilities["backend-url"] + "/users/profilePicture/" + this.state.userId,
+    { responseType: 'arraybuffer' },)
+    .then(res=>{
+      let data = "data:;base64,"+this.formatJPGtopath(res)
+      this.setState({
+        img: data,
+        loadImg : true
+      }); 
+    })
+    .catch(err=>{
+      console.log(err)
+      this.setState({
+        loadImg : true
+      }); 
+    })
+  }
+
+  componentDidUpdate(prevProps){
+    if(this.props.contract !== prevProps.contract){
+      this.setState({contract : this.props.contract})
+    }
+  }
+  checkChatRoom = (friendId,friendName) => {
+    const userId = LocalStorageService.getUserID();
+    var ids = [friendId,userId].sort();
+    var chatroom = ids[0]+"-"+ids[1];
+    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
+    docRef.get().then(function(doc) {
+      LocalStorageService.setChatroom(chatroom);
+      LocalStorageService.setChatName(friendName);
+      if (!doc.exists) {
+        this.addChatRoom(userId,friendId,chatroom,friendName);
+      }
+      window.location.href = '/chat';
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+  }
+
+  addChatRoom = (userId,friendId,chatroom,friendName) => {
+    const time = firebase.firestore.FieldValue.serverTimestamp();
+    firebase.firestore().collection('message').doc('chatroom').collection(userId).doc(chatroom).set({
+      name: friendName,
+      lasttime: time,
+    });
+    var name;
+      axios
+      .get(utilities["backend-url"] + "/users/" + userId)
+      .then(res => {
+        name = res.data.firstName;
+        firebase.firestore().collection('message').doc('chatroom').collection(friendId).doc(chatroom).set({
+          name: name,
+          lasttime: time,
+        });
+    });
+  }
+  async getUserFromJob(){
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/jobs/" + this.state.jobId)
+        .then(res=>{
+            this.setState({
+              userId: res.data.client.userId,
+              fname : res.data.client.firstName,
+              lname: res.data.client.lastName,
+              load:true
+            })
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+  }
+  async getUserDetail(){
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/users/" + this.state.userId)
+        .then(res=>{
+            console.log(res.data)
+            this.setState({
+              fname : res.data.firstName,
+              lname: res.data.lastName,
+              load:true
+            })
+        })
+        .catch(err=>{
+          
+            console.log(err)
+        })
   }
 
   getResponsibleComponent() {
     return (
       <Table className="component-responsible" responsive="sm" hover>
         <tbody>
-          <tr key={this.state.user.userid}>
+          <tr key={this.state.userId}>
             <td>
-              <div className='profile-img'><img src={this.state.user.img} alt='user-img' /></div>
+              <div className='profile-img'><img src={this.state.img} alt='user-img' /></div>
             </td>
-            <td>{this.state.user.fname + ' ' + this.state.user.lname}</td>
+            <td>{this.state.fname + ' ' + this.state.lname}</td>
             <td>
-              <button type="button" className="btn btn-secondary" onClick={""}>
+              <button type="button" className="btn btn-primary" 
+              onClick={()=>{this.checkChatRoom(this.state.userId,this.state.fname)}}>
                 Chat
               </button>
             </td>
@@ -458,13 +597,24 @@ class DashboardResponsible extends React.Component {
       </Table>
     )
   }
-
+  hide(){
+    if(this.state.mode === "client" && this.state.contract === null){
+      return true;
+    }
+    else if(this.state.contract!==null && this.state.contract.status === "accepted"){
+      return true;
+    }else{
+      return false;
+    }
+  }
   render() {
-
-    return this.state.user ? (
-
-      <DashboardBox topic='Responsible' size='small-box' component={this.getResponsibleComponent()} />
-    ) : null;
+    if(!this.state.load || !this.state.loadImg){
+      return ''
+    }
+    return( 
+      <DashboardBox topic={this.props.topic||'responsible'} size='small-box' component={this.getResponsibleComponent()}
+      hidden={this.hide()} />
+    );
   }
 
 }
@@ -477,7 +627,11 @@ class DashboardContract extends React.Component {
       contract : this.props.contract
     };
   }
-  
+  componentDidUpdate(prevProps){
+    if(this.props.contract !== prevProps.contract){
+      this.setState({contract : this.props.contract})
+    }
+  }
   gotoContract(){
     window.location.href = '/contract/'+this.state.contract.jobId+'/'+this.state.contract.freelancerId;
   }
@@ -491,7 +645,8 @@ class DashboardContract extends React.Component {
   render() {
 
     return (
-      <DashboardBox topic='Contract' size='small-box' component={this.getContractComponent()} hidden={this.state.contract==null}/>
+      <DashboardBox topic='Contract' size='small-box' component={this.getContractComponent()} 
+      hidden={this.state.contract===null}/>
     );
   }
 
@@ -566,23 +721,40 @@ class DashboardFeed extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      
+      contract :this.props.contract
     }
   }
-  
+  gotoContract(){
+    window.location.href = '/contract/'+this.state.contract.jobId+'/'+this.state.contract.freelancerId;
+  }
+  componentDidMount(){
+      this.setState({contract : this.props.contract})
+
+  }
+
   getDisplayComponent(){
-    return (
-      <div>
-        <h3>You got an offering</h3>
-        <button type="button" className="btn btn-primary" >
-            Contract
-        </button>
-      </div>
-    );
+    if((this.state.contract!==null&&this.state.contract.status==="null")){
+      return (
+        <div>
+          <h3>Comming soon</h3>
+          <button type="button" className="btn btn-primary" onClick={this.gotoContract.bind(this)} >
+              Contract
+          </button>
+        </div>
+      );
+    }
+    else{
+      return(
+        <div>
+          <h3>waiting for offerings</h3>
+        </div>
+      )
+    }
   }
   render(){
     return (
-      <DashboardBox topic='Feed' component={this.getDisplayComponent()} />
+      <DashboardBox topic='Feed' component={this.getDisplayComponent()} 
+       />
     );
   }
 }
