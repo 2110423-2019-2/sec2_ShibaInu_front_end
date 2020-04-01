@@ -176,7 +176,7 @@ class NavBar extends React.Component {
           My job
         </DropdownItem>
         <DropdownItem href="/payment" id="dropdown-item-balance" className="color-black">
-          My Payment
+          My payment
         </DropdownItem>
         <DropdownItem href="/chat" id="dropdown-item-chat" className="color-black">
           Chat
