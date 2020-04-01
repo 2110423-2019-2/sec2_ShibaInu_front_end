@@ -48,11 +48,22 @@ const LocalStorageService = (function () {
         localStorage.removeItem('chatroom');
     }
 
+    function _setChatName(chatName) {
+        localStorage.setItem('chatName', chatName);
+    }
+    function _getChatName() {
+        return localStorage.getItem('chatName') || '';
+    }
+    function _clearChatName() {
+        localStorage.removeItem('chatName');
+    }
+
     function _signOut() {
         _clearToken();
         _clearUserID();
         _clearUserMode();
         _clearChatroom();
+        _clearChatName();
     }
     return {
         getService: _getService,
@@ -68,6 +79,9 @@ const LocalStorageService = (function () {
         setChatroom: _setChatroom,
         getChatroom: _getChatroom,
         clearChatroom: _clearChatroom,
+        setChatName: _setChatName,
+        getChatName: _getChatName,
+        clearChatName: _clearChatName,
         signOut: _signOut
     }
 })();
