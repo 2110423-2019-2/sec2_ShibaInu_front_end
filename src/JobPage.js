@@ -137,42 +137,51 @@ class JobBid extends React.Component {
     return (
       <Card id="job-bid">
         <Card.Header>Bid</Card.Header>
+
         <Card.Body>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Group controlId="bidAmount">
-              <InputGroup>
-                <Form.Control
-                  type="number"
-                  placeholder="0"
-                  name="biddedWage"
-                  onChange={this.handleChange}
-                  value={this.state.postData.biddedWage}
-                  required
-                />
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroupPrepend">THB</InputGroup.Text>
-                </InputGroup.Prepend>
-              </InputGroup>
-            </Form.Group>
-            <Form.Group controlId="bidDuration">
-              <InputGroup>
-                <Form.Control
-                  type="number"
-                  placeholder="0"
-                  name="biddedDuration"
-                  onChange={this.handleChange}
-                  value={this.state.postData.biddedDuration}
-                  required
-                />
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="inputGroupPrepend">Day</InputGroup.Text>
-                </InputGroup.Prepend>
-              </InputGroup>
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Form>
+          {LocalStorageService.getUserMode() === "freelancer" ? (
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group controlId="bidAmount">
+                <InputGroup>
+                  <Form.Control
+                    type="number"
+                    placeholder="0"
+                    name="biddedWage"
+                    onChange={this.handleChange}
+                    value={this.state.postData.biddedWage}
+                    required
+                  />
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="inputGroupPrepend">
+                      THB
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
+                </InputGroup>
+              </Form.Group>
+              <Form.Group controlId="bidDuration">
+                <InputGroup>
+                  <Form.Control
+                    type="number"
+                    placeholder="0"
+                    name="biddedDuration"
+                    onChange={this.handleChange}
+                    value={this.state.postData.biddedDuration}
+                    required
+                  />
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="inputGroupPrepend">
+                      Day
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
+                </InputGroup>
+              </Form.Group>
+              <Button variant="primary" type="submit">
+                Submit
+              </Button>
+            </Form>
+          ) : (
+            <div>Please switch to freelancer mode to bid</div>
+          )}
         </Card.Body>
       </Card>
     );

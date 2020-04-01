@@ -218,7 +218,6 @@ class ResultRow extends React.Component {
   }
 
   render() {
-    console.log(LocalStorageService.getUserMode());
     return (
       <div className="result-row">
         <Container id="low-margin">
@@ -272,20 +271,16 @@ class DropDownItem extends React.Component {
   }
 
   handleClick() {
-    axios
-      .post(utilities["backend-url"] + "/notification", {
-        topic: "You have been invited to job",
-        description:
-          "You have been invited to " +
-          this.props.jobName +
-          ". You can join via this link " +
-          "http://localhost:3000/job/" +
-          this.props.jobId,
-        user: this.props.userId
-      })
-      .then(res => {
-        console.log(res.status);
-      });
+    axios.post(utilities["backend-url"] + "/notification", {
+      topic: "You have been invited to job",
+      description:
+        "You have been invited to " +
+        this.props.jobName +
+        ". You can join via this link " +
+        "http://localhost:3000/job/" +
+        this.props.jobId,
+      user: this.props.userId
+    });
   }
 
   render() {
