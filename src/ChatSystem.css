@@ -17,8 +17,6 @@
     bottom: 1vh;
     position: absolute;
 }
-#chatarea {
-}
 #msgarea {
     width: 100%;
     position: absolute;
@@ -26,4 +24,7 @@
     bottom: 12vh;
     overflow: scroll;
     overflow-x: hidden;
+}
+.float-right {
+    float: right;
 }

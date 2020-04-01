@@ -18,7 +18,7 @@ class ChatSystem extends React.Component {
     super(props);
     this.state = {
       selectedRoom: "2-3",
-      friendName: "",
+      chatwith: "",
       msg: "Hello",
       userID: LocalStorageService.getUserID(),
       chatrooms: [],
@@ -91,9 +91,9 @@ class ChatSystem extends React.Component {
       var chatmsgs = [];
       snapshot.docChanges().forEach(change => {
         var message = change.doc.data();
-        var pos = "float-left";
+        var pos = "text-left w-100";
         if (message.sender == this.state.userID) {
-          var pos = "float-right";
+          var pos = "text-right w-100";
         }
         chatmsgs.push({
           sender: message.sender,
@@ -114,7 +114,10 @@ class ChatSystem extends React.Component {
           className="w-100 text-left"
           id="chatroom"
           onClick={() => {
-            this.setState({ selectedRoom: chatroom.id });
+            this.setState({
+              selectedRoom: chatroom.id,
+              chatwith: chatroom.chatwith
+            });
           }}
         >
           <h4>{chatroom.chatwith}</h4>
@@ -125,14 +128,13 @@ class ChatSystem extends React.Component {
 
   chatMsg = () => {
     return this.state.chatmsgs.map(chatmsg => (
-      <div key={chatmsg.id} className="ml-3 mt-3">
+      <div key={chatmsg.id} className="ml-3 mt-3 mr-4 ">
         <Row>
-          <h5>{chatmsg.sender}</h5>
-        </Row>
-        <Row>
-          <Badge pill variant="info">
-            <h5>{chatmsg.msg}</h5>
-          </Badge>
+          <div className={chatmsg.pos}>
+            <Badge pill variant="info" className="pl-3 pr-3 pt-1 pb-1">
+              <h5>{chatmsg.msg}</h5>
+            </Badge>
+          </div>
         </Row>
       </div>
     ));
@@ -140,32 +142,32 @@ class ChatSystem extends React.Component {
 
   sendMsgDisp = () => {
     return (
-      <div id="chatarea">
-        <div id="msgarea">
-          {this.chatMsg()}
+      <div>
+        <div id="msgarea">{this.chatMsg()}</div>
+        <div id="sendmsg">
+          <InputGroup className="mb-3 mt-3 ml-1">
+            <FormControl
+              placeholder="Text Here"
+              aria-label="Text Here"
+              aria-describedby="basic-addon2"
+              onChange={e => {
+                this.setState({ msg: e.target.value });
+                console.log(this.state.msg);
+              }}
+            />
+            <InputGroup.Append>
+              <Button variant="dark" onClick={() => this.makeData()}>
+                Send
+              </Button>
+            </InputGroup.Append>
+          </InputGroup>
         </div>
-        <Row id="sendmsg">
-          <Col>
-            <InputGroup className="mb-3 mt-3 ml-1" >
-              <FormControl
-                placeholder="Text Here"
-                aria-label="Text Here"
-                aria-describedby="basic-addon2"
-                onChange={e => {
-                  this.setState({ msg: e.target.value });
-                  console.log(this.state.msg);
-                }}
-              />
-              <InputGroup.Append>
-                <Button variant="dark" onClick={() => this.makeData()}>
-                  Send
-                </Button>
-              </InputGroup.Append>
-            </InputGroup>
-          </Col>
-        </Row>
       </div>
     );
+  };
+
+  chatWith = () => {
+    return <h2>{'Chat with ' + this.state.chatwith}</h2>;
   };
 
   makeData = () => {
@@ -205,9 +207,9 @@ class ChatSystem extends React.Component {
               </Row>
               {this.chatRoom()}
             </Col>
-            <Col xs={7} className="bg-white shadow ml-3 text-center">
-              <Row className="background-blue text-light pt-3 ">
-                <h2 className="pl-3">Chat Message</h2>
+            <Col xs={7} className="shadow ml-3 text-center">
+              <Row className="background-blue text-light pt-3 pl-3">
+                {this.chatWith()}
               </Row>
               {this.sendMsgDisp()}
             </Col>
