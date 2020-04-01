@@ -25,6 +25,7 @@
     overflow: scroll;
     overflow-x: hidden;
 }
-.float-right {
-    float: right;
+.selected-room {
+    background-color: #FFC655;
+    color: #254380;
 }

@@ -24,7 +24,7 @@ class ChatSystem extends React.Component {
       chatrooms: [],
       chatmsgs: [],
       firstLoadMsg: true,
-      ref: React.createRef()
+      ref: React.createRef(),
     };
   }
 
@@ -119,7 +119,7 @@ class ChatSystem extends React.Component {
       <Row key={chatroom.id}>
         <Button
           variant="link"
-          className="w-100 text-left"
+          className={this.state.selectedRoom===chatroom.id?"w-100 text-left selected-room":"w-100 text-left"}
           id="chatroom"
           onClick={() => {
             LocalStorageService.setChatroom(chatroom.id);
