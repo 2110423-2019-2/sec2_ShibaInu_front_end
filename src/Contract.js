@@ -20,6 +20,7 @@ class Contract extends React.Component{
             freelancerId: this.props.params.freelancerId,
             mode : "",
             isModifying : false,
+            creating : false,
             jobName: "",
             editedData : {price:0,text: example},
             currData: {price:0,text: example},
@@ -114,15 +115,15 @@ class Contract extends React.Component{
             console.log(err);
         })
     }
-    async componentWillMount(){
+    async componentDidMount(){
         this.setState({mode : LocalStorageService.getUserMode()});
         await this.getJobDetail();
         await this.getUserName();
         await this.getContractDetail();
-        if(this.state.bidwage != -1 && this.state.currData.price ==0){
+        if(this.state.bidwage != -1 && this.state.currData.price ==-1){
             this.setState({currData : {price : this.state.bidwage , text : example}})
-
             this.setState({editedData : {price : this.state.bidwage , text : example}})
+            this.state({creating : true})
         }
     }
     async getJobDetail(){
@@ -182,24 +183,26 @@ class Contract extends React.Component{
         await axios
         .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
         .then(res =>{
+            console.log(res.data)
             this.setState({
                 currData:{price : res.data.price||0, text : res.data.description||example},
                 editedData:{price : res.data.price||0, text : res.data.description||example},
                 modifiedTime : res.data.updatedTime,
-                loadContractData:true
+                loadContractData:true,
+                creating : false
             })
         })
         .catch(err=>{
             console.log(err);
-            this.setState({loadContractData : true})
+            this.setState({loadContractData : true,})
         });
     }
     async onCreateContract(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         await axios
-        .post(utilities["backend-url"] + "/contracts/" + this.state.jobId,{
+        .post(utilities["backend-url"] + "/contracts",{
             jobId : this.state.jobId,
-            freelancerId:this.state.freelancerId,
+            freelancerId: this.state.freelancerId,
             price : this.state.editedData.price,
             description : this.state.editedData.text,
         })
