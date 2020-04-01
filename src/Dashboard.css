@@ -23,6 +23,10 @@
   overflow: hidden;
   opacity: 1;
   text-align: center;
+  cursor: pointer;
+}
+.profile-img :hover{
+  opacity: 0.5;
 }
 .profile-img img {
   align-self: auto;
