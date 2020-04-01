@@ -5,16 +5,26 @@ import CKEditor from 'ckeditor4-react';
 import "./Contract.css"
 import example from './contractExample'
 import swal from 'sweetalert';
+import axios from 'axios';
+import LocalStorageService from './LocalStorageService'
+let utilities = require('./Utilities.json')
 class Contract extends React.Component{
     constructor(props){
         super(props)
         this.state={
-            isFreelancer : true,
+            jobId: this.props.params.jobId,
+            clientId: null,
+            clientName: "",
+            freelancerName: "",
+            freelancerId: this.props.params.freelancerId,
+            mode : "",
             isModifying : false,
-            jobName: "name",
+            jobName: "",
             editedData : {price:0,text: example},
             currData: {price:0,text: example},
-            modifiedTime: new Date().toLocaleString(),
+            modifiedTime: "",
+            loadContractData : false,
+            loadJobData: false,
         }
         this.handlerEdit=this.handlerEdit.bind(this);
         this.onEditorChange=this.onEditorChange.bind(this,);
@@ -64,28 +74,174 @@ class Contract extends React.Component{
         swal({
             title: "Are you sure?",
             text: "Once submit, you will not be able to recover this  contract!",
-            icon: "warning",
+            icon: "success",
             buttons: true,
             dangerMode: true,
           })
-          .then((willDelete) => {
-            if (willDelete) {
+          .then((confirm) => {
+            if (confirm) {
                 swal("Your new contract has been submit", {
                     icon: "success",
                 });
-                ///api
+                this.onCreateContract();
             }
           });
     }
     handleAccept(){
-
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        axios
+        .post(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+            status : "accepted"
+        })
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     }
     handleDecline(){
-
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        axios
+        .post(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+            status : "rejected"
+        })
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     }
-    componentDidMount(){
+    async componentWillMount(){
+        this.setState({mode : LocalStorageService.getUserMode()});
+        await this.getJobDetail();
+        await this.getUserName();
+        this.getContractDetail();
+
+        console.log(this.state.clientId)
+    }
+    async getJobDetail(){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/jobs/" + this.state.jobId)
+        .then(res => {
+            this.setState({
+            jobName: res.data.name,
+            clientId: res.data.client.userId,
+            loadJobData:true,
+            })
+            
+        })
+        .catch(err=>{
+            console.log(err);
+        });
+    }
+    async getUserName(){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/users/" + this.state.clientId)
+        .then(res=>{
+            this.setState({clientName : res.data.firstName+" "+res.data.lastName})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+        await axios
+        .get(utilities["backend-url"] + "/users/" + this.state.freelancerId)
+        .then(res=>{
+            this.setState({freelancerName : res.data.firstName+" "+res.data.lastName})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+        
+    }
+    async getContractDetail(){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        let price = 0;
+        await axios
+        .get(utilities["backend-url"] + "/bids/bidId/" + this.state.jobId)
+        .then(res =>{
+            for(let i=0; i<res.data.length;i++){
+                if(res.data[i].userId === this.state.freelancerId){
+                    price = res.data.length[i].biddedWage;
+                }
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+        })
+        await axios
+        .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+        .then(res =>{
+            this.setState({
+                currData:{price : price||0, text : res.data.description||example},
+                editedData:{price : price||0, text : res.data.description||example},
+                modifiedTime : res.data.updatedTime,
+                loadContractData:true
+            })
+        })
+        .catch(err=>{
+            console.log(err);
+            this.setState({loadContractData : true})
+        });
+    }
+    async onCreateContract(){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        await axios
+        .post(utilities["backend-url"] + "/contracts/" + this.state.jobId,{
+            jobId : this.state.jobId,
+            freelancerId:this.state.freelancerId,
+            price : this.state.editedData.price,
+            description : this.state.editedData.text,
+            status : "null",
+        })
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    }
+    async onUpdateContract(){
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        await axios
+        .patch(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+            freelancerId:this.state.freelancerId,
+            price : this.state.editedData.price,
+            description : this.state.editedData.text
+        })
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     }
     render(){
+        if(!this.state.loadContractData || !this.state.loadJobData){
+            return(
+                <>
+                </>
+            )
+        }
+        if(this.state.mode === "client" && LocalStorageService.getUserID() != this.state.clientId ){
+            return (
+                <>
+                    <NavBar mode={this.state.mode} userDatas={""} />
+                    <h1 align="center">you're not allowed to access this page</h1>
+                </>
+            )
+        }
+        if(this.state.mode === "freelancer" && LocalStorageService.getUserID() != this.state.freelancerId ){
+            return (
+                <>
+                    <NavBar mode={this.state.mode} userDatas={""} />
+                    <h1 align="center">you're not allowed to access this page</h1>
+                </>
+            )
+        }
         return (
             <>  
                 <NavBar mode={this.state.mode} userDatas={""} />
@@ -107,7 +263,7 @@ class Contract extends React.Component{
                         Client
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control plaintext  disabled defaultValue={"name1"} />
+                            <Form.Control plaintext  disabled defaultValue={this.state.clientName} />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} controlId="formPlaintextClient">
@@ -115,7 +271,7 @@ class Contract extends React.Component{
                         Freelancer
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control plaintext  disabled defaultValue={"name2"} />
+                            <Form.Control plaintext  disabled defaultValue={this.state.freelancerName} />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} controlId="formPrice">
@@ -143,7 +299,7 @@ class Contract extends React.Component{
                                     }
                                 }
                                 data={this.state.editedData.text}
-                                type="inline"
+                                type="classic"
                                 readOnly = {!this.state.isModifying}
                                 onChange={this.onEditorChange}
                             />
@@ -159,7 +315,7 @@ class Contract extends React.Component{
                             }
                             </div>
                             <div classname="col2">
-                                {this.state.isFreelancer?
+                                {this.state.mode === "freelancer"?
                                 <>
                                 <Button variant="outline-danger" onClick={this.handleAccept}>Decline</Button>{' '}
                                 <Button variant="outline-success" onClick={this.handleDecline}>Accept</Button>{' '}

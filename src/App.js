@@ -76,7 +76,7 @@ class App extends React.Component {
           <PrivateRoute path="/client/review" component={ReviewFreelancer} />
           <PrivateRoute path="/payment" component={PaymentPage} />
           <PrivateRoute path="/chat" component={ChatSystem} />
-          <Route path="/contract" component={Contract} />
+          <PrivateRoute path="/contract/:jobId/:freelancerId" component={() => <Contract params={useParams()}/>} />
         </Switch>
       </Router>
     );

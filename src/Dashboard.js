@@ -178,7 +178,7 @@ class Dashboard extends React.Component {
             </div>
           </Col>
           <Col sm={8}>
-            <Row><FreelancerBox freelancerList={this.state.freelancerList}/></Row>
+            <Row><FreelancerBox freelancerList={this.state.freelancerList} jobId={this.state.jobID}/></Row>
             <Row><DashboardTimeline timelineDetail={this.state.timelineDetail} status={this.state.jobStatus} /></Row>
           </Col>
 
@@ -201,6 +201,7 @@ class Dashboard extends React.Component {
               </div>
             </Col>
             <Col sm={8}>
+              <Row><DashboardFeed /></Row>
               <Row><DashboardTimeline timelineDetail={this.state.timelineDetail} status={this.state.jobStatus} /></Row>
             </Col>
 
@@ -279,6 +280,10 @@ class FreelancerBox extends React.Component {
     });
   }
 
+  handleSelect = (e)=>{
+    window.location.href = '/contract/' +this.props.jobId+'/'+e.target.name;
+    console.log(window.location.href)
+  }
   showInterestedList() {
     return this.state.freelancerList.map(item => (
       <tr key={item.userId}>
@@ -291,7 +296,7 @@ class FreelancerBox extends React.Component {
           {item.bid}
         </td>
         <td>
-          <button type="button" className="btn btn-primary" >
+          <button type="button" className="btn btn-primary" name={item.userId} onClick={this.handleSelect.bind(this,)}>
             select
           </button>
         </td>
@@ -504,6 +509,30 @@ class DashboardTimeline extends React.Component {
     );
   }
 
+}
+
+class DashboardFeed extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+
+    }
+  }
+  getDisplayComponent(){
+    return (
+      <div>
+        <h3>You got an offering</h3>
+        <button type="button" className="btn btn-primary" >
+            Contract
+        </button>
+      </div>
+    );
+  }
+  render(){
+    return (
+      <DashboardBox topic='Feed' component={this.getDisplayComponent()}/>
+    );
+  }
 }
 
 

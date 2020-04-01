@@ -113,3 +113,7 @@ form p.unauthorized-message {
   right: 0;
   left: auto;
 }
+
+.card-container * {
+  margin: 0px 0px 10px 0px;
+}
