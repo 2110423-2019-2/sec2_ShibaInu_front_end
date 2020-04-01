@@ -86,6 +86,7 @@ class Profile extends React.Component {
       imageProfileURL: profileimage
     };
     this.fetch = this.fetch.bind(this);
+    this.formatJPGtopath=this.formatJPGtopath.bind(this,);
   }
   
   componentDidMount(){
@@ -96,6 +97,14 @@ class Profile extends React.Component {
       this.setState({userId : LocalStorageService.getUserID()})
       console.log(2)
     }
+  }
+  formatJPGtopath(res){
+    return btoa(
+      new Uint8Array(res.data).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        '',
+      ),
+    );
   }
   fetch() {
     let months = [
@@ -140,16 +149,9 @@ class Profile extends React.Component {
         }
         axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,{ responseType: 'arraybuffer' },)
         .then(res=>{
-          const base64 = btoa(
-            new Uint8Array(res.data).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              '',
-            ),
-          );
-          this.setState({ imageProfileURL: "data:;base64," + base64 });
+          this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res)});
           console.log(res);
         })
-        
         .catch(err=>{
           console.log(err);
         })
