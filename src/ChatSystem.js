@@ -141,10 +141,12 @@ class ChatSystem extends React.Component {
   sendMsgDisp = () => {
     return (
       <div id="chatarea">
-        {this.chatMsg()}
-        <Row>
+        <div id="msgarea">
+          {this.chatMsg()}
+        </div>
+        <Row id="sendmsg">
           <Col>
-            <InputGroup className="mb-3 mt-3 ml-1" id="sendmsg">
+            <InputGroup className="mb-3 mt-3 ml-1" >
               <FormControl
                 placeholder="Text Here"
                 aria-label="Text Here"
