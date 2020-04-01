@@ -23,7 +23,7 @@ import AdminHome from "./AdminHome";
 import AdminAnnouncement from "./AdminAnnouncement";
 import ChatSystem from "./ChatSystem";
 import ReviewFreelancer from "./ReviewFreelancer";
-import WalletPage from "./WalletPage";
+import PaymentPage from "./PaymentPage";
 import Contract from "./Contract";
 import FreelancerSearchPage from "./FreelancerSearchPage";
 class App extends React.Component {
@@ -74,7 +74,7 @@ class App extends React.Component {
             component={AdminAnnouncement}
           />
           <PrivateRoute path="/client/review" component={ReviewFreelancer} />
-          <PrivateRoute path="/wallet" component={WalletPage} />
+          <PrivateRoute path="/payment" component={PaymentPage} />
           <PrivateRoute path="/chat" component={ChatSystem} />
           <Route path="/contract" component={Contract} />
         </Switch>

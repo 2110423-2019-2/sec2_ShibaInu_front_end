@@ -4,7 +4,7 @@ import { Nav, Container, Row, Col, Table, Button } from 'react-bootstrap';
 import NavBar from './NavBar';
 import PaymentModal from './PaymentModal';
 
-class WalletPage extends React.Component {
+class PaymentPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -116,4 +116,4 @@ class WalletPage extends React.Component {
     }
 }
 
-export default WalletPage;
+export default PaymentPage;
