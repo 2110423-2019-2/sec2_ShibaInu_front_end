@@ -315,7 +315,7 @@ class FreelancerBox extends React.Component {
             .firestore()
             .collection("message")
             .doc("chatroom")
-            .collection(userId)
+            .collection(userId.toString())
             .doc(chatroom)
             .set({
               name: friendName,
@@ -329,7 +329,7 @@ class FreelancerBox extends React.Component {
                     .firestore()
                     .collection("message")
                     .doc("chatroom")
-                    .collection(friendId)
+                    .collection(friendId.toString())
                     .doc(chatroom)
                     .set({
                       name: res.data.firstName,
