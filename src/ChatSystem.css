@@ -14,12 +14,16 @@
 }
 #sendmsg {
     width: 95%;
+    bottom: 1vh;
+    position: absolute;
 }
 #chatarea {
-    position: absolute;
-    height: 70vh;
-    bottom: 1vh;
+}
+#msgarea {
     width: 100%;
+    position: absolute;
+    height: 59vh;
+    bottom: 12vh;
     overflow: scroll;
     overflow-x: hidden;
 }
