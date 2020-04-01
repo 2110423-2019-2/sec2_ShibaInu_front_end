@@ -153,7 +153,7 @@ class JobOfferFreelancer extends React.Component {
                   placeholder="Search"
                   className="mr-sm-2"
                 />
-                <Button variant="outline-success">Search</Button>
+                <Button variant="outline-success" className="w-25">Search</Button>
               </Form>
               <Nav variant="tabs" defaultActiveKey="link-1" id="joblist-table">
                 <Nav.Item>
