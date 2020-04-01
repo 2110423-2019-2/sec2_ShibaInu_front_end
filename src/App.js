@@ -9,7 +9,7 @@ import JobCreatePage from "./JobCreatePage";
 import JobSearchPage from "./JobSearchPage";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
-import DashboardClient from "./DashboardClient";
+import Dashboard from "./Dashboard";
 import {
   Route,
   Switch,
@@ -65,8 +65,8 @@ class App extends React.Component {
           <GuestRoute path="/signin" component={SignIn} />
           <GuestRoute path="/signup" component={SignUp} />
           <PrivateRoute
-            path="/client/dashboard/:jobId"
-            component={() => <DashboardClient params={useParams()} />}
+            path="/dashboard/:jobId"
+            component={() => <Dashboard params={useParams()} />}
           />
           <PrivateRoute path="/admin/home" component={AdminHome} />
           <PrivateRoute

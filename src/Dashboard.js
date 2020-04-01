@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
-import "./DashboardClient.css";
+import "./Dashboard.css";
 import profileimage from "./material/profileimg2.png";
 import { Table, Container, Row, Col, Breadcrumb, Card, Badge } from "react-bootstrap";
 import axios from 'axios';
@@ -12,14 +12,14 @@ let utilities = require('./Utilities.json');
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
 
-class DashboardClient extends React.Component {
+class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       jobID: this.props.params.jobId || 1,
       freelancerList: [],
       loadFreelancer: false,
-      mode: "client",
+      mode: LocalStorageService.getUserMode(),
       jobname: "Default job name",
       loadJob: false,
       jobStatus: null,
@@ -34,12 +34,22 @@ class DashboardClient extends React.Component {
   }
 
   loadAllData() {
-    return this.state.loadFreelancer && this.state.loadJob;
+    if(this.state.mode === "client"){
+      return this.state.loadFreelancer && this.state.loadJob;
+    }
+    if(this.state.mode === "freelancer"){
+      return this.state.loadJob;
+    }
   }
 
   componentWillMount() {
-    this.getInterestedFreelancer();
-    this.getjobDetail();
+    if(this.state.mode === "client"){
+      this.getInterestedFreelancer();
+      this.getjobDetail();
+    }
+    if(this.state.mode=="freelancer"){
+      this.getjobDetail();
+    }
   }
 
   formatJPGtopath(res){
@@ -83,7 +93,7 @@ class DashboardClient extends React.Component {
       .then(async res => {
         for (let i = 0; i < res.data.length; i++) {
           let item = res.data[i];
-          let d = { userId: item.userId, fname: item.firstName, lname: item.lastName, score: 0, img: profileimage };
+          let d = { userId: item.userId, fname: item.firstName, lname: item.lastName, score: 0,bid : 0, img: profileimage };
           let img =  await this.getUserImage(item.userId);
           if(img.error===null){
             d.img = img.data;
@@ -96,7 +106,6 @@ class DashboardClient extends React.Component {
         
       })
       .then(freelancerList=>{
-        console.log("do",freelancerList)
         this.setState({
           freelancerList: freelancerList,
           loadFreelancer: true
@@ -154,10 +163,31 @@ class DashboardClient extends React.Component {
         }
       });
   }
+  renderClient(){
+    return (<div>
+      <NavBar mode={this.state.mode} userDatas={""} />
+      <Container>
+        <h1 className="job-header">{this.state.jobname}</h1>
+        <hr />
+        <Row>
+          <Col sm={4} >
+            <div className="left-col">
+              <Row><DashboardStatus status={this.state.jobStatus} /></Row>
+              <Row><DashboardResponsible /></Row>
+              <Row><DashboardContract /></Row>
+            </div>
+          </Col>
+          <Col sm={8}>
+            <Row><FreelancerBox freelancerList={this.state.freelancerList}/></Row>
+            <Row><DashboardTimeline timelineDetail={this.state.timelineDetail} status={this.state.jobStatus} /></Row>
+          </Col>
 
-  render() {
-    return this.loadAllData() ? (
-      <div>
+        </Row>
+      </Container>
+    </div>)
+  }
+  renderFreelancer(){
+    return(<div>
         <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
           <h1 className="job-header">{this.state.jobname}</h1>
@@ -171,14 +201,26 @@ class DashboardClient extends React.Component {
               </div>
             </Col>
             <Col sm={8}>
-              <Row><FreelancerBox freelancerList={this.state.freelancerList} /></Row>
               <Row><DashboardTimeline timelineDetail={this.state.timelineDetail} status={this.state.jobStatus} /></Row>
             </Col>
 
           </Row>
         </Container>
-      </div>
-    ) : '';
+      </div>)
+  }
+  render() {
+    if(this.loadAllData()){
+      if(this.state.mode==="client"){
+        return this.renderClient();
+      }
+      else if(this.state.mode==="freelancer"){
+        return this.renderFreelancer();
+      }else{
+        return '';
+      }
+    } else{
+      return '';
+    }
   }
 }
 
@@ -242,14 +284,12 @@ class FreelancerBox extends React.Component {
     return this.state.freelancerList.map(item => (
       <tr key={item.userId}>
         <td>
-          <div className="profile-img"><img src={item.img} alt="youngstar logo" /></div>
+          <div className="profile-img" onClick={()=>this.checkChatRoom(item.userId,item.fname)} ><img src={item.img} alt="youngstar logo" /></div>
         </td>
         <td>{item.fname + " " + item.lname}</td>
         <td>{item.score}</td>
         <td>
-          <button type="button" className="btn btn-primary" onClick={()=>this.checkChatRoom(item.userId,item.fname)}>
-            Chat
-          </button>
+          {item.bid}
         </td>
         <td>
           <button type="button" className="btn btn-primary" >
@@ -278,7 +318,7 @@ class FreelancerBox extends React.Component {
                         <th></th>
                         <th>Name</th>
                         <th>score</th>
-                        <th>chat</th>
+                        <th>Bid</th>
                         <th>select</th>
                       </tr>
                     </thead>
@@ -497,4 +537,4 @@ class DashboardBox extends React.Component {
 }
 
 
-export default DashboardClient;
+export default Dashboard;

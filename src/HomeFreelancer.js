@@ -61,6 +61,10 @@ class HomeFreelancer extends React.Component {
       });
   };
 
+  handleClickJobDetail(e) {
+    window.location.href = '/dashboard/' + e.target.id;
+  }
+
   componentDidMount = () => {
     this.fetchDatas();
   };
@@ -83,7 +87,7 @@ class HomeFreelancer extends React.Component {
           {job.estimatedDuration}
         </td>
         <td className="align-middle">
-          <button type="button" className="btn btn-secondary btn-block">
+          <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
             Detail
           </button>
         </td>
