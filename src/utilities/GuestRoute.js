@@ -11,7 +11,7 @@ function GuestRoute({ component: Component, ...rest }) {
                 !LocalStorageService.getAccessToken() ? (
                     <Component {...props} />
                 ) : (
-                        <Redirect to={"/" + (LocalStorageService.getUserMode() || "client") + "/home"} />
+                        <Redirect to={"/" + (LocalStorageService.getUserMode() ? (LocalStorageService.getUserMode() === 'guest' ? 'client' : LocalStorageService.getUserMode()) : 'client' ) + "/home"} />
                     )
             }
         />
