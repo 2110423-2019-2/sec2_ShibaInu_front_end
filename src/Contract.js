@@ -98,7 +98,8 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.freelancerId
+            // window.location.href = "/dashboard/"+this.state.freelancerId
+            window.history.back();
         })
         .catch(err=>{
             console.log(err);
