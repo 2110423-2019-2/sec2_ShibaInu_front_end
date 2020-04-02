@@ -98,7 +98,7 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.freelancerId
+            window.location.href = "/dashboard/"+this.state.jobId
         })
         .catch(err=>{
             console.log(err);
@@ -112,7 +112,7 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.freelancerId
+            window.location.href = "/dashboard/"+this.state.jobId
         })
         .catch(err=>{
             console.log(err);
@@ -213,6 +213,7 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
+            window.location.href = "/dashboard/"+this.state.jobId
         })
         .catch(err=>{
             console.log(err);
@@ -228,6 +229,7 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
+            window.location.href = "/dashboard/"+this.state.freelancerId
         })
         .catch(err=>{
             console.log(err);

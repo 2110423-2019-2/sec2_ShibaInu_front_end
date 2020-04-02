@@ -37,10 +37,10 @@ class Dashboard extends React.Component {
 
   loadAllData() {
     if(this.state.mode === "client"){
-      return this.state.loadFreelancer && this.state.loadJob;
+      return this.state.loadFreelancer && this.state.loadJob && this.state.loadContract; 
     }
     if(this.state.mode === "freelancer"){
-      return this.state.loadJob;
+      return this.state.loadJob && this.state.loadContract;
     }
   }
 
@@ -102,7 +102,9 @@ class Dashboard extends React.Component {
   .catch(err=>{
       console.log(err);
      if (err.response.status === 400){
-          
+      this.setState({
+        loadContract : true
+    })
      }
   });
 }
@@ -459,8 +461,8 @@ class DashboardResponsible extends React.Component {
     if(this.state.mode ==="freelancer"){
       this.setState({jobId: this.props.jobId})
       await this.getUserFromJob();
-      await this.getUserImage()
     }
+     await this.getUserImage()
   }
 
   formatJPGtopath(res){
@@ -601,7 +603,7 @@ class DashboardResponsible extends React.Component {
     if(this.state.mode === "client" && this.state.contract === null){
       return true;
     }
-    else if(this.state.contract!==null && this.state.contract.status === "accepted"){
+    else if(this.state.mode === "client" && this.state.contract!==null && this.state.contract.status !== "accepted"){
       return true;
     }else{
       return false;
@@ -729,11 +731,9 @@ class DashboardFeed extends React.Component{
   }
   componentDidMount(){
       this.setState({contract : this.props.contract})
-
   }
-
   getDisplayComponent(){
-    if((this.state.contract!==null&&this.state.contract.status==="null")){
+    if((this.state.contract!==null)){
       return (
         <div>
           <h3>Comming soon</h3>
