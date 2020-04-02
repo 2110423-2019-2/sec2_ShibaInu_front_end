@@ -27,6 +27,7 @@ class Contract extends React.Component{
             modifiedTime: "",
             loadContractData : false,
             loadJobData: false,
+            status : "null",
         }
         this.handlerEdit=this.handlerEdit.bind(this);
         this.onEditorChange=this.onEditorChange.bind(this,);
@@ -92,11 +93,13 @@ class Contract extends React.Component{
     handleAccept(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         axios
-        .patch(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+        .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             status : "accepted"
         })
         .then(res=>{
             console.log(res);
+            // window.location.href = "/dashboard/"+this.state.freelancerId
+            window.history.back();
         })
         .catch(err=>{
             console.log(err);
@@ -105,11 +108,12 @@ class Contract extends React.Component{
     handleDecline(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         axios
-        .patch(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+        .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             status : "rejected"
         })
         .then(res=>{
             console.log(res);
+            window.location.href = "/dashboard/"+this.state.freelancerId
         })
         .catch(err=>{
             console.log(err);
@@ -188,8 +192,10 @@ class Contract extends React.Component{
                 currData:{price : res.data.price||0, text : res.data.description||example},
                 editedData:{price : res.data.price||0, text : res.data.description||example},
                 modifiedTime : res.data.updatedTime,
+                status : res.data.status,
                 loadContractData:true,
-                creating : false
+                creating : false,
+                
             })
         })
         .catch(err=>{
@@ -323,11 +329,11 @@ class Contract extends React.Component{
                                 this.state.modifiedTime
                             }
                             </div>
-                            <div classname="col2">
+                            <div classname="col2" hidden={this.state.status === "accepted"}>
                                 {this.state.mode === "freelancer"?
                                 <>
-                                <Button variant="outline-danger" onClick={this.handleAccept}>Decline</Button>{' '}
-                                <Button variant="outline-success" onClick={this.handleDecline}>Accept</Button>{' '}
+                                <Button variant="outline-danger" onClick={this.handleDecline}>Decline</Button>{' '}
+                                <Button variant="outline-success" onClick={this.handleAccept}>Accept</Button>{' '}
                                 </>
                                 :
                                 <>

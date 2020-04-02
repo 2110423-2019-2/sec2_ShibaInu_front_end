@@ -248,7 +248,7 @@ class PaymentPage extends React.Component {
         });
 
         if (reload) {
-            window.location.reload();
+            this.componentDidMount();
         }
     }
 

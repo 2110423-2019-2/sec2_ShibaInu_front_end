@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./material/Logo.png";
 import "./NavBar.css";
 import { FaBell, FaPlusCircle, FaUserCircle, FaSearch } from "react-icons/fa";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -27,7 +27,7 @@ class NavBar extends React.Component {
       userID: LocalStorageService.getUserID(),
       userDatas: {},
       notiDatas: {},
-      isNotiLoad: false,
+      isNotiLoad: false
     };
   }
 
@@ -54,13 +54,14 @@ class NavBar extends React.Component {
     this.fetchDatas();
   };
 
-  readNoti = (notiID,idx) => {
+  readNoti = (notiID, idx) => {
     let notiDatas = this.state.notiDatas;
     notiDatas[idx].isRead = true;
-    this.setState({notiDatas: notiDatas});
-    axios
-      .patch(utilities["backend-url"] + "/notification/" + this.state.userID);
-  }
+    this.setState({ notiDatas: notiDatas });
+    axios.patch(
+      utilities["backend-url"] + "/notification/" + this.state.userID
+    );
+  };
 
   render() {
     const YOUNGSTAR = "YoungStar ";
@@ -77,55 +78,73 @@ class NavBar extends React.Component {
       memberMenu,
       guestMenu,
       homePath,
-      changeMode; 
+      changeMode;
     var jobPath = "/" + this.state.mode + "/job";
 
     var newNotiDetail, oldNotiDetail, hasNewNoti;
-    if(this.state.isNotiLoad){
-      newNotiDetail = this.state.notiDatas.filter((noti)=>(noti.isRead===false)).map((noti,idx)=>(
-        <DropdownItem
+    if (this.state.isNotiLoad) {
+      newNotiDetail = this.state.notiDatas
+        .filter(noti => noti.isRead === false)
+        .map((noti, idx) => (
+          <DropdownItem
             className="color-black background-yellow noti"
-            onClick={()=>{this.readNoti(noti.notificationId,idx)}}
+            onClick={() => {
+              this.readNoti(noti.notificationId, idx);
+            }}
           >
             <h5>{noti.topic}</h5>
             <p>{noti.description}</p>
           </DropdownItem>
-      ));
-      if(newNotiDetail !== null){
-        hasNewNoti="new-noti";
+        ));
+      if (newNotiDetail !== null) {
+        hasNewNoti = "new-noti";
       } else {
-        hasNewNoti="";
+        hasNewNoti = "";
       }
-      oldNotiDetail = this.state.notiDatas.filter((noti)=>(noti.isRead===true)).map((noti,idx)=>(
-        <DropdownItem
+      oldNotiDetail = this.state.notiDatas
+        .filter(noti => noti.isRead === true)
+        .map((noti, idx) => (
+          <DropdownItem
             className="color-black noti"
-            onClick={()=>{this.readNoti(noti.notificationId,idx)}}
+            onClick={() => {
+              this.readNoti(noti.notificationId, idx);
+            }}
           >
             <h5>{noti.topic}</h5>
             <p>{noti.description}</p>
           </DropdownItem>
-      ));
+        ));
     }
-    
-
 
     notiMenu = (
       <UncontrolledDropdown nav inNavbar>
-          <DropdownToggle nav className={hasNewNoti}>
-            <FaBell />
-          </DropdownToggle>
-          <DropdownMenu right>
-            {newNotiDetail}
-            {oldNotiDetail}
-          </DropdownMenu>
-        </UncontrolledDropdown>
+        <DropdownToggle nav className={hasNewNoti}>
+          <FaBell />
+        </DropdownToggle>
+        <DropdownMenu right>
+          {newNotiDetail}
+          {oldNotiDetail}
+        </DropdownMenu>
+      </UncontrolledDropdown>
     );
 
     searchMenu = (
-      <Nav.Link href="/jobsearch">
-        <FaSearch className="navbar-icon" />
-        Search
-      </Nav.Link>
+      <UncontrolledDropdown nav inNavbar>
+        <DropdownToggle nav caret>
+          <FaSearch className="navbar-icon" />
+          Search
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem href="/jobsearch" className="color-black">
+            <FaSearch className="navbar-icon" />
+            Search Job
+          </DropdownItem>
+          <DropdownItem href="/freelancersearch" className="color-black">
+            <FaSearch className="navbar-icon" />
+            Search Freelancer
+          </DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
     );
     userMode = YOUNGSTAR + this.state.mode;
 
@@ -136,11 +155,23 @@ class NavBar extends React.Component {
           Create Job
         </Nav.Link>
       );
+      searchMenu = (
+        <Nav.Link href="/freelancersearch">
+          <FaSearch className="navbar-icon" />
+          Search Freelancer
+        </Nav.Link>
+      );
       homePath = "/client/home";
       modePath = "/" + this.state.status.FREELANCER + "/home";
       switchMode = "Switch " + this.state.status.FREELANCER;
       changeMode = "freelancer";
     } else if (this.state.mode === this.state.status.FREELANCER) {
+      searchMenu = (
+        <Nav.Link href="/jobsearch">
+          <FaSearch className="navbar-icon" />
+          Search Job
+        </Nav.Link>
+      );
       modePath = "/" + this.state.status.CLIENT + "/home";
       switchMode = "Switch " + this.state.status.CLIENT;
       homePath = "/freelancer/home";
@@ -175,10 +206,18 @@ class NavBar extends React.Component {
         >
           My job
         </DropdownItem>
-        <DropdownItem href="/payment" id="dropdown-item-balance" className="color-black">
+        <DropdownItem
+          href="/payment"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
           My payment
         </DropdownItem>
-        <DropdownItem href="/chat" id="dropdown-item-chat" className="color-black">
+        <DropdownItem
+          href="/chat"
+          id="dropdown-item-chat"
+          className="color-black"
+        >
           Chat
         </DropdownItem>
         <DropdownItem
