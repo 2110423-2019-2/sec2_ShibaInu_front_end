@@ -277,14 +277,14 @@ class FreelancerBox extends React.Component {
     var ids = [friendId,userId].sort();
     var chatroom = ids[0]+"-"+ids[1];
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
-    docRef.get().then(function(doc) {
+    docRef.get().then( doc => {
       LocalStorageService.setChatroom(chatroom);
       LocalStorageService.setChatName(friendName);
       if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
       }
       window.location.href = '/chat';
-    }).catch(function(error) {
+    }).catch(error => {
       console.log("Error getting document:", error);
     });
   }
@@ -516,14 +516,14 @@ class DashboardResponsible extends React.Component {
     var ids = [friendId,userId].sort();
     var chatroom = ids[0]+"-"+ids[1];
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
-    docRef.get().then(function(doc) {
+    docRef.get().then(doc => {
       LocalStorageService.setChatroom(chatroom);
       LocalStorageService.setChatName(friendName);
       if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
       }
       window.location.href = '/chat';
-    }).catch(function(error) {
+    }).catch(error => {
       console.log("Error getting document:", error);
     });
   }
