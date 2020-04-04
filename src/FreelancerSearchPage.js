@@ -2,16 +2,24 @@ import React from "react";
 import "./SearchPage.css";
 import NavBar from "./NavBar";
 import axios from "axios";
-import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
-import { FaCode, FaBtc, FaClock } from "react-icons/fa";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Card,
+  Dropdown,
+  DropdownButton
+} from "react-bootstrap";
+import LocalStorageService from "./LocalStorageService";
+import { FaUserCircle } from "react-icons/fa";
 var utilities = require("./Utilities.json");
 
 class Filter extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      sort: 0
-    };
+    this.state = { name: "", s1: "", cat: "", sort: 2 };
     this.handleChange.bind(this);
     this.handleSubmit.bind(this);
     this.handleReset.bind(this);
@@ -48,18 +56,22 @@ class Filter extends React.Component {
       tmp1.push(a.join("="));
     });
     var ApiUrl = utilities["backend-url"] + "/users" + "?" + tmp1.join("&");
-    console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
 
   handleReset = e => {
-    this.setState({});
-    console.log(this.state);
+    this.setState({ name: "", s1: "", cat: "", sort: 2 });
+    var tmp1 = [];
+    Object.entries(this.state).map(a => {
+      tmp1.push(a.join("="));
+    });
+    var ApiUrl = utilities["backend-url"] + "/users" + "?" + tmp1.join("&");
+    this.props.parentCallback(ApiUrl);
   };
 
   render() {
     return (
-      <Card class="filter">
+      <Card className="filter">
         <Card.Header>Filter</Card.Header>
         <Card.Body>
           <Form onSubmit={this.handleSubmit}>
@@ -81,7 +93,7 @@ class Filter extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-            <Form.Group>
+            {/* <Form.Group>
               <Form.Label>Interested Catergory</Form.Label>
               <Form.Control as="select" name="cat" onChange={this.handleChange}>
                 <option>All</option>
@@ -91,7 +103,7 @@ class Filter extends React.Component {
                 <option>Game</option>
                 <option>Other</option>
               </Form.Control>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group>
               <Form.Label>Sort by</Form.Label>
               <Form.Control
@@ -159,8 +171,8 @@ class Result extends React.Component {
     if (this.state.freelancerList.length == 0) emptyMessage = "Not Found";
     else emptyMessage = "";
     return (
-      <Card class="result">
-        <Card.Header>Result</Card.Header>
+      <Card className="result">
+        <Card.Header>Search Freelancer</Card.Header>
         <Card.Body>
           {emptyMessage}
           {this.state.freelancerList.map(u => {
@@ -169,6 +181,7 @@ class Result extends React.Component {
             u.skills.map(s => tmp.push(s.skill));
             u.interestedCategories.map(c => tmp2.push(c.interestedCategory));
             if (tmp.length == 0) tmp.push("-");
+            if (tmp2.length == 0) tmp2.push("-");
             return (
               <ResultRow
                 key={u.userId}
@@ -189,18 +202,30 @@ class Result extends React.Component {
 class ResultRow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { jobList: [] };
+  }
+
+  componentDidMount() {
+    axios
+      .get(
+        utilities["backend-url"] +
+          "/jobs/user/" +
+          LocalStorageService.getUserID()
+      )
+      .then(res => {
+        this.setState({ jobList: res.data });
+      });
   }
 
   render() {
     return (
-      <div class="result-row">
+      <div className="result-row">
         <Container id="low-margin">
           <Row>
             <Col lg="0.5">
-              <FaCode color="Blue" />
+              <FaUserCircle color="Blue" />
             </Col>
-            <Col lg="9">
+            <Col lg="8">
               <div id="name-and-des">
                 <a href={"/profile/" + this.props.userId}>
                   <b>{this.props.firstName + " " + this.props.lastName}</b>
@@ -210,17 +235,59 @@ class ResultRow extends React.Component {
                 <b>Skill : </b>
                 {this.props.skill}
               </div>
-              <div>
-                <b>Interested Catergory :</b>
+              {/* <div>
+                <b>Interested Catergory : </b>
                 {this.props.intCat}
-              </div>
+              </div> */}
             </Col>
-            <Col>
-              <Button variant="primary">Invite to...</Button>
-            </Col>
+            {LocalStorageService.getUserMode() === "client" ? (
+              <Col>
+                <DropdownButton title="Invite to job...">
+                  {this.state.jobList.map(j => (
+                    <DropDownItem
+                      key={j.jobId}
+                      jobId={j.jobId}
+                      jobName={j.name}
+                      userId={this.props.userId}
+                    />
+                  ))}
+                </DropdownButton>
+              </Col>
+            ) : (
+              ""
+            )}
           </Row>
         </Container>
       </div>
+    );
+  }
+}
+
+class DropDownItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    axios.post(utilities["backend-url"] + "/notification", {
+      topic: "You have been invited to job",
+      description:
+        "You have been invited to " +
+        this.props.jobName +
+        ". You can join via this link " +
+        "http://localhost:3000/job/" +
+        this.props.jobId,
+      user: this.props.userId
+    });
+  }
+
+  render() {
+    return (
+      <Dropdown.Item onClick={this.handleClick}>
+        {this.props.jobName}
+      </Dropdown.Item>
     );
   }
 }
@@ -239,7 +306,7 @@ class FreelancerSearchPage extends React.Component {
     return (
       <div>
         <NavBar />
-        <div class="search-page">
+        <div className="search-page">
           <Container>
             <Row>
               <Col>

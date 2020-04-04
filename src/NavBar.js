@@ -155,11 +155,23 @@ class NavBar extends React.Component {
           Create Job
         </Nav.Link>
       );
+      searchMenu = (
+        <Nav.Link href="/freelancersearch">
+          <FaSearch className="navbar-icon" />
+          Search Freelancer
+        </Nav.Link>
+      );
       homePath = "/client/home";
       modePath = "/" + this.state.status.FREELANCER + "/home";
       switchMode = "Switch " + this.state.status.FREELANCER;
       changeMode = "freelancer";
     } else if (this.state.mode === this.state.status.FREELANCER) {
+      searchMenu = (
+        <Nav.Link href="/jobsearch">
+          <FaSearch className="navbar-icon" />
+          Search Job
+        </Nav.Link>
+      );
       modePath = "/" + this.state.status.CLIENT + "/home";
       switchMode = "Switch " + this.state.status.CLIENT;
       homePath = "/freelancer/home";
