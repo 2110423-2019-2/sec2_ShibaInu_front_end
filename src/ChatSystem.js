@@ -8,7 +8,8 @@ import {
   Button,
   InputGroup,
   FormControl,
-  Badge
+  Badge,
+  Spinner
 } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
@@ -25,6 +26,8 @@ class ChatSystem extends React.Component {
       chatmsgs: [],
       firstLoadMsg: true,
       ref: React.createRef(),
+      loadChatroomFinished: false,
+      loadChatmsgFinished: false
     };
   }
 
@@ -57,7 +60,7 @@ class ChatSystem extends React.Component {
           lasttime: room.lasttime
         });
       });
-      this.setState({ chatrooms: chatrooms });
+      this.setState({ chatrooms: chatrooms, loadChatroomFinished: true });
     });
   };
 
@@ -107,19 +110,29 @@ class ChatSystem extends React.Component {
           });
         }
       });
-      this.setState({ chatmsgs: chatmsgs, firstLoadMsg: false }, () => {
-        console.log(this.state.chatmsgs);
-        this.scrollToBottom();
-      });
+      this.setState(
+        { chatmsgs: chatmsgs, firstLoadMsg: false, loadChatmsgFinished: true },
+        () => {
+          console.log(this.state.chatmsgs);
+          this.scrollToBottom();
+        }
+      );
     });
   };
 
   chatRoom = () => {
+    if (!this.state.loadChatroomFinished) {
+      return this.loadingChat();
+    }
     return this.state.chatrooms.map(chatroom => (
       <Row key={chatroom.id}>
         <Button
           variant="link"
-          className={this.state.selectedRoom===chatroom.id?"w-100 text-left selected-room":"w-100 text-left"}
+          className={
+            this.state.selectedRoom === chatroom.id
+              ? "w-100 text-left selected-room"
+              : "w-100 text-left"
+          }
           id="chatroom"
           onClick={() => {
             LocalStorageService.setChatroom(chatroom.id);
@@ -156,6 +169,9 @@ class ChatSystem extends React.Component {
   };
 
   sendMsgDisp = () => {
+    if (!this.state.loadChatmsgFinished) {
+      return this.loadingChat();
+    }
     return (
       <div>
         <div id="msgarea">
@@ -193,13 +209,21 @@ class ChatSystem extends React.Component {
     return <h2>{"Chat with " + this.state.chatwith}</h2>;
   };
 
+  loadingChat = () => {
+    return (
+      <Spinner animation="border" role="status" className="loading-chat">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    );
+  }
+
   render() {
     return (
       <div className="main-background h-100">
         <NavBar />
         <Container id="chatsystem-box">
           <Row className="h-100">
-            <Col xs={4} className="bg-white shadow">
+            <Col xs={4} className="bg-white shadow text-center">
               <Row className="background-blue text-light pl-3 pt-3">
                 <h2>#Chat Room</h2>
               </Row>

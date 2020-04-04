@@ -29,3 +29,7 @@
     background-color: #FFC655;
     color: #254380;
 }
+.loading-chat {
+    float: center;
+    margin-top: 30vh;
+}
