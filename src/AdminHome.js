@@ -12,7 +12,8 @@ class AdminHome extends React.Component {
     this.state = {
       isDataLoad: false,
       userDatas: {},
-      isUserDataLoad: false
+      isUserDataLoad: false,
+      banned: []
     };
   }
 
@@ -21,8 +22,17 @@ class AdminHome extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios.get(utilities['backend-url'] + "/users").then(res => {
       const userDatas = res.data;
-      this.setState({ userDatas: userDatas, isUserDataLoad: true });
+      var banned = [];
+      for(let i=0;i<userDatas.length;i++){
+        var ban = "Ban";
+        if (userDatas[i].isBanned){
+          ban = "Unban"
+        }
+        banned.push(ban);
+      }
+      this.setState({ userDatas: userDatas, isUserDataLoad: true, banned: banned });
       console.log(this.state.userDatas);
+      console.log(this.state.isBanned);
     });
   };
 
@@ -39,6 +49,7 @@ class AdminHome extends React.Component {
     })
     .then((willDisapprove) => {
       if (willDisapprove) {
+        var status = 
         swal("Disapproved success!", {
           icon: "success",
         });
@@ -47,7 +58,7 @@ class AdminHome extends React.Component {
     });
   }
 
-  approveHandler = () => {
+  approveHandler = (index) => {
     swal({
       title: "Are you sure to approve?",
       icon: "warning",
@@ -56,6 +67,23 @@ class AdminHome extends React.Component {
     })
     .then((willApprove) => {
       if (willApprove) {
+      axios
+      .patch(utilities["backend-url"] + "/users/verify/verify",{
+        user: this.state.userDatas[index].userId,
+        approve: true
+      })
+      .then(response => {
+        switch (response.status) {
+          // Created
+          case 201:
+            console.log("already push");
+            break;
+
+          // Other case
+          default:
+            console.log("Status code is " + response.status);
+        }
+      });
         swal("Approved success!", {
           icon: "success",
         });
@@ -64,12 +92,52 @@ class AdminHome extends React.Component {
     });
   }
 
-  render() {
-    if (!this.state.isUserDataLoad) {
-      return null;
-    }
-    var headTable, detailTable;
-    headTable = (
+  banHandler = (index) => {
+    var title = "Are you sure to " + this.state.banned[index] + "?";
+    swal({
+      title: title,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willBan) => {
+      if (willBan) {
+      var banned = this.state.banned;
+      var isBanned = false;
+      if(banned[index] === "Ban"){
+        isBanned = true;
+        banned[index] = "Unban";
+      } else {
+        banned[index] = "Ban";
+      }
+      this.setState({banned: banned});
+      axios
+      .patch(utilities["backend-url"] + "/users/ban", {
+        user: this.state.userDatas[index].userId,
+        isBanned: isBanned
+      })
+      .then(response => {
+        switch (response.status) {
+          // Created
+          case 201:
+            console.log("already push");
+            break;
+
+          // Other case
+          default:
+            console.log("Status code is " + response.status);
+        }
+      });
+        swal("Success!", {
+          icon: "success",
+        });
+
+      }
+    });
+  }
+
+  headTable = () => {
+    return (
       <tr className="text-center background-blue text-light">
         <td>
           <h5>Name</h5>
@@ -83,38 +151,53 @@ class AdminHome extends React.Component {
         <td>National ID Card</td>
         <td></td>
         <td></td>
+        <td></td>
       </tr>
     );
-    detailTable = this.state.userDatas.map((user,index)=>(
-        <tr key={index} className="text-center">
-        <td className="align-middle">
-          {user.firstName}
-          {user.lastName}
-        </td>
-        <td className="align-middle">{user.identificationNumber}</td>
-        <td className="align-middle">{user.identificationCardWithFacePic}</td>
-        <td className="align-middle">{user.identificationCardPic}</td>
-        <td className="align-middle">
-          <button type="button" className="btn btn-danger btn-block" onClick={()=>this.disapproveHandler(index)}>
-            Disapprove
-          </button>
-        </td>
-        <td className="align-middle">
-          <button type="button" className="btn btn-success btn-block" onClick={()=>this.approveHandler(index)}>
-            Approve
-          </button>
-        </td>
-      </tr>
-    ));
+  }
+
+  detailTable = () => {
+    return this.state.userDatas.map((user,index)=>(
+      <tr key={index} className="text-center">
+      <td className="align-middle">
+        {user.firstName}
+        {user.lastName}
+      </td>
+      <td className="align-middle">{user.identificationNumber}</td>
+      <td className="align-middle">{user.identificationCardWithFacePic}</td>
+      <td className="align-middle">{user.identificationCardPic}</td>
+      <td className="align-middle">
+        <button type="button" className="btn btn-secondary btn-block" onClick={()=>this.disapproveHandler(index)}>
+          Disapprove
+        </button>
+      </td>
+      <td className="align-middle">
+        <button type="button" className="btn btn-success btn-block" onClick={()=>this.approveHandler(index)}>
+          Approve
+        </button>
+      </td>
+      <td className="align-middle">
+        <button type="button" className="btn btn-danger btn-block" onClick={()=>this.banHandler(index)}>
+          {this.state.banned[index]}
+        </button>
+      </td>
+    </tr>
+  ));
+  }
+
+  render() {
+    if (!this.state.isUserDataLoad) {
+      return null;
+    }
     return (
       <div className="main-background">
-        <NavBar mode="admin" userDatas={this.state.userDatas} />
+        <NavBar />
         <Container id="adminHome-box">
           <Row>
             <Col>
               <Table responsive>
-                <thead>{headTable}</thead>
-                <tbody>{detailTable}</tbody>
+                <thead>{this.headTable()}</thead>
+                <tbody>{this.detailTable()}</tbody>
               </Table>
             </Col>
           </Row>

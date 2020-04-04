@@ -11,9 +11,9 @@ import {
   FormControl,
   Button
 } from "react-bootstrap";
-import axios from 'axios';
-import LocalStorageService from './LocalStorageService';
-var utilities = require('./Utilities.json');
+import axios from "axios";
+import LocalStorageService from "./LocalStorageService";
+var utilities = require("./Utilities.json");
 class JobOfferClient extends React.Component {
   constructor(props) {
     super(props);
@@ -39,16 +39,23 @@ class JobOfferClient extends React.Component {
   };
 
   fetchDatas = () => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    axios.defaults.headers.common["Authorization"] =
+      "Bearer " + LocalStorageService.getAccessToken();
     axios
-      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
+      .get(
+        utilities["backend-url"] + "/users/" + LocalStorageService.getUserID()
+      )
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get(utilities['backend-url'] + "/jobs/user/" + LocalStorageService.getUserID())
+      .get(
+        utilities["backend-url"] +
+          "/jobs/user/" +
+          LocalStorageService.getUserID()
+      )
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
@@ -60,9 +67,9 @@ class JobOfferClient extends React.Component {
     this.fetchDatas();
   };
 
-  handleClickJobDetail(e) {
-    window.location.href = '/client/dashboard/' + e.target.id;
-  }
+  handleClickJobDetail = e => {
+    window.location.href = "/dashboard/" + e.target.id;
+  };
 
   render() {
     if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
@@ -81,7 +88,12 @@ class JobOfferClient extends React.Component {
           <td className="align-middle">-</td>
           <td className="align-middle">{job.status}</td>
           <td className="align-middle">
-            <button type="button" className="btn btn-secondary btn-block"  id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
+            <button
+              type="button"
+              className="btn btn-secondary btn-block"
+              id={job.jobId}
+              onClick={this.handleClickJobDetail.bind(this)}
+            >
               Detail
             </button>
           </td>
@@ -92,13 +104,16 @@ class JobOfferClient extends React.Component {
         .filter(job => job.status === this.state.statusFilter)
         .map((job, index) => (
           <tr key={index} className="text-center">
-            <td className="align-middle">
-              {job.name}
-            </td>
+            <td className="align-middle">{job.name}</td>
             <td className="align-middle">-</td>
             <td className="align-middle">{job.status}</td>
             <td className="align-middle">
-              <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
+              <button
+                type="button"
+                className="btn btn-secondary btn-block"
+                id={job.jobId}
+                onClick={this.handleClickJobDetail.bind(this)}
+              >
                 Detail
               </button>
             </td>
@@ -133,7 +148,7 @@ class JobOfferClient extends React.Component {
                   placeholder="Search"
                   className="mr-sm-2"
                 />
-                <Button variant="outline-success">Search</Button>
+                <Button variant="outline-success" className="w-25">Search</Button>
               </Form>
               <Nav variant="tabs" defaultActiveKey="link-1" id="joblist-table">
                 <Nav.Item>
@@ -156,7 +171,8 @@ class JobOfferClient extends React.Component {
                   <Nav.Link
                     eventKey="link-3"
                     onClick={e =>
-                      this.statusHandler(e, this.state.status.ACCEPTED)}
+                      this.statusHandler(e, this.state.status.ACCEPTED)
+                    }
                   >
                     Accepted
                   </Nav.Link>
@@ -174,9 +190,7 @@ class JobOfferClient extends React.Component {
                 <Nav.Item>
                   <Nav.Link
                     eventKey="link-5"
-                    onClick={e =>
-                      this.statusHandler(e, this.state.status.DONE)
-                    }
+                    onClick={e => this.statusHandler(e, this.state.status.DONE)}
                   >
                     Done
                   </Nav.Link>

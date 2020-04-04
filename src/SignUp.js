@@ -1,9 +1,11 @@
 import React from 'react';
+import axios from 'axios';
+import { Form, Button, Col, Spinner } from 'react-bootstrap';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+
 import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
-import axios from 'axios';
-import { Form, Button, Col } from 'react-bootstrap';
 import LocalStorageService from './LocalStorageService';
 var utilities = require('./Utilities.json');
 
@@ -12,6 +14,7 @@ class SignUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
             registerData: { firstName: '', lastName: '', username: '', password: '' },
             validated: false,
             errorMessage: '',
@@ -83,6 +86,10 @@ class SignUp extends React.Component {
             return;
         }
 
+        this.setState({
+            isLoading: true
+        });
+
         axios.post(utilities['backend-url'] + '/users', this.state.registerData)
             .then((response) => {
                 switch (response.status) {
@@ -106,7 +113,55 @@ class SignUp extends React.Component {
                 } else {
                     console.error(error);
                 }
+            }).finally(() => {
+                this.setState({
+                    isLoading: false
+                });
+            });
+    }
+
+    responseFacebook = (response) => {
+        console.log("FB LOGIN");
+        console.log(response);
+
+        const fbData={ firstName: response.first_name, lastName: response.last_name, username: response.userID, token:response.accessToken};
+
+        this.setState({
+            isLoading: true
+        });
+
+        axios.post(utilities['backend-url'] + '/users', fbData)
+            .then((response) => {
+                switch (response.status) {
+
+                    // Created
+                    case 201:
+                        this.submitLogin();
+                        break;
+
+                    // Other case
+                    default:
+                        console.log('Status code is ' + response.status);
+
+                }
             })
+            .catch((error) => {
+                if (error.response.status === 400) {
+                    console.log('Error 400');
+                    this.setState({ errorMessage: error.response.data.message });
+
+                } else {
+                    console.error(error);
+                }
+            }).finally(() => {
+                this.setState({
+                    isLoading: false
+                });
+            });
+    }
+
+    clickFB(){
+        this.setState({isLoading: true});
     }
 
     render() {
@@ -155,9 +210,18 @@ class SignUp extends React.Component {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <p className='unauthorized-message' hidden={this.state.errorMessage === ''}>{this.state.errorMessage}</p>
-                                    <Button variant="success" type="submit">
-                                        Sign Up
+                                    <Button variant="success" type="submit" disabled={this.state.isLoading}>
+                                        <Spinner
+                                            as="span"
+                                            animation="border"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                            hidden={!this.state.isLoading}
+                                        />
+                                        {' '}Sign Up
                                     </Button>
+
                                     <p>Already have an account? <a href='/signin'>Sign in</a></p>
                                 </Form>
                             </div>

@@ -1,15 +1,22 @@
 import React from "react";
-import "./JobSearchPage.css";
+import "./SearchPage.css";
 import NavBar from "./NavBar";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FaCode, FaBtc, FaClock } from "react-icons/fa";
 var utilities = require("./Utilities.json");
 
-class JobFilter extends React.Component {
+class Filter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: "",
+      r1: "",
+      w1: "",
+      w2: "",
+      t1: "",
+      t2: "",
+      cat: "",
       sort: 0
     };
     this.handleChange.bind(this);
@@ -61,12 +68,28 @@ class JobFilter extends React.Component {
   };
 
   handleReset = e => {
-    this.setState();
+    this.setState({
+      name: "",
+      r1: "",
+      w1: "",
+      w2: "",
+      t1: "",
+      t2: "",
+      cat: "",
+      sort: 0
+    });
+    var tmp1 = [];
+    Object.entries(this.state).map(a => {
+      tmp1.push(a.join("="));
+    });
+    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    console.log(ApiUrl);
+    this.props.parentCallback(ApiUrl);
   };
 
   render() {
     return (
-      <Card class="job-filter">
+      <Card class="filter">
         <Card.Header>Filter</Card.Header>
         <Card.Body>
           <Form onSubmit={this.handleSubmit}>
@@ -173,7 +196,7 @@ class JobFilter extends React.Component {
   }
 }
 
-class JobResult extends React.Component {
+class Result extends React.Component {
   constructor(props) {
     super(props);
     this.state = { jobList: [] };
@@ -195,15 +218,16 @@ class JobResult extends React.Component {
 
   render() {
     return (
-      <Card class="job-result">
-        <Card.Header>Result</Card.Header>
+      <Card class="result">
+        <Card.Header>Search Job</Card.Header>
         <Card.Body>
           {this.state.jobList.map(j => {
             var tmp = [];
             j.requiredSkills.map(s => tmp.push(s.skill));
             if (tmp.length == 0) tmp.push("-");
             return (
-              <JobResultRow
+              <ResultRow
+                key={j.jobId}
                 jobId={j.jobId}
                 jobName={j.name}
                 jobDes={j.description}
@@ -219,7 +243,7 @@ class JobResult extends React.Component {
   }
 }
 
-class JobResultRow extends React.Component {
+class ResultRow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -227,20 +251,20 @@ class JobResultRow extends React.Component {
 
   render() {
     return (
-      <div class="job-result-row">
+      <div class="result-row">
         <Container id="low-margin">
           <Row>
             <Col lg="0.5">
               <FaCode color="Blue" />
             </Col>
             <Col lg="9">
-              <div id="job-name-and-des">
+              <div id="name-and-des">
                 <div>
                   <a href={"/job/" + this.props.jobId}>
                     <b>{this.props.jobName}</b>
                   </a>
                 </div>
-                <div id="job-des">{this.props.jobDes}</div>
+                <div id="des">{this.props.jobDes}</div>
               </div>
               <div>
                 <div>
@@ -278,14 +302,14 @@ class JobSearchPage extends React.Component {
     return (
       <div>
         <NavBar />
-        <div class="job-search-page">
+        <div class="search-page">
           <Container>
             <Row>
               <Col>
-                <JobFilter parentCallback={this.callbackFunction} />
+                <Filter parentCallback={this.callbackFunction} />
               </Col>
               <Col lg="9">
-                <JobResult ApiUrl={this.state.ApiUrl} />
+                <Result ApiUrl={this.state.ApiUrl} />
               </Col>
             </Row>
           </Container>

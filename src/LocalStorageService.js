@@ -38,10 +38,32 @@ const LocalStorageService = (function () {
         localStorage.removeItem('userMode');
     }
 
+    function _setChatroom(chatroom) {
+        localStorage.setItem('chatroom', chatroom);
+    }
+    function _getChatroom() {
+        return localStorage.getItem('chatroom') || '';
+    }
+    function _clearChatroom() {
+        localStorage.removeItem('chatroom');
+    }
+
+    function _setChatName(chatName) {
+        localStorage.setItem('chatName', chatName);
+    }
+    function _getChatName() {
+        return localStorage.getItem('chatName') || '';
+    }
+    function _clearChatName() {
+        localStorage.removeItem('chatName');
+    }
+
     function _signOut() {
         _clearToken();
         _clearUserID();
         _clearUserMode();
+        _clearChatroom();
+        _clearChatName();
     }
     return {
         getService: _getService,
@@ -54,6 +76,12 @@ const LocalStorageService = (function () {
         setUserMode: _setUserMode,
         getUserMode: _getUserMode,
         clearUserMode: _clearUserMode,
+        setChatroom: _setChatroom,
+        getChatroom: _getChatroom,
+        clearChatroom: _clearChatroom,
+        setChatName: _setChatName,
+        getChatName: _getChatName,
+        clearChatName: _clearChatName,
         signOut: _signOut
     }
 })();
