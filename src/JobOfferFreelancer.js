@@ -65,7 +65,7 @@ class JobOfferFreelancer extends React.Component {
         console.log(this.state.userDatas);
       });
     axios
-      .get(utilities['backend-url'] + "/jobs/user/" + LocalStorageService.getUserID())
+      .get(utilities['backend-url'] + "/bids/job/" + LocalStorageService.getUserID())
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
