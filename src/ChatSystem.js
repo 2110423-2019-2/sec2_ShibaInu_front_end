@@ -61,6 +61,7 @@ class ChatSystem extends React.Component {
         });
       });
       this.setState({ chatrooms: chatrooms, loadChatroomFinished: true });
+      console.log(this.state.chatrooms);
     });
   };
 

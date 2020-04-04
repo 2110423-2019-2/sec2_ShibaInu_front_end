@@ -274,16 +274,17 @@ class FreelancerBox extends React.Component {
 
   checkChatRoom = (friendId,friendName) => {
     const userId = LocalStorageService.getUserID();
-    var ids = [friendId,userId].sort();
+    var ids = [parseInt(friendId),parseInt(userId)].sort((a, b)=>{return a-b});
     var chatroom = ids[0]+"-"+ids[1];
-    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
+    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId.toString()).doc(chatroom);
     docRef.get().then( doc => {
       LocalStorageService.setChatroom(chatroom);
       LocalStorageService.setChatName(friendName);
       if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
+      } else {
+        window.location.href = '/chat';
       }
-      window.location.href = '/chat';
     }).catch(error => {
       console.log("Error getting document:", error);
     });
@@ -291,18 +292,24 @@ class FreelancerBox extends React.Component {
 
   addChatRoom = (userId,friendId,chatroom,friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
-    firebase.firestore().collection('message').doc('chatroom').collection(userId).doc(chatroom).set({
+    firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
       name: friendName,
       lasttime: time,
+    }).catch(error => {
+      alert("Error adding chatroom 1:", error);
     });
     var name;
     axios
       .get(utilities["backend-url"] + "/users/" + userId)
       .then(res => {
         name = res.data.firstName;
-        firebase.firestore().collection('message').doc('chatroom').collection(friendId).doc(chatroom).set({
+        firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
           name: name,
           lasttime: time,
+        }).then(()=>{
+          window.location.href = '/chat';
+        }).catch(error => {
+          alert("Error adding chatroom 2:", error);
         });
     });
   }
@@ -511,18 +518,20 @@ class DashboardResponsible extends React.Component {
       this.setState({contract : this.props.contract})
     }
   }
+
   checkChatRoom = (friendId,friendName) => {
     const userId = LocalStorageService.getUserID();
-    var ids = [friendId,userId].sort();
+    var ids = [parseInt(friendId),parseInt(userId)].sort((a, b)=>{return a-b});
     var chatroom = ids[0]+"-"+ids[1];
-    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
-    docRef.get().then(doc => {
+    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId.toString()).doc(chatroom);
+    docRef.get().then( doc => {
       LocalStorageService.setChatroom(chatroom);
       LocalStorageService.setChatName(friendName);
       if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
+      } else {
+        window.location.href = '/chat';
       }
-      window.location.href = '/chat';
     }).catch(error => {
       console.log("Error getting document:", error);
     });
@@ -530,21 +539,28 @@ class DashboardResponsible extends React.Component {
 
   addChatRoom = (userId,friendId,chatroom,friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
-    firebase.firestore().collection('message').doc('chatroom').collection(userId).doc(chatroom).set({
+    firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
       name: friendName,
       lasttime: time,
+    }).catch(error => {
+      alert("Error adding chatroom 1:", error);
     });
     var name;
-      axios
+    axios
       .get(utilities["backend-url"] + "/users/" + userId)
       .then(res => {
         name = res.data.firstName;
-        firebase.firestore().collection('message').doc('chatroom').collection(friendId).doc(chatroom).set({
+        firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
           name: name,
           lasttime: time,
+        }).then(()=>{
+          window.location.href = '/chat';
+        }).catch(error => {
+          alert("Error adding chatroom 2:", error);
         });
     });
   }
+
   async getUserFromJob(){
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         await axios
