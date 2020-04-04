@@ -32,7 +32,7 @@ class Home extends React.Component {
         console.log(this.state.userDatas);
       });
     axios
-      .get(utilities['backend-url'] + "/jobs/user/" + this.state.userID)
+      .get(utilities['backend-url'] + "/jobs/recent/" + this.state.userID)
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
