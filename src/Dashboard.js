@@ -339,28 +339,20 @@ class FreelancerBox extends React.Component {
 
   checkChatRoom = (friendId, friendName) => {
     const userId = LocalStorageService.getUserID();
-    var ids = [friendId, userId].sort();
-    var chatroom = ids[0] + "-" + ids[1];
-    var docRef = firebase
-      .firestore()
-      .collection("message")
-      .doc("chatroom")
-      .collection(userId)
-      .doc(chatroom);
-    docRef
-      .get()
-      .then(function(doc) {
-        LocalStorageService.setChatroom(chatroom);
-        LocalStorageService.setChatName(friendName);
-        if (!doc.exists) {
-          this.addChatRoom(userId, friendId, chatroom, friendName);
-        }
-        window.location.href = "/chat";
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
-  };
+    var ids = [friendId,userId].sort();
+    var chatroom = ids[0]+"-"+ids[1];
+    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
+    docRef.get().then( doc => {
+      LocalStorageService.setChatroom(chatroom);
+      LocalStorageService.setChatName(friendName);
+      if (!doc.exists) {
+        this.addChatRoom(userId,friendId,chatroom,friendName);
+      }
+      window.location.href = '/chat';
+    }).catch(error => {
+      console.log("Error getting document:", error);
+    });
+  }
 
   addChatRoom = (userId, friendId, chatroom, friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
@@ -588,7 +580,7 @@ class DashboardResponsible extends React.Component {
     await this.getUserImage();
   }
 
-  formatJPGtopath(res) {
+  formatJPGtopath = (res) => {
     return btoa(
       new Uint8Array(res.data).reduce(
         (data, byte) => data + String.fromCharCode(byte),
@@ -641,28 +633,20 @@ class DashboardResponsible extends React.Component {
   }
   checkChatRoom = (friendId, friendName) => {
     const userId = LocalStorageService.getUserID();
-    var ids = [friendId, userId].sort();
-    var chatroom = ids[0] + "-" + ids[1];
-    var docRef = firebase
-      .firestore()
-      .collection("message")
-      .doc("chatroom")
-      .collection(userId)
-      .doc(chatroom);
-    docRef
-      .get()
-      .then(function(doc) {
-        LocalStorageService.setChatroom(chatroom);
-        LocalStorageService.setChatName(friendName);
-        if (!doc.exists) {
-          this.addChatRoom(userId, friendId, chatroom, friendName);
-        }
-        window.location.href = "/chat";
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
-  };
+    var ids = [friendId,userId].sort();
+    var chatroom = ids[0]+"-"+ids[1];
+    var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId).doc(chatroom);
+    docRef.get().then(doc => {
+      LocalStorageService.setChatroom(chatroom);
+      LocalStorageService.setChatName(friendName);
+      if (!doc.exists) {
+        this.addChatRoom(userId,friendId,chatroom,friendName);
+      }
+      window.location.href = '/chat';
+    }).catch(error => {
+      console.log("Error getting document:", error);
+    });
+  }
 
   addChatRoom = (userId, friendId, chatroom, friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
