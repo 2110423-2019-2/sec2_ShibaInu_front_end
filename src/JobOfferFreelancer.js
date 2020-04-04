@@ -26,24 +26,6 @@ class JobOfferFreelancer extends React.Component {
         CONTRACT: "contract"
       },
       statusFilter: "all",
-      jobList: [
-        {
-          id: "00001",
-          name: "Make Android App",
-          type: "Android App",
-          freelancerID: "123456789",
-          freelancerName: "-",
-          status: "interested"
-        },
-        {
-          id: "00002",
-          name: "Make Website",
-          type: "Frontend Backend",
-          freelancerID: "55555555",
-          freelancerName: "Shiba",
-          status: "contract"
-        }
-      ],
       userDatas: "",
       jobDatas: "",
       isUserDataLoad: false,
@@ -67,10 +49,9 @@ class JobOfferFreelancer extends React.Component {
     axios
       .get(utilities['backend-url'] + "/bids/job/" + LocalStorageService.getUserID())
       .then(res => {
-        const jobDatas = res.data;
-        this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
-        console.log(this.state.jobDatas);
-      });
+        this.setState({ jobDatas: res.data, isJobDataLoad: true});
+        console.log(res.data);
+      })
   };
 
   componentDidMount = () => {
@@ -91,11 +72,8 @@ class JobOfferFreelancer extends React.Component {
         <tr key={index} className="text-center">
           <td className="align-middle">
             {job.name}
-            <br />
-            <br />
-            {job.type}
           </td>
-          <td className="align-middle">{job.freelancerName}</td>
+          <td className="align-middle">{job.catergory}</td>
           <td className="align-middle">{job.status}</td>
           <td className="align-middle">
             <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
@@ -111,11 +89,8 @@ class JobOfferFreelancer extends React.Component {
           <tr key={index} className="text-center">
             <td className="align-middle">
               {job.name}
-              <br />
-              <br />
-              {job.type}
             </td>
-            <td className="align-middle">{job.freelancerName}</td>
+            <td className="align-middle">{job.catergory}</td>
             <td className="align-middle">{job.status}</td>
             <td className="align-middle">
               <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
@@ -131,7 +106,7 @@ class JobOfferFreelancer extends React.Component {
           <h5>Name</h5>
         </td>
         <td className="align-middle">
-          <h5>Freelancer</h5>
+          <h5>Category</h5>
         </td>
         <td className="align-middle">
           <h5>Status</h5>

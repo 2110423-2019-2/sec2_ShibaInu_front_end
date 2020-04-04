@@ -81,9 +81,6 @@ class JobOfferClient extends React.Component {
         <tr key={index} className="text-center">
           <td className="align-middle">
             {job.name}
-            <br />
-            <br />
-            {job.category}
           </td>
           <td className="align-middle">-</td>
           <td className="align-middle">{job.status}</td>

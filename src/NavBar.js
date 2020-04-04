@@ -86,7 +86,7 @@ class NavBar extends React.Component {
       newNotiDetail = this.state.notiDatas
         .filter(noti => noti.isRead === false)
         .map((noti, idx) => (
-          <DropdownItem
+          <DropdownItem key={idx}
             className="color-black background-yellow noti"
             onClick={() => {
               this.readNoti(noti.notificationId, idx);
@@ -104,7 +104,7 @@ class NavBar extends React.Component {
       oldNotiDetail = this.state.notiDatas
         .filter(noti => noti.isRead === true)
         .map((noti, idx) => (
-          <DropdownItem
+          <DropdownItem key={idx}
             className="color-black noti"
             onClick={() => {
               this.readNoti(noti.notificationId, idx);
