@@ -121,7 +121,7 @@ class NavBar extends React.Component {
         <DropdownToggle nav className={hasNewNoti}>
           <FaBell />
         </DropdownToggle>
-        <DropdownMenu right>
+        <DropdownMenu right id="noti-box">
           {newNotiDetail}
           {oldNotiDetail}
         </DropdownMenu>

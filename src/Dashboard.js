@@ -357,28 +357,24 @@ class FreelancerBox extends React.Component {
 
   addChatRoom = (userId, friendId, chatroom, friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
-    firebase
-      .firestore()
-      .collection("message")
-      .doc("chatroom")
-      .collection(userId)
-      .doc(chatroom)
-      .set({
-        name: friendName,
-        lasttime: time
-      });
+    firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
+      name: friendName,
+      lasttime: time,
+    }).catch(error => {
+      alert("Error adding chatroom 1:", error);
+    });
     var name;
-    axios.get(utilities["backend-url"] + "/users/" + userId).then(res => {
-      name = res.data.firstName;
-      firebase
-        .firestore()
-        .collection("message")
-        .doc("chatroom")
-        .collection(friendId)
-        .doc(chatroom)
-        .set({
+    axios
+      .get(utilities["backend-url"] + "/users/" + userId)
+      .then(res => {
+        name = res.data.firstName;
+        firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
           name: name,
-          lasttime: time
+          lasttime: time,
+        }).then(()=>{
+          window.location.href = '/chat';
+        }).catch(error => {
+          alert("Error adding chatroom 2:", error);
         });
     });
   };
@@ -632,7 +628,8 @@ class DashboardResponsible extends React.Component {
       this.setState({ contract: this.props.contract });
     }
   }
-  checkChatRoom = (friendId, friendName) => {
+
+  checkChatRoom = (friendId,friendName) => {
     const userId = LocalStorageService.getUserID();
     var ids = [parseInt(friendId),parseInt(userId)].sort((a, b)=>{return a-b});
     var chatroom = ids[0]+"-"+ids[1];
@@ -652,28 +649,24 @@ class DashboardResponsible extends React.Component {
 
   addChatRoom = (userId, friendId, chatroom, friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
-    firebase
-      .firestore()
-      .collection("message")
-      .doc("chatroom")
-      .collection(userId)
-      .doc(chatroom)
-      .set({
-        name: friendName,
-        lasttime: time
-      });
+    firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
+      name: friendName,
+      lasttime: time,
+    }).catch(error => {
+      alert("Error adding chatroom 1:", error);
+    });
     var name;
-    axios.get(utilities["backend-url"] + "/users/" + userId).then(res => {
-      name = res.data.firstName;
-      firebase
-        .firestore()
-        .collection("message")
-        .doc("chatroom")
-        .collection(friendId)
-        .doc(chatroom)
-        .set({
+    axios
+      .get(utilities["backend-url"] + "/users/" + userId)
+      .then(res => {
+        name = res.data.firstName;
+        firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
           name: name,
-          lasttime: time
+          lasttime: time,
+        }).then(()=>{
+          window.location.href = '/chat';
+        }).catch(error => {
+          alert("Error adding chatroom 2:", error);
         });
     });
   };
