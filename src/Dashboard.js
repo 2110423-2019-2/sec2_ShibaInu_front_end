@@ -357,19 +357,6 @@ class FreelancerBox extends React.Component {
 
   addChatRoom = (userId, friendId, chatroom, friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
-<<<<<<< HEAD
-    firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
-      name: friendName,
-      lasttime: time,
-    }).catch(error => {
-      alert("Error adding chatroom 1:", error);
-    });
-||||||| merged common ancestors
-    firebase.firestore().collection('message').doc('chatroom').collection(userId).doc(chatroom).set({
-      name: friendName,
-      lasttime: time,
-    });
-=======
     firebase
       .firestore()
       .collection("message")
@@ -380,21 +367,7 @@ class FreelancerBox extends React.Component {
         name: friendName,
         lasttime: time
       });
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
     var name;
-<<<<<<< HEAD
-    axios
-      .get(utilities["backend-url"] + "/users/" + userId)
-      .then(res => {
-        name = res.data.firstName;
-        firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
-||||||| merged common ancestors
-    axios
-      .get(utilities["backend-url"] + "/users/" + userId)
-      .then(res => {
-        name = res.data.firstName;
-        firebase.firestore().collection('message').doc('chatroom').collection(friendId).doc(chatroom).set({
-=======
     axios.get(utilities["backend-url"] + "/users/" + userId).then(res => {
       name = res.data.firstName;
       firebase
@@ -404,19 +377,8 @@ class FreelancerBox extends React.Component {
         .collection(friendId)
         .doc(chatroom)
         .set({
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
           name: name,
-<<<<<<< HEAD
-          lasttime: time,
-        }).then(()=>{
-          window.location.href = '/chat';
-        }).catch(error => {
-          alert("Error adding chatroom 2:", error);
-||||||| merged common ancestors
-          lasttime: time,
-=======
           lasttime: time
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
         });
     });
   };
@@ -670,14 +632,7 @@ class DashboardResponsible extends React.Component {
       this.setState({ contract: this.props.contract });
     }
   }
-<<<<<<< HEAD
-
-  checkChatRoom = (friendId,friendName) => {
-||||||| merged common ancestors
-  checkChatRoom = (friendId,friendName) => {
-=======
   checkChatRoom = (friendId, friendName) => {
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
     const userId = LocalStorageService.getUserID();
     var ids = [parseInt(friendId),parseInt(userId)].sort((a, b)=>{return a-b});
     var chatroom = ids[0]+"-"+ids[1];
@@ -697,19 +652,6 @@ class DashboardResponsible extends React.Component {
 
   addChatRoom = (userId, friendId, chatroom, friendName) => {
     const time = firebase.firestore.FieldValue.serverTimestamp();
-<<<<<<< HEAD
-    firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
-      name: friendName,
-      lasttime: time,
-    }).catch(error => {
-      alert("Error adding chatroom 1:", error);
-    });
-||||||| merged common ancestors
-    firebase.firestore().collection('message').doc('chatroom').collection(userId).doc(chatroom).set({
-      name: friendName,
-      lasttime: time,
-    });
-=======
     firebase
       .firestore()
       .collection("message")
@@ -720,21 +662,7 @@ class DashboardResponsible extends React.Component {
         name: friendName,
         lasttime: time
       });
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
     var name;
-<<<<<<< HEAD
-    axios
-      .get(utilities["backend-url"] + "/users/" + userId)
-      .then(res => {
-        name = res.data.firstName;
-        firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
-||||||| merged common ancestors
-      axios
-      .get(utilities["backend-url"] + "/users/" + userId)
-      .then(res => {
-        name = res.data.firstName;
-        firebase.firestore().collection('message').doc('chatroom').collection(friendId).doc(chatroom).set({
-=======
     axios.get(utilities["backend-url"] + "/users/" + userId).then(res => {
       name = res.data.firstName;
       firebase
@@ -744,19 +672,8 @@ class DashboardResponsible extends React.Component {
         .collection(friendId)
         .doc(chatroom)
         .set({
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
           name: name,
-<<<<<<< HEAD
-          lasttime: time,
-        }).then(()=>{
-          window.location.href = '/chat';
-        }).catch(error => {
-          alert("Error adding chatroom 2:", error);
-||||||| merged common ancestors
-          lasttime: time,
-=======
           lasttime: time
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
         });
     });
   };
@@ -777,74 +694,6 @@ class DashboardResponsible extends React.Component {
         console.log(err);
       });
   }
-<<<<<<< HEAD
-
-  async getUserFromJob(){
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        await axios
-        .get(utilities["backend-url"] + "/jobs/" + this.state.jobId)
-        .then(res=>{
-            this.setState({
-              userId: res.data.client.userId,
-              fname : res.data.client.firstName,
-              lname: res.data.client.lastName,
-              load:true
-            })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-  }
-  async getUserDetail(){
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        await axios
-        .get(utilities["backend-url"] + "/users/" + this.state.userId)
-        .then(res=>{
-            console.log(res.data)
-            this.setState({
-              fname : res.data.firstName,
-              lname: res.data.lastName,
-              load:true
-            })
-        })
-        .catch(err=>{
-          
-            console.log(err)
-        })
-||||||| merged common ancestors
-  async getUserFromJob(){
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        await axios
-        .get(utilities["backend-url"] + "/jobs/" + this.state.jobId)
-        .then(res=>{
-            this.setState({
-              userId: res.data.client.userId,
-              fname : res.data.client.firstName,
-              lname: res.data.client.lastName,
-              load:true
-            })
-        })
-        .catch(err=>{
-            console.log(err)
-        })
-  }
-  async getUserDetail(){
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        await axios
-        .get(utilities["backend-url"] + "/users/" + this.state.userId)
-        .then(res=>{
-            console.log(res.data)
-            this.setState({
-              fname : res.data.firstName,
-              lname: res.data.lastName,
-              load:true
-            })
-        })
-        .catch(err=>{
-          
-            console.log(err)
-        })
-=======
   async getUserDetail() {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
@@ -861,7 +710,6 @@ class DashboardResponsible extends React.Component {
       .catch(err => {
         console.log(err);
       });
->>>>>>> 3fa27caffcbb1ba5dbba1cae027065ddfbfa70bf
   }
 
   getResponsibleComponent() {
