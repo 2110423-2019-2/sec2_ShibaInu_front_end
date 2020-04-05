@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Form, Col, Row, Container,Button} from 'react-bootstrap';
+import {Card, Form, Col, Row, Container,Button,Alert} from 'react-bootstrap';
 import NavBar from './NavBar';
 import CKEditor from 'ckeditor4-react';
 import "./Contract.css"
@@ -22,8 +22,8 @@ class Contract extends React.Component{
             isModifying : false,
             creating : false,
             jobName: "",
-            editedData : {price:0,text: example},
-            currData: {price:0,text: example},
+            editedData : {price:-1,text: example},
+            currData: {price:-1,text: example},
             modifiedTime: "",
             loadContractData : false,
             loadJobData: false,
@@ -86,7 +86,11 @@ class Contract extends React.Component{
                 swal("Your new contract has been submit", {
                     icon: "success",
                 });
-                this.onCreateContract();
+                if(this.state.creating){
+                    this.onCreateContract();
+                }else{
+                    this.onUpdateContract();
+                }
             }
           });
     }
@@ -98,7 +102,6 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            // window.location.href = "/dashboard/"+this.state.freelancerId
             window.history.back();
         })
         .catch(err=>{
@@ -113,7 +116,7 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.jobId
+            window.history.back();
         })
         .catch(err=>{
             console.log(err);
@@ -124,10 +127,9 @@ class Contract extends React.Component{
         await this.getJobDetail();
         await this.getUserName();
         await this.getContractDetail();
-        if(this.state.bidwage != -1 && this.state.currData.price ==-1){
+        if(this.state.currData.price === -1){
             this.setState({currData : {price : this.state.bidwage , text : example}})
             this.setState({editedData : {price : this.state.bidwage , text : example}})
-            this.state({creating : true})
         }
     }
     async getJobDetail(){
@@ -166,17 +168,10 @@ class Contract extends React.Component{
             console.log(err)
         })
         await axios
-        .get(utilities["backend-url"] + "/bids/bidId/" + this.state.jobId)
+        .get(utilities["backend-url"] + "/bids/jobuser/"+ this.state.jobId+","+this.state.freelancerId)
         .then(res =>{
-            let bid = [];
-            for(let i=0; i<res.data.length;i++){
-                if(res.data[i].userId == this.state.freelancerId){
-                   bid.push(res.data[i].biddedWage)
-                }
-            }
-            if(bid.length != 0){
-                this.setState({bidwage : bid[bid.length-1]})
-            }
+            console.log(res)
+            this.setState({bidwage : res.data.biddedWage})
         })
         .catch(err =>{
             console.log(err);
@@ -189,13 +184,12 @@ class Contract extends React.Component{
         .then(res =>{
             console.log(res.data)
             this.setState({
-                currData:{price : res.data.price||0, text : res.data.description||example},
-                editedData:{price : res.data.price||0, text : res.data.description||example},
+                currData:{price : res.data.price, text : res.data.description||example},
+                editedData:{price : res.data.price, text : res.data.description||example},
                 modifiedTime : res.data.updatedTime,
                 status : res.data.status,
                 loadContractData:true,
                 creating : false,
-                
             })
         })
         .catch(err=>{
@@ -223,7 +217,7 @@ class Contract extends React.Component{
     async onUpdateContract(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         await axios
-        .patch(utilities["backend-url"] + "/contracts/updateByJobId" + this.state.jobId,{
+        .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             freelancerId:this.state.freelancerId,
             price : this.state.editedData.price,
             description : this.state.editedData.text
@@ -236,12 +230,37 @@ class Contract extends React.Component{
             console.log(err);
         })
     }
+
+    renderRejected(){
+        if(this.state.status === "rejected" && this.state.mode === "client"){
+           return <AlertDanger />
+        }
+    }
+
+    renderButton(){
+        if(this.state.mode === "client" && this.state.status !== "accepted"){
+            return (<>
+                <Button variant="outline-danger" onClick={this.handlerDiscard}>Cancel</Button>{' '}
+                <Button variant="outline-secondary" onClick={this.handlerEdit}>Edit</Button>{' '}
+                <Button variant="outline-success" onClick={this.handleSubmit}>Submit</Button>{' '}
+            </>)
+        }
+        else if(this.state.mode === "freelancer" && this.state.status !== "accepted" && this.state.status !== "rejected"){
+            return ( 
+                    <>
+                    <Button variant="outline-danger" onClick={this.handleDecline}>Decline</Button>{' '}
+                    <Button variant="outline-success" onClick={this.handleAccept}>Accept</Button>{' '}
+                    </>
+                    )
+        }
+        else{
+            return null;
+        }
+    }
+
     render(){
         if(!this.state.loadContractData || !this.state.loadJobData || this.state.bidwage===-1){
-            return(
-                <>
-                </>
-            )
+            return null
         }
         if(this.state.mode === "client" && LocalStorageService.getUserID() != this.state.clientId ){
             return (
@@ -266,6 +285,7 @@ class Contract extends React.Component{
                 <Card className="contract-box">
                     <Card.Header className="header">Contract</Card.Header>
                     <Card.Body className="contract-box-body">
+                    {this.renderRejected()}
                     <Form>
                     <Form.Group as={Row} controlId="formPlaintextJob">
                         <Form.Label column sm="2">
@@ -327,23 +347,19 @@ class Contract extends React.Component{
                     <Card.Footer className="contract-box-footer">
                     
                             <div className="col1">
-                            Updated : {
+                            updated : {
                                 this.state.modifiedTime
                             }
                             </div>
-                            <div classname="col2" hidden={this.state.status === "accepted"}>
-                                {this.state.mode === "freelancer"?
-                                <>
-                                <Button variant="outline-danger" onClick={this.handleDecline}>Decline</Button>{' '}
-                                <Button variant="outline-success" onClick={this.handleAccept}>Accept</Button>{' '}
-                                </>
-                                :
-                                <>
-                                <Button variant="outline-danger" onClick={this.handlerDiscard}>Cancel</Button>{' '}
-                                <Button variant="outline-secondary" onClick={this.handlerEdit}>Edit</Button>{' '}
-                                <Button variant="outline-success" onClick={this.handleSubmit}>Submit</Button>{' '}
-                                </>
-                                }
+                            <div className="col1">
+                            {this.state.status === "null"?
+                             null
+                             :
+                            "status : "+(this.state.status === "accepted"? "accepted" : "rejected")
+                            }
+                            </div>
+                            <div classname="col2" >
+                                {this.renderButton()}
                             </div>
                         
                     </Card.Footer>
@@ -351,6 +367,28 @@ class Contract extends React.Component{
                 </Container>
             </>
         );
+    }
+}
+
+class AlertDanger extends React.Component{
+    constructor(props){
+        super(props)
+        this.state={
+            show : true
+        }
+    }
+    handleShow(){
+        this.setState({show:false})
+    }
+    render(){
+        if(!this.state.show){
+            return null;
+        }
+        return (
+        <Alert variant={"danger"} onClose={()=>this.handleShow()} dismissible>
+            <p>Your contract are rejected </p>
+        </Alert>
+        )
     }
 }
 export default Contract;
