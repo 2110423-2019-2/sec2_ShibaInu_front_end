@@ -7,14 +7,13 @@ import {
   Container,
   Row,
   Col,
-  Breadcrumb,
   Card,
-  Badge
+  Badge,
+  Spinner
 } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
-import { FaMaxcdn } from "react-icons/fa";
 let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -90,7 +89,7 @@ class Dashboard extends React.Component {
         };
       });
   }
-  async getUserImage(userId) {
+  getUserImage = async(userId) => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
 
@@ -127,7 +126,17 @@ class Dashboard extends React.Component {
         }
       });
   }
-
+  getUserBidWage = async(userId) =>{
+    
+    let { result, error } = await this.to(axios.get(utilities["backend-url"] + "/bids/jobuser/"+ this.state.jobID+","+userId));
+    if (error !== null) {
+      return { error: error, data: null };
+    }
+    return {
+      error: null,
+      data: result.data
+    };
+  }
   async getInterestedFreelancer() {
     let freelancerList = new Array();
 
@@ -150,6 +159,13 @@ class Dashboard extends React.Component {
           let img = await this.getUserImage(item.userId);
           if (img.error === null) {
             d.img = img.data;
+          }
+          let bid = await this.getUserBidWage(item.userId);
+          if (bid.error === null){
+            console.log(bid)
+            d.bid = bid.data.biddedWage;
+          }else{
+            continue;
           }
           freelancerList.push(d);
         }
@@ -212,7 +228,6 @@ class Dashboard extends React.Component {
   renderClient() {
     return (
       <div>
-        <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
           <h1 className="job-header">{this.state.jobname}</h1>
           <hr />
@@ -260,7 +275,6 @@ class Dashboard extends React.Component {
   renderFreelancer() {
     return (
       <div>
-        <NavBar mode={this.state.mode} userDatas={""} />
         <Container>
           <h1 className="job-header">{this.state.jobname}</h1>
           <hr />
@@ -301,18 +315,34 @@ class Dashboard extends React.Component {
       </div>
     );
   }
+
+  renderReload(){
+    return  (<Spinner animation="border" role="status" className="loading">
+              <span className="sr-only">Loading...</span>
+            </Spinner>);
+  }
+
+  renderNav(){
+    return (<NavBar mode={this.state.mode} userDatas={""} />);
+  }
+
   render() {
+    let container;
     if (this.loadAllData()) {
       if (this.state.mode === "client") {
-        return this.renderClient();
+        container = this.renderClient();
       } else if (this.state.mode === "freelancer") {
-        return this.renderFreelancer();
+        container = this.renderFreelancer();
       } else {
-        return "";
+        container = "";
       }
     } else {
-      return "";
+      container = this.renderReload();
     }
+    return (<>
+              {this.renderNav()}
+              {container}
+            </>)
   }
 }
 
@@ -424,13 +454,13 @@ class FreelancerBox extends React.Component {
         <td>{item.bid}</td>
         <td>
           {this.state.contract !== null &&
-          this.state.contract.freelancerId == item.userId ? (
+          this.state.contract.freelancerId === item.userId ? (
             <button
               type="button"
               className="btn btn-danger"
               disabled={
                 this.state.contract !== null &&
-                this.state.contract.freelancerId != item.userId
+                this.state.contract.freelancerId !== item.userId
               }
               name={item.userId}
               onClick={this.handleCancel.bind(this)}
@@ -455,7 +485,9 @@ class FreelancerBox extends React.Component {
       </tr>
     ));
   }
-
+  onInvite(){
+    window.location.href = "/freelancersearch"
+  }
   render() {
     return (
       <DashboardBox
@@ -477,7 +509,7 @@ class FreelancerBox extends React.Component {
                       <th></th>
                       <th>Name</th>
                       <th>score</th>
-                      <th>Bid</th>
+                      <th>BiddedWage(THB)</th>
                       <th>select</th>
                     </tr>
                   </thead>
@@ -485,7 +517,7 @@ class FreelancerBox extends React.Component {
                 </Table>
               </div>
               <div className="footer">
-                <button type="button" className="btn btn-success" onClick={""}>
+                <button type="button" className="btn btn-success" onClick={this.onInvite}>
                   invite
                 </button>
               </div>
@@ -705,13 +737,16 @@ class DashboardResponsible extends React.Component {
       });
   }
 
+  goProfile(){
+    window.location.href = "/profile/"+this.state.userId
+  }
   getResponsibleComponent() {
     return (
       <Table className="component-responsible" responsive="sm" hover>
         <tbody>
           <tr key={this.state.userId}>
             <td>
-              <div className="profile-img">
+              <div className="profile-img" onClick={() => this.goProfile()}>
                 <img src={this.state.img} alt="user-img" />
               </div>
             </td>
