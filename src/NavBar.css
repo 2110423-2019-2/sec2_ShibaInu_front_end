@@ -37,3 +37,9 @@
 .new-noti {
     color: rgb(255, 70, 70) !important;
 }
+#noti-box {
+    height: 400px;
+    width: 300px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
