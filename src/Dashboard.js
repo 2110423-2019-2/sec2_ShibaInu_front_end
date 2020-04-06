@@ -342,11 +342,11 @@ class Dashboard extends React.Component {
   renderPayment = (status) => {
     if (status === 'accepted') {
       // มัดจำ
-      return (<PaymentModal mode='card' addPay='pay' amount={30} payMode='Deposit' callback={this.callbackPayment} />);
+      return (<PaymentModal mode='card' addPay='pay' amount={30} payMode='Deposit' jobId={this.state.jobID} callback={this.callbackPayment} />);
     }
     else if (status === 'done') {
       // ส่วนที่เหลือ
-      return (<PaymentModal mode='card' addPay='pay' amount={70} payMode='Total' callback={this.callbackPayment} />);
+      return (<PaymentModal mode='card' addPay='pay' amount={70} payMode='Total' jobId={this.state.jobID} callback={this.callbackPayment} />);
     } else {
       return '';
     }
