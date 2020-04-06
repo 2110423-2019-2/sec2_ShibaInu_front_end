@@ -34,7 +34,8 @@ class Dashboard extends React.Component {
         openTime: null,
         acceptedTime: null,
         workingTime: null,
-        doneTime: null
+        doneTime: null,
+        closeTime: null,
       },
       contract: null,
       loadContract: false
