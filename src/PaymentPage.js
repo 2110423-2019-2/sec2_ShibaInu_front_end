@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Container, Row, Col, Table, Card, Button } from 'react-bootstrap';
+import { Nav, Container, Row, Col, Table, Card, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
 import NavBar from './NavBar';
@@ -256,8 +256,14 @@ class PaymentPage extends React.Component {
         this.setState({ modalMode: mode, showModal: true });
     }
 
+    renderReload(){
+        return  (<Spinner animation="border" role="status" className="loading">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>);
+      }
+
     render() {
-        return !this.state.loadedData() ? '' : (
+        return !this.state.loadedData() ? <this.renderReload /> : (
             <div>
                 {!this.state.showModal ? '' : <PaymentModal mode={this.state.modalMode} addPay='add' callback={this.showHideModalCallback} />}
                 <NavBar mode='' userDatas='' />
