@@ -14,6 +14,7 @@ class PaymentModal extends React.Component {
             mode: this.props.mode || 'card',
             addPay: this.props.addPay || 'add',
             amount: this.props.amount || '0',
+            payMode: this.props.payMode || 'Deposit',
             formText: '',
             cardData: {
                 cardNumber: '',
@@ -28,6 +29,7 @@ class PaymentModal extends React.Component {
                 branchName: ''
             },
             isSendingData: false,
+            isFetching: false,
         }
 
         this.AddCardPayment = this.AddCardPayment.bind(this);
@@ -36,12 +38,15 @@ class PaymentModal extends React.Component {
     }
 
     componentWillMount() {
-        if(this.state.mode === 'card' && this.state.addPay === 'pay'){
+        if (this.state.mode === 'card' && this.state.addPay === 'pay') {
             this.fetchCardData();
         }
     }
 
     fetchCardData = () => {
+
+        this.setState({ isFetching: true });
+
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
         axios.get(utilities['backend-url'] + "/payment/creditCard")
@@ -49,6 +54,8 @@ class PaymentModal extends React.Component {
                 this.setState({ cardData: res.data });
             }).catch((err) => {
                 console.error(err);
+            }).finally(() => {
+                this.setState({ isFetching: false, });
             });
     }
 
@@ -153,19 +160,23 @@ class PaymentModal extends React.Component {
         );
     }
 
-    ChargeCardPayment = () => {
+    ChargeCardPayment = (props) => {
         return (
-            <Card>
-                <Card.Header>
-                    Credit Card
+            <Form>
+                <Form.Group>
+                    <Card border='secondary'>
+                        <Card.Header>
+                            Credit Card
                     </Card.Header>
-                {!this.state.creditCard ? (<Card.Body>NO CREDIT CARD. ADD ONE ?</Card.Body>) :
-                    <Card.Body>
-                        <h3>{this.state.creditCard.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.creditCard.cardNumber.substring(12)}</h3><br />
-                        <h5>{this.state.creditCard.name}</h5>
-                    </Card.Body>}
-                <Card.Footer>
-                    <Button variant="success" onClick={this.handleSubmitAddCardPayment} disabled={this.state.isSendingData}>
+                        {props.isLoading ? (<this.renderLoading />) : (
+                            <Card.Body>
+                                <h5>{this.state.cardData.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.cardData.cardNumber.substring(12)}</h5><br />
+                                <p>{this.state.cardData.name}</p>
+                            </Card.Body>)}
+                    </Card>
+                </Form.Group>
+                <Form.Group>
+                    <Button variant="success" onClick={''} disabled={this.state.isSendingData}>
                         <Spinner
                             as="span"
                             animation="border"
@@ -174,11 +185,17 @@ class PaymentModal extends React.Component {
                             aria-hidden="true"
                             hidden={!this.state.isSendingData}
                         />
-                        {' SUBMIT CARD'}
+                        {' PAY ' + this.state.amount + ' THB (' + this.state.payMode + ')'}
                     </Button>
-                </Card.Footer>
-            </Card>
+                </Form.Group>
+            </Form>
         );
+    }
+
+    renderLoading() {
+        return (<Spinner animation="border" role="status" className="loading">
+            <span className="sr-only">Loading...</span>
+        </Spinner>);
     }
 
     handleAddCardPaymentChange = (e) => {
@@ -295,7 +312,7 @@ class PaymentModal extends React.Component {
         }
     }
 
-    getModalBody = () => {
+    getModalBody = (isFetching) => {
         const isCard = (this.state.mode === 'card');
         const isAdd = (this.state.addPay === 'add');
 
@@ -304,7 +321,7 @@ class PaymentModal extends React.Component {
         } else if (!isCard && isAdd) {
             return <this.AddBankAccount />
         } else if (isCard && !isAdd) {
-            return ''
+            return <this.ChargeCardPayment isLoading={isFetching} />
         } else {
             return ''
         }
@@ -315,18 +332,19 @@ class PaymentModal extends React.Component {
             <Modal
                 // {...props}
                 show={this.state.showModal}
-                size="sm"
+                size='sm'
                 aria-labelledby="contained-modal-title-vcenter"
                 onHide={this.showHideModal}
+                backdrop={this.state.addPay === 'add' ? true : 'static'}
                 centered
             >
-                <Modal.Header closeButton>
+                <Modal.Header closeButton={this.state.addPay === 'add'}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         YoungStar Payment
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.getModalBody()}
+                    {this.getModalBody(this.state.isFetching)}
                 </Modal.Body>
             </Modal>
         );
