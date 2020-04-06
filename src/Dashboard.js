@@ -334,6 +334,8 @@ class Dashboard extends React.Component {
       showPayment: status
     });
 
+    // Transfer money to freelancer here if status is done
+
     if(reload) {
       window.location.reload();
     }
