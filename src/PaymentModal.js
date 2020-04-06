@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner, Card } from 'react-bootstrap';
 import axios from 'axios';
 
 import LocalStorageService from './LocalStorageService';
@@ -33,6 +33,23 @@ class PaymentModal extends React.Component {
         this.AddCardPayment = this.AddCardPayment.bind(this);
         this.handleAddCardPaymentChange = this.handleAddCardPaymentChange.bind(this);
         this.handleSubmitAddCardPayment = this.handleSubmitAddCardPayment.bind(this);
+    }
+
+    componentWillMount() {
+        if(this.state.mode === 'card' && this.state.addPay === 'pay'){
+            this.fetchCardData();
+        }
+    }
+
+    fetchCardData = () => {
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+        axios.get(utilities['backend-url'] + "/payment/creditCard")
+            .then(res => {
+                this.setState({ cardData: res.data });
+            }).catch((err) => {
+                console.error(err);
+            });
     }
 
     AddCardPayment() {
@@ -136,6 +153,34 @@ class PaymentModal extends React.Component {
         );
     }
 
+    ChargeCardPayment = () => {
+        return (
+            <Card>
+                <Card.Header>
+                    Credit Card
+                    </Card.Header>
+                {!this.state.creditCard ? (<Card.Body>NO CREDIT CARD. ADD ONE ?</Card.Body>) :
+                    <Card.Body>
+                        <h3>{this.state.creditCard.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.creditCard.cardNumber.substring(12)}</h3><br />
+                        <h5>{this.state.creditCard.name}</h5>
+                    </Card.Body>}
+                <Card.Footer>
+                    <Button variant="success" onClick={this.handleSubmitAddCardPayment} disabled={this.state.isSendingData}>
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            hidden={!this.state.isSendingData}
+                        />
+                        {' SUBMIT CARD'}
+                    </Button>
+                </Card.Footer>
+            </Card>
+        );
+    }
+
     handleAddCardPaymentChange = (e) => {
         let temp = this.state.cardData;
         temp[e.target.name] = e.target.value;
@@ -200,7 +245,7 @@ class PaymentModal extends React.Component {
 
     handleSubmitAddBankAccount = () => {
         const bankData = this.state.bankData;
-        if (isNaN(bankData.accountNumber) ) {
+        if (isNaN(bankData.accountNumber)) {
             this.setState({
                 formText: 'Please enter a valid account number.'
             });

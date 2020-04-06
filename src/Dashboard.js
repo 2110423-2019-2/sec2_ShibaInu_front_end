@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
+import PaymentModal from './PaymentModal';
 let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -327,6 +328,18 @@ class Dashboard extends React.Component {
     return (<NavBar mode={this.state.mode} userDatas={""} />);
   }
 
+  renderPayment = () => {
+    // if(this.state.jobStatus === 'accepted') {
+    //   // มัดจำ
+    //   return (<PaymentModal mode='card' addPay='pay' amount={30} />);
+    // } else if(this.state.jobStatus === 'done') {
+    //   // ส่วนที่เหลือ
+    //   return (<PaymentModal mode='card' addPay='pay' amount={70} />);
+    // } else {
+      // return '';
+    // }
+  }
+
   render() {
     let container;
     if (this.loadAllData()) {
@@ -342,6 +355,7 @@ class Dashboard extends React.Component {
     }
     return (<>
               {this.renderNav()}
+              {/* {this.renderPayment()} */}
               {container}
             </>)
   }
