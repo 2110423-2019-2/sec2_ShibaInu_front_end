@@ -20,7 +20,7 @@ class Contract extends React.Component{
             freelancerId: this.props.params.freelancerId,
             mode : "",
             isModifying : false,
-            creating : false,
+            creating : true,
             jobName: "",
             editedData : {price:-1,text: example},
             currData: {price:-1,text: example},
@@ -81,18 +81,20 @@ class Contract extends React.Component{
             buttons: true,
             dangerMode: true,
           })
-          .then((confirm) => {
+          .then(async(confirm) => {
             if (confirm) {
                 swal("Your new contract has been submit", {
                     icon: "success",
                 });
                 if(this.state.creating){
-                    this.onCreateContract();
+                    await this.onCreateContract();
                 }else{
-                    this.onUpdateContract();
+                    await this.onUpdateContract();
                 }
+                window.history.back();
             }
-          });
+          })
+          
     }
     handleAccept(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
@@ -100,8 +102,12 @@ class Contract extends React.Component{
         .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             status : "accepted"
         })
-        .then(res=>{
-            console.log(res);
+        .then(()=>{
+            axios.patch(utilities["backend-url"] + "/jobs/" + this.state.jobId,{
+                status : "accepted"
+            })
+        })
+        .then(()=>{
             window.history.back();
         })
         .catch(err=>{
@@ -208,10 +214,11 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.jobId
+            return res;
         })
         .catch(err=>{
             console.log(err);
+            return err;
         })
     }
     async onUpdateContract(){
@@ -220,14 +227,16 @@ class Contract extends React.Component{
         .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             freelancerId:this.state.freelancerId,
             price : this.state.editedData.price,
-            description : this.state.editedData.text
+            description : this.state.editedData.text,
+            status : "null"
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.freelancerId
+            return res;
         })
         .catch(err=>{
             console.log(err);
+            return err;
         })
     }
 
