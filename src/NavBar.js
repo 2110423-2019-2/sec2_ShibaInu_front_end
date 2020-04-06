@@ -37,6 +37,8 @@ class NavBar extends React.Component {
       notiDatas: {},
       isNotiLoad: false,
       unreadRoom: 0,
+      newNoti: 1,
+      firstLoadUnreadChat: true,
     };
   }
 
@@ -68,14 +70,26 @@ class NavBar extends React.Component {
         .collection(this.state.userID);
       // Start listening to the query.
       query.onSnapshot((snapshot) => {
-        var unreadRoom = 0;
+        if(this.state.firstLoadUnreadChat){
+          var unreadRoom = 0;
+        } else {
+          var unreadRoom = this.state.unreadRoom;
+        }
         snapshot.docChanges().forEach((change) => {
           var room = change.doc.data();
-          if (room.read === false) {
-            unreadRoom += 1;
+          if(this.state.firstLoadUnreadChat){
+            if (room.read === false) {
+              unreadRoom += 1;
+            }
+          } else {
+            if (room.read === false) {
+              unreadRoom += 1;
+            } else {
+              unreadRoom -= 1;
+            }
           }
         });
-        this.setState({ unreadRoom: unreadRoom });
+        this.setState({ unreadRoom: unreadRoom, firstLoadUnreadChat: false });
         console.log(this.state.unreadRoom);
       });
     }
@@ -114,7 +128,7 @@ class NavBar extends React.Component {
       chatMenu;
     var jobPath = "/" + this.state.mode + "/job";
 
-    var newNotiDetail, oldNotiDetail, hasNewNoti;
+    var newNotiDetail, oldNotiDetail;
     if (this.state.isNotiLoad) {
       newNotiDetail = this.state.notiDatas
         .filter((noti) => noti.isRead === false)
@@ -130,11 +144,6 @@ class NavBar extends React.Component {
             <p>{noti.description}</p>
           </DropdownItem>
         ));
-      if (newNotiDetail !== null) {
-        hasNewNoti = "new-noti";
-      } else {
-        hasNewNoti = "";
-      }
       oldNotiDetail = this.state.notiDatas
         .filter((noti) => noti.isRead === true)
         .map((noti, idx) => (
@@ -154,7 +163,7 @@ class NavBar extends React.Component {
     notiMenu = (
       <UncontrolledDropdown nav inNavbar>
         <DropdownToggle nav>
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={this.state.newNoti} color="secondary">
             <FaBell />
           </Badge>
         </DropdownToggle>

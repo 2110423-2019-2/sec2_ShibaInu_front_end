@@ -27,6 +27,7 @@ class ChatSystem extends React.Component {
       chatrooms: [],
       chatmsgs: [],
       firstLoadMsg: true,
+      firstLoadChatroom: true,
       ref: React.createRef(),
       loadChatroomFinished: false,
       loadChatmsgFinished: false
@@ -53,18 +54,41 @@ class ChatSystem extends React.Component {
       .orderBy("lasttime", "desc");
     // Start listening to the query.
     query.onSnapshot(snapshot => {
-      var chatrooms = [];
+      if(this.state.firstLoadChatroom){
+        var chatrooms = [];
+      } else {
+        var chatrooms = this.state.chatrooms;
+      }
       snapshot.docChanges().forEach(change => {
         var room = change.doc.data();
-        chatrooms.push({
-          id: change.doc.id,
-          chatwith: room.name,
-          chatwithId: room.id,
-          lasttime: room.lasttime,
-          read: room.read
-        });
+        if(this.state.firstLoadChatroom){
+          chatrooms.push({
+            id: change.doc.id,
+            chatwith: room.name,
+            chatwithId: room.id,
+            lasttime: room.lasttime,
+            read: room.read
+          });
+        } else {
+          var isNewRoom = true;
+          for(let i=0;i<chatrooms.length;i++){
+            if(chatrooms[i].id === change.doc.id){
+              chatrooms[i].read = true;
+              isNewRoom = false;
+            }
+          }
+          if(isNewRoom){
+            chatrooms.push({
+              id: change.doc.id,
+              chatwith: room.name,
+              chatwithId: room.id,
+              lasttime: room.lasttime,
+              read: room.read
+            });
+          }
+        }
       });
-      this.setState({ chatrooms: chatrooms, loadChatroomFinished: true });
+      this.setState({ chatrooms: chatrooms, loadChatroomFinished: true, firstLoadChatroom: false });
       console.log(this.state.chatrooms);
     });
   };
