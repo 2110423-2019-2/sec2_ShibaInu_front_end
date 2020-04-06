@@ -374,7 +374,8 @@ class FreelancerBox extends React.Component {
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId.toString()).doc(chatroom);
     docRef.get().then( doc => {
       LocalStorageService.setChatroom(chatroom);
-      LocalStorageService.setChatName(friendName);
+      LocalStorageService.setChatWithName(friendName);
+      LocalStorageService.setChatWithId(friendId);
       if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
       } else {
@@ -389,7 +390,9 @@ class FreelancerBox extends React.Component {
     const time = firebase.firestore.FieldValue.serverTimestamp();
     firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
       name: friendName,
+      id: friendId.toString(),
       lasttime: time,
+      read: true
     }).catch(error => {
       alert("Error adding chatroom 1:", error);
     });
@@ -400,7 +403,9 @@ class FreelancerBox extends React.Component {
         name = res.data.firstName;
         firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
           name: name,
+          id: userId.toString(),
           lasttime: time,
+          read: false
         }).then(()=>{
           window.location.href = '/chat';
         }).catch(error => {
@@ -668,7 +673,8 @@ class DashboardResponsible extends React.Component {
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId.toString()).doc(chatroom);
     docRef.get().then( doc => {
       LocalStorageService.setChatroom(chatroom);
-      LocalStorageService.setChatName(friendName);
+      LocalStorageService.setChatWithName(friendName);
+      LocalStorageService.setChatWithId(friendId);
       if (!doc.exists) {
         this.addChatRoom(userId,friendId,chatroom,friendName);
       } else {
@@ -683,7 +689,9 @@ class DashboardResponsible extends React.Component {
     const time = firebase.firestore.FieldValue.serverTimestamp();
     firebase.firestore().collection('message').doc('chatroom').collection(userId.toString()).doc(chatroom).set({
       name: friendName,
+      id: friendId.toString(),
       lasttime: time,
+      read: true,
     }).catch(error => {
       alert("Error adding chatroom 1:", error);
     });
@@ -694,7 +702,9 @@ class DashboardResponsible extends React.Component {
         name = res.data.firstName;
         firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
           name: name,
+          id: userId.toString(),
           lasttime: time,
+          read: false,
         }).then(()=>{
           window.location.href = '/chat';
         }).catch(error => {

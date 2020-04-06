@@ -13,13 +13,15 @@ import {
 } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
+import {FaCircle} from "react-icons/fa";
 
 class ChatSystem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedRoom: LocalStorageService.getChatroom(),
-      chatwith: LocalStorageService.getChatName(),
+      chatwith: LocalStorageService.getChatWithName(),
+      chatwithId: LocalStorageService.getChatWithId(),
       msg: "",
       userID: LocalStorageService.getUserID(),
       chatrooms: [],
@@ -57,7 +59,9 @@ class ChatSystem extends React.Component {
         chatrooms.push({
           id: change.doc.id,
           chatwith: room.name,
-          lasttime: room.lasttime
+          chatwithId: room.id,
+          lasttime: room.lasttime,
+          read: room.read
         });
       });
       this.setState({ chatrooms: chatrooms, loadChatroomFinished: true });
@@ -80,6 +84,20 @@ class ChatSystem extends React.Component {
         console.error("Error writing new message to database", error);
       });
     this.setState({ msg: "" });
+
+    //update status unread to another user
+    firebase
+      .firestore()
+      .collection("message")
+      .doc("chatroom")
+      .collection(this.state.chatwithId)
+      .doc(this.state.selectedRoom)
+      .update({
+        read: false,
+      })
+      .catch(function(error) {
+        console.error("Error updating status unread", error);
+      });
   };
 
   loadMsg = () => {
@@ -119,6 +137,19 @@ class ChatSystem extends React.Component {
         }
       );
     });
+    //update status read
+    firebase
+      .firestore()
+      .collection("message")
+      .doc("chatroom")
+      .collection(this.state.userID)
+      .doc(this.state.selectedRoom)
+      .update({
+        read: true,
+      })
+      .catch(function(error) {
+        console.error("Error updating status read", error);
+      });
   };
 
   chatRoom = () => {
@@ -137,11 +168,13 @@ class ChatSystem extends React.Component {
           id="chatroom"
           onClick={() => {
             LocalStorageService.setChatroom(chatroom.id);
-            LocalStorageService.setChatName(chatroom.chatwith);
+            LocalStorageService.setChatWithName(chatroom.chatwith);
+            LocalStorageService.setChatWithId(chatroom.chatwithId);
             this.setState(
               {
                 selectedRoom: chatroom.id,
                 chatwith: chatroom.chatwith,
+                chatwithId: chatroom.chatwithId,
                 firstLoadMsg: true
               },
               () => {
@@ -151,11 +184,17 @@ class ChatSystem extends React.Component {
             console.log(this.state.selectedRoom);
           }}
         >
-          <h4>{chatroom.chatwith}</h4>
+          <h4>{chatroom.chatwith}{this.hasNewMessage(chatroom)}</h4>
         </Button>
       </Row>
     ));
   };
+
+  hasNewMessage = (chatroom) => {
+    if(chatroom.read === false){
+      return <FaCircle className="ml-3 text-danger" />;
+    }
+  }
 
   chatMsg = () => {
     return this.state.chatmsgs.map(chatmsg => (

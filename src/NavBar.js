@@ -1,16 +1,24 @@
 import React from "react";
 import logo from "./material/Logo.png";
 import "./NavBar.css";
-import { FaBell, FaPlusCircle, FaUserCircle, FaSearch } from "react-icons/fa";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import {
+  FaBell,
+  FaPlusCircle,
+  FaUserCircle,
+  FaSearch,
+  FaFacebookMessenger,
+} from "react-icons/fa";
+import { Nav, Navbar } from "react-bootstrap";
 import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from "reactstrap";
 import axios from "axios";
+import { Badge } from "@material-ui/core";
 import LocalStorageService from "./LocalStorageService";
+import firebase from "./firebase";
 
 var utilities = require("./Utilities.json");
 class NavBar extends React.Component {
@@ -21,13 +29,14 @@ class NavBar extends React.Component {
         CLIENT: "client",
         FREELANCER: "freelancer",
         GUEST: "guest",
-        ADMIN: "admin"
+        ADMIN: "admin",
       },
       mode: LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: {},
       notiDatas: {},
-      isNotiLoad: false
+      isNotiLoad: false,
+      unreadRoom: 0,
     };
   }
 
@@ -36,22 +45,45 @@ class NavBar extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(utilities["backend-url"] + "/users/" + this.state.userID)
-      .then(res => {
+      .then((res) => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
       });
     axios
       .get(utilities["backend-url"] + "/notification/" + this.state.userID)
-      .then(res => {
+      .then((res) => {
         const notiDatas = res.data;
         this.setState({ notiDatas: notiDatas, isNotiLoad: true });
         console.log(this.state.notiDatas);
       });
   };
 
+  checkNewMessage = () => {
+    if (this.state.userID !== "") {
+      var query = firebase
+        .firestore()
+        .collection("message")
+        .doc("chatroom")
+        .collection(this.state.userID);
+      // Start listening to the query.
+      query.onSnapshot((snapshot) => {
+        var unreadRoom = 0;
+        snapshot.docChanges().forEach((change) => {
+          var room = change.doc.data();
+          if (room.read === false) {
+            unreadRoom += 1;
+          }
+        });
+        this.setState({ unreadRoom: unreadRoom });
+        console.log(this.state.unreadRoom);
+      });
+    }
+  };
+
   componentDidMount = () => {
     this.fetchDatas();
+    this.checkNewMessage();
   };
 
   readNoti = (notiID, idx) => {
@@ -78,15 +110,17 @@ class NavBar extends React.Component {
       memberMenu,
       guestMenu,
       homePath,
-      changeMode;
+      changeMode,
+      chatMenu;
     var jobPath = "/" + this.state.mode + "/job";
 
     var newNotiDetail, oldNotiDetail, hasNewNoti;
     if (this.state.isNotiLoad) {
       newNotiDetail = this.state.notiDatas
-        .filter(noti => noti.isRead === false)
+        .filter((noti) => noti.isRead === false)
         .map((noti, idx) => (
-          <DropdownItem key={idx}
+          <DropdownItem
+            key={idx}
             className="color-black background-yellow noti"
             onClick={() => {
               this.readNoti(noti.notificationId, idx);
@@ -102,9 +136,10 @@ class NavBar extends React.Component {
         hasNewNoti = "";
       }
       oldNotiDetail = this.state.notiDatas
-        .filter(noti => noti.isRead === true)
+        .filter((noti) => noti.isRead === true)
         .map((noti, idx) => (
-          <DropdownItem key={idx}
+          <DropdownItem
+            key={idx}
             className="color-black noti"
             onClick={() => {
               this.readNoti(noti.notificationId, idx);
@@ -118,8 +153,10 @@ class NavBar extends React.Component {
 
     notiMenu = (
       <UncontrolledDropdown nav inNavbar>
-        <DropdownToggle nav className={hasNewNoti}>
-          <FaBell />
+        <DropdownToggle nav>
+          <Badge badgeContent={4} color="secondary">
+            <FaBell />
+          </Badge>
         </DropdownToggle>
         <DropdownMenu right id="noti-box">
           {newNotiDetail}
@@ -147,6 +184,14 @@ class NavBar extends React.Component {
       </UncontrolledDropdown>
     );
     userMode = YOUNGSTAR + this.state.mode;
+
+    chatMenu = (
+      <Nav.Link href="/chat">
+        <Badge badgeContent={this.state.unreadRoom} color="secondary">
+          <FaFacebookMessenger className="navbar-icon" />
+        </Badge>
+      </Nav.Link>
+    );
 
     if (this.state.mode === this.state.status.CLIENT) {
       createMenu = (
@@ -214,13 +259,6 @@ class NavBar extends React.Component {
           My payment
         </DropdownItem>
         <DropdownItem
-          href="/chat"
-          id="dropdown-item-chat"
-          className="color-black"
-        >
-          Chat
-        </DropdownItem>
-        <DropdownItem
           id="dropdown-item-switch"
           href={modePath}
           onClick={() => {
@@ -257,6 +295,7 @@ class NavBar extends React.Component {
       <Nav className="ml-auto">
         {createMenu}
         {searchMenu}
+        {chatMenu}
         {notiMenu}
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav caret>

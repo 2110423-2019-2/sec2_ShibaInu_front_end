@@ -48,14 +48,24 @@ const LocalStorageService = (function () {
         localStorage.removeItem('chatroom');
     }
 
-    function _setChatName(chatName) {
-        localStorage.setItem('chatName', chatName);
+    function _setChatWithName(chatWithName) {
+        localStorage.setItem('chatWithName', chatWithName);
     }
-    function _getChatName() {
-        return localStorage.getItem('chatName') || '';
+    function _getChatWithName() {
+        return localStorage.getItem('chatWithName') || '';
     }
-    function _clearChatName() {
-        localStorage.removeItem('chatName');
+    function _clearChatWithName() {
+        localStorage.removeItem('chatWithName');
+    }
+
+    function _setChatWithId(chatWithId) {
+        localStorage.setItem('chatWithId', chatWithId);
+    }
+    function _getChatWithId() {
+        return localStorage.getItem('chatWithId') || '';
+    }
+    function _clearChatWithId() {
+        localStorage.removeItem('chatWithId');
     }
 
     function _signOut() {
@@ -63,7 +73,8 @@ const LocalStorageService = (function () {
         _clearUserID();
         _clearUserMode();
         _clearChatroom();
-        _clearChatName();
+        _clearChatWithName();
+        _clearChatWithId();
     }
     return {
         getService: _getService,
@@ -79,9 +90,12 @@ const LocalStorageService = (function () {
         setChatroom: _setChatroom,
         getChatroom: _getChatroom,
         clearChatroom: _clearChatroom,
-        setChatName: _setChatName,
-        getChatName: _getChatName,
-        clearChatName: _clearChatName,
+        setChatWithName: _setChatWithName,
+        getChatWithName: _getChatWithName,
+        clearChatWithName: _clearChatWithName,
+        setChatWithId: _setChatWithId,
+        getChatWithId: _getChatWithId,
+        clearChatWithId: _clearChatWithId,
         signOut: _signOut
     }
 })();

@@ -15,7 +15,7 @@
 #navbar a {
    color: #FFC655;
 }
-#dropdown-item-profile, #dropdown-item-job, #dropdown-item-balance, #dropdown-item-chat {
+#dropdown-item-profile, #dropdown-item-job, #dropdown-item-balance {
     color: black;
 }
 #dropdown-item-switch {
