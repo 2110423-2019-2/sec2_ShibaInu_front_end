@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Form, Col, Row, Container,Button,Alert} from 'react-bootstrap';
+import {Card, Form, Col, Row, Container,Button,Alert,Spinner} from 'react-bootstrap';
 import NavBar from './NavBar';
 import CKEditor from 'ckeditor4-react';
 import "./Contract.css"
@@ -20,7 +20,7 @@ class Contract extends React.Component{
             freelancerId: this.props.params.freelancerId,
             mode : "",
             isModifying : false,
-            creating : false,
+            creating : true,
             jobName: "",
             editedData : {price:-1,text: example},
             currData: {price:-1,text: example},
@@ -28,33 +28,47 @@ class Contract extends React.Component{
             loadContractData : false,
             loadJobData: false,
             status : "null",
+            inputError : {price : false},
+            fetchError : {loadUser : false, loadJob : false}
         }
-        this.handlerEdit=this.handlerEdit.bind(this);
-        this.onEditorChange=this.onEditorChange.bind(this,);
+        this.handleEdit=this.handleEdit.bind(this);
+        this.onTextChange=this.onTextChange.bind(this,);
         this.onPriceChange=this.onPriceChange.bind(this,);
-        this.handlerDiscard=this.handlerDiscard.bind(this);
+        this.handleDiscard=this.handleDiscard.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
         this.handleAccept=this.handleAccept.bind(this);
         this.handleDecline=this.handleDecline.bind(this);
     }
-    handlerEdit(){
+    redirect(time){
+        setTimeout(()=>{
+            window.history.back()
+        },time);
+    }
+    handleEdit(){
         let prev = this.state.isModifying;
         this.setState({isModifying:!prev});
     }
-    onEditorChange(evt){
-        let price = this.state.editedData.price;
-        this.setState( {
-            editedData: {text:evt.editor.getData(),price:price}
+    onTextChange(evt){
+        this.setState({
+            editedData:{...this.state.editedData,text : evt.editor.getData()}
         });
+        
     }
     onPriceChange(evt){
-        let text = this.state.editedData.text;
+        if(evt.target.value === ""){
+            this.setState({
+                inputError:{...this.state.inputError,price : true}
+            });
+        }else{
+            this.setState({
+                inputError:{...this.state.inputError,price : false}
+            });
+        }
         this.setState({
-            editedData:{price:evt.target.value,text:text}
+            editedData:{...this.state.editedData,price : evt.target.value}
         });
-        console.log(this.state.editedData.text)
     }
-    handlerDiscard(){
+    handleDiscard(){
         swal({
             title: "Are you sure?",
             text: "Once deleted, you will not be able to recover this imaginary file!",
@@ -64,16 +78,16 @@ class Contract extends React.Component{
           })
           .then((willDelete) => {
             if (willDelete) {
-                swal("Your new contract has been discarded", {
-                    icon: "success",
-                });
                 let data = this.state.currData
                 this.setState({editedData:data});
             }
           });
         
     }
-    handleSubmit(){
+    handleSubmit(e){
+        if(this.state.inputError.text || this.state.inputError.price){
+            return;
+        }
         swal({
             title: "Are you sure?",
             text: "Once submit, you will not be able to recover this  contract!",
@@ -81,18 +95,31 @@ class Contract extends React.Component{
             buttons: true,
             dangerMode: true,
           })
-          .then((confirm) => {
+          .then(async(confirm) => {
             if (confirm) {
-                swal("Your new contract has been submit", {
-                    icon: "success",
-                });
+                let res;
                 if(this.state.creating){
-                    this.onCreateContract();
+                    res = await this.onCreateContract();
                 }else{
-                    this.onUpdateContract();
+                    res = await this.onUpdateContract();
+                }
+                if(res.error !== null){
+                    swal("Error occured!", {
+                        icon: "error",
+                    });
+                }else{
+                    swal("Your new contract has been submit, You will go back in 3 seconds", {
+                        icon: "success",
+                        timer : 3000,
+                        buttons : false,
+                    });
+                    this.redirect(3000)
+                     
+                    
                 }
             }
-          });
+          })
+          return false;
     }
     handleAccept(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
@@ -100,8 +127,7 @@ class Contract extends React.Component{
         .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             status : "accepted"
         })
-        .then(res=>{
-            console.log(res);
+        .then(()=>{
             window.history.back();
         })
         .catch(err=>{
@@ -125,8 +151,8 @@ class Contract extends React.Component{
     async componentDidMount(){
         this.setState({mode : LocalStorageService.getUserMode()});
         await this.getJobDetail();
-        await this.getUserName();
         await this.getContractDetail();
+        await this.getUserName();
         if(this.state.currData.price === -1){
             this.setState({currData : {price : this.state.bidwage , text : example}})
             this.setState({editedData : {price : this.state.bidwage , text : example}})
@@ -146,6 +172,7 @@ class Contract extends React.Component{
         })
         .catch(err=>{
             console.log(err);
+            this.setState({fetchError : {...this.state.fetchError, loadJob :true}})
         });
     }
     async getUserName(){
@@ -174,7 +201,8 @@ class Contract extends React.Component{
             this.setState({bidwage : res.data.biddedWage})
         })
         .catch(err =>{
-            console.log(err);
+            console.log(err.response.status);
+            this.setState({fetchError : {...this.state.fetchError, loadUser :true}})
         })
     }
     async getContractDetail(){
@@ -183,9 +211,11 @@ class Contract extends React.Component{
         .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
         .then(res =>{
             console.log(res.data)
+            
             this.setState({
                 currData:{price : res.data.price, text : res.data.description||example},
                 editedData:{price : res.data.price, text : res.data.description||example},
+                freelancerId : res.data.freelancerId,
                 modifiedTime : res.data.updatedTime,
                 status : res.data.status,
                 loadContractData:true,
@@ -193,12 +223,13 @@ class Contract extends React.Component{
             })
         })
         .catch(err=>{
-            console.log(err);
+            console.log(err.response.status);
             this.setState({loadContractData : true,})
         });
     }
     async onCreateContract(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        let ans = {result : null, error: null};
         await axios
         .post(utilities["backend-url"] + "/contracts",{
             jobId : this.state.jobId,
@@ -208,27 +239,32 @@ class Contract extends React.Component{
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.jobId
+            ans.result = res.data;
         })
         .catch(err=>{
             console.log(err);
+            ans.error = err;
         })
+        return ans;
     }
     async onUpdateContract(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+        let ans = {result : null, error: null};
         await axios
         .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
-            freelancerId:this.state.freelancerId,
             price : this.state.editedData.price,
-            description : this.state.editedData.text
+            description : this.state.editedData.text,
+            status : "null"
         })
         .then(res=>{
             console.log(res);
-            window.location.href = "/dashboard/"+this.state.freelancerId
+            ans.result = res.data;
         })
         .catch(err=>{
             console.log(err);
+            ans.error = err;
         })
+        return ans;
     }
 
     renderRejected(){
@@ -240,9 +276,9 @@ class Contract extends React.Component{
     renderButton(){
         if(this.state.mode === "client" && this.state.status !== "accepted"){
             return (<>
-                <Button variant="outline-danger" onClick={this.handlerDiscard}>Cancel</Button>{' '}
-                <Button variant="outline-secondary" onClick={this.handlerEdit}>Edit</Button>{' '}
-                <Button variant="outline-success" onClick={this.handleSubmit}>Submit</Button>{' '}
+                <Button variant="outline-danger" onClick={this.handleDiscard}>Cancel</Button>{' '}
+                <Button variant="outline-secondary" onClick={this.handleEdit}>Edit</Button>{' '}
+                <Button variant="outline-success" onClick={this.handleSubmit} >Submit</Button>{' '}
             </>)
         }
         else if(this.state.mode === "freelancer" && this.state.status !== "accepted" && this.state.status !== "rejected"){
@@ -258,11 +294,30 @@ class Contract extends React.Component{
         }
     }
 
+    renderReload() {
+        return (<Spinner animation="border" role="status" className="loading">
+          <span className="sr-only">Loading...</span>
+        </Spinner>);
+    }
+
     render(){
         if(!this.state.loadContractData || !this.state.loadJobData || this.state.bidwage===-1){
-            return null
+            if(this.state.fetchError.loadJob || this.state.fetchError.loadUser){
+                return (
+                    <>
+                        <NavBar mode={this.state.mode} userDatas={""} />
+                        <h1 align="center">you're not allowed to access this page</h1>
+                    </>
+                )
+            }
+            return (
+                <>
+                <NavBar mode={this.state.mode} userDatas={""} />
+                {this.renderReload()}
+            </>
+            )
         }
-        if(this.state.mode === "client" && LocalStorageService.getUserID() != this.state.clientId ){
+        if(this.state.mode === "client" && parseInt(LocalStorageService.getUserID()) !== this.state.clientId ){
             return (
                 <>
                     <NavBar mode={this.state.mode} userDatas={""} />
@@ -270,7 +325,16 @@ class Contract extends React.Component{
                 </>
             )
         }
-        if(this.state.mode === "freelancer" && LocalStorageService.getUserID() != this.state.freelancerId ){
+        if(this.state.mode === "freelancer" && parseInt(LocalStorageService.getUserID()) !== this.state.freelancerId ){
+            return (
+                <>
+                    <NavBar mode={this.state.mode} userDatas={""} />
+                    <h1 align="center">you're not allowed to access this page</h1>
+                </>
+            )
+        }
+        if(this.state.mode === "client" && parseInt(LocalStorageService.getUserID()) === this.state.clientId &&
+        (!this.state.creating) && this.state.freelancerId.toString() !== this.props.params.freelancerId.toString()){
             return (
                 <>
                     <NavBar mode={this.state.mode} userDatas={""} />
@@ -286,7 +350,7 @@ class Contract extends React.Component{
                     <Card.Header className="header">Contract</Card.Header>
                     <Card.Body className="contract-box-body">
                     {this.renderRejected()}
-                    <Form>
+                    <Form >
                     <Form.Group as={Row} controlId="formPlaintextJob">
                         <Form.Label column sm="2">
                         Job
@@ -315,13 +379,16 @@ class Contract extends React.Component{
                         <Form.Label column sm="2">
                         Price
                         </Form.Label>
-                        <Col sm="10">
-                            <Form.Control 
+                        <Col sm="3">
+                            <Form.Control
+                            type = "number"
                             value={this.state.editedData.price}
-                            plaintext={!this.state.isModifying} 
                             disabled={!this.state.isModifying} 
                             onChange={this.onPriceChange}
+                            required
+                            isInvalid={this.state.inputError.price}
                             />
+                            <Form.Control.Feedback type="invalid">Price should be number</Form.Control.Feedback>
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row}  controlId="formContract">
@@ -330,15 +397,11 @@ class Contract extends React.Component{
                         </Form.Label>
                         <Col sm="10">
                             <CKEditor
-                                config={
-                                    {
-                                        extraPlugins : 'autogrow',
-                                    }
-                                }
                                 data={this.state.editedData.text}
                                 type="classic"
                                 readOnly = {!this.state.isModifying}
-                                onChange={this.onEditorChange}
+                                onChange={this.onTextChange}
+                                 
                             />
                         </Col>
                     </Form.Group>
@@ -358,7 +421,7 @@ class Contract extends React.Component{
                             "status : "+(this.state.status === "accepted"? "accepted" : "rejected")
                             }
                             </div>
-                            <div classname="col2" >
+                            <div className="col2" >
                                 {this.renderButton()}
                             </div>
                         

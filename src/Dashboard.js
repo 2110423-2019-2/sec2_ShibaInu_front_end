@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
+import PaymentModal from './PaymentModal';
 let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -34,10 +35,12 @@ class Dashboard extends React.Component {
         openTime: null,
         acceptedTime: null,
         workingTime: null,
-        doneTime: null
+        doneTime: null,
+        closedTime: null,
       },
       contract: null,
-      loadContract: false
+      loadContract: false,
+      showPayment: false,
     };
   }
 
@@ -89,7 +92,7 @@ class Dashboard extends React.Component {
         };
       });
   }
-  getUserImage = async(userId) => {
+  getUserImage = async (userId) => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
 
@@ -126,9 +129,9 @@ class Dashboard extends React.Component {
         }
       });
   }
-  getUserBidWage = async(userId) =>{
-    
-    let { result, error } = await this.to(axios.get(utilities["backend-url"] + "/bids/jobuser/"+ this.state.jobID+","+userId));
+  getUserBidWage = async (userId) => {
+
+    let { result, error } = await this.to(axios.get(utilities["backend-url"] + "/bids/jobuser/" + this.state.jobID + "," + userId));
     if (error !== null) {
       return { error: error, data: null };
     }
@@ -161,10 +164,10 @@ class Dashboard extends React.Component {
             d.img = img.data;
           }
           let bid = await this.getUserBidWage(item.userId);
-          if (bid.error === null){
+          if (bid.error === null) {
             console.log(bid)
             d.bid = bid.data.biddedWage;
-          }else{
+          } else {
             continue;
           }
           freelancerList.push(d);
@@ -316,14 +319,39 @@ class Dashboard extends React.Component {
     );
   }
 
-  renderReload(){
-    return  (<Spinner animation="border" role="status" className="loading">
-              <span className="sr-only">Loading...</span>
-            </Spinner>);
+  renderReload() {
+    return (<Spinner animation="border" role="status" className="loading">
+      <span className="sr-only">Loading...</span>
+    </Spinner>);
   }
 
-  renderNav(){
+  renderNav() {
     return (<NavBar mode={this.state.mode} userDatas={""} />);
+  }
+
+  callbackPayment = (status = false, reload = false) => {
+    this.setState({
+      showPayment: status
+    });
+
+    // Transfer money to freelancer here if status is done
+
+    if(reload) {
+      window.location.reload();
+    }
+  }
+
+  renderPayment = (status) => {
+    if (status === 'accepted') {
+      // มัดจำ
+      return (<PaymentModal mode='card' addPay='pay' amount={30} payMode='Deposit' jobId={this.state.jobID} callback={this.callbackPayment} />);
+    }
+    else if (status === 'done') {
+      // ส่วนที่เหลือ
+      return (<PaymentModal mode='card' addPay='pay' amount={70} payMode='Total' jobId={this.state.jobID} callback={this.callbackPayment} />);
+    } else {
+      return '';
+    }
   }
 
   render() {
@@ -340,9 +368,10 @@ class Dashboard extends React.Component {
       container = this.renderReload();
     }
     return (<>
-              {this.renderNav()}
-              {container}
-            </>)
+      {this.renderNav()}
+      {this.renderPayment(this.state.jobStatus)}
+      {container}
+    </>)
   }
 }
 
@@ -369,15 +398,15 @@ class FreelancerBox extends React.Component {
 
   checkChatRoom = (friendId, friendName) => {
     const userId = LocalStorageService.getUserID();
-    var ids = [parseInt(friendId),parseInt(userId)].sort((a, b)=>{return a-b});
-    var chatroom = ids[0]+"-"+ids[1];
+    var ids = [parseInt(friendId), parseInt(userId)].sort((a, b) => { return a - b });
+    var chatroom = ids[0] + "-" + ids[1];
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId.toString()).doc(chatroom);
-    docRef.get().then( doc => {
+    docRef.get().then(doc => {
       LocalStorageService.setChatroom(chatroom);
       LocalStorageService.setChatWithName(friendName);
       LocalStorageService.setChatWithId(friendId);
       if (!doc.exists) {
-        this.addChatRoom(userId,friendId,chatroom,friendName);
+        this.addChatRoom(userId, friendId, chatroom, friendName);
       } else {
         window.location.href = '/chat';
       }
@@ -406,12 +435,12 @@ class FreelancerBox extends React.Component {
           id: userId.toString(),
           lasttime: time,
           read: false
-        }).then(()=>{
+        }).then(() => {
           window.location.href = '/chat';
         }).catch(error => {
           alert("Error adding chatroom 2:", error);
         });
-    });
+      });
   };
 
   handleSelect = e => {
@@ -423,8 +452,8 @@ class FreelancerBox extends React.Component {
     axios
       .delete(
         utilities["backend-url"] +
-          "/contracts/deleteByJobId/" +
-          this.props.jobId
+        "/contracts/deleteByJobId/" +
+        this.props.jobId
       )
       .then(res => {
         console.log(res.data);
@@ -459,38 +488,38 @@ class FreelancerBox extends React.Component {
         <td>{item.bid}</td>
         <td>
           {this.state.contract !== null &&
-          this.state.contract.freelancerId === item.userId ? (
-            <button
-              type="button"
-              className="btn btn-danger"
-              disabled={
-                this.state.contract !== null &&
-                this.state.contract.freelancerId !== item.userId
-              }
-              name={item.userId}
-              onClick={this.handleCancel.bind(this)}
-            >
-              cancel
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="btn btn-primary"
-              disabled={
-                this.state.contract !== null &&
-                this.state.contract.freelancerId != item.userId
-              }
-              name={item.userId}
-              onClick={this.handleSelect.bind(this)}
-            >
-              select
-            </button>
-          )}
+            this.state.contract.freelancerId === item.userId ? (
+              <button
+                type="button"
+                className="btn btn-danger"
+                disabled={
+                  this.state.contract !== null &&
+                  this.state.contract.freelancerId !== item.userId
+                }
+                name={item.userId}
+                onClick={this.handleCancel.bind(this)}
+              >
+                cancel
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="btn btn-primary"
+                disabled={
+                  this.state.contract !== null &&
+                  this.state.contract.freelancerId != item.userId
+                }
+                name={item.userId}
+                onClick={this.handleSelect.bind(this)}
+              >
+                select
+              </button>
+            )}
         </td>
       </tr>
     ));
   }
-  onInvite(){
+  onInvite() {
     window.location.href = "/freelancersearch"
   }
   render() {
@@ -506,28 +535,28 @@ class FreelancerBox extends React.Component {
           this.state.freelancerList.length === 0 ? (
             "No one interested yet"
           ) : (
-            <>
-              <div className="table-container-f">
-                <Table className="table-freelancer" responsive="sm" hover>
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Name</th>
-                      <th>score</th>
-                      <th>BiddedWage(THB)</th>
-                      <th>select</th>
-                    </tr>
-                  </thead>
-                  <tbody>{this.showInterestedList()}</tbody>
-                </Table>
-              </div>
-              <div className="footer">
-                <button type="button" className="btn btn-success" onClick={this.onInvite}>
-                  invite
+              <>
+                <div className="table-container-f">
+                  <Table className="table-freelancer" responsive="sm" hover>
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>score</th>
+                        <th>BiddedWage(THB)</th>
+                        <th>select</th>
+                      </tr>
+                    </thead>
+                    <tbody>{this.showInterestedList()}</tbody>
+                  </Table>
+                </div>
+                <div className="footer">
+                  <button type="button" className="btn btn-success" onClick={this.onInvite}>
+                    invite
                 </button>
-              </div>
-            </>
-          )
+                </div>
+              </>
+            )
         }
       />
     );
@@ -666,17 +695,17 @@ class DashboardResponsible extends React.Component {
     }
   }
 
-  checkChatRoom = (friendId,friendName) => {
+  checkChatRoom = (friendId, friendName) => {
     const userId = LocalStorageService.getUserID();
-    var ids = [parseInt(friendId),parseInt(userId)].sort((a, b)=>{return a-b});
-    var chatroom = ids[0]+"-"+ids[1];
+    var ids = [parseInt(friendId), parseInt(userId)].sort((a, b) => { return a - b });
+    var chatroom = ids[0] + "-" + ids[1];
     var docRef = firebase.firestore().collection("message").doc("chatroom").collection(userId.toString()).doc(chatroom);
-    docRef.get().then( doc => {
+    docRef.get().then(doc => {
       LocalStorageService.setChatroom(chatroom);
       LocalStorageService.setChatWithName(friendName);
       LocalStorageService.setChatWithId(friendId);
       if (!doc.exists) {
-        this.addChatRoom(userId,friendId,chatroom,friendName);
+        this.addChatRoom(userId, friendId, chatroom, friendName);
       } else {
         window.location.href = '/chat';
       }
@@ -705,12 +734,12 @@ class DashboardResponsible extends React.Component {
           id: userId.toString(),
           lasttime: time,
           read: false,
-        }).then(()=>{
+        }).then(() => {
           window.location.href = '/chat';
         }).catch(error => {
           alert("Error adding chatroom 2:", error);
         });
-    });
+      });
   };
   async getUserFromJob() {
     axios.defaults.headers.common["Authorization"] =
@@ -747,8 +776,8 @@ class DashboardResponsible extends React.Component {
       });
   }
 
-  goProfile(){
-    window.location.href = "/profile/"+this.state.userId
+  goProfile() {
+    window.location.href = "/profile/" + this.state.userId
   }
   getResponsibleComponent() {
     return (
