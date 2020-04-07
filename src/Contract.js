@@ -281,10 +281,15 @@ class Contract extends React.Component{
             console.log(res.data)
             let time;
             if(res.data.status === "accepted"){
-                time = res.data.updatedTime;
+                time = res.data.acceptedTime;
             }
             else{
-                time = res.data.acceptedTime
+                if(res.data.updatedTime === null){
+                    time = res.data.createdTime;
+                }else{
+                    time = res.data.updatedTime;
+                }
+                
             }
             this.setState({
                 contractId : res.data.contractId,
