@@ -33,3 +33,12 @@
     float: center;
     margin-top: 30vh;
 }
+::-webkit-scrollbar {
+    width: 10px;
+    background: #FFC655; 
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: #254380; 
+    border-radius: 5px;
+}
