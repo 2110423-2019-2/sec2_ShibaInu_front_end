@@ -21,3 +21,8 @@ html, body, .main-background {
     margin-top: 10px;
     padding-bottom: 10px;
   }
+  #announce-area {
+    height: 150px;
+    overflow: scroll;
+    overflow-x: hidden;
+  }

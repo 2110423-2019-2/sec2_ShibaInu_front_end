@@ -109,7 +109,11 @@ class Home extends React.Component {
               <h3><FaBullhorn /> Announcement</h3>
             </Col>
           </Row>
-          {announce}
+          <Row id="announce-area">
+            <Container >
+              {announce}
+            </Container>
+          </Row>
           <Row className="mt-3">
             <Col className="bg-light shadow" xl={8} offset={1}>
               <h2 id="recentjob-topic">Recent Job Offering</h2>
