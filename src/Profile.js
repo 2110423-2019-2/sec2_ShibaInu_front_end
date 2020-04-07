@@ -19,7 +19,7 @@ import {
   ReviewListItem,
   ProfileImageModal
 } from "./ProfileModal";
-import { Container } from "react-bootstrap";
+import { Container,Spinner } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
 var utilities = require("./Utilities.json");
 class Profile extends React.Component {
@@ -106,7 +106,7 @@ class Profile extends React.Component {
       ),
     );
   }
-  fetch() {
+  async fetch() {
     let months = [
       "January",
       "Febuary",
@@ -127,9 +127,9 @@ class Profile extends React.Component {
       this.setState({isMyProfile : false})
     }
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-    axios
+    await axios
       .get(utilities["backend-url"]+"/users/" + this.state.userId)
-      .then(res => {
+      .then(async (res) => {
         console.log(res);
         let body = res.data;
         let bdate = new Date(body.dateOfBirth);
@@ -147,7 +147,7 @@ class Profile extends React.Component {
         if (body.experience !== null) {
           exp_json = JSON.parse(body.experience);
         }
-        axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,{ responseType: 'arraybuffer' },)
+        await axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,{ responseType: 'arraybuffer' },)
         .then(res=>{
           this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res)});
           console.log(res);
@@ -196,6 +196,12 @@ class Profile extends React.Component {
       });
       
   }
+  renderReload() {
+    return (<Spinner animation="border" role="status" className="loading">
+      <span className="sr-only">Loading...</span>
+    </Spinner>);
+  }
+
   render() {
     let invite_btn = <button
     type="button"
@@ -213,12 +219,15 @@ class Profile extends React.Component {
     >
     verify
     </button>
-    /*if(!this.state.isLoaded){
+    
+    if(!this.state.isLoaded){
       return(
         <>
+         <NavBar mode="client" userDatas={this.state.data} />
+         {this.renderReload()}
         </>
       );
-    }*/
+    }
     return (
       <>
         <NavBar mode="client" userDatas={this.state.data} />
