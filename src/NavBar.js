@@ -33,12 +33,13 @@ class NavBar extends React.Component {
       },
       mode: LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
-      userDatas: {},
-      notiDatas: {},
+      userDatas: [],
+      notiDatas: [],
       isNotiLoad: false,
       unreadRoom: 0,
-      newNoti: 1,
+      newNoti: 0,
       firstLoadUnreadChat: true,
+      firstLoadNoti: true,
     };
   }
 
@@ -52,13 +53,6 @@ class NavBar extends React.Component {
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
       });
-    axios
-      .get(utilities["backend-url"] + "/notification/" + this.state.userID)
-      .then((res) => {
-        const notiDatas = res.data;
-        this.setState({ notiDatas: notiDatas, isNotiLoad: true });
-        console.log(this.state.notiDatas);
-      });
   };
 
   checkNewMessage = () => {
@@ -70,14 +64,14 @@ class NavBar extends React.Component {
         .collection(this.state.userID);
       // Start listening to the query.
       query.onSnapshot((snapshot) => {
-        if(this.state.firstLoadUnreadChat){
+        if (this.state.firstLoadUnreadChat) {
           var unreadRoom = 0;
         } else {
           var unreadRoom = this.state.unreadRoom;
         }
         snapshot.docChanges().forEach((change) => {
           var room = change.doc.data();
-          if(this.state.firstLoadUnreadChat){
+          if (this.state.firstLoadUnreadChat) {
             if (room.read === false) {
               unreadRoom += 1;
             }
@@ -95,18 +89,124 @@ class NavBar extends React.Component {
     }
   };
 
+  makeData = () => {
+    if (this.state.userID !== "") {
+      firebase
+        .firestore()
+        .collection("notification")
+        .doc("notification")
+        .collection(this.state.userID.toString())
+        .add({
+          topic: "TestNoti3",
+          detail: "noti3",
+          link: "/freelancer/home",
+          createtime: firebase.firestore.FieldValue.serverTimestamp(),
+          read: false,
+        })
+        .catch((error) => {
+          alert("Error adding noti:", error);
+        });
+    }
+  };
+
+  checkNoti = () => {
+    if (this.state.userID !== "") {
+      var query = firebase
+        .firestore()
+        .collection("notification")
+        .doc("notification")
+        .collection(this.state.userID.toString())
+        .orderBy("createtime", "asc");
+      // Start listening to the query.
+      query.onSnapshot((snapshot) => {
+        if (this.state.firstLoadNoti) {
+          var notiDatas = [];
+          var newNoti = 0;
+        } else {
+          var notiDatas = this.state.notiDatas;
+          var newNoti = this.state.newNoti;
+        }
+        snapshot.docChanges().forEach((change) => {
+          var noti = change.doc.data();
+          if (this.state.firstLoadNoti) {
+            notiDatas.push({
+              id: change.doc.id,
+              topic: noti.topic,
+              detail: noti.detail,
+              link: noti.link,
+              read: noti.read,
+            });
+            if (noti.read === false) {
+              newNoti += 1;
+            }
+          } else {
+            if (noti.read === true) {
+              newNoti -= 1;
+            } else {
+              newNoti += 1;
+            }
+            for (let i = 0; i < notiDatas.length; i++) {
+              if (change.doc.id === notiDatas[i].id) {
+                notiDatas[i].read = true;
+              }
+            }
+          }
+        });
+        this.setState({
+          notiDatas: notiDatas,
+          newNoti: newNoti,
+          firstLoadNoti: false,
+        });
+        console.log(this.state.notiDatas);
+      });
+    }
+  };
+
   componentDidMount = () => {
     this.fetchDatas();
     this.checkNewMessage();
+    //this.makeData();
+    this.checkNoti();
   };
 
-  readNoti = (notiID, idx) => {
-    let notiDatas = this.state.notiDatas;
-    notiDatas[idx].isRead = true;
-    this.setState({ notiDatas: notiDatas });
-    axios.patch(
-      utilities["backend-url"] + "/notification/" + this.state.userID
-    );
+  readNoti = (notiData) => {
+    //update status read
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc("notification")
+      .collection(this.state.userID.toString())
+      .doc(notiData.id)
+      .update({
+        read: true,
+      }).then(()=>{
+        console.log("a");
+        window.location.href = notiData.link;
+      })
+      .catch(function (error) {
+        console.error("Error updating status read", error);
+      });
+  };
+
+  notiList = () => {
+    if (this.state.notiDatas !== []) {
+      return this.state.notiDatas.map((notiData, idx) => (
+        <DropdownItem
+          key={idx}
+          className={
+            notiData.read
+              ? "color-black noti"
+              : "color-black background-yellow noti"
+          }
+          onClick={() => {
+            this.readNoti(notiData);
+          }}
+        >
+          <h5>{notiData.topic}</h5>
+          <p>{notiData.detail}</p>
+        </DropdownItem>
+      ));
+    }
   };
 
   render() {
@@ -128,7 +228,7 @@ class NavBar extends React.Component {
       chatMenu;
     var jobPath = "/" + this.state.mode + "/job";
 
-    var newNotiDetail, oldNotiDetail;
+    /*var newNotiDetail, oldNotiDetail;
     if (this.state.isNotiLoad) {
       newNotiDetail = this.state.notiDatas
         .filter((noti) => noti.isRead === false)
@@ -159,6 +259,7 @@ class NavBar extends React.Component {
           </DropdownItem>
         ));
     }
+*/
 
     notiMenu = (
       <UncontrolledDropdown nav inNavbar>
@@ -168,8 +269,7 @@ class NavBar extends React.Component {
           </Badge>
         </DropdownToggle>
         <DropdownMenu right id="noti-box">
-          {newNotiDetail}
-          {oldNotiDetail}
+          {this.notiList()}
         </DropdownMenu>
       </UncontrolledDropdown>
     );
