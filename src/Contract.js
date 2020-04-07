@@ -12,6 +12,7 @@ class Contract extends React.Component{
     constructor(props){
         super(props)
         this.state={
+            contractId : null,
             jobId: this.props.params.jobId,
             bidwage : -1,
             clientId: null,
@@ -122,31 +123,98 @@ class Contract extends React.Component{
           return false;
     }
     handleAccept(){
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        axios
-        .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
-            status : "accepted"
-        })
-        .then(()=>{
-            window.history.back();
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        swal({
+            title: "Are you sure?",
+            text: "Once Accept, you will not be able to cancel this  contract!",
+            icon: "success",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then(async(confirm) => {
+            if (confirm) {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+                let status;
+                await axios
+                .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+                .then(res=>{
+                    status = res.data.status;
+                }).catch(err=>{
+                    console.log(err)
+                })
+                if(status != null && status === "accepted"){
+                    swal("Error occured!", {
+                        icon: "error",
+                    });
+                    return;
+                }
+                await axios
+                .patch(utilities["backend-url"] + "/contracts/accept/" + this.state.contractId,{
+                    status : "accepted"
+                })
+                .then(()=>{
+                    swal("Your new contract has been submit, You will go back in 3 seconds", {
+                        icon: "success",
+                        timer : 3000,
+                        buttons : false,
+                    });
+                    this.redirect(3000)
+                })
+                .catch(err=>{
+                    console.log(err);
+                    swal("Error occured!", {
+                        icon: "error",
+                    });
+                })
+            }
+          })
+        
     }
+
     handleDecline(){
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        axios
-        .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
-            status : "rejected"
-        })
-        .then(res=>{
-            console.log(res);
-            window.history.back();
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+        swal({
+            title: "Are you sure?",
+            text: "Once Decline, you will not be able to cancel this  contract!",
+            icon: "success",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then(async(confirm) => {
+            if (confirm) {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+                let status;
+                await axios
+                .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+                .then(res=>{
+                    status = res.data.status;
+                }).catch(err=>{
+                    console.log(err)
+                })
+                if(status != null && status === "accepted"){
+                    swal("Error occured!", {
+                        icon: "error",
+                    });
+                    return;
+                }
+                await axios
+                .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
+                    status : "rejected"
+                })
+                .then(()=>{
+                    swal("Your new contract has been submit, You will go back in 3 seconds", {
+                        icon: "success",
+                        timer : 3000,
+                        buttons : false,
+                    });
+                    this.redirect(3000)
+                })
+                .catch(err=>{
+                    console.log(err);
+                    swal("Error occured!", {
+                        icon: "error",
+                    });
+                })
+            }
+          })
     }
     async componentDidMount(){
         this.setState({mode : LocalStorageService.getUserMode()});
@@ -211,12 +279,24 @@ class Contract extends React.Component{
         .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
         .then(res =>{
             console.log(res.data)
-            
+            let time;
+            if(res.data.status === "accepted"){
+                time = res.data.acceptedTime;
+            }
+            else{
+                if(res.data.updatedTime === null){
+                    time = res.data.createdTime;
+                }else{
+                    time = res.data.updatedTime;
+                }
+                
+            }
             this.setState({
+                contractId : res.data.contractId,
                 currData:{price : res.data.price, text : res.data.description||example},
                 editedData:{price : res.data.price, text : res.data.description||example},
                 freelancerId : res.data.freelancerId,
-                modifiedTime : res.data.updatedTime,
+                modifiedTime : time,
                 status : res.data.status,
                 loadContractData:true,
                 creating : false,
@@ -250,6 +330,18 @@ class Contract extends React.Component{
     async onUpdateContract(){
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         let ans = {result : null, error: null};
+        let status;
+        await axios
+        .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+        .then(res=>{
+            status = res.data.status;
+        }).catch(err=>{
+            console.log(err)
+        })
+        if(status != null && status === "accepted"){
+            ans.error = "error,contact was accepted"
+            return ans;
+        }
         await axios
         .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId,{
             price : this.state.editedData.price,
