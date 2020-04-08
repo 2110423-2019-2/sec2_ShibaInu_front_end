@@ -609,6 +609,8 @@ class DashboardStatus extends React.Component {
       case "working":
         return "warning";
       case "done":
+        return "primary";
+      case "closed":
         return "Danger";
       default:
         return "primary";
@@ -911,6 +913,10 @@ class DashboardTimeline extends React.Component {
         {
           status: "done",
           datetime: this.setDateFormat(this.props.timelineDetail.doneTime)
+        },
+        {
+          status: "closed",
+          datetime: this.setDateFormat(this.props.timelineDetail.closedTime)
         }
       ],
       currentStatus: this.props.status || "default"
