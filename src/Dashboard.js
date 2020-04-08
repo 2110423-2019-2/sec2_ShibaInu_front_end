@@ -29,6 +29,7 @@ class Dashboard extends React.Component {
       loadFreelancer: false,
       mode: LocalStorageService.getUserMode(),
       jobname: "Default job name",
+      clientId: null,
       loadJob: false,
       jobStatus: null,
       timelineDetail: {
@@ -67,6 +68,7 @@ class Dashboard extends React.Component {
       this.getjobDetail();
       this.checkContract();
     }
+
   }
 
   formatJPGtopath(res) {
@@ -200,7 +202,8 @@ class Dashboard extends React.Component {
       .then(res => {
         this.setState({
           jobname: res.data.name,
-          jobStatus: res.data.status
+          jobStatus: res.data.status,
+          clientId: res.data.client ? res.data.client.userId : null
         });
 
         let timelineDetail = {
@@ -217,6 +220,10 @@ class Dashboard extends React.Component {
         this.setState({
           loadJob: true
         });
+
+        if ((this.state.jobStatus === 'accepted' || this.state.jobStatus === 'done') && this.state.clientId === parseInt(LocalStorageService.getUserID())) {
+          this.setState({ showPayment: true });
+        }
       })
       .catch(error => {
         if (error.response.status === 401) {
@@ -336,21 +343,29 @@ class Dashboard extends React.Component {
 
     // Transfer money to freelancer here if status is done
 
-    if(reload) {
-      window.location.reload();
+    if (reload) {
+      this.componentWillMount();
+      // window.location.reload();
     }
   }
 
   renderPayment = (status) => {
+
+    if (!this.state.showPayment || this.state.clientId !== parseInt(LocalStorageService.getUserID())) {
+      return '';
+    }
+
+    const totalPrice = this.state.contract ? this.state.contract.price : 0;
+    const down = parseInt(totalPrice * 0.1);
+    const full = parseInt(totalPrice - down);
+
     if (status === 'accepted') {
       // มัดจำ
-      return (<PaymentModal mode='card' addPay='pay' amount={30} payMode='Deposit' jobId={this.state.jobID} callback={this.callbackPayment} />);
+      return (<PaymentModal mode='card' addPay='pay' amount={down} payMode='Down payment' jobId={this.state.jobID} callback={this.callbackPayment} />);
     }
     else if (status === 'done') {
       // ส่วนที่เหลือ
-      return (<PaymentModal mode='card' addPay='pay' amount={70} payMode='Total' jobId={this.state.jobID} callback={this.callbackPayment} />);
-    } else {
-      return '';
+      return (<PaymentModal mode='card' addPay='pay' amount={full} payMode='Full Payment' jobId={this.state.jobID} callback={this.callbackPayment} />);
     }
   }
 
