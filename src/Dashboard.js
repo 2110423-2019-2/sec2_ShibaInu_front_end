@@ -336,12 +336,44 @@ class Dashboard extends React.Component {
     return (<NavBar mode={this.state.mode} userDatas={""} />);
   }
 
+  transferMoneyToFreelancer = () => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+    axios.post(utilities['backend-url'] + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price })
+      .then(res => {
+        console.log(res.data);
+        if (res.status === 201) {
+          this.changeStatus('closed');
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+
+  changeStatus = (jobStatus) => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+    axios.patch(utilities['backend-url'] + "/jobs/" + this.state.jobID, { status: jobStatus })
+      .then(res => {
+        console.log(res.status);
+        if (res.status === 201) {
+          this.componentWillMount();
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+
   callbackPayment = (status = false, reload = false) => {
     this.setState({
       showPayment: status
     });
 
-    // Transfer money to freelancer here if status is done
+    if (this.state.jobStatus === 'accepted') {
+      this.changeStatus('working');
+    } else if (this.state.jobStatus === 'done') {
+      this.transferMoneyToFreelancer();
+    }
 
     if (reload) {
       this.componentWillMount();
