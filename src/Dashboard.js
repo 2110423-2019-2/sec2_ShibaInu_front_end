@@ -364,19 +364,19 @@ class Dashboard extends React.Component {
       });
   }
 
-  callbackPayment = (status = false, reload = false) => {
+   callbackPayment = async (status = false, reload = false) => {
     this.setState({
       showPayment: status
     });
 
     if (this.state.jobStatus === 'accepted') {
-      this.changeStatus('working');
+      await this.changeStatus('working');
     } else if (this.state.jobStatus === 'done') {
-      this.transferMoneyToFreelancer();
+      await this.transferMoneyToFreelancer();
     }
 
     if (reload) {
-      this.componentWillMount();
+      await this.componentWillMount();
       // window.location.reload();
     }
   }
