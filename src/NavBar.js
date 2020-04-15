@@ -40,6 +40,7 @@ class NavBar extends React.Component {
       newNoti: 0,
       firstLoadUnreadChat: true,
       firstLoadNoti: true,
+      isUserDataLoad : false, //tested
     };
   }
 
@@ -52,6 +53,8 @@ class NavBar extends React.Component {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
+      }).then((res)=>{
+        this.setState({isUserDataLoad : true}) //tested
       });
   };
 
@@ -433,7 +436,9 @@ class NavBar extends React.Component {
         {userMode}
       </Navbar.Brand>
     );
-
+    if(this.state.isUserDataLoad === false){ //tested
+      return null; 
+    }
     return (
       <Navbar expand="lg" id="navbar" sticky="top" className="shadow">
         {logoBrand}
