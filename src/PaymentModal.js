@@ -169,11 +169,18 @@ class PaymentModal extends React.Component {
                         <Card.Header>
                             Credit Card
                     </Card.Header>
-                        {props.isLoading ? (<this.renderLoading />) : (
-                            <Card.Body>
-                                <h5>{this.state.cardData.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.cardData.cardNumber.substring(12)}</h5><br />
-                                <p>{this.state.cardData.name}</p>
-                            </Card.Body>)}
+                        <Card.Body>
+                            {props.isLoading ? (<this.renderLoading />) : 
+                            !this.state.cardData ? 
+                            (<>
+                                <p>No credit card. Please add at My payment.</p>
+                                <Button variant='success' onClick={() => {window.location.href = '/payment'}}>My payment</Button>
+                            </>) :
+                            (<>
+                                    <h5>{this.state.cardData.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.cardData.cardNumber.substring(12)}</h5><br />
+                                    <p>{this.state.cardData.name}</p>
+                                </>)}
+                        </Card.Body>
                     </Card>
                 </Form.Group>
                 <Form.Group>

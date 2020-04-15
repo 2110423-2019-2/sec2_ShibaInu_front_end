@@ -29,6 +29,7 @@ class Dashboard extends React.Component {
       loadFreelancer: false,
       mode: LocalStorageService.getUserMode(),
       jobname: "Default job name",
+      clientId: null,
       loadJob: false,
       jobStatus: null,
       timelineDetail: {
@@ -67,6 +68,7 @@ class Dashboard extends React.Component {
       this.getjobDetail();
       this.checkContract();
     }
+
   }
 
   formatJPGtopath(res) {
@@ -200,7 +202,8 @@ class Dashboard extends React.Component {
       .then(res => {
         this.setState({
           jobname: res.data.name,
-          jobStatus: res.data.status
+          jobStatus: res.data.status,
+          clientId: res.data.client ? res.data.client.userId : null
         });
 
         let timelineDetail = {
@@ -217,6 +220,10 @@ class Dashboard extends React.Component {
         this.setState({
           loadJob: true
         });
+
+        if ((this.state.jobStatus === 'accepted' || this.state.jobStatus === 'done') && this.state.clientId === parseInt(LocalStorageService.getUserID())) {
+          this.setState({ showPayment: true });
+        }
       })
       .catch(error => {
         if (error.response.status === 401) {
@@ -329,28 +336,68 @@ class Dashboard extends React.Component {
     return (<NavBar mode={this.state.mode} userDatas={""} />);
   }
 
-  callbackPayment = (status = false, reload = false) => {
+  transferMoneyToFreelancer = () => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+    axios.post(utilities['backend-url'] + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price })
+      .then(res => {
+        console.log(res.data);
+        if (res.status === 201) {
+          this.changeStatus('closed');
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+
+  changeStatus = (jobStatus) => {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+    axios.patch(utilities['backend-url'] + "/jobs/" + this.state.jobID, { status: jobStatus })
+      .then(res => {
+        console.log(res.status);
+        if (res.status === 201) {
+          this.componentWillMount();
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+
+   callbackPayment = async (status = false, reload = false) => {
     this.setState({
       showPayment: status
     });
 
-    // Transfer money to freelancer here if status is done
+    if (this.state.jobStatus === 'accepted') {
+      await this.changeStatus('working');
+    } else if (this.state.jobStatus === 'done') {
+      await this.transferMoneyToFreelancer();
+    }
 
-    if(reload) {
-      window.location.reload();
+    if (reload) {
+      await this.componentWillMount();
+      // window.location.reload();
     }
   }
 
   renderPayment = (status) => {
+
+    if (!this.state.showPayment || this.state.clientId !== parseInt(LocalStorageService.getUserID())) {
+      return '';
+    }
+
+    const totalPrice = this.state.contract ? this.state.contract.price : 0;
+    const down = parseInt(totalPrice * 0.1);
+    const full = parseInt(totalPrice - down);
+
     if (status === 'accepted') {
       // มัดจำ
-      return (<PaymentModal mode='card' addPay='pay' amount={30} payMode='Deposit' jobId={this.state.jobID} callback={this.callbackPayment} />);
+      return (<PaymentModal mode='card' addPay='pay' amount={down} payMode='Down payment' jobId={this.state.jobID} callback={this.callbackPayment} />);
     }
     else if (status === 'done') {
       // ส่วนที่เหลือ
-      return (<PaymentModal mode='card' addPay='pay' amount={70} payMode='Total' jobId={this.state.jobID} callback={this.callbackPayment} />);
-    } else {
-      return '';
+      return (<PaymentModal mode='card' addPay='pay' amount={full} payMode='Full Payment' jobId={this.state.jobID} callback={this.callbackPayment} />);
     }
   }
 
@@ -594,6 +641,8 @@ class DashboardStatus extends React.Component {
       case "working":
         return "warning";
       case "done":
+        return "primary";
+      case "closed":
         return "Danger";
       default:
         return "primary";
@@ -896,6 +945,10 @@ class DashboardTimeline extends React.Component {
         {
           status: "done",
           datetime: this.setDateFormat(this.props.timelineDetail.doneTime)
+        },
+        {
+          status: "closed",
+          datetime: this.setDateFormat(this.props.timelineDetail.closedTime)
         }
       ],
       currentStatus: this.props.status || "default"

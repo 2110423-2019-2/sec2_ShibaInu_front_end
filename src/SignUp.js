@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import { Form, Button, Col, Spinner } from 'react-bootstrap';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 import NavBar from "./NavBar";
 import logo from './material/Logo.png';
