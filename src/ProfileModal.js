@@ -178,7 +178,11 @@ class ProfileModal extends Component {
                 <Form.Label>Phone Number</Form.Label>
                 <Form.Control
                   defaultValue={this.state.tel}
+                  value={this.state.tel}
                   onChange={e => {
+                    if(e.target.value.length >10){
+                      return;
+                    }
                     this.setState({ tel: e.target.value });
                   }}
                 />
