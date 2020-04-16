@@ -20,8 +20,8 @@ class HomeGuest extends React.Component {
               <h1>Hire expert freelancers for any job, online</h1>
               <p>Millions of small businesses use Freelancer to turn their ideas into reality.</p>
               <div id="btn-group">
-              <button type="button" class="btn btn-outline-light btn-lg">Start Hiring</button>
-              <button type="button" class="btn btn-outline-light btn-lg">Start working</button>
+              <button type="button" className="btn btn-outline-light btn-lg">Start Hiring</button>
+              <button type="button" className="btn btn-outline-light btn-lg">Start working</button>
               </div>
             </div>
           </div>
