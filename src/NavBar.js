@@ -436,7 +436,7 @@ class NavBar extends React.Component {
         {userMode}
       </Navbar.Brand>
     );
-    if(this.state.mode === this.state.status.GUEST && this.state.isUserDataLoad === false){ //tested
+    if(this.state.mode !== this.state.status.GUEST && this.state.isUserDataLoad === false){ //tested
       return null; 
     }
     return (
