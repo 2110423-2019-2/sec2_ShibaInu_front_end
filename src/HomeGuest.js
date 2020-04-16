@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import Background from "./material/GuestBackground.jpg";
 import './HomeGuest.css';
 import LocalStorageService from "./LocalStorageService";
@@ -14,7 +13,6 @@ class HomeGuest extends React.Component {
     LocalStorageService.setUserMode('guest');
     return (
       <div className="main-background" id="home-guest" >
-        <NavBar />
         <div id="navbar-guest">
         </div>
           <div id="bg-overlay" style={{backgroundImage:`linear-gradient(rgba(0, 0, 0, 0.7),rgba(0, 0, 0, 0.5)),url(${Background})`}}>

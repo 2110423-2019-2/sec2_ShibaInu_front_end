@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import './AdminHome.css';
 import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
@@ -191,7 +190,6 @@ class AdminHome extends React.Component {
     }
     return (
       <div className="main-background">
-        <NavBar />
         <Container id="adminHome-box">
           <Row>
             <Col>

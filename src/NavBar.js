@@ -170,6 +170,7 @@ class NavBar extends React.Component {
     this.checkNewMessage();
     //this.makeData();
     this.checkNoti();
+    console.log(this.state.mode);
   };
 
   readNoti = (notiData) => {

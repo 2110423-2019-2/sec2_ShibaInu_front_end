@@ -1,6 +1,5 @@
 import React from "react";
 import "./SearchPage.css";
-import NavBar from "./NavBar";
 import axios from "axios";
 import {
   Container,
@@ -305,7 +304,6 @@ class FreelancerSearchPage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
         <div className="search-page">
           <Container>
             <Row>

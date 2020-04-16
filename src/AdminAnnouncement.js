@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import "./AdminAnnouncement.css";
@@ -85,7 +84,6 @@ class AdminAnnouncement extends React.Component {
     }
     return (
       <div className="main-background">
-        <NavBar mode="admin" userDatas={this.state.userDatas} />
         <Container id="admin-announce-box">
           <Row>
             <Col className="background-blue text-light">

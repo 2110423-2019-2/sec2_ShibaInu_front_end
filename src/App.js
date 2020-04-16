@@ -14,7 +14,7 @@ import {
   Route,
   Switch,
   BrowserRouter as Router,
-  useParams
+  useParams,
 } from "react-router-dom";
 import PrivateRoute from "./utilities/PrivateRoute";
 import GuestRoute from "./utilities/GuestRoute";
@@ -26,7 +26,7 @@ import ReviewFreelancer from "./ReviewFreelancer";
 import PaymentPage from "./PaymentPage";
 import Contract from "./Contract";
 import FreelancerSearchPage from "./FreelancerSearchPage";
-import AdminReport from "./AdminReport";
+import NavBar from "./NavBar";
 import AdminReportList from "./AdminReport";
 class App extends React.Component {
   constructor(props) {
@@ -36,55 +36,64 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
-        <Switch>
-          <GuestRoute exact path="/" component={() => <HomeGuest />} />
-          <PrivateRoute path="/client/home" component={() => <HomeClient />} />
-          <Route
-            path="/profile/:userId"
-            component={() => <Profile userId={useParams()} />}
-          />
-          <Route path="/profile/" component={() => <Profile userId={null} />} />
-          <PrivateRoute
-            path="/client/job"
-            component={() => <JobOfferClient />}
-          />
-          <PrivateRoute
-            path="/freelancer/home"
-            component={() => <HomeFreelancer />}
-          />
-          <PrivateRoute
-            path="/freelancer/job"
-            component={() => <JobOfferFreelancer />}
-          />
-          <Route
-            path="/job/:jobid"
-            component={() => <JobPage jobid={useParams()} />}
-          />
-          <PrivateRoute path="/jobcreate" component={JobCreatePage} />
-          <Route path="/jobsearch" component={JobSearchPage} />
-          <Route path="/freelancersearch" component={FreelancerSearchPage} />
-          <GuestRoute path="/signin" component={SignIn} />
-          <GuestRoute path="/signup" component={SignUp} />
-          <PrivateRoute
-            path="/dashboard/:jobId"
-            component={() => <Dashboard params={useParams()} />}
-          />
-          <PrivateRoute path="/admin/home" component={AdminHome} />
-          <PrivateRoute
-            path="/admin/announcement"
-            component={AdminAnnouncement}
-          />
-          <PrivateRoute path="/client/review" component={ReviewFreelancer} />
-          <PrivateRoute path="/payment" component={PaymentPage} />
-          <PrivateRoute path="/chat" component={ChatSystem} />
-          <PrivateRoute path="/contract/:jobId/:freelancerId" component={() => <Contract params={useParams()}/>} />
-          <PrivateRoute
-            path="/admin/report"
-            component={AdminReportList}
-          />
-        </Switch>
-      </Router>
+      <div>
+        <NavBar />
+        <Router>
+          <Switch>
+            <GuestRoute exact path="/" component={() => <HomeGuest />} />
+            <PrivateRoute
+              path="/client/home"
+              component={() => <HomeClient />}
+            />
+            <Route
+              path="/profile/:userId"
+              component={() => <Profile userId={useParams()} />}
+            />
+            <Route
+              path="/profile/"
+              component={() => <Profile userId={null} />}
+            />
+            <PrivateRoute
+              path="/client/job"
+              component={() => <JobOfferClient />}
+            />
+            <PrivateRoute
+              path="/freelancer/home"
+              component={() => <HomeFreelancer />}
+            />
+            <PrivateRoute
+              path="/freelancer/job"
+              component={() => <JobOfferFreelancer />}
+            />
+            <Route
+              path="/job/:jobid"
+              component={() => <JobPage jobid={useParams()} />}
+            />
+            <PrivateRoute path="/jobcreate" component={JobCreatePage} />
+            <Route path="/jobsearch" component={JobSearchPage} />
+            <Route path="/freelancersearch" component={FreelancerSearchPage} />
+            <GuestRoute path="/signin" component={SignIn} />
+            <GuestRoute path="/signup" component={SignUp} />
+            <PrivateRoute
+              path="/dashboard/:jobId"
+              component={() => <Dashboard params={useParams()} />}
+            />
+            <PrivateRoute path="/admin/home" component={AdminHome} />
+            <PrivateRoute
+              path="/admin/announcement"
+              component={AdminAnnouncement}
+            />
+            <PrivateRoute path="/client/review" component={ReviewFreelancer} />
+            <PrivateRoute path="/payment" component={PaymentPage} />
+            <PrivateRoute path="/chat" component={ChatSystem} />
+            <PrivateRoute
+              path="/contract/:jobId/:freelancerId"
+              component={() => <Contract params={useParams()} />}
+            />
+            <PrivateRoute path="/admin/report" component={AdminReportList} />
+          </Switch>
+        </Router>
+      </div>
     );
   }
 }

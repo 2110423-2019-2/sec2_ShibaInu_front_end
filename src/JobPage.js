@@ -1,7 +1,6 @@
 import React from "react";
 import "./JobPage.css";
 import axios from "axios";
-import NavBar from "./NavBar";
 import {
   Container,
   Row,
@@ -303,7 +302,6 @@ class JobPage extends React.Component {
     let jobid = this.props.jobid;
     return (
       <div>
-        <NavBar />
         <div class="job-page">
           <Container>
             <Row>

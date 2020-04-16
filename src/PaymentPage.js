@@ -1,8 +1,6 @@
 import React from 'react';
 import { Nav, Container, Row, Col, Table, Card, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-
-import NavBar from './NavBar';
 import PaymentModal from './PaymentModal';
 import LocalStorageService from './LocalStorageService';
 const utilities = require('./Utilities.json');
@@ -266,7 +264,6 @@ class PaymentPage extends React.Component {
         return !this.state.loadedData() ? <this.renderReload /> : (
             <div>
                 {!this.state.showModal ? '' : <PaymentModal mode={this.state.modalMode} addPay='add' callback={this.showHideModalCallback} />}
-                <NavBar mode='' userDatas='' />
                 <Container id="homeclient-box">
                     <Container className="bg-light shadow">
                         <Row>
