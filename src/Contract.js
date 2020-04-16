@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, Form, Col, Row, Container, Button, Alert, Spinner } from 'react-bootstrap';
-import NavBar from './NavBar';
 import CKEditor from 'ckeditor4-react';
 import "./Contract.css"
 import example from './contractExample'
@@ -418,14 +417,12 @@ class Contract extends React.Component {
             if (this.state.fetchError.loadJob || this.state.fetchError.loadUser) {
                 return (
                     <>
-                        <NavBar mode={this.state.mode} userDatas={""} />
                         <h1 align="center">you're not allowed to access this page</h1>
                     </>
                 )
             }
             return (
                 <>
-                    <NavBar mode={this.state.mode} userDatas={""} />
                     {this.renderReload()}
                 </>
             )
@@ -433,7 +430,6 @@ class Contract extends React.Component {
         if (this.state.mode === "client" && parseInt(LocalStorageService.getUserID()) !== this.state.clientId) {
             return (
                 <>
-                    <NavBar mode={this.state.mode} userDatas={""} />
                     <h1 align="center">you're not allowed to access this page</h1>
                 </>
             )
@@ -441,7 +437,6 @@ class Contract extends React.Component {
         if (this.state.mode === "freelancer" && parseInt(LocalStorageService.getUserID()) !== this.state.freelancerId) {
             return (
                 <>
-                    <NavBar mode={this.state.mode} userDatas={""} />
                     <h1 align="center">you're not allowed to access this page</h1>
                 </>
             )
@@ -450,7 +445,6 @@ class Contract extends React.Component {
             (!this.state.creating) && this.state.freelancerId.toString() !== this.props.params.freelancerId.toString()) {
             return (
                 <>
-                    <NavBar mode={this.state.mode} userDatas={""} />
                     <h1 align="center">you're not allowed to access this page</h1>
                 </>
             )
@@ -459,7 +453,6 @@ class Contract extends React.Component {
 
         return (this.state.mode === 'freelancer' && !this.state.checkFreelancerBankAccount) ? (
             <>
-                <NavBar mode={this.state.mode} userDatas={""} />
                 <Container>
                     <h3>Please add your bank account on My payment before accepting contract.</h3>
                     <Button variant='success' onClick={() => { window.location.href = '/payment' }}>My payment</Button>
@@ -467,7 +460,6 @@ class Contract extends React.Component {
             </>
         ) : (
                 <>
-                    <NavBar mode={this.state.mode} userDatas={""} />
                     <Container>
                         <Card className="contract-box">
                             <Card.Header className="header">Contract</Card.Header>

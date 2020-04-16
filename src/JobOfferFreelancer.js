@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import "./JobOfferFreelancer.css";
 import {
   Container,
@@ -117,7 +116,6 @@ class JobOfferFreelancer extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar />
         <Container id="homeclient-box">
           <Row>
             <Col className="bg-light shadow">

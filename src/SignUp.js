@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import { Form, Button, Col, Spinner } from 'react-bootstrap';
-
-import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import LocalStorageService from './LocalStorageService';
@@ -167,7 +165,6 @@ class SignUp extends React.Component {
 
         return (
             <div>
-                <NavBar mode='guest' userDatas='' />
                 <div className='SignInSignUp-page'>
                     <div className='left-content'>
                         <span className='left-logo'><img src={logo} id="logo-img" alt="youngstar logo" /></span>

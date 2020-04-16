@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import "./Dashboard.css";
 import profileimage from "./material/profileimg2.png";
 import {
@@ -332,10 +331,6 @@ class Dashboard extends React.Component {
     </Spinner>);
   }
 
-  renderNav() {
-    return (<NavBar mode={this.state.mode} userDatas={""} />);
-  }
-
   transferMoneyToFreelancer = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
@@ -415,7 +410,6 @@ class Dashboard extends React.Component {
       container = this.renderReload();
     }
     return (<>
-      {this.renderNav()}
       {this.renderPayment(this.state.jobStatus)}
       {container}
     </>)

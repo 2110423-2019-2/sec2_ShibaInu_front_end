@@ -2,8 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
-
-import NavBar from "./NavBar";
 import logo from './material/Logo.png';
 import './SignInSignUp.css';
 import LocalStorageService from './LocalStorageService';
@@ -126,7 +124,6 @@ class SignIn extends React.Component {
 
         return (
             <div>
-                <NavBar mode='guest' userDatas='' />
                 <div className='SignInSignUp-page'>
                     <div className='left-content'>
                         <span className='left-logo'><img src={logo} id="logo-img" alt="youngstar logo" /></span>

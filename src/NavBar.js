@@ -170,6 +170,7 @@ class NavBar extends React.Component {
     this.checkNewMessage();
     //this.makeData();
     this.checkNoti();
+    console.log(this.state.mode);
   };
 
   readNoti = (notiData) => {
@@ -436,7 +437,7 @@ class NavBar extends React.Component {
         {userMode}
       </Navbar.Brand>
     );
-    if(this.state.mode === this.state.status.GUEST && this.state.isUserDataLoad === false){ //tested
+    if(this.state.mode !== this.state.status.GUEST && this.state.isUserDataLoad === false){ //tested
       return null; 
     }
     return (

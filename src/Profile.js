@@ -5,7 +5,6 @@ import "./Profile.css";
 import { FaGlobe, FaBirthdayCake } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
 import { MdEmail, MdMyLocation } from "react-icons/md";
-import NavBar from "./NavBar";
 import axios from "axios";
 import {
   ProfileModal,
@@ -223,14 +222,12 @@ class Profile extends React.Component {
     if(!this.state.isLoaded){
       return(
         <>
-         <NavBar mode="client" userDatas={this.state.data} />
          {this.renderReload()}
         </>
       );
     }
     return (
       <>
-        <NavBar mode="client" userDatas={this.state.data} />
         <Container id="profile-container">
           <div className="row-5-xs shadow-sm" id="personal">
             <div className="row" id="pro-bg">

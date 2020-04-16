@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import NavBar from "./NavBar";
 import "./ChatSystem.css";
 import {
   Container,
@@ -284,7 +283,6 @@ class ChatSystem extends React.Component {
   render() {
     return (
       <div className="main-background h-100">
-        <NavBar />
         <Container id="chatsystem-box">
           <Row className="h-100">
             <Col xs={4} className="bg-white shadow text-center">

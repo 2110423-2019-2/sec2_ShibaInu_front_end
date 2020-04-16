@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import "./HomeClient.css";
 import "./HomeFreelancer.css";
 import { Container, Row, Col, Table } from "react-bootstrap";
@@ -102,7 +101,6 @@ class Home extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar />
         <Container id="homeclient-box">
           <Row>
             <Col className="background-blue text-light pt-2 pb-2">

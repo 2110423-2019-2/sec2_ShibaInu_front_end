@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import "./HomeFreelancer.css";
 import { Container, Row, Col, Table, CardDeck } from "react-bootstrap";
 import { FaClock, FaMoneyBill, FaBullhorn, FaInfoCircle } from "react-icons/fa";
@@ -132,7 +131,6 @@ class HomeFreelancer extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar />
         <Container id="homefreelancer-box">
           <Row>
             <Col className="background-blue text-light pt-2 pb-2">

@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import "./JobCreatePage.css";
 import { Form, Row, Col, InputGroup, Button, Card } from "react-bootstrap";
-import NavBar from "./NavBar";
 import LocalStorageService from "./LocalStorageService";
 var utilities = require("./Utilities.json");
 
@@ -81,7 +80,6 @@ class JobCreatePage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
         <Card id="job-create-page">
           <Card.Header>Create New Job Offering</Card.Header>
           <Card.Body>

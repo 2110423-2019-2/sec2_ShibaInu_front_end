@@ -1,6 +1,5 @@
 import React from "react";
 import "./SearchPage.css";
-import NavBar from "./NavBar";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FaCode, FaBtc, FaClock } from "react-icons/fa";
@@ -301,7 +300,6 @@ class JobSearchPage extends React.Component {
   render() {
     return (
       <div>
-        <NavBar />
         <div class="search-page">
           <Container>
             <Row>
