@@ -27,7 +27,7 @@ import PaymentPage from "./PaymentPage";
 import Contract from "./Contract";
 import FreelancerSearchPage from "./FreelancerSearchPage";
 import NavBar from "./NavBar";
-import AdminReport from "./AdminReport";
+import AdminReportList from "./AdminReport";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -90,7 +90,7 @@ class App extends React.Component {
               path="/contract/:jobId/:freelancerId"
               component={() => <Contract params={useParams()} />}
             />
-            <PrivateRoute path="/admin/report" component={AdminReport} />
+            <PrivateRoute path="/admin/report" component={AdminReportList} />
           </Switch>
         </Router>
       </div>
