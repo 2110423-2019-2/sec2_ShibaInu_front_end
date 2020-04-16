@@ -26,6 +26,7 @@ import ReviewFreelancer from "./ReviewFreelancer";
 import PaymentPage from "./PaymentPage";
 import Contract from "./Contract";
 import FreelancerSearchPage from "./FreelancerSearchPage";
+import AdminReport from "./AdminReport";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -77,6 +78,10 @@ class App extends React.Component {
           <PrivateRoute path="/payment" component={PaymentPage} />
           <PrivateRoute path="/chat" component={ChatSystem} />
           <PrivateRoute path="/contract/:jobId/:freelancerId" component={() => <Contract params={useParams()}/>} />
+          <PrivateRoute
+            path="/admin/report"
+            component={AdminReport}
+          />
         </Switch>
       </Router>
     );
