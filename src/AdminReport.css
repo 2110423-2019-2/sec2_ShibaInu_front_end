@@ -1,0 +1,46 @@
+#admin-report-table{
+    margin-top : 2%;
+}
+#admin-report-box{
+    margin-top : 2%;
+    align-items: center;
+}
+#admin-report-card{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+#admin-report-card .header{
+    background-color: #254380;
+    color: white;
+    font-size: 16px;
+}
+.report-message{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 5px;
+    border-top: 2px solid #F5F5F5;
+    padding: 2%;
+}
+.report-message p{
+    text-indent: 5%;
+}
+
+.report-send-message{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 5px;
+    border-top: 2px solid #F5F5F5;
+    padding: 2%;
+}
+#report-back{
+    cursor: pointer;
+}
+#report-back:hover{
+    color: #254380;
+    text-decoration-line: underline;
+}
