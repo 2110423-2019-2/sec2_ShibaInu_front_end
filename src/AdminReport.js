@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Table, Card, Nav, Badge, Form,} from "react-bootstrap";
+import {CSSTransition} from 'react-transition-group';
 import "./AdminReport.css"
 class AdminReportList extends React.Component{
     constructor(props){
@@ -170,16 +171,28 @@ class AdminReportList extends React.Component{
     }
 
     render(){
-        let component =  this.showAllReport();
+        let component;
         if(this.state.showReportDetail){
-            component = (<Report report={this.state.reportDetail} close={()=>this.closeReportDetail()}/>)
+            component = (
+                <Report report={this.state.reportDetail} close={()=>this.closeReportDetail()}/>
+            )
+        }else{
+            component =  this.showAllReport();
         }
         return(
             <>
             <Container>
                 <Row>
-                    <Col>
-                        {component}
+                    <Col>           
+                    <CSSTransition
+                        classNames="fade"
+                        timeout={{
+                            enter: 450,
+                            exit: 450,
+                          }}
+                        in={this.state.showReportDetail}
+                        >{component}
+                        </CSSTransition>
                     </Col>
                 </Row>
             </Container>
