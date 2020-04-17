@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Table, Card, Nav, Badge, Form} from "react-bootstrap";
+import { Container, Row, Col, Table, Card, Nav, Badge, Form,} from "react-bootstrap";
 import "./AdminReport.css"
 class AdminReportList extends React.Component{
     constructor(props){
@@ -199,8 +199,8 @@ class Report extends React.Component{
     }
     showMessage(){
         return this.state.messages.map((msg,index) => (
-            <Container className="report-message" key={index}>
-            <h4>{msg.name} :</h4>
+            <Container className={"report-message "+(msg.name.toString().toLowerCase()==="admin"?"admin":"user")} key={index}>
+            <h6>{msg.name}</h6>
             <p>{msg.text}</p>
             </Container>))
         
@@ -221,9 +221,9 @@ class Report extends React.Component{
             this.setState({report : {...prevReport, description : data[0].desc}})
         }
         /// test data
-        let msg = {name:this.state.report.name,text:"Did you fixed it yet?"}
+        let msg = [{name:this.state.report.name,text:"Did you fixed it yet?"},{name:"Admin",text:"we're solving your problem please keep calm"}]
         ///
-        this.setState({messages : [...prevMsg,msg]})
+        this.setState({messages : [...prevMsg,...msg]})
 
     }
 
@@ -244,30 +244,38 @@ class Report extends React.Component{
                 <Container id="admin-report-box">
                 <h3 id="report-back" onClick={this.props.close}>{"< Back"}</h3>
                 <Card id="admin-report-card">
-                <Card.Header className="header">{this.state.report.topicName}</Card.Header>
+                <Card.Header className="header">Report</Card.Header>
                 <Card.Body>
                 <Row>
                     <Col sm={2}>
-                        Type
+                        <h6>Topic</h6>
                     </Col>
                     <Col>
-                        {this.state.report.type}
+                        <p>{this.state.report.topicName}</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col sm={2}>
-                        Reporter name
+                        <h6>Type</h6>
                     </Col>
                     <Col>
-                        {this.state.report.name}
+                        <p>{this.state.report.type}</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col sm={2}>
-                        Description
+                        <h6>Reporter name </h6>
                     </Col>
                     <Col>
-                        {this.state.report.description}
+                        <p>{this.state.report.name}</p>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={2}>
+                        <h6>Description</h6>
+                    </Col>
+                    <Col>
+                        <p>{this.state.report.description}</p>
                     </Col>
                 </Row>
                 </Card.Body>
