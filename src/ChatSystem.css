@@ -13,17 +13,15 @@
     background-color: #d8d8d8;
 }
 #sendmsg {
-    width: 95%;
-    bottom: 1vh;
-    position: absolute;
+    text-align: center;
 }
 #msgarea {
     width: 100%;
-    position: absolute;
     height: 59vh;
     bottom: 11vh;
     overflow: scroll;
     overflow-x: hidden;
+    align-items: center;
 }
 .selected-room {
     background-color: #FFC655;
@@ -41,4 +39,11 @@
 ::-webkit-scrollbar-thumb {
     background: #254380; 
     border-radius: 5px;
+}
+.msg-allarea {
+    background-color: #fafafa;
+    height: 76%;
+}
+.sendmsg {
+    height: 13%;
 }

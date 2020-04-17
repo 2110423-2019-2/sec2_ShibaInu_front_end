@@ -107,7 +107,7 @@ class Home extends React.Component {
               <h3><FaBullhorn /> Announcement</h3>
             </Col>
           </Row>
-          <Row id="announce-area">
+          <Row id="announce-area" className="shadow">
             <Container >
               {announce}
             </Container>

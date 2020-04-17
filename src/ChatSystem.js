@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import "./ChatSystem.css";
 import {
   Container,
@@ -8,11 +8,11 @@ import {
   InputGroup,
   FormControl,
   Badge,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
-import {FaCircle} from "react-icons/fa";
+import { FaCircle } from "react-icons/fa";
 
 class ChatSystem extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class ChatSystem extends React.Component {
       firstLoadChatroom: true,
       ref: React.createRef(),
       loadChatroomFinished: false,
-      loadChatmsgFinished: false
+      loadChatmsgFinished: false,
     };
   }
 
@@ -52,42 +52,46 @@ class ChatSystem extends React.Component {
       .collection(this.state.userID)
       .orderBy("lasttime", "desc");
     // Start listening to the query.
-    query.onSnapshot(snapshot => {
-      if(this.state.firstLoadChatroom){
+    query.onSnapshot((snapshot) => {
+      if (this.state.firstLoadChatroom) {
         var chatrooms = [];
       } else {
         var chatrooms = this.state.chatrooms;
       }
-      snapshot.docChanges().forEach(change => {
+      snapshot.docChanges().forEach((change) => {
         var room = change.doc.data();
-        if(this.state.firstLoadChatroom){
+        if (this.state.firstLoadChatroom) {
           chatrooms.push({
             id: change.doc.id,
             chatwith: room.name,
             chatwithId: room.id,
             lasttime: room.lasttime,
-            read: room.read
+            read: room.read,
           });
         } else {
           var isNewRoom = true;
-          for(let i=0;i<chatrooms.length;i++){
-            if(chatrooms[i].id === change.doc.id){
+          for (let i = 0; i < chatrooms.length; i++) {
+            if (chatrooms[i].id === change.doc.id) {
               chatrooms[i].read = true;
               isNewRoom = false;
             }
           }
-          if(isNewRoom){
+          if (isNewRoom) {
             chatrooms.push({
               id: change.doc.id,
               chatwith: room.name,
               chatwithId: room.id,
               lasttime: room.lasttime,
-              read: room.read
+              read: room.read,
             });
           }
         }
       });
-      this.setState({ chatrooms: chatrooms, loadChatroomFinished: true, firstLoadChatroom: false });
+      this.setState({
+        chatrooms: chatrooms,
+        loadChatroomFinished: true,
+        firstLoadChatroom: false,
+      });
       console.log(this.state.chatrooms);
     });
   };
@@ -101,9 +105,9 @@ class ChatSystem extends React.Component {
       .add({
         msg: this.state.msg,
         sender: this.state.userID,
-        timesent: firebase.firestore.FieldValue.serverTimestamp()
+        timesent: firebase.firestore.FieldValue.serverTimestamp(),
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Error writing new message to database", error);
       });
     this.setState({ msg: "" });
@@ -118,7 +122,7 @@ class ChatSystem extends React.Component {
       .update({
         read: false,
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Error updating status unread", error);
       });
   };
@@ -133,12 +137,12 @@ class ChatSystem extends React.Component {
       .orderBy("timesent", "asc");
 
     // Start listening to the query.
-    query.onSnapshot(snapshot => {
+    query.onSnapshot((snapshot) => {
       var chatmsgs = this.state.chatmsgs;
       if (this.state.firstLoadMsg) {
         chatmsgs = [];
       }
-      snapshot.docChanges().forEach(change => {
+      snapshot.docChanges().forEach((change) => {
         var message = change.doc.data();
         var pos = "text-left w-100";
         if (message.sender == this.state.userID) {
@@ -148,7 +152,7 @@ class ChatSystem extends React.Component {
           chatmsgs.push({
             sender: message.sender,
             msg: message.msg,
-            pos: pos
+            pos: pos,
           });
         }
       });
@@ -170,7 +174,7 @@ class ChatSystem extends React.Component {
       .update({
         read: true,
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Error updating status read", error);
       });
   };
@@ -179,7 +183,7 @@ class ChatSystem extends React.Component {
     if (!this.state.loadChatroomFinished) {
       return this.loadingChat();
     }
-    return this.state.chatrooms.map(chatroom => (
+    return this.state.chatrooms.map((chatroom) => (
       <Row key={chatroom.id}>
         <Button
           variant="link"
@@ -198,7 +202,7 @@ class ChatSystem extends React.Component {
                 selectedRoom: chatroom.id,
                 chatwith: chatroom.chatwith,
                 chatwithId: chatroom.chatwithId,
-                firstLoadMsg: true
+                firstLoadMsg: true,
               },
               () => {
                 this.loadMsg();
@@ -207,20 +211,23 @@ class ChatSystem extends React.Component {
             console.log(this.state.selectedRoom);
           }}
         >
-          <h4>{chatroom.chatwith}{this.hasNewMessage(chatroom)}</h4>
+          <h4>
+            {chatroom.chatwith}
+            {this.hasNewMessage(chatroom)}
+          </h4>
         </Button>
       </Row>
     ));
   };
 
   hasNewMessage = (chatroom) => {
-    if(chatroom.read === false){
+    if (chatroom.read === false) {
       return <FaCircle className="ml-3 text-danger" />;
     }
-  }
+  };
 
   chatMsg = () => {
-    return this.state.chatmsgs.map(chatmsg => (
+    return this.state.chatmsgs.map((chatmsg) => (
       <div key={chatmsg.id} className="ml-3 mt-3 mr-4 ">
         <div className={chatmsg.pos}>
           <Badge pill variant="info" className="pl-3 pr-3 pt-1 pb-1">
@@ -231,45 +238,59 @@ class ChatSystem extends React.Component {
     ));
   };
 
-  sendMsgDisp = () => {
+  msgDisp = () => {
     if (!this.state.loadChatmsgFinished) {
       return this.loadingChat();
     }
     return (
-      <div>
+      <Row className="msg-allarea shadow">
         <div id="msgarea">
           {this.chatMsg()}
           <div ref={this.state.ref} />
         </div>
-        <div id="sendmsg">
-          <InputGroup className="mb-3 mt-3 ml-1">
-            <FormControl
-              placeholder="Text Here"
-              aria-label="Text Here"
-              aria-describedby="basic-addon2"
-              onChange={e => {
-                this.setState({ msg: e.target.value });
-              }}
-              value={this.state.msg}
-              onKeyDown={e => {
-                if (e.keyCode === 13) {
-                  this.sendMsg();
-                }
-              }}
-            />
-            <InputGroup.Append>
-              <Button variant="dark" onClick={() => this.sendMsg()}>
-                Send
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
-        </div>
-      </div>
+      </Row>
+    );
+  };
+
+  sendMsgDisp = () => {
+    if (!this.state.loadChatmsgFinished) {
+      return;
+    }
+    return (
+      <Row className="bg-white pt-3 pb-3 shadow sendmsg">
+        <InputGroup className="mb-3">
+          <FormControl
+            placeholder="Text Here"
+            aria-label="Text Here"
+            aria-describedby="basic-addon2"
+            onChange={(e) => {
+              this.setState({ msg: e.target.value });
+            }}
+            value={this.state.msg}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                this.sendMsg();
+              }
+            }}
+          />
+          <InputGroup.Append>
+            <Button variant="dark" onClick={() => this.sendMsg()}>
+              Send
+            </Button>
+          </InputGroup.Append>
+        </InputGroup>
+      </Row>
     );
   };
 
   chatWith = () => {
-    return <h2>{"Chat with " + this.state.chatwith}</h2>;
+    return (
+      <Row className="background-blue text-light pt-3 shadow">
+        <Col>
+          <h2>{this.state.chatwith}</h2>
+        </Col>
+      </Row>
+    );
   };
 
   loadingChat = () => {
@@ -278,7 +299,7 @@ class ChatSystem extends React.Component {
         <span className="sr-only">Loading...</span>
       </Spinner>
     );
-  }
+  };
 
   render() {
     return (
@@ -291,10 +312,9 @@ class ChatSystem extends React.Component {
               </Row>
               {this.chatRoom()}
             </Col>
-            <Col xs={7} className="bg-white shadow ml-3 text-center">
-              <Row className="background-blue text-light pt-3 pl-3">
-                {this.chatWith()}
-              </Row>
+            <Col xs={7} className="ml-3 text-center">
+              {this.chatWith()}
+              {this.msgDisp()}
               {this.sendMsgDisp()}
             </Col>
           </Row>
