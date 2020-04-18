@@ -1,32 +1,61 @@
 import React from "react";
 import { Container, Row, Col, Table, Card, Nav, Badge, Form,} from "react-bootstrap";
 import {CSSTransition} from 'react-transition-group';
-import "./AdminReport.css"
+import axios from 'axios';
+import "./AdminReport.css";
+import LocalStorageService from "./LocalStorageService";
+let utilities = require("./Utilities.json");
+
 class AdminReportList extends React.Component{
     constructor(props){
         super(props)
         this.state ={
-            type: {All : "All", Problem : "Problem", Job : "Job", Person : "Person"},
+            type: {All : "all", Problem : "problem", Job : "job", Person : "person",Other : "other"},
             status : {All : "All", Open : "open", Closed : "closed"},
             reports : [],
             reportDetail : null,
             showReportDetail : false,
-            filterType : "All",
+            filterType : "all",
             filterStatus : "All",
+            loadReports : false,
         }
     }
     
-    fetchDatas(){
+    async fetchDatas(){
+        let data = [];
         /// showAllReport api
+        axios.defaults.headers.common["Authorization"] =
+        "Bearer " + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/reports")
+        .then(res=>{
+            res.data
+            .forEach((item)=>{
+                let d = {
+                    reportId : item.reportId,
+                    topicName : item.topicName,
+                    type : item.topicType,
+                    status : item.status,
+                    createdTime : item.createdTime,
+                    name : item.user.firstName+" "+item.user.lastName
+                }
+                data.push(d);
+            })
+        })
+        .catch(err=>{
+            console.log(err);
+        })
         /// test Data
-        let test_data = [{reportId:"1",topicName : "I was accused by Teddy",type : "Person",status : "open",name : "Jolly Bear"},
+        /*let test_data = [{reportId:"1",topicName : "I was accused by Teddy",type : "Person",status : "open",name : "Jolly Bear"},
         {reportId:"2",topicName : "I lost my money",type : "Problem",status : "closed",name : "Teddy Bear"},
         {reportId:"3",topicName : "My job was deleted from job list",type : "Job",status : "open",name : "Teddy Bear"}
         ]
-        ///
-        this.setState({
-            reports : test_data
+        ///*/
+        await this.setState({
+            reports : data,
+            loadReports : true,
         })
+        console.log(data)
     }
 
     setReportStatus(){
@@ -44,11 +73,11 @@ class AdminReportList extends React.Component{
             }
         })
         .filter((report) => {
-            if(this.state.filterType === this.state.type.All){
+            if(this.state.filterType.toLowerCase() === this.state.type.All){
                 return true;
             }
             else{
-                return report.type === this.state.filterType
+                return report.type.toLowerCase() === this.state.filterType
             }
         })
         .map((report,index) => (
@@ -125,6 +154,14 @@ class AdminReportList extends React.Component{
                     Problem
                   </Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-5"
+                    onClick={(e) =>{this.setState({filterType : this.state.type.Other})}}
+                  >
+                    Other
+                  </Nav.Link>
+                </Nav.Item>
                 <Form inline >
                 <Form.Check
                   inline
@@ -171,6 +208,9 @@ class AdminReportList extends React.Component{
     }
 
     render(){
+        if(!this.state.loadReports){
+            return null
+        }
         let component;
         if(this.state.showReportDetail){
             component = (
@@ -188,7 +228,7 @@ class AdminReportList extends React.Component{
                         classNames="fade"
                         timeout={{
                             enter: 450,
-                            exit: 450,
+                            exit: 300,
                           }}
                         in={this.state.showReportDetail}
                         >{component}
@@ -208,6 +248,7 @@ class Report extends React.Component{
             report : {reportId : "",topicName : "",type : "",status : "",name : "", description : ""},
             messages : [],
             sendingMessage : "",
+            loadReport : false,
         }
     }
     showMessage(){
@@ -221,18 +262,32 @@ class Report extends React.Component{
     handleWrite = (e)=>{
         this.setState({sendingMessage : e.target.value})
     }
-    fetchData(){
+    async fetchData(){
         /// fetch for description and messages
+        axios.defaults.headers.common["Authorization"] =
+        "Bearer " + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/reports/"+this.state.report.reportId)
+        .then(res=>{
+            /// get res.data as array which only have 1 member
+            this.setState({
+                report : {...this.state.report,description : res.data[0].description},
+                loadReport : true
+            })
+            console.log(res.data)
+        })
+        .catch(err=>{
+            console.log(err);
+        })
         /// test Data
-        let descList = [{reportId : "1" ,desc : "Two-thirds of those adopting paper-free processes report a payback within 18 months. 50% see payback in under 12 months."},
+        /*let descList = [{reportId : "1" ,desc : "Two-thirds of those adopting paper-free processes report a payback within 18 months. 50% see payback in under 12 months."},
         {reportId : "2" ,desc : "Respondents felt that driving paper out of the process would improve the productivity of process staff by 29.7%. For respondents who understood document management and capture technology, that number rose to 35.4%."},]
-        let data = descList.filter(report => this.state.report.reportId === report.reportId)
+        let data = descList.filter(report => this.state.report.reportId === report.reportId)*/
         ///
-        let prevReport = this.state.report
         let prevMsg = this.state.messages
-        if(data.length > 0){
+        /*if(data.length > 0){
             this.setState({report : {...prevReport, description : data[0].desc}})
-        }
+        }*/
         /// test data
         let msg = [{name:this.state.report.name,text:"Did you fixed it yet?"},{name:"Admin",text:"we're solving your problem please keep calm"}]
         ///
@@ -247,11 +302,14 @@ class Report extends React.Component{
 
     async componentDidMount(){
         await this.setState({
-            report : {...this.props.report}
+            report : {...this.props.report,description:""}
         })
         await this.fetchData();
     }
     render(){
+        if(!this.state.loadReport){
+            return null;
+        }
         return(
             <>
                 <Container id="admin-report-box">
