@@ -66,3 +66,8 @@
     opacity: 1;
     transition: opacity 300ms linear 150ms;
   }
+  .loading{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }

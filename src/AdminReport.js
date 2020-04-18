@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Table, Card, Nav, Badge, Form,} from "react-bootstrap";
+import { Container, Row, Col, Table, Card, Nav, Badge, Form, Spinner} from "react-bootstrap";
 import {CSSTransition} from 'react-transition-group';
 import axios from 'axios';
 import "./AdminReport.css";
@@ -207,9 +207,15 @@ class AdminReportList extends React.Component{
         console.log("blah")
     }
 
+    renderReload() {
+        return (<Spinner animation="border" role="status" className="loading">
+          <span className="sr-only">Loading...</span>
+        </Spinner>);
+    }
+
     render(){
         if(!this.state.loadReports){
-            return null
+            return this.renderReload();
         }
         let component;
         if(this.state.showReportDetail){
@@ -228,7 +234,7 @@ class AdminReportList extends React.Component{
                         classNames="fade"
                         timeout={{
                             enter: 450,
-                            exit: 300,
+                            exit: 450,
                           }}
                         in={this.state.showReportDetail}
                         >{component}
@@ -306,10 +312,49 @@ class Report extends React.Component{
         })
         await this.fetchData();
     }
+
+    renderReload() {
+        return (<Spinner animation="border" role="status" className="loading">
+          <span className="sr-only">Loading...</span>
+        </Spinner>);
+      }
+
     render(){
-        if(!this.state.loadReport){
-            return null;
-        }
+        let showReportDetail = (
+        <>
+        <Row>
+            <Col sm={2}>
+                <h6>Topic</h6>
+            </Col>
+            <Col>
+                <p>{this.state.report.topicName}</p>
+            </Col>
+        </Row>
+        <Row>
+            <Col sm={2}>
+                <h6>Type</h6>
+            </Col>
+            <Col>
+                <p>{this.state.report.type}</p>
+            </Col>
+        </Row>
+        <Row>
+            <Col sm={2}>
+                <h6>Reporter name </h6>
+            </Col>
+            <Col>
+                <p>{this.state.report.name}</p>
+            </Col>
+        </Row>
+        <Row>
+            <Col sm={2}>
+                <h6>Description</h6>
+            </Col>
+            <Col>
+                <p>{this.state.report.description}</p>
+            </Col>
+        </Row>
+        </>)
         return(
             <>
                 <Container id="admin-report-box">
@@ -317,38 +362,9 @@ class Report extends React.Component{
                 <Card id="admin-report-card">
                 <Card.Header className="header">Report</Card.Header>
                 <Card.Body>
-                <Row>
-                    <Col sm={2}>
-                        <h6>Topic</h6>
-                    </Col>
-                    <Col>
-                        <p>{this.state.report.topicName}</p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col sm={2}>
-                        <h6>Type</h6>
-                    </Col>
-                    <Col>
-                        <p>{this.state.report.type}</p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col sm={2}>
-                        <h6>Reporter name </h6>
-                    </Col>
-                    <Col>
-                        <p>{this.state.report.name}</p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col sm={2}>
-                        <h6>Description</h6>
-                    </Col>
-                    <Col>
-                        <p>{this.state.report.description}</p>
-                    </Col>
-                </Row>
+                {
+                    this.state.loadReport?showReportDetail:this.renderReload()
+                }
                 </Card.Body>
                 </Card>
                 {
