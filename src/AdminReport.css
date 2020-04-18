@@ -71,3 +71,12 @@
     left: 50%;
     top: 50%;
   }
+  #admin-report-box #closed{
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+  }
+  #admin-report-box #closed button{
+    width: 10rem;
+    font-size: 20px;
+  }

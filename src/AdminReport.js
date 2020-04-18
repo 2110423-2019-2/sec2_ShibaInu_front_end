@@ -365,7 +365,16 @@ class Report extends React.Component{
                 {
                     this.state.loadReport?showReportDetail:this.renderReload()
                 }
+                
                 </Card.Body>
+                <Card.Footer>
+                {  
+                    this.state.report.status.toLowerCase()==="open"?
+                    <div id="closed"><button className="btn btn-success btn-block">Solve</button></div>
+                    :
+                    null
+                }
+                </Card.Footer>
                 </Card>
                 {
                    this.showMessage()
@@ -385,7 +394,7 @@ class Report extends React.Component{
                     />
                     </Col>
                     <Col md={2}>
-                    <button type="submit" className="btn btn-success btn-block" onClick={()=>this.sendMessage()}>send</button>
+                    <button type="submit" className="btn btn-secondary btn-block" size="sm" onClick={()=>this.sendMessage()}>send</button>
                     </Col>
                 </Row>
                 </Form.Group>
