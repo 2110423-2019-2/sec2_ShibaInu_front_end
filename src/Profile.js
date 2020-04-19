@@ -4,6 +4,7 @@ import profilebg from "./material/profilebg.jpg";
 import "./Profile.css";
 import { FaGlobe, FaBirthdayCake } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
+import {IoMdCheckmarkCircleOutline} from "react-icons/io";
 import { MdEmail, MdMyLocation } from "react-icons/md";
 import axios from "axios";
 import {
@@ -94,7 +95,6 @@ class Profile extends React.Component {
   componentDidUpdate(prevProps){
     if(this.props !== prevProps){
       this.setState({userId : LocalStorageService.getUserID()})
-      console.log(2)
     }
   }
   formatJPGtopath(res){
@@ -202,22 +202,14 @@ class Profile extends React.Component {
   }
 
   render() {
-    let invite_btn = <button
-    type="button"
-    className="btn btn-outline-success"
-    id="verify"
-    hidden={this.state.verified}
-    >
-    invite
-    </button>
-    let verify_btn = <button
+    let verify_btn = (<button
     type="button"
     className="btn btn-outline-dark"
     id="verify"
     hidden={this.state.verified}
     >
     verify
-    </button>
+    </button>)
     
     if(!this.state.isLoaded){
       return(
@@ -251,10 +243,7 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className="col-1">
-              {this.state.isMyProfile&&!this.state.verified?verify_btn:null}
-              </div>
-              <div className="col-1">
-              {!this.state.isMyProfile?invite_btn:null}
+              {this.state.verified?<IoMdCheckmarkCircleOutline size={30} color="green"/>:this.state.isMyProfile?verify_btn:null}
               </div>
               <div className="col-1" id="edit">
                 <ProfileModal
@@ -368,18 +357,20 @@ class Profile extends React.Component {
           </div>
           <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode()==="client"}>
             <h5>Review</h5>
-            <div className="review">
+            {/// responsive problem div have more width than html width
+            /*<div className="review">
               {this.state.reviewlist.length === 0
               ? "No skill yet"
               : this.state.reviewlist.map((item,idx) => 
                 <ReviewListItem
+                  key={idx}
                   reviewername={item.reviewername}
                   description={item.description}
                   score={item.score}
                   jobname={item.jobname}
                 />
               )}
-            </div>
+              </div>*/}
           </div>
         </Container>
       </>

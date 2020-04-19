@@ -58,10 +58,6 @@ class AdminReportList extends React.Component{
         console.log(data)
     }
 
-    setReportStatus(){
-        /// setReportStatus api
-    }
-
     showAllReport(){
         let tableDetail = this.state.reports
         .filter((report) => {
@@ -220,7 +216,7 @@ class AdminReportList extends React.Component{
         let component;
         if(this.state.showReportDetail){
             component = (
-                <Report report={this.state.reportDetail} close={()=>this.closeReportDetail()}/>
+                <Report report={this.state.reportDetail} refetch={()=>this.fetchDatas()} close={()=>this.closeReportDetail()}/>
             )
         }else{
             component =  this.showAllReport();
@@ -255,13 +251,15 @@ class Report extends React.Component{
             messages : [],
             sendingMessage : "",
             loadReport : false,
+            loadMsg : false,
+            refetch : null,
         }
     }
     showMessage(){
         return this.state.messages.map((msg,index) => (
-            <Container className={"report-message "+(msg.name.toString().toLowerCase()==="admin"?"admin":"user")} key={index}>
-            <h6>{msg.name}</h6>
-            <p>{msg.text}</p>
+            <Container className={"report-message "+(false?"admin":"user")} key={index}>
+            <h6>{/*msg.name*/}</h6>
+            <p>{msg.detail}</p>
             </Container>))
         
     }
@@ -285,30 +283,73 @@ class Report extends React.Component{
         .catch(err=>{
             console.log(err);
         })
+        await axios
+        .get(utilities["backend-url"] + "/reports/messages/"+this.state.report.reportId)
+        .then(res=>{
+            this.setState({
+                messages : res.data,
+                loadMsg : true
+            })
+            console.log(res.data)
+        })
+        .catch(err=>{
+            console.log(err);
+        })
         /// test Data
         /*let descList = [{reportId : "1" ,desc : "Two-thirds of those adopting paper-free processes report a payback within 18 months. 50% see payback in under 12 months."},
         {reportId : "2" ,desc : "Respondents felt that driving paper out of the process would improve the productivity of process staff by 29.7%. For respondents who understood document management and capture technology, that number rose to 35.4%."},]
         let data = descList.filter(report => this.state.report.reportId === report.reportId)*/
         ///
-        let prevMsg = this.state.messages
+        //let prevMsg = this.state.messages
         /*if(data.length > 0){
             this.setState({report : {...prevReport, description : data[0].desc}})
         }*/
         /// test data
-        let msg = [{name:this.state.report.name,text:"Did you fixed it yet?"},{name:"Admin",text:"we're solving your problem please keep calm"}]
+        //let msg = [{name:this.state.report.name,text:"Did you fixed it yet?"},{name:"Admin",text:"we're solving your problem please keep calm"}]
         ///
-        this.setState({messages : [...prevMsg,...msg]})
+        //this.setState({messages : [...prevMsg,...msg]})
 
     }
 
-    sendMessage(){
+    async setReportStatus(){
+        /// setReportStatus api
+        /// this will only set to closed
+        await axios
+        .patch(utilities["backend-url"] + "/reports/"+this.state.report.reportId+"/1")
+        .then(res=>{
+            console.log(res)
+            this.state.refetch();
+            this.setState({report : {...this.state.report,status : "closed"}})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+
+    async sendMessage(e){
         /// sendMessage api
+        e.preventDefault();
+        await axios
+        .post(utilities["backend-url"] + "/reports/send",{
+            detail : this.state.sendingMessage,
+            report : this.state.report.reportId,
+            user : LocalStorageService.getUserID,
+        })
+        .then(res=>{
+            console.log(res)
+            this.fetchData()
+            this.setState({sendingMessage : ""})
+        })
+        .catch(err=>{
+            console.log(err)
+        })
         console.log("send");
     }
 
     async componentDidMount(){
         await this.setState({
-            report : {...this.props.report,description:""}
+            report : {...this.props.report,description:""},
+            refetch : this.props.refetch
         })
         await this.fetchData();
     }
@@ -370,31 +411,32 @@ class Report extends React.Component{
                 <Card.Footer>
                 {  
                     this.state.report.status.toLowerCase()==="open"?
-                    <div id="closed"><button className="btn btn-success btn-block">Solve</button></div>
+                    <div id="closed"><button className="btn btn-success btn-block" onClick={()=>this.setReportStatus()}>Solve</button></div>
                     :
                     null
                 }
                 </Card.Footer>
                 </Card>
                 {
-                   this.showMessage()
+                   this.state.loadMsg?this.showMessage():this.renderReload()
                 }
                 <Container className="report-send-message" hidden={this.state.report.status === "closed"}>
                 <Form>
-                <Form.Group controlId="jobDes">
+                <Form.Group controlId="sendingMsg" id="myForm">
                 <Row>
                     <Col md={10}>
                     <Form.Control
                     type="text"
                     as="textarea"
                     rows="2"
+                    value={this.state.sendingMessage}
                     onChange={this.handleWrite}
-                    name="description"
+                    name="message"
                     required
                     />
                     </Col>
                     <Col md={2}>
-                    <button type="submit" className="btn btn-secondary btn-block" size="sm" onClick={()=>this.sendMessage()}>send</button>
+                    <button type="submit" className="btn btn-secondary btn-block" size="sm" onClick={(e)=>this.sendMessage(e)}>send</button>
                     </Col>
                 </Row>
                 </Form.Group>

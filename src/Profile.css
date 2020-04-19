@@ -1,7 +1,7 @@
 body {
   /* background-color: black; */
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1200px ) {
   svg {
     font-size: 5px;
   }
@@ -39,7 +39,6 @@ body {
   #pro-bg.row{
       height: 10%;
   }
-
 }
 @media screen and (min-width: 1201px) {
   #profile-container {
