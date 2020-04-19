@@ -45,12 +45,6 @@ class AdminReportList extends React.Component{
         .catch(err=>{
             console.log(err);
         })
-        /// test Data
-        /*let test_data = [{reportId:"1",topicName : "I was accused by Teddy",type : "Person",status : "open",name : "Jolly Bear"},
-        {reportId:"2",topicName : "I lost my money",type : "Problem",status : "closed",name : "Teddy Bear"},
-        {reportId:"3",topicName : "My job was deleted from job list",type : "Job",status : "open",name : "Teddy Bear"}
-        ]
-        ///*/
         await this.setState({
             reports : data,
             loadReports : true,
