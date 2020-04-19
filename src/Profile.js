@@ -17,7 +17,8 @@ import {
   ExperienceModal,
   EducationModal,
   ReviewListItem,
-  ProfileImageModal
+  ProfileImageModal,
+  VerifyDataModal
 } from "./ProfileModal";
 import { Container,Spinner } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
@@ -202,14 +203,11 @@ class Profile extends React.Component {
   }
 
   render() {
-    let verify_btn = (<button
-    type="button"
-    className="btn btn-outline-dark"
-    id="verify"
-    hidden={this.state.verified}
-    >
-    verify
-    </button>)
+    let verify_btn = (<VerifyDataModal
+      id="verify-btn"
+      userId={this.state.userId} 
+      hidden={!this.state.isMyProfile}
+       />)
     
     if(!this.state.isLoaded){
       return(

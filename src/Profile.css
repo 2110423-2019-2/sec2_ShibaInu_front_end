@@ -303,3 +303,10 @@ p.weak {
   align-items: flex-end;
   display: flex;
 }
+#verify-btn{
+  display: flex;
+  width: 3rem;
+  height: 2rem;
+  font-size: 100%;
+  justify-content: center;
+}

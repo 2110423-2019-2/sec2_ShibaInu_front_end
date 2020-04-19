@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Modal, Button, Form, Col, ModalTitle, Table } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 import ImageUploader from "./ImageUploader"
+import FileUploader from "./FileUploader"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -1262,6 +1263,107 @@ class ProfileImageModal extends Component {
     )
   }
 }
+
+class VerifyDataModal extends Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      upload : false,
+      show:false,
+      userId:null,
+      SSN:"",
+      formatSSN : "",
+    }
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+  }
+  
+  handleClose(){
+    this.setState({show:false})
+  }
+  handleShow(){
+    this.setState({show:true})
+  }
+  handleSave(){
+    this.setState({upload:true})
+  }
+  handleWrite(e){
+    let format = e.target.value.replace(/\D/g,"")
+    if(format.length >13){
+      return;
+    }
+    this.setState({SSN:format})
+    //let newFormat = "";
+    /*for(let i=0; i<format.length;i++){
+      if(i===0){
+        newFormat=newFormat+format.charAt(i)+"-"
+      }else if(i===4){
+        newFormat=newFormat+format.charAt(i)+"-"
+      }else if(i===9){
+        newFormat=newFormat+format.charAt(i)+"-"
+      }else if(i===10){
+        newFormat=newFormat+format.charAt(i)+"-"
+      }else{
+        newFormat=newFormat+format.charAt(i)
+      }
+    }*/
+    this.setState({formatSSN:format})
+    
+  }
+
+  handlerUpload(fd){
+    if(!(fd instanceof FormData)){
+      return;
+    }
+    console.log(fd)
+  }
+  componentDidMount(){
+    this.setState({userId : this.props.userId})
+  }
+  render(){
+    return (
+      <>
+      <button
+          type="button"
+          id= {this.props.id}
+          onClick={this.handleShow}
+          hidden={this.props.hidden}
+          className = "btn btn-outline-secondary "
+        >
+          verify
+        </button>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header className="modalHead" closeButton>
+            <ModalTitle>Verify</ModalTitle>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Label>National ID</Form.Label>
+            <Col>
+            <Form.Control
+              placeholder="1234567890123"
+              value={this.state.formatSSN}
+              onChange={e=>this.handleWrite(e)}
+              />
+            </Col>
+            <label>National ID Card</label>
+            <ImageUploader upload={this.state.upload} name="1" handlerUpload={this.handlerUpload} />
+            <label>Selfie Image</label>
+            <ImageUploader upload={this.state.upload} name="2" handlerUpload={this.handlerUpload} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-danger" onClick={this.handleClose} >
+              Cancel
+            </Button>
+            <Button variant="outline-success" onClick={this.handleSave}>
+              Save
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        </>
+    )
+  }
+}
 export {
   ProfileModal,
   SkillListItem,
@@ -1272,7 +1374,8 @@ export {
   ExperienceModal,
   EducationModal,
   ReviewListItem,
-  ProfileImageModal
+  ProfileImageModal,
+  VerifyDataModal
 };
 
 /*
