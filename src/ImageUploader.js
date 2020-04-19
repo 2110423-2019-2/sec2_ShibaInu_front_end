@@ -1,6 +1,8 @@
 import React from 'react';
-import {Spinner,Badge} from 'react-bootstrap';
+import {Spinner,Container,Row,Col} from 'react-bootstrap';
 import swal from 'sweetalert'
+import "./ImageUploader.css"
+import LocalStorageService from './LocalStorageService';
 
 class ImageUploader extends React.Component{
     constructor(props){
@@ -19,7 +21,10 @@ class ImageUploader extends React.Component{
         this.resizeImage = this.resizeImage.bind(this);
     }
     selectHandler(event){
-        console.log("do")
+        if(event.target.files[0]&&event.target.files[0].size > 2_000_000){
+            swal("Error","Image file size cannot exceed 2 MB","error");
+            return;
+        }
         if(event.target.files[0]){
             let image = event.target.files[0];
             let reader = new FileReader();
@@ -88,7 +93,7 @@ class ImageUploader extends React.Component{
         }
         const timestamp = new Date();
         const fd = new FormData();
-        fd.append('image',this.state.selectedImage,this.userId+timestamp.toString()+".jpg");
+        fd.append('image',this.state.selectedImage,timestamp.toString()+".jpg");
         console.log(this.state.selectedImage)
         this.props.handlerUpload(fd);
         this.setState({uploadstate : false/*selectedImage:null,imageUrl:null*/});
@@ -98,18 +103,30 @@ class ImageUploader extends React.Component{
             this.uploadHandler()
         }
         return(
-        <div className="image-uploader">
+        <Container className="image-uploader">
             
-            <div className="image-container">
+            <Row>
+                <Col className="image-container">
                 {this.state.onloadUpload?<Spinner animation="border" />:null}
                 {this.state.imageUrl===null? null: <img src={this.state.imageUrl} alt="profile" width="200" height="200"/>}
-            </div>
-            <label>
-                <input type="file" onChange={this.selectHandler} value={this.state.image} accept="image/*" hidden={true}/>
-                <Badge variant={this.state.imageUrl===null?"secondary":"primary"}>choose</Badge>
-            </label>{' '}
-            {this.state.selectedImage!==null?this.state.selectedImage.name:"no file choosen"}
-        </div>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                <input type="file" id={"image"+this.props.name||""} onChange={this.selectHandler} accept="image/*" hidden={true}/>
+                <div id="image-upload-bar">
+                <span>{this.state.selectedImage!==null?this.state.selectedImage.name:"no file choosen"}</span>
+                    <label htmlFor={"image"+this.props.name||""} >
+                    <span id="image-upload-button" variant={this.state.imageUrl===null?"secondary":"primary"}>choose</span>
+                    </label>
+                </div>
+                
+                </Col>
+            
+            </Row>
+            
+           
+        </Container>
         )
     }
 }
