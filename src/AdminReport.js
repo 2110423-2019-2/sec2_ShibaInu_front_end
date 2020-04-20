@@ -18,9 +18,26 @@ class AdminReportList extends React.Component{
             filterType : "all",
             filterStatus : "All",
             loadReports : false,
+            isAdmin : false,
         }
     }
     
+    async checkUser(){
+        let check = false;
+        axios.defaults.headers.common["Authorization"] =
+        "Bearer " + LocalStorageService.getAccessToken();
+        await axios
+        .get(utilities["backend-url"] + "/users/" + LocalStorageService.getUserID())
+        .then(res => {
+            check = res.data.isAdmin
+            console.log(res.data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        await this.setState({isAdmin : check})
+    }
+
     async fetchDatas(){
         let data = [];
         /// showAllReport api
@@ -193,8 +210,9 @@ class AdminReportList extends React.Component{
     }
 
     componentDidMount(){
-        this.fetchDatas();
-        console.log("blah")
+        if(this.state.isAdmin){
+            this.fetchDatas();
+        }
     }
 
     renderReload() {
@@ -204,6 +222,13 @@ class AdminReportList extends React.Component{
     }
 
     render(){
+        if(!this.state.isAdmin){
+            return (
+                <Container>
+                    <h2 style={{textAlign:"center"}}>You're not allowed to access this page</h2>
+                </Container>
+            )
+        }
         if(!this.state.loadReports){
             return this.renderReload();
         }
@@ -217,6 +242,13 @@ class AdminReportList extends React.Component{
         }
         return(
             <>
+            <Container id="homeclient-box">
+            <Container className="bg-light shadow">
+            <Row>
+            <Col >
+                <h2 id="recentjob-topic">Admin Report</h2>
+            </Col >
+            </Row>
             <Container>
                 <Row>
                     <Col>           
@@ -231,6 +263,8 @@ class AdminReportList extends React.Component{
                         </CSSTransition>
                     </Col>
                 </Row>
+            </Container>
+            </Container>
             </Container>
             </>
         );
@@ -289,19 +323,7 @@ class Report extends React.Component{
         .catch(err=>{
             console.log(err);
         })
-        /// test Data
-        /*let descList = [{reportId : "1" ,desc : "Two-thirds of those adopting paper-free processes report a payback within 18 months. 50% see payback in under 12 months."},
-        {reportId : "2" ,desc : "Respondents felt that driving paper out of the process would improve the productivity of process staff by 29.7%. For respondents who understood document management and capture technology, that number rose to 35.4%."},]
-        let data = descList.filter(report => this.state.report.reportId === report.reportId)*/
-        ///
-        //let prevMsg = this.state.messages
-        /*if(data.length > 0){
-            this.setState({report : {...prevReport, description : data[0].desc}})
-        }*/
-        /// test data
-        //let msg = [{name:this.state.report.name,text:"Did you fixed it yet?"},{name:"Admin",text:"we're solving your problem please keep calm"}]
-        ///
-        //this.setState({messages : [...prevMsg,...msg]})
+    
 
     }
 
@@ -402,14 +424,14 @@ class Report extends React.Component{
                 }
                 
                 </Card.Body>
-                <Card.Footer>
+                <Card.Footer hidden={this.state.report.status === "closed"}>
                 {  
                     this.state.report.status.toLowerCase()==="open"?
                     <div id="closed"><button className="btn btn-success btn-block" onClick={()=>this.setReportStatus()}>Solve</button></div>
                     :
                     null
                 }
-                </Card.Footer>
+                </Card.Footer >
                 </Card>
                 {
                    this.state.loadMsg?this.showMessage():this.renderReload()

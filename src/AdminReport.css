@@ -4,6 +4,7 @@
 #admin-report-box{
     margin-top : 2%;
     align-items: center;
+    margin-bottom: 5vh;
 }
 #admin-report-card{
     width : 80%;
@@ -80,3 +81,6 @@
     width: 10rem;
     font-size: 20px;
   }
+ #homeclient-box{
+     margin-bottom:5vh ;
+ }
