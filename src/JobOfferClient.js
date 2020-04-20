@@ -135,16 +135,12 @@ class JobOfferClient extends React.Component {
       <div className="main-background">
         <Container id="homeclient-box">
           <Row>
-            <Col className="bg-light shadow">
+            <Col className="bg-light">
               <h2 id="recentjob-topic">Job Offering</h2>
-              <Form inline className="float-right">
-                <FormControl
-                  type="text"
-                  placeholder="Search"
-                  className="mr-sm-2"
-                />
-                <Button variant="outline-success" className="w-25">Search</Button>
-              </Form>
+            </Col>
+          </Row>
+          <Row className="bg-light shadow">
+            <Col lg={6} md={6.5}>
               <Nav variant="tabs" defaultActiveKey="link-1" id="joblist-table">
                 <Nav.Item>
                   <Nav.Link
@@ -191,13 +187,25 @@ class JobOfferClient extends React.Component {
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
+              </Col>
+              <Col>
+              <Form inline className="joboffer-search">
+                <FormControl
+                  type="text"
+                  placeholder="Search"
+                  className="mr-sm-2 joboffer-search-box"
+                />
+                <Button variant="outline-success" className="w-auto">Search</Button>
+              </Form>
+              </Col>
+              </Row>
+              <Row className="bg-light shadow">
               <Table responsive>
                 <thead className="background-blue text-light">
                   {headTable}
                 </thead>
                 <tbody>{recentJob}</tbody>
               </Table>
-            </Col>
           </Row>
         </Container>
       </div>

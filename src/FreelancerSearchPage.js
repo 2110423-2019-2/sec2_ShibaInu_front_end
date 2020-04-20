@@ -117,7 +117,7 @@ class Filter extends React.Component {
               </Form.Control>
             </Form.Group>
             <Form.Row>
-              <Col lg={{ offset: "3" }}>
+              <Col>
                 <Button
                   variant="secondary"
                   type="reset"
@@ -224,7 +224,7 @@ class ResultRow extends React.Component {
             <Col lg="0.5">
               <FaUserCircle color="Blue" />
             </Col>
-            <Col lg="8">
+            <Col lg={8} md={5} sm={6} xs={5}>
               <div id="name-and-des">
                 <a href={"/profile/" + this.props.userId}>
                   <b>{this.props.firstName + " " + this.props.lastName}</b>
@@ -307,10 +307,10 @@ class FreelancerSearchPage extends React.Component {
         <div className="search-page">
           <Container>
             <Row>
-              <Col>
+              <Col lg={3} md={4}>
                 <Filter parentCallback={this.callbackFunction} />
               </Col>
-              <Col lg="9">
+              <Col lg={9} md={8}>
                 <Result ApiUrl={this.state.ApiUrl} />
               </Col>
             </Row>

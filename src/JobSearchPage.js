@@ -173,7 +173,7 @@ class Filter extends React.Component {
               </Form.Control>
             </Form.Group>
             <Form.Row>
-              <Col lg={{ offset: "3" }}>
+              <Col>
                 <Button
                   variant="secondary"
                   type="reset"
@@ -256,7 +256,7 @@ class ResultRow extends React.Component {
             <Col lg="0.5">
               <FaCode color="Blue" />
             </Col>
-            <Col lg="9">
+            <Col lg="9" md={6} sm={8} xs={7}>
               <div id="name-and-des">
                 <div>
                   <a href={"/job/" + this.props.jobId}>
@@ -303,10 +303,10 @@ class JobSearchPage extends React.Component {
         <div class="search-page">
           <Container>
             <Row>
-              <Col>
+              <Col lg={3} md={4}>
                 <Filter parentCallback={this.callbackFunction} />
               </Col>
-              <Col lg="9">
+              <Col lg={9} md={8}>
                 <Result ApiUrl={this.state.ApiUrl} />
               </Col>
             </Row>
