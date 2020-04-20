@@ -1,7 +1,7 @@
 .SignInSignUp-page {
-  height: 650px;
   /* height: 100%; */
   /* background-color: aqua; */
+  align-items: center;
 }
 
 .left-content {
@@ -28,34 +28,12 @@
   position: absolute;
 }
 
-.left-logo #logo-img {
-  height: 100%;
-  width: 100%;
-}
-
-.right-area {
-  float: right;
-  width: 50%;
-  height: 100%;
-  display: table;
-  /* background-color: blue; */
-}
-
-.right-content {
-  width: 50%;
-  display: table-cell;
-  vertical-align: middle;
-  height: auto;
-  /* background-color: aqua; */
-}
-
 .form-name {
   text-align: center;
   font-size: 45px;
 }
 
 .form-container {
-  width: 100%;
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
@@ -116,4 +94,19 @@ form p.unauthorized-message {
 
 .card-container * {
   margin: 0px 0px 10px 0px;
+}
+
+.signIn-box {
+  display: flex;
+  align-items: center;
+  height: 85vh;
+}
+#logo-img-sign {
+  width: 250px;
+  height: auto;
+}
+#logo-img-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
