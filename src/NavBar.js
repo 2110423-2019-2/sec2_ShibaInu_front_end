@@ -337,12 +337,12 @@ class NavBar extends React.Component {
     } else if (this.state.mode === this.state.status.GUEST) {
       userMode = YOUNGSTAR;
       signInMenu = (
-        <Nav.Link href="/signin" className="border-right border-warning">
+        <Nav.Link href="/signin">
           Sign in
         </Nav.Link>
       );
       signUpMenu = (
-        <Nav.Link href="/signup" className="border-left border-warning">
+        <Nav.Link href="/signup">
           Sign up
         </Nav.Link>
       );
