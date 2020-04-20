@@ -20,9 +20,9 @@ class JobOfferFreelancer extends React.Component {
       userID: this.props.userID,
       status: {
         ALL: "all",
-        INTERESTED: "interested",
-        MAKEDEAL: "make deal",
-        CONTRACT: "contract"
+        INTERESTED: "open",
+        MAKEDEAL: "accepted",
+        CONTRACT: "working"
       },
       statusFilter: "all",
       userDatas: "",
@@ -36,19 +36,37 @@ class JobOfferFreelancer extends React.Component {
     this.setState({ statusFilter: status });
   };
 
-  fetchDatas = () => {
+  fetchDatas = async() => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-    axios
+    await axios
       .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
-    axios
+    let data=[]
+    await axios
       .get(utilities['backend-url'] + "/bids/job/" + LocalStorageService.getUserID())
-      .then(res => {
-        this.setState({ jobDatas: res.data, isJobDataLoad: true});
+      .then(async res => {
+        for(let i=0;i<res.data.length;i++){
+          if(res.data[i].contractId === null){
+             data.push(res.data[i]);
+           }else{
+            await axios
+            .get(utilities['backend-url'] + "/contracts/jobId/" + res.data[i].jobId)
+            .then(contract=>{
+              console.log(contract.data)
+              if(contract.data.freelancerId === this.state.userDatas.userId)
+              data.push(res.data[i]);
+            })
+            .catch(err=>{
+              console.log(err)
+            })
+           }
+
+        }
+        await this.setState({ jobDatas: data,isJobDataLoad: true});
         console.log(res.data);
       })
   };
@@ -83,7 +101,7 @@ class JobOfferFreelancer extends React.Component {
       ));
     } else {
       recentJob = this.state.jobDatas
-        .filter(job => job.status === this.state.statusFilter)
+        .filter(job => (job.status === this.state.statusFilter))
         .map((job, index) =>  (
           <tr key={index} className="text-center">
             <td className="align-middle">
