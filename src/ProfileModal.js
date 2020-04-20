@@ -1294,20 +1294,6 @@ class VerifyDataModal extends Component{
       return;
     }
     this.setState({SSN:format})
-    //let newFormat = "";
-    /*for(let i=0; i<format.length;i++){
-      if(i===0){
-        newFormat=newFormat+format.charAt(i)+"-"
-      }else if(i===4){
-        newFormat=newFormat+format.charAt(i)+"-"
-      }else if(i===9){
-        newFormat=newFormat+format.charAt(i)+"-"
-      }else if(i===10){
-        newFormat=newFormat+format.charAt(i)+"-"
-      }else{
-        newFormat=newFormat+format.charAt(i)
-      }
-    }*/
     this.setState({formatSSN:format})
     
   }
