@@ -133,7 +133,6 @@ class ProfileModal extends Component {
                 </Form.Row>
               </Form.Group>
               <Form.Group controlId="Headline">
-                <Form.Row>
                   <Form.Label>Headline</Form.Label>
                   <Form.Control
                     defaultValue=""
@@ -142,7 +141,6 @@ class ProfileModal extends Component {
                       this.setState({ headline: e.target.value });
                     }}
                   />
-                </Form.Row>
               </Form.Group>
               <Form.Label>Date of birth</Form.Label>
               <Form.Row>
