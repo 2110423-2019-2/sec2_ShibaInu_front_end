@@ -28,6 +28,7 @@ import Contract from "./Contract";
 import FreelancerSearchPage from "./FreelancerSearchPage";
 import NavBar from "./NavBar";
 import AdminReportList from "./AdminReport";
+import UserReport from './UserReport';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -91,6 +92,7 @@ class App extends React.Component {
               component={() => <Contract params={useParams()} />}
             />
             <PrivateRoute path="/admin/report" component={AdminReportList} />
+            <PrivateRoute path="/report" component={UserReport} />
           </Switch>
         </Router>
       </div>
