@@ -20,7 +20,6 @@ class UserReport extends React.Component {
             loadReports: false,
         }
     }
-
     async fetchDatas() {
         let data = [];
         /// showAllReport api
@@ -204,6 +203,7 @@ class UserReport extends React.Component {
     }
 
     render() {
+
         if (!this.state.loadReports) {
             return this.renderReload();
         }
@@ -414,7 +414,7 @@ class Report extends React.Component {
                             }
 
                         </Card.Body>
-                        <Card.Footer>
+                        <Card.Footer hidden={this.state.report.status === "closed"}>
                             {
                                 this.state.report.status.toLowerCase() === "open" ?
                                     <div id="closed"><button className="btn btn-success btn-block" onClick={() => this.setReportStatus()}>Solve</button></div>
