@@ -231,7 +231,15 @@ class ChatSystem extends React.Component {
       <div key={chatmsg.id} className="ml-3 mt-3 mr-4 ">
         <div className={chatmsg.pos}>
           <Badge pill variant="info" className="pl-3 pr-3 pt-1 pb-1">
-            <h5>{chatmsg.msg}</h5>
+            {chatmsg.msg.length >= 80 ? (
+              <h5>
+                {chatmsg.msg.substring(0, 80)}
+                <br />
+                {chatmsg.msg.substring(80, chatmsg.msg.length)}
+              </h5>
+            ) : (
+              <h5>{chatmsg.msg}</h5>
+            )}
           </Badge>
         </div>
       </div>
@@ -243,7 +251,7 @@ class ChatSystem extends React.Component {
       return this.loadingChat();
     }
     return (
-      <Row className="msg-allarea shadow">
+      <Row className="msg-allarea">
         <div id="msgarea">
           {this.chatMsg()}
           <div ref={this.state.ref} />
@@ -257,14 +265,16 @@ class ChatSystem extends React.Component {
       return;
     }
     return (
-      <Row className="bg-white pt-3 pb-3 shadow sendmsg">
+      <Row className="pt-3 pb-3 shadow">
         <InputGroup className="mb-3">
           <FormControl
             placeholder="Text Here"
             aria-label="Text Here"
             aria-describedby="basic-addon2"
             onChange={(e) => {
-              this.setState({ msg: e.target.value });
+              if(e.target.value.length <= 50){
+                this.setState({ msg: e.target.value });
+              }
             }}
             value={this.state.msg}
             onKeyDown={(e) => {
@@ -306,16 +316,20 @@ class ChatSystem extends React.Component {
       <div className="main-background h-100">
         <Container id="chatsystem-box">
           <Row className="h-100">
-            <Col xs={4} className="bg-white shadow text-center">
+            <Col lg={3} className="bg-white shadow text-center">
+              <Container fluid>
               <Row className="background-blue text-light pl-3 pt-3">
                 <h2>#Chat Room</h2>
               </Row>
               {this.chatRoom()}
+              </Container>
             </Col>
-            <Col xs={7} className="ml-3 text-center">
+            <Col className="bg-white text-center shadow">
+              <Container fluid>
               {this.chatWith()}
               {this.msgDisp()}
               {this.sendMsgDisp()}
+              </Container>
             </Col>
           </Row>
         </Container>
