@@ -58,6 +58,7 @@ class AdminHome extends React.Component {
       }
     });
   }
+  
 
   approveHandler = (index) => {
     swal({
@@ -68,6 +69,7 @@ class AdminHome extends React.Component {
     })
     .then((willApprove) => {
       if (willApprove) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
       axios
       .patch(utilities["backend-url"] + "/users/verify/verify",{
         user: this.state.userDatas[index].userId,
@@ -112,6 +114,7 @@ class AdminHome extends React.Component {
         banned[index] = "Ban";
       }
       this.setState({banned: banned});
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
       axios
       .patch(utilities["backend-url"] + "/users/ban", {
         user: this.state.userDatas[index].userId,
@@ -328,7 +331,7 @@ class ImageModal extends React.Component{
             </Container>
           </Modal.Body>
           <Modal.Footer>
-            <button className="outline-success" onClick={this.handleClose}>
+            <button type="button" className="btn btn-success btn-block" onClick={this.handleClose}>
               close
             </button>
           </Modal.Footer>
