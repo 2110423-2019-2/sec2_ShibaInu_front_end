@@ -135,7 +135,7 @@ class ProfileModal extends Component {
               <Form.Group controlId="Headline">
                   <Form.Label>Headline</Form.Label>
                   <Form.Control
-                    defaultValue=""
+                    defaultValue={this.state.headline}
                     as="textarea"
                     onChange={e => {
                       this.setState({ headline: e.target.value });
@@ -1239,7 +1239,7 @@ class ProfileImageModal extends Component {
           onClick={this.handleShow}
           hidden={this.props.hidden}
         >
-          change profile image
+          <p>change profile image</p>
         </button>
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header className="modalHead" closeButton>
