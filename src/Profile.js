@@ -202,13 +202,7 @@ class Profile extends React.Component {
     </Spinner>);
   }
 
-  render() {
-    let verify_btn = (<VerifyDataModal
-      id="verify-btn"
-      userId={this.state.userId} 
-      hidden={!this.state.isMyProfile}
-       />)
-    
+  render() {  
     if(!this.state.isLoaded){
       return(
         <>
@@ -216,6 +210,12 @@ class Profile extends React.Component {
         </>
       );
     }
+    let verify_btn = (<VerifyDataModal
+      id="verify-btn"
+      userId={this.state.userId}
+      hidden={!this.state.isMyProfile}
+      onUpdate={this.fetch}
+       />)
     return (
       <>
         <Container id="profile-container">

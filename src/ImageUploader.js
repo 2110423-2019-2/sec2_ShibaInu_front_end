@@ -96,7 +96,7 @@ class ImageUploader extends React.Component{
         fd.append('image',this.state.selectedImage,timestamp.toString()+".jpg");
         console.log(this.state.selectedImage)
         this.props.handlerUpload(fd);
-        this.setState({uploadstate : false/*selectedImage:null,imageUrl:null*/});
+        this.setState({uploadstate : false,selectedImage:null,imageUrl:null});
     }
     render(){
         if(this.state.uploadstate){
