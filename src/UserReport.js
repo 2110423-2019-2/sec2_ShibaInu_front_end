@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Table, Card, Nav, Badge, Form, Spinner, Button } from "react-bootstrap";
+import { Container, Row, Col, Table, Card, Nav, Badge, Form, Spinner, Button, Modal } from "react-bootstrap";
 import { CSSTransition } from 'react-transition-group';
 import axios from 'axios';
 import "./AdminReport.css";
@@ -18,6 +18,7 @@ class UserReport extends React.Component {
             filterType: "all",
             filterStatus: "All",
             loadReports: false,
+            showCreateReport: false,
         }
     }
     async fetchDatas() {
@@ -202,11 +203,16 @@ class UserReport extends React.Component {
         </Spinner>);
     }
 
+    createReportCallback = () => {
+        this.setState({ showCreateReport: false });
+    }
+
     render() {
 
         if (!this.state.loadReports) {
             return this.renderReload();
         }
+
         let component;
         if (this.state.showReportDetail) {
             component = (
@@ -215,16 +221,20 @@ class UserReport extends React.Component {
         } else {
             component = this.showAllReport();
         }
+
         return (
             <>
+                {this.state.showCreateReport ? <CreateReport cb={this.createReportCallback} show={this.state.showCreateReport} /> : ''}
                 <Container id="homeclient-box">
                     <Container className="bg-light shadow">
                         <Row>
                             <Col >
                                 <h2 id="recentjob-topic">My Report</h2>
                             </Col >
-                            <Col sm="auto" style={{ 'padding-top': '20px', 'padding-right':'30px' }}>
-                                <Button>Create Report</Button>
+                            <Col sm="auto" style={{ 'padding-top': '20px', 'padding-right': '30px' }}>
+                                <Button
+                                    onClick={() => { this.setState({ showCreateReport: !this.state.showCreateReport }); }}
+                                >Create Report</Button>
                             </Col>
                         </Row>
                         <Container>
@@ -451,6 +461,156 @@ class Report extends React.Component {
                 </Container>
             </>
         )
+    }
+}
+
+class CreateReport extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: this.props.show || true,
+            reportData: {
+                topicName: '',
+                description: '',
+                topicType: ''
+            },
+            isSendingData: false,
+        };
+    }
+
+    handleTextChange = (e) => {
+        let temp = this.state.reportData;
+        temp[e.target.name] = e.target.value;
+        this.setState({
+            reportData: temp
+        });
+    }
+
+    handleSubmit = () => {
+
+        let reportData = this.state.reportData;
+
+        if (!reportData['topicName'] || !reportData['description'] || !reportData['topicType']) {
+            alert("please input in every field.");
+            return;
+        }
+
+        this.setState({ isSendingData: true });
+
+        reportData['user'] = LocalStorageService.getUserID();
+
+        axios.defaults.headers.common["Authorization"] =
+            "Bearer " + LocalStorageService.getAccessToken();
+
+        axios
+            .post(utilities["backend-url"] + "/reports")
+            .then(res => {
+                if (res.status === 201) {
+                    this.handleClose();
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            }).finally(() => {
+                this.setState({ isSendingData: false });
+            });
+    }
+
+    handleClose = () => {
+        this.setState({ show: false });
+    }
+
+    callbackClose = () => {
+        this.props.cb();
+    }
+
+    render() {
+        return (
+            <Modal
+                size="lg"
+                centered
+                show={this.state.show}
+                onHide={this.handleClose}
+                onExited={this.callbackClose}
+            >
+                <Modal.Header closeButton={!this.state.isSendingData}>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        Create Report
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+
+                    <Form>
+                        <Form.Group controlId="report.topic">
+                            <Form.Label>Topic</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Your report's topic."
+                                maxlength={50}
+                                value={this.state.reportData.topic}
+                                name="topicName"
+                                onChange={this.handleTextChange}
+                            />
+                            <Form.Text className={"text-" + (this.state.reportData.topicName.length >= 50 ? "danger" : "success")}>
+                                {this.state.reportData.topicName.length}/50
+                            </Form.Text>
+                        </Form.Group>
+                        <Form.Group controlId="report.description">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows="5"
+                                placeholder="Your report's description."
+                                maxlength={200}
+                                value={this.state.reportData.description}
+                                name="description"
+                                onChange={this.handleTextChange}
+                            />
+                            <Form.Text className={"text-" + (this.state.reportData.description.length >= 200 ? "danger" : "success")}>
+                                {this.state.reportData.description.length}/200
+                            </Form.Text>
+
+                        </Form.Group>
+                        <Form.Group controlId="report.type">
+                            <Form.Label>Report type</Form.Label>
+                            <Form.Control
+                                as="select"
+                                name="topicType"
+                                onChange={this.handleTextChange}>
+                                <option selected disabled hidden>-- Please select --</option>
+                                <option>Job</option>
+                                <option>Person</option>
+                                <option>Problem</option>
+                                <option>Other</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant='danger'
+                        onClick={this.handleClose}
+                        disabled={this.state.isSendingData}
+                    >Cancel</Button>
+                    <Button
+                        variant='success'
+                        onClick={this.handleSubmit}
+                        disabled={this.state.isSendingData}
+                    >
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            hidden={!this.state.isSendingData}
+                        />
+                        {' ' + "Submit"}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        );
     }
 }
 export default UserReport
