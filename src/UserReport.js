@@ -606,7 +606,7 @@ class CreateReport extends React.Component {
                             aria-hidden="true"
                             hidden={!this.state.isSendingData}
                         />
-                        {' ' + "Submit"}
+                        {" Submit"}
                     </Button>
                 </Modal.Footer>
             </Modal>
