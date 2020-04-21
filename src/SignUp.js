@@ -44,7 +44,7 @@ class SignUp extends React.Component {
         }
       })
       .catch((error) => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           console.log("Unauthorization");
         } else {
           console.error(error);
@@ -98,7 +98,7 @@ class SignUp extends React.Component {
         }
       })
       .catch((error) => {
-        if (error.response.status === 400) {
+        if (error.response && error.response.status === 400) {
           console.log("Error 400");
           this.setState({ errorMessage: error.response.data.message });
         } else {
@@ -142,7 +142,7 @@ class SignUp extends React.Component {
         }
       })
       .catch((error) => {
-        if (error.response.status === 400) {
+        if (error.response && error.response.status === 400) {
           console.log("Error 400");
           this.setState({ errorMessage: error.response.data.message });
         } else {

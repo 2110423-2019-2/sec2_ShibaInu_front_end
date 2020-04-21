@@ -66,7 +66,7 @@ class SignIn extends React.Component {
         }
       })
       .catch((error) => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           console.log("Unauthorization");
           this.setState({ unauthorized: true });
         } else {
@@ -109,7 +109,7 @@ class SignIn extends React.Component {
         }
       })
       .catch((error) => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           console.log("Unauthorization");
           this.setState({ unauthorized: true });
         } else {
