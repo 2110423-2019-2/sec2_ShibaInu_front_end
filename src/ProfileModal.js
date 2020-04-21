@@ -1271,11 +1271,13 @@ class VerifyDataModal extends Component{
       userId:null,
       SSN:"",
       formatSSN : "",
+      error : {selfie : null,IDcard : null},
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handlerUploadSelfie = this.handlerUploadSelfie.bind(this,);
+    this.handlerUploadNationalIDcard = this.handlerUploadNationalIDcard.bind(this,);
   }
   
   handleClose(){
@@ -1284,8 +1286,27 @@ class VerifyDataModal extends Component{
   handleShow(){
     this.setState({show:true})
   }
-  handleSave(){
+  async handleSave(){
     this.setState({upload:true})
+    let error = {err1:null,}
+    if(this.state.error.selfie !== null || this.state.error.IDcard !== null){
+      console.log("error")
+      return;
+    }
+    await axios.patch(utilities["backend-url"]+"/users/"+this.state.userId,
+      {
+        identificationNumber : this.state.SSN
+      }
+    )
+    .then(res => {
+      console.log(res);
+      this.handleClose();
+      this.props.onUpdate();
+    })
+    .catch(err => {
+      error.err1 = err;
+      console.log(err);
+    });
   }
   handleWrite(e){
     let format = e.target.value.replace(/\D/g,"")
@@ -1293,12 +1314,27 @@ class VerifyDataModal extends Component{
       return;
     }
     this.setState({SSN:format})
-    this.setState({formatSSN:format})
-    
   }
-
+  async handlerUploadNationalIDcard(fd){
+    let error = {err1:null,}
+    if(!(fd instanceof FormData)){
+      return;
+    }
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    await axios({
+      method: 'post',
+      url: utilities["backend-url"]+"/users/IDCard/" + this.state.userId,
+      data: fd,
+      headers: {'Content-Type': 'multipart/form-data' }
+      })
+    .catch(err => {
+      error.err1 = err;
+      console.log(err);
+    });
+    await this.setState({error : {...this.state.error,IDcard : error.err1}})
+  }
   async handlerUploadSelfie(fd){
-    let error = {err1:null,err2:null}
+    let error = {err1:null,}
     if(!(fd instanceof FormData)){
       return;
     }
@@ -1316,20 +1352,7 @@ class VerifyDataModal extends Component{
     if(error.err1!==null){
       return
     }
-    await axios.patch(utilities["backend-url"]+"/users/"+this.state.userId,
-      {
-        identificationNumber : this.state.SSN
-      }
-    )
-    .then(res => {
-      console.log(res);
-      this.handleClose();
-      this.props.onUpdate();
-    })
-    .catch(err => {
-      error.err2 = err;
-      console.log(err);
-    });
+    await this.setState({error : {...this.state.error,selfie : error.err1}})
   }
   async componentDidMount(){
     await this.setState({userId : this.props.userId})
@@ -1351,7 +1374,7 @@ class VerifyDataModal extends Component{
         </button>
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header className="modalHead" closeButton>
-            <ModalTitle>Verify</ModalTitle>
+            <Modal.Title>Verify</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Label>National ID</Form.Label>
@@ -1363,7 +1386,9 @@ class VerifyDataModal extends Component{
               />
             </Col>
             <label>Selfie image with national ID card</label>
-            <ImageUploader upload={this.state.upload} name="1" handlerUpload={this.handlerUploadSelfie} />
+            <ImageUploader upload={this.state.upload} name="1" handlerUpload={this.handlerUploadNationalIDcard} />
+            <label>Selfie image with national ID card</label>
+            <ImageUploader upload={this.state.upload} name="2" handlerUpload={this.handlerUploadSelfie} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="outline-danger" onClick={this.handleClose} >
