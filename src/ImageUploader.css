@@ -6,7 +6,7 @@
     color : cornsilk;
     border-radius : 0 10px 10px 0;
     align-items: center;
-   
+    height : 100%;
 }
 #image-upload-bar{
     display: flex;
@@ -22,6 +22,7 @@
     padding-right: 10px;
     border: rgba(37, 67, 128, 0.9) 1px dashed;
     border-right-width: 0;
+
 }
 #image-upload-button:hover{
     cursor: pointer;
