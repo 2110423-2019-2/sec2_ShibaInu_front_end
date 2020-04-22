@@ -174,7 +174,7 @@ class AdminHome extends React.Component {
   }
 
   detailTable = () => {
-    return this.state.userDatas.map((user,index)=>(
+    return this.state.userDatas.filter((user)=>user.isVerified === false).map((user,index)=>(
       <tr key={index} className="text-center">
       <td className="align-middle">
         {user.firstName}{' '}
