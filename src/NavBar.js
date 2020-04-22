@@ -372,6 +372,13 @@ class NavBar extends React.Component {
           My payment
         </DropdownItem>
         <DropdownItem
+          href="/report"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
+          My report
+        </DropdownItem>
+        <DropdownItem
           id="dropdown-item-switch"
           href={modePath}
           onClick={() => {
@@ -390,6 +397,14 @@ class NavBar extends React.Component {
     if (this.state.mode === this.state.status.ADMIN) {
       dropDownMenu = (
         <DropdownMenu right>
+          <DropdownItem
+          href="/admin/report"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
+          Report list
+        </DropdownItem>
+        <DropdownItem divider />
           <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
             Sign out
           </DropdownItem>
