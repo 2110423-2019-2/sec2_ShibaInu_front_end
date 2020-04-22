@@ -228,16 +228,18 @@ class UserReport extends React.Component {
                 {this.state.showCreateReport ? <CreateReport cb={this.createReportCallback} show={this.state.showCreateReport} /> : ''}
                 <Container id="homeclient-box">
                     <Container className="bg-light shadow">
-                        <Row>
-                            <Col >
-                                <h2 id="recentjob-topic">My Report</h2>
-                            </Col >
-                            <Col sm="auto" style={{ 'padding-top': '20px', 'padding-right': '30px' }}>
-                                <Button
-                                    onClick={() => { this.setState({ showCreateReport: !this.state.showCreateReport }); }}
-                                >Create Report</Button>
-                            </Col>
-                        </Row>
+                        {this.state.showReportDetail ? '' :
+                            (<Row>
+                                <Col >
+                                    <h2 id="recentjob-topic">My Report</h2>
+                                </Col >
+                                <Col sm="auto" style={{ 'padding-top': '20px', 'padding-right': '30px' }}>
+                                    <Button
+                                        onClick={() => { this.setState({ showCreateReport: !this.state.showCreateReport }); }}
+                                    >Create Report</Button>
+                                </Col>
+                            </Row>)
+                        }
                         <Container>
                             <Row>
                                 <Col>
@@ -270,12 +272,13 @@ class Report extends React.Component {
             loadReport: false,
             loadMsg: false,
             refetch: null,
+            tableUserId: new Map(),
         }
     }
     showMessage() {
         return this.state.messages.map((msg, index) => (
-            <Container className={"report-message " + (false ? "admin" : "user")} key={index}>
-                <h6>{/*msg.name*/}</h6>
+            <Container className={"report-message " + (this.state.tableUserId.get(msg.userId) === "Admin" ? "admin" : "user")} key={index}>
+                <h6>{this.state.tableUserId.get(msg.userId)}</h6>
                 <p>{msg.detail}</p>
             </Container>))
 
@@ -312,19 +315,27 @@ class Report extends React.Component {
             .catch(err => {
                 console.log(err);
             })
-        /// test Data
-        /*let descList = [{reportId : "1" ,desc : "Two-thirds of those adopting paper-free processes report a payback within 18 months. 50% see payback in under 12 months."},
-        {reportId : "2" ,desc : "Respondents felt that driving paper out of the process would improve the productivity of process staff by 29.7%. For respondents who understood document management and capture technology, that number rose to 35.4%."},]
-        let data = descList.filter(report => this.state.report.reportId === report.reportId)*/
-        ///
-        //let prevMsg = this.state.messages
-        /*if(data.length > 0){
-            this.setState({report : {...prevReport, description : data[0].desc}})
-        }*/
-        /// test data
-        //let msg = [{name:this.state.report.name,text:"Did you fixed it yet?"},{name:"Admin",text:"we're solving your problem please keep calm"}]
-        ///
-        //this.setState({messages : [...prevMsg,...msg]})
+        let userList = this.state.messages
+        let map = new Map();
+        for (let i = 0; i < userList.length; i++) {
+            if (userList[i].userId !== null && !map.has(userList[i].userId)) {
+                await axios
+                    .get(utilities["backend-url"] + "/users/" + userList[i].userId)
+                    .then(res => {
+                        console.log(res.data)
+                        if (res.data.isAdmin) {
+                            map.set(userList[i].userId, "Admin")
+                        } else {
+                            map.set(userList[i].userId, res.data.firstName + " " + res.data.lastName)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        }
+        await this.setState({ tableUserId: map })
+        console.log(map)
 
     }
 
