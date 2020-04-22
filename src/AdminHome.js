@@ -235,7 +235,7 @@ class AdminHome extends React.Component {
     return (
       <div className="main-background">
         <Container id="adminHome-box">
-          <Row>
+          <Row className="bg-white shadow">
             <Col>
               <Table responsive>
                 <thead>{this.headTable()}</thead>
