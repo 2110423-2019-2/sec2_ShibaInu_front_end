@@ -123,7 +123,7 @@ class AdminHome extends React.Component {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
       axios
       .patch(utilities["backend-url"] + "/users/ban", {
-        user: this.state.userDatas[index].userId,
+        user: id,
         isBanned: (isBanned===false)
       })
       .then(response => {
