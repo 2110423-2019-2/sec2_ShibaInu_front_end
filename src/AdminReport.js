@@ -209,7 +209,8 @@ class AdminReportList extends React.Component{
         })
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+        await this.checkUser()
         if(this.state.isAdmin){
             this.fetchDatas();
         }
@@ -281,12 +282,13 @@ class Report extends React.Component{
             loadReport : false,
             loadMsg : false,
             refetch : null,
+            tableUserId : new Map(),
         }
     }
     showMessage(){
         return this.state.messages.map((msg,index) => (
-            <Container className={"report-message "+(false?"admin":"user")} key={index}>
-            <h6>{/*msg.name*/}</h6>
+            <Container className={"report-message "+(this.state.tableUserId.get(msg.userId)==="Admin"?"admin":"user")} key={index}>
+            <h6>{this.state.tableUserId.get(msg.userId)}</h6>
             <p>{msg.detail}</p>
             </Container>))
         
@@ -323,8 +325,27 @@ class Report extends React.Component{
         .catch(err=>{
             console.log(err);
         })
-    
-
+        let userList = this.state.messages
+        let map = new Map();
+        for(let i =0 ; i<userList.length;i++){
+            if(userList[i].userId !== null && !map.has(userList[i].userId)){
+                await axios
+                .get(utilities["backend-url"] + "/users/"+userList[i].userId)
+                .then(res=>{
+                    console.log(res.data)
+                    if(res.data.isAdmin){
+                        map.set(userList[i].userId,"Admin")
+                    }else{
+                        map.set(userList[i].userId,res.data.firstName+" "+res.data.lastName)
+                    }
+                })
+                .catch(err=>{
+                    console.log(err)
+                })
+            }
+        }
+        await this.setState({tableUserId : map})
+        console.log(map)
     }
 
     async setReportStatus(){
@@ -349,7 +370,7 @@ class Report extends React.Component{
         .post(utilities["backend-url"] + "/reports/send",{
             detail : this.state.sendingMessage,
             report : this.state.report.reportId,
-            user : LocalStorageService.getUserID,
+            user : LocalStorageService.getUserID(),
         })
         .then(res=>{
             console.log(res)
