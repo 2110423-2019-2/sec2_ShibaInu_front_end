@@ -1065,7 +1065,7 @@ class DashboardBox extends React.Component {
   render() {
     return (
       <Card
-        className={"dashboard-box " + this.state.size}
+        className={"shadow dashboard-box " + this.state.size}
         hidden={this.props.hidden}
       >
         <Card.Header as="h5" className="box-topic">
