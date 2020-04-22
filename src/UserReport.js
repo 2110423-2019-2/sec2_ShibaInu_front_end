@@ -328,21 +328,6 @@ class Report extends React.Component {
 
     }
 
-    async setReportStatus() {
-        /// setReportStatus api
-        /// this will only set to closed
-        await axios
-            .patch(utilities["backend-url"] + "/reports/" + this.state.report.reportId + "/1")
-            .then(res => {
-                console.log(res)
-                this.state.refetch();
-                this.setState({ report: { ...this.state.report, status: "closed" } })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-
     async sendMessage(e) {
         /// sendMessage api
         e.preventDefault();
@@ -425,14 +410,6 @@ class Report extends React.Component {
                             }
 
                         </Card.Body>
-                        <Card.Footer hidden={this.state.report.status === "closed"}>
-                            {
-                                this.state.report.status.toLowerCase() === "open" ?
-                                    <div id="closed"><button className="btn btn-success btn-block" onClick={() => this.setReportStatus()}>Solve</button></div>
-                                    :
-                                    null
-                            }
-                        </Card.Footer>
                     </Card>
                     {
                         this.state.loadMsg ? this.showMessage() : this.renderReload()
