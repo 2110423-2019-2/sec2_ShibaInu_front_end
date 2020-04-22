@@ -19,6 +19,7 @@ class AdminReportList extends React.Component{
             filterStatus : "All",
             loadReports : false,
             isAdmin : false,
+            loadCheck : false,
         }
     }
     
@@ -35,7 +36,7 @@ class AdminReportList extends React.Component{
         .catch(err => {
             console.log(err);
         })
-        await this.setState({isAdmin : check})
+        await this.setState({isAdmin : check, loadCheck : true})
     }
 
     async fetchDatas(){
@@ -223,6 +224,9 @@ class AdminReportList extends React.Component{
     }
 
     render(){
+        if(!this.state.loadCheck){
+            return this.renderReload();
+        }
         if(!this.state.isAdmin){
             return (
                 <Container>
