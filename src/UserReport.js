@@ -205,6 +205,7 @@ class UserReport extends React.Component {
 
     createReportCallback = () => {
         this.setState({ showCreateReport: false });
+        this.fetchDatas();
     }
 
     render() {
@@ -349,7 +350,7 @@ class Report extends React.Component {
             .post(utilities["backend-url"] + "/reports/send", {
                 detail: this.state.sendingMessage,
                 report: this.state.report.reportId,
-                user: LocalStorageService.getUserID,
+                user: LocalStorageService.getUserID(),
             })
             .then(res => {
                 console.log(res)
@@ -504,7 +505,7 @@ class CreateReport extends React.Component {
             "Bearer " + LocalStorageService.getAccessToken();
 
         axios
-            .post(utilities["backend-url"] + "/reports")
+            .post(utilities["backend-url"] + "/reports", reportData)
             .then(res => {
                 if (res.status === 201) {
                     this.handleClose();
