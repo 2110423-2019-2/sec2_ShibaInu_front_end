@@ -12,7 +12,6 @@ class AdminHome extends React.Component {
       isDataLoad: false,
       userDatas: {},
       isUserDataLoad: false,
-      banned: [],
       showModal : false,
       modalData : {userId : "", mode : ""}
     };
@@ -23,17 +22,16 @@ class AdminHome extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios.get(utilities['backend-url'] + "/users").then(res => {
       const userDatas = res.data;
-      var banned = [];
+      /*var banned = [];
       for(let i=0;i<userDatas.length;i++){
         var ban = "Ban";
         if (userDatas[i].isBanned){
           ban = "Unban"
         }
         banned.push(ban);
-      }
-      this.setState({ userDatas: userDatas, isUserDataLoad: true, banned: banned });
+      }*/
+      this.setState({ userDatas: userDatas, isUserDataLoad: true });
       console.log(this.state.userDatas);
-      console.log(this.state.isBanned);
     });
   };
 
@@ -41,26 +39,7 @@ class AdminHome extends React.Component {
     this.fetchDatas();
   };
 
-  disapproveHandler = () => {
-    swal({
-      title: "Are you sure to disapprove?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((willDisapprove) => {
-      if (willDisapprove) {
-        var status = 
-        swal("Disapproved success!", {
-          icon: "success",
-        });
-        
-      }
-    });
-  }
-  
-
-  approveHandler = (index) => {
+  disapproveHandler = (id) => {
     swal({
       title: "Are you sure to approve?",
       icon: "warning",
@@ -72,7 +51,43 @@ class AdminHome extends React.Component {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
       axios
       .patch(utilities["backend-url"] + "/users/verify/verify",{
-        user: this.state.userDatas[index].userId,
+        user: id,
+        approve: false
+      })
+      .then(response => {
+        switch (response.status) {
+          // Created
+          case 201:
+            console.log("already push");
+            break;
+
+          // Other case
+          default:
+            console.log("Status code is " + response.status);
+        }
+      });
+        swal("Approved success!", {
+          icon: "success",
+        });
+
+      }
+    });
+  }
+  
+
+  approveHandler = (id) => {
+    swal({
+      title: "Are you sure to approve?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    })
+    .then((willApprove) => {
+      if (willApprove) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+      axios
+      .patch(utilities["backend-url"] + "/users/verify/verify",{
+        user: id,
         approve: true
       })
       .then(response => {
@@ -95,8 +110,8 @@ class AdminHome extends React.Component {
     });
   }
 
-  banHandler = (index) => {
-    var title = "Are you sure to " + this.state.banned[index] + "?";
+  banHandler = (id,isBanned) => {
+    var title = "Are you sure to " + isBanned?"Unban":"Ban" + "?";
     swal({
       title: title,
       icon: "warning",
@@ -105,26 +120,25 @@ class AdminHome extends React.Component {
     })
     .then((willBan) => {
       if (willBan) {
-      var banned = this.state.banned;
-      var isBanned = false;
-      if(banned[index] === "Ban"){
-        isBanned = true;
-        banned[index] = "Unban";
-      } else {
-        banned[index] = "Ban";
-      }
-      this.setState({banned: banned});
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
       axios
       .patch(utilities["backend-url"] + "/users/ban", {
         user: this.state.userDatas[index].userId,
-        isBanned: isBanned
+        isBanned: (isBanned===false)
       })
       .then(response => {
         switch (response.status) {
           // Created
           case 201:
             console.log("already push");
+            var {userDatas} = this.state;
+            for(let i=0;i<this.state.userDatas.length;i++){
+              if(userDatas.userId === id){
+                userDatas.isBanned = (isBanned===false);
+                break;
+              }
+            }
+            this.setState({userDatas: userDatas});
             break;
 
           // Other case
@@ -196,18 +210,18 @@ class AdminHome extends React.Component {
         }
         </td>
       <td className="align-middle">
-        <button type="button" className="btn btn-secondary btn-block" onClick={()=>this.disapproveHandler(index)}>
+        <button type="button" className="btn btn-secondary btn-block" onClick={()=>this.disapproveHandler(user.userId)}>
           Disapprove
         </button>
       </td>
       <td className="align-middle">
-        <button type="button" className="btn btn-success btn-block" onClick={()=>this.approveHandler(index)}>
+        <button type="button" className="btn btn-success btn-block" onClick={()=>this.approveHandler(user.userId)}>
           Approve
         </button>
       </td>
       <td className="align-middle">
-        <button type="button" className="btn btn-danger btn-block" onClick={()=>this.banHandler(index)}>
-          {this.state.banned[index]}
+        <button type="button" className="btn btn-danger btn-block" onClick={()=>this.banHandler(user.userId,user.isBanned)}>
+          {user.isBanned?"Unban":"Ban"}
         </button>
       </td>
     </tr>
