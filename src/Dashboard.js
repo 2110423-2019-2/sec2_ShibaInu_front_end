@@ -426,7 +426,7 @@ class Dashboard extends React.Component {
 
       if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId.toString() === LocalStorageService.getUserID()) {
         this.setState({ permissionToAccess: true });
-      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && this.state.jobStatus !== 'open' && this.state.contract.freelancerId.toString() === LocalStorageService.getUserID()) {
+      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && (this.state.jobStatus === 'open' || (this.state.jobStatus !== 'open' && this.state.contract.freelancerId.toString() === LocalStorageService.getUserID()))) {
         this.setState({ permissionToAccess: true });
       }
 
@@ -1125,8 +1125,8 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
-  handleConfirm=async(status)=>{
-    if(status){
+  handleConfirm = async (status) => {
+    if (status) {
       swal({
         title: "Are you sure?",
         text: "Once Accept, you will not be able to change this! ",
@@ -1140,7 +1140,7 @@ class DashboardFeed extends React.Component {
               "Bearer " + LocalStorageService.getAccessToken();
             let res;
             try {
-              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/"+this.state.jobId+","+1)
+              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/" + this.state.jobId + "," + 1)
               window.location.reload()
             } catch (err) {
               res = err.response.data
@@ -1150,7 +1150,7 @@ class DashboardFeed extends React.Component {
             }
           }
         });
-    }else{
+    } else {
       swal({
         title: "Are you sure?",
         text: "Once Decline, you will have to wait for a new link ",
@@ -1164,7 +1164,7 @@ class DashboardFeed extends React.Component {
               "Bearer " + LocalStorageService.getAccessToken();
             let res;
             try {
-              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/"+this.state.jobId+","+0)
+              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/" + this.state.jobId + "," + 0)
               window.location.reload()
             } catch (err) {
               res = err.response.data
@@ -1175,7 +1175,7 @@ class DashboardFeed extends React.Component {
           }
         });
     }
-    
+
   }
   renderInput() {
     return (
@@ -1211,20 +1211,20 @@ class DashboardFeed extends React.Component {
     let showButton = null;
     if (this.state.mode === "client") {
       showButton = (<>
-      <button
-              type="submit"
-              className="btn btn-danger"
-              onClick={()=>this.handleConfirm(false)}
-            >
-              Decline
+        <button
+          type="submit"
+          className="btn btn-danger"
+          onClick={() => this.handleConfirm(false)}
+        >
+          Decline
         </button>
         {' '}
         <button
-              type="submit"
-              className="btn btn-success"
-              onClick={()=>this.handleConfirm(true)}
-            >
-            Accept
+          type="submit"
+          className="btn btn-success"
+          onClick={() => this.handleConfirm(true)}
+        >
+          Accept
         </button>
       </>)
     }
