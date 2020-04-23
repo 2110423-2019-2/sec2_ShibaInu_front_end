@@ -16,6 +16,7 @@ import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
 import PaymentModal from './PaymentModal';
 import swal from 'sweetalert';
+import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -65,18 +66,10 @@ class Dashboard extends React.Component {
       this.getInterestedFreelancer();
       this.getjobDetail();
       this.getContract();
-
-      if (this.state.jobStatus !== 'open' && this.state.clientId !== LocalStorageService.getUserID()) {
-        this.setState({ permissionToAccess: true });
-      }
     }
     if (this.state.mode === "freelancer") {
       this.getjobDetail();
       this.getContract();
-
-      if (this.state.jobStatus !== 'open' && this.state.contract.freelancerId !== LocalStorageService.getUserID()) {
-        this.setState({ permissionToAccess: true });
-      }
     }
 
   }
@@ -429,6 +422,13 @@ class Dashboard extends React.Component {
       } else {
         container = "";
       }
+
+      if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId === LocalStorageService.getUserID()) {
+        this.setState({ permissionToAccess: true });
+      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && this.state.jobStatus !== 'open' && this.state.contract.freelancerId === LocalStorageService.getUserID()) {
+        this.setState({ permissionToAccess: true });
+      }
+
     } else {
       container = this.renderReload();
     }
@@ -436,7 +436,7 @@ class Dashboard extends React.Component {
       (<>
         {this.renderPayment(this.state.jobStatus)}
         {container}
-      </>) : (<h1 align="center">you're not allowed to access this page</h1>);
+      </>) : (<PageNotFoundNotAllow mode='not-allow' />);
   }
 }
 
@@ -1035,13 +1035,13 @@ class DashboardFeed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url : "",
-      jobId : this.props.jobId,
-      hasbeenSent : false,
-      loadUrl : false,
-      mode : this.props.mode,
-      status : this.props.status,
-      linkStatus : false,
+      url: "",
+      jobId: this.props.jobId,
+      hasbeenSent: false,
+      loadUrl: false,
+      mode: this.props.mode,
+      status: this.props.status,
+      linkStatus: false,
     };
   }
   getUrl = async () => {
@@ -1176,11 +1176,11 @@ class DashboardFeed extends React.Component {
     }
     
   }
-  renderInput(){
-      return (
-        <div>
-          <h3>Finish your Job</h3>
-          <Form>
+  renderInput() {
+    return (
+      <div>
+        <h3>Finish your Job</h3>
+        <Form>
           <Form.Group as={Row} controlId="formLink">
             <Form.Label column sm={2}>
               Link
@@ -1206,9 +1206,9 @@ class DashboardFeed extends React.Component {
       </div>
     );
   }
-  renderUrl(){
+  renderUrl() {
     let showButton = null;
-    if(this.state.mode === "client"){
+    if (this.state.mode === "client") {
       showButton = (<>
       <button
               type="submit"
