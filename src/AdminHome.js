@@ -168,7 +168,6 @@ class AdminCard extends React.Component {
     return (
       <Card
         className={"text-center dashboard-box"}
-        hidden={this.props.hidden}
       >
         <Card.Header className="box-topic"><h5>{this.state.topicName[this.state.mode]}</h5></Card.Header>
         <Card.Body>
