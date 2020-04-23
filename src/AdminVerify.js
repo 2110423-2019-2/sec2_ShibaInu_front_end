@@ -239,7 +239,7 @@ class AdminVerify extends React.Component {
           </Row>
           <Row className="bg-white shadow">
             <Col>
-              <Table responsive>
+              <Table responsive hover striped>
                 <thead>{this.headTable()}</thead>
                 <tbody>{this.detailTable()}</tbody>
               </Table>
