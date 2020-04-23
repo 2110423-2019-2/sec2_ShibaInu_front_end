@@ -1035,12 +1035,13 @@ class DashboardFeed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: "",
-      jobId: this.props.jobId,
-      hasbeenSent: false,
-      loadUrl: false,
-      mode: this.props.mode,
-      status: this.props.status,
+      url : "",
+      jobId : this.props.jobId,
+      hasbeenSent : false,
+      loadUrl : false,
+      mode : this.props.mode,
+      status : this.props.status,
+      linkStatus : false,
     };
   }
   getUrl = async () => {
@@ -1123,11 +1124,18 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
-  renderInput() {
-    return (
-      <div>
-        <h3>Finish your Job</h3>
-        <Form>
+  handleConfirm=(status)=>{
+    if(status){
+
+    }else{
+
+    }
+  }
+  renderInput(){
+      return (
+        <div>
+          <h3>Finish your Job</h3>
+          <Form>
           <Form.Group as={Row} controlId="formLink">
             <Form.Label column sm={2}>
               Link
@@ -1153,10 +1161,31 @@ class DashboardFeed extends React.Component {
       </div>
     );
   }
-  renderUrl() {
+  renderUrl(){
+    let showButton = null;
+    if(this.state.mode === "client"){
+      showButton = (<>
+      <button
+              type="submit"
+              className="btn btn-danger"
+              onClick={this.handleConfirm(false)}
+            >
+              Decline
+        </button>
+        {' '}
+        <button
+              type="submit"
+              className="btn btn-success"
+              onClick={this.handleConfirm(true)}
+            >
+            Accept
+        </button>
+      </>)
+    }
     return (
       <div>
         <h3>Link : <a href={this.state.url}>{this.state.url}</a></h3>
+        {showButton}
       </div>
     );
   }
