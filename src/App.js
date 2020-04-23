@@ -16,6 +16,9 @@ import {
   BrowserRouter as Router,
   useParams,
 } from "react-router-dom";
+import axios from 'axios';
+import { swal } from "sweetalert";
+
 import PrivateRoute from "./utilities/PrivateRoute";
 import GuestRoute from "./utilities/GuestRoute";
 import HomeGuest from "./HomeGuest";
@@ -32,6 +35,9 @@ import UserReport from './UserReport';
 import AdminVerify from './AdminVerify';
 import AdminBan from "./AdminBan";
 
+import LocalStorageService from './LocalStorageService';
+var utilities = require("./Utilities.json");
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -39,6 +45,21 @@ class App extends React.Component {
   }
 
   render() {
+
+    if (LocalStorageService.getAccessToken()) {
+      axios.defaults.headers.common["Authorization"] = "Bearer " + LocalStorageService.getAccessToken();
+      axios
+        .post(utilities["backend-url"] + "/users/" + LocalStorageService.getUserID())
+        .then((response) => {
+        }).catch((error) => {
+
+          if (error.response && error.response.status === 403) {
+            console.log("Banned user");
+            swal("You are banned!", error.response.data.message, "error");
+          }
+        });
+    }
+
     return (
       <div>
         <NavBar />
