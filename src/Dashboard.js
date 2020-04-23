@@ -369,7 +369,7 @@ class Dashboard extends React.Component {
       .then(res => {
         console.log(res.status);
         if (res.status === 201) {
-          this.componentWillMount();
+          this.componentDidMount();
         }
       }).catch((err) => {
         console.error(err);
@@ -388,7 +388,7 @@ class Dashboard extends React.Component {
     }
 
     if (reload) {
-      await this.componentWillMount();
+      await this.componentDidMount();
       // window.location.reload();
     }
   }
