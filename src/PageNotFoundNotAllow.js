@@ -1,21 +1,26 @@
 import React from 'react';
 import { Card, Container, Row, Col } from 'react-bootstrap';
 
-class PageNotFound extends React.Component {
+class PageNotFoundNotAllow extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         return (
             <div className="main-background">
                 <Container id="adminHome-box">
                     <Row>
-                        <Col  style={{ "align-item": "center" }}>
+                        <Col style={{ "align-item": "center" }}>
                             <Card
                                 className={"text-center dashboard-box shadow small-box"} style={{ margin: "20px" }}
                             >
                                 <Card.Header className="box-topic"><h5>Oops!</h5></Card.Header>
                                 <Card.Body>
-                                    We can't seem to find the page you are looking for. :(
-                            </Card.Body>
+                                    {this.props.mode === 'not-allow' ? "You are not allow to access this page. :("
+                                        : "We can't seem to find the page you are looking for. :("}
+                                </Card.Body>
                             </Card>
                         </Col>
                     </Row>
@@ -25,4 +30,4 @@ class PageNotFound extends React.Component {
     }
 }
 
-export default PageNotFound;
+export default PageNotFoundNotAllow;

@@ -34,7 +34,7 @@ import AdminReportList from "./AdminReport";
 import UserReport from './UserReport';
 import AdminVerify from './AdminVerify';
 import AdminBan from "./AdminBan";
-import PageNotFound from "./PageNotFound";
+import PageNotFoundNotAllow from "./PageNotFoundNotAllow";
 
 import LocalStorageService from './LocalStorageService';
 var utilities = require("./Utilities.json");
@@ -54,7 +54,7 @@ class App extends React.Component {
         .then((response) => {
         }).catch((error) => {
 
-          if (error.response && error.response.status === 403 ) {
+          if (error.response && error.response.status === 403) {
             console.log("Banned user");
             swal("You are banned!", error.response.data.message, "error");
             LocalStorageService.signOut();
@@ -121,7 +121,7 @@ class App extends React.Component {
             <PrivateRoute exact path="/report" component={UserReport} />
             <PrivateRoute exact path="/admin/verify" component={AdminVerify} />
             <PrivateRoute exact path="/admin/ban" component={AdminBan} />
-            <Route path="*" component={PageNotFound} />
+            <Route path="*" component={PageNotFoundNotAllow} />
           </Switch>
         </Router>
       </div>
