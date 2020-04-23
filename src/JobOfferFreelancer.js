@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
+import { switchCase } from "@babel/types";
 var utilities = require('./Utilities.json');
 class JobOfferFreelancer extends React.Component {
   constructor(props) {
@@ -101,7 +102,21 @@ class JobOfferFreelancer extends React.Component {
       ));
     } else {
       recentJob = this.state.jobDatas
-        .filter(job => (job.status === this.state.statusFilter))
+        .filter(job => {
+          if(job.status === this.state.statusFilter){
+            return true;
+          }else{
+            if(this.state.statusFilter === this.state.status.CONTRACT){
+              switch(job.status){
+                case this.state.status.INTERESTED:
+                  return false;
+                case this.state.status.MAKEDEAL:
+                  return false;
+                default : 
+                  return true;
+              }
+            }
+          }})
         .map((job, index) =>  (
           <tr key={index} className="text-center">
             <td className="align-middle">
