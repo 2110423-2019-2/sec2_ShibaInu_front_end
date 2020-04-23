@@ -148,8 +148,7 @@ class SignUp extends React.Component {
         } else {
           console.error(error);
         }
-      })
-      .finally(() => {
+
         this.setState({
           isLoading: false,
         });
