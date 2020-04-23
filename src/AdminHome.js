@@ -50,6 +50,11 @@ class AdminHome extends React.Component {
             </Row>
             <Row>
               <Col>
+                <AdminCard mode='total' />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <AdminCard mode="verification" />
               </Col>
               <Col>
@@ -73,11 +78,18 @@ class AdminCard extends React.Component {
     this.state = {
       mode: this.props.mode || null,
       amount: "ERROR",
-      isLoading: false,
+      isLoading: true,
       topicName: {
         verification: 'User Verification',
         report: 'Report',
-        ban: 'Banned User'
+        ban: 'Banned User',
+        total: 'Total user'
+      },
+      description: {
+        verification: 'users waiting for verified',
+        report: 'reports left',
+        ban: 'users being banned',
+        total: 'users in the system'
       },
       goTo: {
         verification: 'User Verification',
@@ -107,12 +119,16 @@ class AdminCard extends React.Component {
 
     switch (this.state.mode) {
       case 'verification':
-        this.fetchVerification();
+        this.fetchUser();
         break;
       case 'report':
         this.fetchReport();
         break;
       case 'ban':
+        this.fetchUser();
+        break;
+      case 'total':
+        this.fetchUser();
         break;
       default:
         this.setState({ isLoading: false });
@@ -120,15 +136,29 @@ class AdminCard extends React.Component {
     }
   }
 
-  fetchVerification = () => {
+  fetchUser = () => {
 
     axios.get(utilities['backend-url'] + "/users").then((res) => {
 
       if (res.status === 200) {
-        const userDatas = res.data;
-        const amount = userDatas.filter((user) => {
-          return !user.isVerified;
-        }).length;
+
+        let amount = "ERROR";
+
+        switch (this.state.mode) {
+          case 'verification':
+            amount = res.data.filter((user) => {
+              return !user.isVerified;
+            }).length;
+            break;
+          case 'ban':
+            amount = res.data.filter((user) => {
+              return user.isBanned;
+            }).length;
+            break;
+          case 'total':
+            amount = res.data.length;
+            break;
+        }
 
         this.setState({
           amount: amount
@@ -163,24 +193,24 @@ class AdminCard extends React.Component {
     });
   }
 
-
   render() {
     return (
       <Card
-        className={"text-center dashboard-box"}
+        className={"text-center dashboard-box shadow"} style={{ margin: "0px", "margin-bottom": "20px" }}
       >
         <Card.Header className="box-topic"><h5>{this.state.topicName[this.state.mode]}</h5></Card.Header>
         <Card.Body>
           {this.state.isLoading ? (<LoadingSpinner customClass="false" />) : (
             <>
               <h1>{this.state.amount}</h1>
-              <h5>{this.state.mode === 'report' ? 'reports left' : 'users left'}</h5>
+              <h5>{this.state.description[this.state.mode]}</h5>
             </>
           )}
         </Card.Body>
-        <Card.Footer>
-          <Button variant="primary" href={this.state.link[this.state.mode]} >{this.state.goTo[this.state.mode]}</Button>
-        </Card.Footer>
+        {!this.state.goTo[this.state.mode] ? '' :
+          (<Card.Footer>
+            <Button variant="primary" href={this.state.link[this.state.mode]} >{this.state.goTo[this.state.mode]}</Button>
+          </Card.Footer>)}
       </Card>
     );
   }
