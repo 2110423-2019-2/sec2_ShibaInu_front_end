@@ -272,6 +272,13 @@ class Dashboard extends React.Component {
                 />
               </Row>
               <Row>
+                <DashboardFeed contract={this.state.contract} 
+                jobId={this.state.jobID} 
+                status={this.state.jobStatus}
+                mode ={this.state.mode}
+                />
+              </Row>
+              <Row>
                 <DashboardTimeline
                   timelineDetail={this.state.timelineDetail}
                   status={this.state.jobStatus}
@@ -312,7 +319,12 @@ class Dashboard extends React.Component {
             </Col>
             <Col sm={8}>
               <Row>
-                <DashboardFeed contract={this.state.contract} jobId={this.state.jobID} />
+                <DashboardFeed 
+                contract={this.state.contract} 
+                jobId={this.state.jobID} 
+                status={this.state.jobStatus}
+                mode ={this.state.mode}
+                />
               </Row>
               <Row>
                 <DashboardTimeline
@@ -723,15 +735,16 @@ class DashboardResponsible extends React.Component {
         let data = "data:;base64," + this.formatJPGtopath(res);
         this.setState({
           img: data,
-          loadImg: true
         });
       })
       .catch(err => {
         console.log(err);
+      }).finally(()=>{
         this.setState({
           loadImg: true
         });
-      });
+      })
+      
   }
 
   componentDidUpdate(prevProps) {
@@ -1016,6 +1029,8 @@ class DashboardFeed extends React.Component {
       jobId : this.props.jobId,
       hasbeenSent : false,
       loadUrl : false,
+      mode : this.props.mode,
+      status : this.props.status,
     };
   }
   getUrl=async()=>{
@@ -1038,7 +1053,12 @@ class DashboardFeed extends React.Component {
     }
   }
   async componentDidMount() {
-    await this.setState({ contract: this.props.contract, jobId : this.props.jobId });
+    await this.setState({ 
+      contract: this.props.contract, 
+      jobId : this.props.jobId,
+      status : this.props.status,
+      mode : this.props.mode
+    });
     await this.getUrl();
     console.log(this.state.loadUrl)
   }
@@ -1114,11 +1134,12 @@ class DashboardFeed extends React.Component {
     );
   }
   render() {
+    console.log(this.state.status)
     if(this.state.loadUrl){
-      if(this.state.hasbeenSent){
-        return <DashboardBox topic="Feed" component={this.renderUrl()} />;
-      }else{
+      if(!this.state.hasbeenSent && this.state.mode.toLowerCase()==="freelancer"){
         return <DashboardBox topic="Feed" component={this.renderInput()} />;
+      }else{
+        return <DashboardBox topic="Feed" component={this.renderUrl()} />;
       }
     }else{
       return null;
