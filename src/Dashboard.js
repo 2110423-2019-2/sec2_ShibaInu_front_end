@@ -118,15 +118,15 @@ class Dashboard extends React.Component {
       .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobID)
       .then(res => {
         console.log(res.data);
-        this.setState({contract : res.data})
+        this.setState({ contract: res.data })
       })
       .catch(err => {
         console.log(err);
         if (err.response.status === 400) {
-          
+
         }
       })
-      .finally(()=>{
+      .finally(() => {
         this.setState({
           loadContract: true
         });
@@ -272,10 +272,10 @@ class Dashboard extends React.Component {
                 />
               </Row>
               <Row>
-                <DashboardFeed contract={this.state.contract} 
-                jobId={this.state.jobID} 
-                status={this.state.jobStatus}
-                mode ={this.state.mode}
+                <DashboardFeed contract={this.state.contract}
+                  jobId={this.state.jobID}
+                  status={this.state.jobStatus}
+                  mode={this.state.mode}
                 />
               </Row>
               <Row>
@@ -319,11 +319,11 @@ class Dashboard extends React.Component {
             </Col>
             <Col sm={8}>
               <Row>
-                <DashboardFeed 
-                contract={this.state.contract} 
-                jobId={this.state.jobID} 
-                status={this.state.jobStatus}
-                mode ={this.state.mode}
+                <DashboardFeed
+                  contract={this.state.contract}
+                  jobId={this.state.jobID}
+                  status={this.state.jobStatus}
+                  mode={this.state.mode}
                 />
               </Row>
               <Row>
@@ -348,7 +348,7 @@ class Dashboard extends React.Component {
   transferMoneyToFreelancer = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-    axios.post(utilities['backend-url'] + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price })
+    axios.post(utilities['backend-url'] + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price, userId: this.state.contract.freelancerId })
       .then(res => {
         console.log(res.data);
         if (res.status === 201) {
@@ -373,7 +373,7 @@ class Dashboard extends React.Component {
       });
   }
 
-   callbackPayment = async (status = false, reload = false) => {
+  callbackPayment = async (status = false, reload = false) => {
     this.setState({
       showPayment: status
     });
@@ -739,12 +739,12 @@ class DashboardResponsible extends React.Component {
       })
       .catch(err => {
         console.log(err);
-      }).finally(()=>{
+      }).finally(() => {
         this.setState({
           loadImg: true
         });
       })
-      
+
   }
 
   componentDidUpdate(prevProps) {
@@ -1025,49 +1025,49 @@ class DashboardFeed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url : "",
-      jobId : this.props.jobId,
-      hasbeenSent : false,
-      loadUrl : false,
-      mode : this.props.mode,
-      status : this.props.status,
+      url: "",
+      jobId: this.props.jobId,
+      hasbeenSent: false,
+      loadUrl: false,
+      mode: this.props.mode,
+      status: this.props.status,
     };
   }
-  getUrl=async()=>{
+  getUrl = async () => {
     let res;
-    try{
+    try {
       axios.defaults.headers.common["Authorization"] =
-      "Bearer " + LocalStorageService.getAccessToken();
+        "Bearer " + LocalStorageService.getAccessToken();
       res = await axios
-      .get(utilities["backend-url"] + "/jobs/finishedLink/"+this.state.jobId)
+        .get(utilities["backend-url"] + "/jobs/finishedLink/" + this.state.jobId)
       console.log(res.data)
       this.setState({
-        url : res.data,
-        hasbeenSent : true,
-        loadUrl:true
+        url: res.data,
+        hasbeenSent: true,
+        loadUrl: true
       })
-    }catch(err){
+    } catch (err) {
       console.log(err.response)
-    }finally{
+    } finally {
       this.setState({ loadUrl: true })
     }
   }
   async componentDidMount() {
-    await this.setState({ 
-      contract: this.props.contract, 
-      jobId : this.props.jobId,
-      status : this.props.status,
-      mode : this.props.mode
+    await this.setState({
+      contract: this.props.contract,
+      jobId: this.props.jobId,
+      status: this.props.status,
+      mode: this.props.mode
     });
     await this.getUrl();
     console.log(this.state.loadUrl)
   }
-  onLinkChange = (e)=>{
+  onLinkChange = (e) => {
     console.log(e.target.value)
-    this.setState({url:e.target.value})
+    this.setState({ url: e.target.value })
     console.log(this.state.url)
   }
-  onSubmit = (e)=>{
+  onSubmit = (e) => {
     e.preventDefault()
     swal({
       title: "Are you sure?",
@@ -1075,31 +1075,31 @@ class DashboardFeed extends React.Component {
       icon: "success",
       buttons: true,
       dangerMode: true,
-  })
+    })
       .then(async (confirm) => {
-          if (confirm) {
-            axios.defaults.headers.common["Authorization"] =
-              "Bearer " + LocalStorageService.getAccessToken();
-            let res;
-            try{
-              res = await axios.patch(utilities["backend-url"] + "/jobs/finishJob",{
-                jobId : this.state.jobId,
-                url : this.state.url
-              })
-              window.location.reload()
-            }catch(err){
-              res = err.response.data
-              swal("Error occured, code: "+res.statusCode, {
-                icon: "error",
-              });
-            }
+        if (confirm) {
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer " + LocalStorageService.getAccessToken();
+          let res;
+          try {
+            res = await axios.patch(utilities["backend-url"] + "/jobs/finishJob", {
+              jobId: this.state.jobId,
+              url: this.state.url
+            })
+            window.location.reload()
+          } catch (err) {
+            res = err.response.data
+            swal("Error occured, code: " + res.statusCode, {
+              icon: "error",
+            });
           }
+        }
       });
   }
-  checkStatus=()=>{
+  checkStatus = () => {
     let status = this.state.status.toLowerCase()
-    switch(status){
-      case "open" :
+    switch (status) {
+      case "open":
         return true;
       case "accepted":
         return true;
@@ -1113,37 +1113,37 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
-  renderInput(){
-      return (
-        <div>
-          <h3>Finish your Job</h3>
-          <Form>
+  renderInput() {
+    return (
+      <div>
+        <h3>Finish your Job</h3>
+        <Form>
           <Form.Group as={Row} controlId="formLink">
             <Form.Label column sm={2}>
-                Link
+              Link
             </Form.Label>
             <Col sm="8">
-                <Form.Control
-                    onChange={(e)=>this.onLinkChange(e)}
-                    required
-                />
+              <Form.Control
+                onChange={(e) => this.onLinkChange(e)}
+                required
+              />
             </Col>
             <Col>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={this.onSubmit}
-            >
-              Send
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={this.onSubmit}
+              >
+                Send
             </button>
             </Col>
           </Form.Group>
-          </Form>
-          
-        </div>
-      );
+        </Form>
+
+      </div>
+    );
   }
-  renderUrl(){
+  renderUrl() {
     return (
       <div>
         <h3>Link : <a href={this.state.url}>{this.state.url}</a></h3>
@@ -1152,15 +1152,15 @@ class DashboardFeed extends React.Component {
   }
   render() {
     console.log(this.state.status)
-    if(this.state.loadUrl){
-      if(this.state.hasbeenSent){
-        return <DashboardBox topic="Feed" component={this.renderUrl()} hidden={this.checkStatus()}/>;
-      }else if(!this.state.hasbeenSent && this.state.mode.toLowerCase()==="freelancer"){
-        return <DashboardBox topic="Feed" component={this.renderInput()} hidden={this.checkStatus()}/>;
-      }else{
+    if (this.state.loadUrl) {
+      if (this.state.hasbeenSent) {
+        return <DashboardBox topic="Feed" component={this.renderUrl()} hidden={this.checkStatus()} />;
+      } else if (!this.state.hasbeenSent && this.state.mode.toLowerCase() === "freelancer") {
+        return <DashboardBox topic="Feed" component={this.renderInput()} hidden={this.checkStatus()} />;
+      } else {
         return null;
       }
-    }else{
+    } else {
       return null;
     }
   }
