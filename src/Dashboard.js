@@ -43,6 +43,7 @@ class Dashboard extends React.Component {
       contract: null,
       loadContract: false,
       showPayment: false,
+      permissionToAccess: false,
     };
   }
 
@@ -59,15 +60,23 @@ class Dashboard extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.state.mode === "client") {
       this.getInterestedFreelancer();
       this.getjobDetail();
       this.getContract();
+
+      if (this.state.jobStatus !== 'open' && this.state.clientId !== LocalStorageService.getUserID()) {
+        this.setState({ permissionToAccess: true });
+      }
     }
     if (this.state.mode === "freelancer") {
       this.getjobDetail();
       this.getContract();
+
+      if (this.state.jobStatus !== 'open' && this.state.contract.freelancerId !== LocalStorageService.getUserID()) {
+        this.setState({ permissionToAccess: true });
+      }
     }
 
   }
@@ -423,10 +432,11 @@ class Dashboard extends React.Component {
     } else {
       container = this.renderReload();
     }
-    return (<>
-      {this.renderPayment(this.state.jobStatus)}
-      {container}
-    </>)
+    return this.state.permissionToAccess ?
+      (<>
+        {this.renderPayment(this.state.jobStatus)}
+        {container}
+      </>) : (<h1 align="center">you're not allowed to access this page</h1>);
   }
 }
 
