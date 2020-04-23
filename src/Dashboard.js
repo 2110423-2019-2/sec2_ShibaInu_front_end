@@ -17,6 +17,7 @@ import firebase from "./firebase";
 import PaymentModal from './PaymentModal';
 import swal from 'sweetalert';
 import PageNotFoundNotAllow from './PageNotFoundNotAllow';
+import LoadingSpinner from './utilities/LoadingSpinner';
 let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -423,16 +424,16 @@ class Dashboard extends React.Component {
         container = "";
       }
 
-      if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId === LocalStorageService.getUserID()) {
+      if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId.toString() === LocalStorageService.getUserID()) {
         this.setState({ permissionToAccess: true });
-      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && this.state.jobStatus !== 'open' && this.state.contract.freelancerId === LocalStorageService.getUserID()) {
+      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && this.state.jobStatus !== 'open' && this.state.contract.freelancerId.toString() === LocalStorageService.getUserID()) {
         this.setState({ permissionToAccess: true });
       }
 
     } else {
       container = this.renderReload();
     }
-    return this.state.permissionToAccess ?
+    return !this.loadAllData() ? <LoadingSpinner /> : this.state.permissionToAccess ?
       (<>
         {this.renderPayment(this.state.jobStatus)}
         {container}
