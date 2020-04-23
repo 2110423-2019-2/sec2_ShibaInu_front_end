@@ -403,13 +403,15 @@ class Contract extends React.Component {
                     this.setState({ checkFreelancerBankAccount: true });
                 }
             }).catch((err) => {
+
                 console.error(err);
+
                 this.setState({ checkFreelancerBankAccount: false });
             });
     }
 
     render() {
-        if (this.state.mode === 'freelancer') {
+        if (this.state.mode === 'freelancer' && this.state.checkFreelancerBankAccount) {
             this.checkFreelancerBankAccount();
         }
 
@@ -454,8 +456,19 @@ class Contract extends React.Component {
         return (this.state.mode === 'freelancer' && !this.state.checkFreelancerBankAccount) ? (
             <>
                 <Container>
-                    <h3>Please add your bank account on My payment before accepting contract.</h3>
-                    <Button variant='success' onClick={() => { window.location.href = '/payment' }}>My payment</Button>
+                    <Card
+                        className="text-center dashboard-box small-box"
+                    >
+                        <Card.Header className="box-topic">
+                            Payment Warning!
+                        </Card.Header>
+                        <Card.Body>
+                            <h5>Please add your bank account on My payment before accepting contract.</h5>
+                        </Card.Body>
+                        <Card.Footer>
+                            <Button variant='success' onClick={() => { window.location.href = '/payment' }}>My payment</Button>
+                        </Card.Footer>
+                    </Card>
                 </Container>
             </>
         ) : (
