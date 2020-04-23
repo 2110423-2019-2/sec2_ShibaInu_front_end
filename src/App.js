@@ -29,6 +29,8 @@ import FreelancerSearchPage from "./FreelancerSearchPage";
 import NavBar from "./NavBar";
 import AdminReportList from "./AdminReport";
 import UserReport from './UserReport';
+import AdminVerify from './AdminVerify';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -93,6 +95,7 @@ class App extends React.Component {
             />
             <PrivateRoute path="/admin/report" component={AdminReportList} />
             <PrivateRoute path="/report" component={UserReport} />
+            <PrivateRoute path="/admin/verify" component={AdminVerify} />
           </Switch>
         </Router>
       </div>
