@@ -30,6 +30,7 @@ import NavBar from "./NavBar";
 import AdminReportList from "./AdminReport";
 import UserReport from './UserReport';
 import AdminVerify from './AdminVerify';
+import AdminBan from "./AdminBan";
 
 class App extends React.Component {
   constructor(props) {
@@ -96,6 +97,7 @@ class App extends React.Component {
             <PrivateRoute path="/admin/report" component={AdminReportList} />
             <PrivateRoute path="/report" component={UserReport} />
             <PrivateRoute path="/admin/verify" component={AdminVerify} />
+            <PrivateRoute path="/admin/ban" component={AdminBan} />
           </Switch>
         </Router>
       </div>

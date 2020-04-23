@@ -88,7 +88,7 @@ class AdminCard extends React.Component {
       link: {
         verification: '/admin/verify',
         report: '/admin/report',
-        ban: '/'
+        ban: '/admin/ban'
       }
     };
   }
