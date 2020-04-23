@@ -1125,12 +1125,57 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
-  handleConfirm = (status) => {
-    if (status) {
-
-    } else {
-
+  handleConfirm=async(status)=>{
+    if(status){
+      swal({
+        title: "Are you sure?",
+        text: "Once Accept, you will not be able to change this! ",
+        icon: "success",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then(async (confirm) => {
+          if (confirm) {
+            axios.defaults.headers.common["Authorization"] =
+              "Bearer " + LocalStorageService.getAccessToken();
+            let res;
+            try {
+              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/"+this.state.jobId+","+1)
+              window.location.reload()
+            } catch (err) {
+              res = err.response.data
+              swal("Error occured, code: " + res.statusCode, {
+                icon: "error",
+              });
+            }
+          }
+        });
+    }else{
+      swal({
+        title: "Are you sure?",
+        text: "Once Decline, you will have to wait for a new link ",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+        .then(async (confirm) => {
+          if (confirm) {
+            axios.defaults.headers.common["Authorization"] =
+              "Bearer " + LocalStorageService.getAccessToken();
+            let res;
+            try {
+              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/"+this.state.jobId+","+0)
+              window.location.reload()
+            } catch (err) {
+              res = err.response.data
+              swal("Error occured, code: " + res.statusCode, {
+                icon: "error",
+              });
+            }
+          }
+        });
     }
+    
   }
   renderInput() {
     return (
@@ -1166,20 +1211,20 @@ class DashboardFeed extends React.Component {
     let showButton = null;
     if (this.state.mode === "client") {
       showButton = (<>
-        <button
-          type="submit"
-          className="btn btn-danger"
-          onClick={this.handleConfirm(false)}
-        >
-          Decline
+      <button
+              type="submit"
+              className="btn btn-danger"
+              onClick={()=>this.handleConfirm(false)}
+            >
+              Decline
         </button>
         {' '}
         <button
-          type="submit"
-          className="btn btn-success"
-          onClick={this.handleConfirm(true)}
-        >
-          Accept
+              type="submit"
+              className="btn btn-success"
+              onClick={()=>this.handleConfirm(true)}
+            >
+            Accept
         </button>
       </>)
     }
