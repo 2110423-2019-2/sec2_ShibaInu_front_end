@@ -398,6 +398,13 @@ class NavBar extends React.Component {
       dropDownMenu = (
         <DropdownMenu right>
           <DropdownItem
+          href="/admin/verify"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
+          User verification
+        </DropdownItem>
+          <DropdownItem
           href="/admin/report"
           id="dropdown-item-balance"
           className="color-black"
