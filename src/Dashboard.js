@@ -1096,7 +1096,24 @@ class DashboardFeed extends React.Component {
           }
       });
   }
-    renderInput(){
+  checkStatus=()=>{
+    let status = this.state.status.toLowerCase()
+    switch(status){
+      case "open" :
+        return true;
+      case "accepted":
+        return true;
+      case "working":
+        return false;
+      case "done":
+        return false;
+      case "closed":
+        return false;
+      default:
+        return true;
+    }
+  }
+  renderInput(){
       return (
         <div>
           <h3>Finish your Job</h3>
@@ -1136,10 +1153,12 @@ class DashboardFeed extends React.Component {
   render() {
     console.log(this.state.status)
     if(this.state.loadUrl){
-      if(!this.state.hasbeenSent && this.state.mode.toLowerCase()==="freelancer"){
-        return <DashboardBox topic="Feed" component={this.renderInput()} />;
+      if(this.state.hasbeenSent){
+        return <DashboardBox topic="Feed" component={this.renderUrl()} hidden={this.checkStatus()}/>;
+      }else if(!this.state.hasbeenSent && this.state.mode.toLowerCase()==="freelancer"){
+        return <DashboardBox topic="Feed" component={this.renderInput()} hidden={this.checkStatus()}/>;
       }else{
-        return <DashboardBox topic="Feed" component={this.renderUrl()} />;
+        return null;
       }
     }else{
       return null;

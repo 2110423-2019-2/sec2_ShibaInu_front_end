@@ -152,7 +152,7 @@ class AdminBan extends React.Component {
           <td className="align-middle admin-banbtn">
             <button
               type="button"
-              className="btn btn-danger btn-block"
+              className={user.isBanned === true ? "btn btn-warning btn-block" : "btn btn-danger btn-block"}
               onClick={() => this.banHandler(user.userId, user.isBanned)}
             >
               {user.isBanned === true ? "Unban" : "Ban"}
@@ -180,7 +180,7 @@ class AdminBan extends React.Component {
             <td className="align-middle admin-banbtn">
               <button
                 type="button"
-                className="btn btn-danger btn-block"
+                className={user.isBanned === true ? "btn btn-warning btn-block" : "btn btn-danger btn-block"}
                 onClick={() => this.banHandler(user.userId, user.isBanned)}
               >
                 {user.isBanned === true ? "Unban" : "Ban"}
