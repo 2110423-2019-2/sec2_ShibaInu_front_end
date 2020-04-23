@@ -17,7 +17,7 @@ import {
   useParams,
 } from "react-router-dom";
 import axios from 'axios';
-import { swal } from "sweetalert";
+import swal from "sweetalert";
 
 import PrivateRoute from "./utilities/PrivateRoute";
 import GuestRoute from "./utilities/GuestRoute";
@@ -46,16 +46,17 @@ class App extends React.Component {
 
   render() {
 
-    if (LocalStorageService.getAccessToken()) {
-      axios.defaults.headers.common["Authorization"] = "Bearer " + LocalStorageService.getAccessToken();
+    if (LocalStorageService.getUserID()) {
+      console.log("XXXXXXXXXXXXXXXXXXX");
       axios
-        .post(utilities["backend-url"] + "/users/" + LocalStorageService.getUserID())
+        .get(utilities["backend-url"] + "/auth/checkban/" + LocalStorageService.getUserID())
         .then((response) => {
         }).catch((error) => {
 
-          if (error.response && error.response.status === 403) {
+          if (error.response && error.response.status === 403 ) {
             console.log("Banned user");
             swal("You are banned!", error.response.data.message, "error");
+            LocalStorageService.signOut();
           }
         });
     }
