@@ -376,7 +376,7 @@ class Dashboard extends React.Component {
       });
   }
 
-  callbackPayment = async (status = false, reload = false) => {
+  callbackPayment = async (status = false, reload = true) => {
     this.setState({
       showPayment: status
     });
