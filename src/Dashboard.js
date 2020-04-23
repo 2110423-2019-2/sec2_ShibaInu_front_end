@@ -8,12 +8,14 @@ import {
   Col,
   Card,
   Badge,
-  Spinner
+  Spinner,
+  Form
 } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
 import PaymentModal from './PaymentModal';
+import swal from 'sweetalert';
 let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
@@ -61,11 +63,11 @@ class Dashboard extends React.Component {
     if (this.state.mode === "client") {
       this.getInterestedFreelancer();
       this.getjobDetail();
-      this.checkContract();
+      this.getContract();
     }
     if (this.state.mode === "freelancer") {
       this.getjobDetail();
-      this.checkContract();
+      this.getContract();
     }
 
   }
@@ -111,24 +113,24 @@ class Dashboard extends React.Component {
     };
   }
 
-  async checkContract() {
+  async getContract() {
     await axios
       .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobID)
       .then(res => {
         console.log(res.data);
-        this.setState({
-          contract: res.data,
-          loadContract: true
-        });
+        this.setState({contract : res.data})
       })
       .catch(err => {
         console.log(err);
         if (err.response.status === 400) {
-          this.setState({
-            loadContract: true
-          });
+          
         }
-      });
+      })
+      .finally(()=>{
+        this.setState({
+          loadContract: true
+        });
+      })
   }
   getUserBidWage = async (userId) => {
 
@@ -270,6 +272,13 @@ class Dashboard extends React.Component {
                 />
               </Row>
               <Row>
+                <DashboardFeed contract={this.state.contract} 
+                jobId={this.state.jobID} 
+                status={this.state.jobStatus}
+                mode ={this.state.mode}
+                />
+              </Row>
+              <Row>
                 <DashboardTimeline
                   timelineDetail={this.state.timelineDetail}
                   status={this.state.jobStatus}
@@ -310,7 +319,12 @@ class Dashboard extends React.Component {
             </Col>
             <Col sm={8}>
               <Row>
-                <DashboardFeed contract={this.state.contract} />
+                <DashboardFeed 
+                contract={this.state.contract} 
+                jobId={this.state.jobID} 
+                status={this.state.jobStatus}
+                mode ={this.state.mode}
+                />
               </Row>
               <Row>
                 <DashboardTimeline
@@ -609,7 +623,7 @@ class DashboardStatus extends React.Component {
     super(props);
     this.state = {
       status: this.props.status || null,
-      message: "Due in 3 months"
+      message: ""
     };
   }
 
@@ -637,7 +651,7 @@ class DashboardStatus extends React.Component {
       case "done":
         return "primary";
       case "closed":
-        return "Danger";
+        return "danger";
       default:
         return "primary";
     }
@@ -721,15 +735,16 @@ class DashboardResponsible extends React.Component {
         let data = "data:;base64," + this.formatJPGtopath(res);
         this.setState({
           img: data,
-          loadImg: true
         });
       })
       .catch(err => {
         console.log(err);
+      }).finally(()=>{
         this.setState({
           loadImg: true
         });
-      });
+      })
+      
   }
 
   componentDidUpdate(prevProps) {
@@ -1010,43 +1025,125 @@ class DashboardFeed extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contract: this.props.contract
+      url : "",
+      jobId : this.props.jobId,
+      hasbeenSent : false,
+      loadUrl : false,
+      mode : this.props.mode,
+      status : this.props.status,
     };
   }
-  gotoContract() {
-    window.location.href =
-      "/contract/" +
-      this.state.contract.jobId +
-      "/" +
-      this.state.contract.freelancerId;
-  }
-  componentDidMount() {
-    this.setState({ contract: this.props.contract });
-  }
-  getDisplayComponent() {
-    if (this.state.contract !== null) {
-      return (
-        <div>
-          <h3>Comming soon</h3>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={this.gotoContract.bind(this)}
-          >
-            Contract
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <h3>waiting for offerings</h3>
-        </div>
-      );
+  getUrl=async()=>{
+    let res;
+    try{
+      axios.defaults.headers.common["Authorization"] =
+      "Bearer " + LocalStorageService.getAccessToken();
+      res = await axios
+      .get(utilities["backend-url"] + "/jobs/finishedLink/"+this.state.jobId)
+      console.log(res.data)
+      this.setState({
+        url : res.data,
+        hasbeenSent : true,
+        loadUrl:true
+      })
+    }catch(err){
+      console.log(err.response)
+    }finally{
+      this.setState({ loadUrl: true })
     }
   }
+  async componentDidMount() {
+    await this.setState({ 
+      contract: this.props.contract, 
+      jobId : this.props.jobId,
+      status : this.props.status,
+      mode : this.props.mode
+    });
+    await this.getUrl();
+    console.log(this.state.loadUrl)
+  }
+  onLinkChange = (e)=>{
+    console.log(e.target.value)
+    this.setState({url:e.target.value})
+    console.log(this.state.url)
+  }
+  onSubmit = (e)=>{
+    e.preventDefault()
+    swal({
+      title: "Are you sure?",
+      text: "Once submit, you will not be able to change this! ",
+      icon: "success",
+      buttons: true,
+      dangerMode: true,
+  })
+      .then(async (confirm) => {
+          if (confirm) {
+            axios.defaults.headers.common["Authorization"] =
+              "Bearer " + LocalStorageService.getAccessToken();
+            let res;
+            try{
+              res = await axios.patch(utilities["backend-url"] + "/jobs/finishJob",{
+                jobId : this.state.jobId,
+                url : this.state.url
+              })
+              window.location.reload()
+            }catch(err){
+              res = err.response.data
+              swal("Error occured, code: "+res.statusCode, {
+                icon: "error",
+              });
+            }
+          }
+      });
+  }
+    renderInput(){
+      return (
+        <div>
+          <h3>Finish your Job</h3>
+          <Form>
+          <Form.Group as={Row} controlId="formLink">
+            <Form.Label column sm={2}>
+                Link
+            </Form.Label>
+            <Col sm="8">
+                <Form.Control
+                    onChange={(e)=>this.onLinkChange(e)}
+                    required
+                />
+            </Col>
+            <Col>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={this.onSubmit}
+            >
+              Send
+            </button>
+            </Col>
+          </Form.Group>
+          </Form>
+          
+        </div>
+      );
+  }
+  renderUrl(){
+    return (
+      <div>
+        <h3>Link : <a href={this.state.url}>{this.state.url}</a></h3>
+      </div>
+    );
+  }
   render() {
-    return <DashboardBox topic="Feed" component={this.getDisplayComponent()} />;
+    console.log(this.state.status)
+    if(this.state.loadUrl){
+      if(!this.state.hasbeenSent && this.state.mode.toLowerCase()==="freelancer"){
+        return <DashboardBox topic="Feed" component={this.renderInput()} />;
+      }else{
+        return <DashboardBox topic="Feed" component={this.renderUrl()} />;
+      }
+    }else{
+      return null;
+    }
   }
 }
 
