@@ -1031,6 +1031,7 @@ class DashboardFeed extends React.Component {
       loadUrl : false,
       mode : this.props.mode,
       status : this.props.status,
+      linkStatus : false,
     };
   }
   getUrl=async()=>{
@@ -1113,6 +1114,13 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
+  handleConfirm=(status)=>{
+    if(status){
+
+    }else{
+
+    }
+  }
   renderInput(){
       return (
         <div>
@@ -1144,9 +1152,30 @@ class DashboardFeed extends React.Component {
       );
   }
   renderUrl(){
+    let showButton = null;
+    if(this.state.mode === "client"){
+      showButton = (<>
+      <button
+              type="submit"
+              className="btn btn-danger"
+              onClick={this.handleConfirm(false)}
+            >
+              Decline
+        </button>
+        {' '}
+        <button
+              type="submit"
+              className="btn btn-success"
+              onClick={this.handleConfirm(true)}
+            >
+            Accept
+        </button>
+      </>)
+    }
     return (
       <div>
         <h3>Link : <a href={this.state.url}>{this.state.url}</a></h3>
+        {showButton}
       </div>
     );
   }
