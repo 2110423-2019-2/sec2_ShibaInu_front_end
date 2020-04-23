@@ -623,7 +623,7 @@ class DashboardStatus extends React.Component {
     super(props);
     this.state = {
       status: this.props.status || null,
-      message: "Due in 3 months"
+      message: ""
     };
   }
 
@@ -651,7 +651,7 @@ class DashboardStatus extends React.Component {
       case "done":
         return "primary";
       case "closed":
-        return "Danger";
+        return "danger";
       default:
         return "primary";
     }
