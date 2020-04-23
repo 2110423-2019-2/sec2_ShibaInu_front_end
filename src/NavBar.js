@@ -404,6 +404,13 @@ class NavBar extends React.Component {
         >
           User verification
         </DropdownItem>
+        <DropdownItem
+          href="/admin/ban"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
+          Ban user
+        </DropdownItem>
           <DropdownItem
           href="/admin/report"
           id="dropdown-item-balance"
