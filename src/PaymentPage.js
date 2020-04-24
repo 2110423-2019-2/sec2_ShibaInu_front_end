@@ -3,7 +3,6 @@ import { Nav, Container, Row, Col, Table, Card, Button, Spinner } from 'react-bo
 import axios from 'axios';
 import PaymentModal from './PaymentModal';
 import LocalStorageService from './LocalStorageService';
-const utilities = require('./Utilities.json');
 
 class PaymentPage extends React.Component {
 
@@ -41,7 +40,7 @@ class PaymentPage extends React.Component {
     fetchSumFromDB() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment/sum")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/sum")
             .then(res => {
                 this.setState({ sum: res.data.sum * -1 });
             }).catch((err) => {
@@ -51,7 +50,7 @@ class PaymentPage extends React.Component {
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/sum/charge")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/sum/charge")
             .then(res => {
                 this.setState({ sumCharge: res.data.sum * -1 });
             }).catch((err) => {
@@ -61,7 +60,7 @@ class PaymentPage extends React.Component {
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/sum/transfer")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/sum/transfer")
             .then(res => {
                 this.setState({ sumTransfer: res.data.sum * -1 });
             }).catch((err) => {
@@ -76,7 +75,7 @@ class PaymentPage extends React.Component {
     fetchTransactionFromDB() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment")
             .then(res => {
                 this.setState({ transaction: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
@@ -86,7 +85,7 @@ class PaymentPage extends React.Component {
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/charge")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/charge")
             .then(res => {
                 this.setState({ transactionCharge: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
@@ -96,7 +95,7 @@ class PaymentPage extends React.Component {
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/transfer")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/transfer")
             .then(res => {
                 this.setState({ transactionTransfer: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
@@ -110,14 +109,14 @@ class PaymentPage extends React.Component {
     fetchCardAndBankAccountFromDB() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment/creditCard")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard")
             .then(res => {
                 this.setState({ creditCard: res.data });
             }).catch((err) => {
                 console.error(err);
             });
 
-        axios.get(utilities['backend-url'] + "/payment/bankAccount")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount")
             .then(res => {
                 this.setState({ bankAccount: res.data });
             }).catch((err) => {

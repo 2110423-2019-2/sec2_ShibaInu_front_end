@@ -7,7 +7,6 @@ import swal from 'sweetalert';
 import logo from "./material/Logo.png";
 import "./SignInSignUp.css";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -46,7 +45,7 @@ class SignIn extends React.Component {
     });
 
     axios
-      .post(utilities["backend-url"] + "/auth/login", this.state.loginData)
+      .post(process.env.REACT_APP_BACKEND_URL + "/auth/login", this.state.loginData)
       .then((response) => {
         switch (response.status) {
           // Created
@@ -91,7 +90,7 @@ class SignIn extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + fb_response.accessToken;
     axios
-      .post(utilities["backend-url"] + "/auth/login-fb", fb_response)
+      .post(process.env.REACT_APP_BACKEND_URL + "/auth/login-fb", fb_response)
       .then((response) => {
         switch (response.status) {
           // Created

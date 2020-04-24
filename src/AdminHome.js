@@ -6,7 +6,6 @@ import swal from "sweetalert";
 
 import LocalStorageService from "./LocalStorageService";
 import LoadingSpinner from "./utilities/LoadingSpinner";
-var utilities = require('./Utilities.json');
 
 class AdminHome extends React.Component {
   constructor(props) {
@@ -23,7 +22,7 @@ class AdminHome extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
-    axios.get(utilities['backend-url'] + "/users").then(res => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then(res => {
       const userDatas = res.data;
       this.setState({ userDatas: userDatas, isUserDataLoad: true });
     }).catch((error) => {
@@ -138,7 +137,7 @@ class AdminCard extends React.Component {
 
   fetchUser = () => {
 
-    axios.get(utilities['backend-url'] + "/users").then((res) => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then((res) => {
 
       if (res.status === 200) {
 
@@ -173,7 +172,7 @@ class AdminCard extends React.Component {
   }
 
   fetchReport = () => {
-    axios.get(utilities['backend-url'] + "/reports").then((res) => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/reports").then((res) => {
 
       if (res.status === 200) {
         const reportDatas = res.data;

@@ -6,7 +6,6 @@ import example from './contractExample'
 import swal from 'sweetalert';
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService'
-let utilities = require('./Utilities.json')
 class Contract extends React.Component {
     constructor(props) {
         super(props)
@@ -135,7 +134,7 @@ class Contract extends React.Component {
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
                     let status;
                     await axios
-                        .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+                        .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobId)
                         .then(res => {
                             status = res.data.status;
                         }).catch(err => {
@@ -148,7 +147,7 @@ class Contract extends React.Component {
                         return;
                     }
                     await axios
-                        .patch(utilities["backend-url"] + "/contracts/accept/" + this.state.contractId, {
+                        .patch(process.env.REACT_APP_BACKEND_URL + "/contracts/accept/" + this.state.contractId, {
                             status: "accepted"
                         })
                         .then(() => {
@@ -183,7 +182,7 @@ class Contract extends React.Component {
                     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
                     let status;
                     await axios
-                        .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+                        .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobId)
                         .then(res => {
                             status = res.data.status;
                         }).catch(err => {
@@ -196,7 +195,7 @@ class Contract extends React.Component {
                         return;
                     }
                     await axios
-                        .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId, {
+                        .patch(process.env.REACT_APP_BACKEND_URL + "/contracts/updateByJobId/" + this.state.jobId, {
                             status: "rejected"
                         })
                         .then(() => {
@@ -229,7 +228,7 @@ class Contract extends React.Component {
     async getJobDetail() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         await axios
-            .get(utilities["backend-url"] + "/jobs/" + this.state.jobId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.state.jobId)
             .then(res => {
                 this.setState({
                     jobName: res.data.name,
@@ -246,7 +245,7 @@ class Contract extends React.Component {
     async getUserName() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         await axios
-            .get(utilities["backend-url"] + "/users/" + this.state.clientId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.clientId)
             .then(res => {
                 this.setState({ clientName: res.data.firstName + " " + res.data.lastName })
             })
@@ -254,7 +253,7 @@ class Contract extends React.Component {
                 console.log(err)
             })
         await axios
-            .get(utilities["backend-url"] + "/users/" + this.state.freelancerId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.freelancerId)
             .then(res => {
                 this.setState({ freelancerName: res.data.firstName + " " + res.data.lastName })
             })
@@ -263,7 +262,7 @@ class Contract extends React.Component {
                 console.log(err)
             })
         await axios
-            .get(utilities["backend-url"] + "/bids/jobuser/" + this.state.jobId + "," + this.state.freelancerId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/bids/jobuser/" + this.state.jobId + "," + this.state.freelancerId)
             .then(res => {
                 console.log(res)
                 this.setState({ bidwage: res.data.biddedWage })
@@ -276,7 +275,7 @@ class Contract extends React.Component {
     async getContractDetail() {
 
         await axios
-            .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobId)
             .then(res => {
                 console.log(res.data)
                 let time;
@@ -311,7 +310,7 @@ class Contract extends React.Component {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         let ans = { result: null, error: null };
         await axios
-            .post(utilities["backend-url"] + "/contracts", {
+            .post(process.env.REACT_APP_BACKEND_URL + "/contracts", {
                 jobId: this.state.jobId,
                 freelancerId: this.state.freelancerId,
                 price: this.state.editedData.price,
@@ -332,7 +331,7 @@ class Contract extends React.Component {
         let ans = { result: null, error: null };
         let status;
         await axios
-            .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobId)
             .then(res => {
                 status = res.data.status;
             }).catch(err => {
@@ -343,7 +342,7 @@ class Contract extends React.Component {
             return ans;
         }
         await axios
-            .patch(utilities["backend-url"] + "/contracts/updateByJobId/" + this.state.jobId, {
+            .patch(process.env.REACT_APP_BACKEND_URL + "/contracts/updateByJobId/" + this.state.jobId, {
                 price: this.state.editedData.price,
                 description: this.state.editedData.text,
                 status: "null"
@@ -396,7 +395,7 @@ class Contract extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment/bankAccount")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount")
             .then(res => {
                 console.log(res.status);
                 if (res.status === 201) {
