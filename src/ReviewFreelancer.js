@@ -1,24 +1,33 @@
 import React from "react";
-import {Card, Container, Row, Col, Form} from "react-bootstrap";
+import {Container, Row, Col, Form} from "react-bootstrap";
 import Rating from "@material-ui/lab/Rating"
 import "./ReviewFreelancer.css";
 class ReviewFreelancer extends React.Component{
     constructor(props){
         super(props)
         this.state= {
-            jobname:"Build",
-            freelancername:"ABC",
-            price : "10000",
-            duration : "100",
+            jobname:"",
+            freelancername:"",
+            price : "",
+            duration : "",
             description : "",
+            closed : false,
         }
+    }
+    componentDidMount=()=>{
+      this.setState({
+        jobname : this.props.jobName,
+        freelancername : this.props.freelancerName,
+        price : this.props.price,
+        duration : this.props.duration,
+        description : this.props.description,
+        closed : this.props.closed===undefined?true:this.props.closed
+      })
     }
     render(){
         return(
             <>
-                <ReviewBox topic={"Review freelancer"}
-                component={
-                    
+               
                     <Container fluid>
                         <Row>
                             <Col md={8}>
@@ -29,12 +38,15 @@ class ReviewFreelancer extends React.Component{
                                 Responsible : {this.state.freelancername}
                                 </Row>
                                 <Row>
-                                <Rating name="half-rating" defaultValue={2.5} precision={1}  />
+                                <Rating name="half-rating" defaultValue={4} precision={1}  />
                                 </Row>
                                 <Row className="txtinput">
-                                <div className="title">details </div>
+                                <div className="title">detail </div>
                                 <Form.Group controlId="reviewtext" >
                                     <Form.Control
+                                    disabled={this.state.closed}
+                                    plaintext={this.state.closed}
+                                    value={this.state.description}
                                     className="reviewarea"
                                     as="textarea"
                                     onChange={e => {
@@ -52,15 +64,15 @@ class ReviewFreelancer extends React.Component{
                                 duration : {this.state.duration}
                                 </Row>
                                 <Row className="button-container">
-                                <button type="button" className="btn btn-warning" onClick={""}>
+                                <button type="button" className="btn btn-warning" hidden={this.state.closed}>
                                     Submit
                                 </button>
                                 </Row>
                             </Col>
                         </Row>
                     </Container>
-                }
-                />
+                
+                
             </>
         )
     }
@@ -68,29 +80,4 @@ class ReviewFreelancer extends React.Component{
 
 // DEFAULT COMPONENT -----------------------------------------------------------------------------
 
-class ReviewBox extends React.Component {
-
-    constructor(props) {
-      super(props);
-      this.state = {
-        topic: this.props.topic || 'NO TOPIC',
-        component: this.props.component || 'NO DATA',
-        size: this.props.size || 'small-box',
-      };
-    }
-  
-    render() {
-  
-      return (
-        <Card className={'review-box' } hidden={this.props.hidden}>
-          <Card.Header as="h5" className='box-topic'>
-            {this.state.topic}
-          </Card.Header>
-          <Card.Body className='box-body'>
-            {this.state.component}
-          </Card.Body>
-        </Card>
-      );
-    }
-  }
 export default ReviewFreelancer

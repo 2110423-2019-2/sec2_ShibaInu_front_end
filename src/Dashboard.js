@@ -18,6 +18,7 @@ import PaymentModal from './PaymentModal';
 import swal from 'sweetalert';
 import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 import LoadingSpinner from './utilities/LoadingSpinner';
+import ReviewFreelancer from './ReviewFreelancer';
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
@@ -275,6 +276,13 @@ class Dashboard extends React.Component {
                 />
               </Row>
               <Row>
+                <DashBoardReview 
+                  jobName={this.state.jobname}
+                  freelancerName={this.state.contract.freelancerId}
+                  price={this.state.contract.price}
+                  duration={this.state.timelineDetail.closedTime}
+                  status={status}
+                />
                 <DashboardFeed contract={this.state.contract}
                   jobId={this.state.jobID}
                   status={status}
@@ -1068,12 +1076,15 @@ class DashboardFeed extends React.Component {
       url: "",
       jobId: this.props.jobId,
       hasbeenSent: false,
+      hasbeenReviewed: false,
       loadUrl: false,
+      loadReview: false,
       mode: this.props.mode,
       status: this.props.status,
       linkStatus: false,
     };
   }
+  
   getUrl = async () => {
     let res;
     try {
@@ -1151,7 +1162,7 @@ class DashboardFeed extends React.Component {
       });
   }
   checkStatus = () => {
-    let status = this.state.status.toLowerCase()
+    let status = this.state.status.toLowerCase();
     switch (status) {
       case "open":
         return true;
@@ -1301,21 +1312,80 @@ class DashboardFeed extends React.Component {
       </div>
     );
   }
+
   render() {
+    console.log(this.state.status)
     if (this.state.loadUrl) {
-      if (this.state.hasbeenSent) {
-        return <DashboardBox topic="Feed" component={this.renderUrl()} hidden={this.checkStatus()} />;
-      } else if (!this.state.hasbeenSent && this.state.mode.toLowerCase() === "freelancer") {
-        return <DashboardBox topic="Feed" component={this.renderInput()} hidden={this.checkStatus()} />;
-      } else {
-        return null;
-      }
+        if (this.state.hasbeenSent) {
+          return <DashboardBox size="auto" topic="Link" component={this.renderUrl()} hidden={this.checkStatus()} />;
+        } else if (!this.state.hasbeenSent && this.state.mode.toLowerCase() === "freelancer") {
+          return <DashboardBox size="auto" topic="Link" component={this.renderInput()} hidden={this.checkStatus()} />;
+        } else {
+          return null;
+        }      
     } else {
       return null;
     }
   }
 }
 
+class DashBoardReview extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      jobId: "",
+      jobName: "",
+      freelancerName: "",
+      price:"",
+      duration:"",
+      description: "",
+      hadbeenReviewed: false,
+      loadReview: false,
+      mode: this.props.mode,
+      status: this.props.status,
+    };
+  }
+  getReview = async () => {
+
+  }
+
+  writeReview = async () => {
+
+  }
+  componentDidMount=async()=>{
+    await this.setState({status : this.props.status})
+    await this.getReview()
+    if(!this.state.hadbeenReviewed){
+      await this.setState({
+        jobName : this.props.jobName,
+        freelancerName : this.props.freelancerName,
+        price : this.props.price,
+        duration : this.props.duration,
+      })
+    }
+    await this.setState({loadReview : true})
+  }
+  renderReview(){
+    return <ReviewFreelancer
+    jobName={this.state.jobName}
+    freelancerName={this.state.freelancerName}
+    price={this.state.price}
+    duration={this.state.duration}
+    description={this.state.description}
+    closed={this.state.hadbeenReviewed}
+  />
+  }
+  render(){
+    if(!this.state.loadReview){
+      return null;
+    }
+    if(this.state.status.toLowerCase()==="closed"){
+      return <DashboardBox size="auto" topic="Review" component={this.renderReview()}/>;
+    }else{
+      return null;
+    }
+  }
+}
 // DEFAULT COMPONENT -----------------------------------------------------------------------------
 
 class DashboardBox extends React.Component {
