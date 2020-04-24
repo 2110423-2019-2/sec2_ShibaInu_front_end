@@ -3,7 +3,6 @@ import axios from "axios";
 import "./JobCreatePage.css";
 import { Form, Row, Col, InputGroup, Button, Card } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 
 class JobCreatePage extends React.Component {
   constructor(props) {
@@ -56,7 +55,7 @@ class JobCreatePage extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     axios
-      .post(utilities["backend-url"] + "/jobs", this.state.postData)
+      .post(process.env.REACT_APP_BACKEND_URL + "/jobs", this.state.postData)
       .then(res => {
         switch (res.status) {
           case 201:

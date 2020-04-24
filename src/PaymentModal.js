@@ -3,7 +3,6 @@ import { Modal, Button, Form, Row, Col, Spinner, Card } from 'react-bootstrap';
 import axios from 'axios';
 
 import LocalStorageService from './LocalStorageService';
-const utilities = require('./Utilities.json');
 
 class PaymentModal extends React.Component {
 
@@ -50,7 +49,7 @@ class PaymentModal extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment/creditCard")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard")
             .then(res => {
                 this.setState({ cardData: res.data });
             }).catch((err) => {
@@ -255,7 +254,7 @@ class PaymentModal extends React.Component {
         // Send data to backend
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.post(utilities['backend-url'] + "/payment/creditCard", this.state.cardData)
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard", this.state.cardData)
             .then(res => {
                 console.log(res.data.message)
                 this.showHideModal(false, true);
@@ -299,7 +298,7 @@ class PaymentModal extends React.Component {
         // Send data to backend
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.post(utilities['backend-url'] + "/payment/bankAccount", this.state.bankData)
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount", this.state.bankData)
             .then(res => {
                 console.log(res.data.message)
                 this.showHideModal(false, true);
@@ -318,7 +317,7 @@ class PaymentModal extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.post(utilities['backend-url'] + "/payment/charge", { job: this.props.jobId, amount: this.props.amount })
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/charge", { job: this.props.jobId, amount: this.props.amount })
             .then(res => {
                 console.log(res.status);
                 if (res.status === 201) {

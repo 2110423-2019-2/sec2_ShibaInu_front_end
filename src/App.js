@@ -43,6 +43,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+
+    if (!process.env.REACT_APP_BACKEND_URL) {
+      alert("ยังไม่มี REACT_APP_BACKEND_URL ใน .env จ้า ไปใส่เร้ววววว");
+    }
   }
 
   render() {
