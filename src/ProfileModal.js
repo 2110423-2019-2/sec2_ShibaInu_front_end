@@ -1308,8 +1308,8 @@ class VerifyDataModal extends Component{
       console.log(err);
     });
   }
-  handleWrite(e){
-    let format = e.target.value.replace(/\D/g,"")
+  handleWrite=(e)=>{
+    let format = e.target.value 
     if(format.length >13){
       return;
     }
@@ -1357,6 +1357,17 @@ class VerifyDataModal extends Component{
   async componentDidMount(){
     await this.setState({userId : this.props.userId})
   }
+  onExit=()=>{
+    this.setState({
+      upload : false,
+      show:false,
+      userId:null,
+      SSN:"",
+      formatSSN : "",
+      error : {selfie : null,IDcard : null},
+    })
+      
+  }
   render(){
     if(this.state.upload){
       this.setState({upload:false})
@@ -1372,7 +1383,7 @@ class VerifyDataModal extends Component{
         >
           verify
         </button>
-        <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal show={this.state.show} onHide={this.handleClose} onExited={this.onExit}>
           <Modal.Header className="modalHead" closeButton>
             <Modal.Title>Verify</Modal.Title>
           </Modal.Header>
@@ -1381,8 +1392,8 @@ class VerifyDataModal extends Component{
             <Col>
             <Form.Control
               placeholder="1234567890123"
-              value={this.state.formatSSN}
-              onChange={e=>this.handleWrite(e)}
+              value={this.state.SSN}
+              onChange={this.handleWrite}
               />
             </Col>
             <label>Selfie image with national ID card</label>
