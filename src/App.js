@@ -48,7 +48,6 @@ class App extends React.Component {
   render() {
 
     if (LocalStorageService.getUserID()) {
-      console.log("XXXXXXXXXXXXXXXXXXX");
       axios
         .get(utilities["backend-url"] + "/auth/checkban/" + LocalStorageService.getUserID())
         .then((response) => {

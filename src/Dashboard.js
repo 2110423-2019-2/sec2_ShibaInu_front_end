@@ -239,7 +239,7 @@ class Dashboard extends React.Component {
         }
       });
   }
-  renderClient() {
+  renderClient(status) {
     return (
       <div>
         <Container>
@@ -249,7 +249,7 @@ class Dashboard extends React.Component {
             <Col sm={4}>
               <div className="left-col">
                 <Row>
-                  <DashboardStatus status={this.state.jobStatus} />
+                  <DashboardStatus status={status} />
                 </Row>
                 <Row>
                   <DashboardResponsible
@@ -277,14 +277,14 @@ class Dashboard extends React.Component {
               <Row>
                 <DashboardFeed contract={this.state.contract}
                   jobId={this.state.jobID}
-                  status={this.state.jobStatus}
+                  status={status}
                   mode={this.state.mode}
                 />
               </Row>
               <Row>
                 <DashboardTimeline
                   timelineDetail={this.state.timelineDetail}
-                  status={this.state.jobStatus}
+                  status={status}
                 />
               </Row>
             </Col>
@@ -293,7 +293,7 @@ class Dashboard extends React.Component {
       </div>
     );
   }
-  renderFreelancer() {
+  renderFreelancer(status) {
     return (
       <div>
         <Container>
@@ -303,7 +303,7 @@ class Dashboard extends React.Component {
             <Col sm={4}>
               <div className="left-col">
                 <Row>
-                  <DashboardStatus status={this.state.jobStatus} />
+                  <DashboardStatus status={status} />
                 </Row>
                 <Row>
                   <DashboardResponsible
@@ -325,14 +325,14 @@ class Dashboard extends React.Component {
                 <DashboardFeed
                   contract={this.state.contract}
                   jobId={this.state.jobID}
-                  status={this.state.jobStatus}
+                  status={status}
                   mode={this.state.mode}
                 />
               </Row>
               <Row>
                 <DashboardTimeline
                   timelineDetail={this.state.timelineDetail}
-                  status={this.state.jobStatus}
+                  status={status}
                 />
               </Row>
             </Col>
@@ -342,7 +342,7 @@ class Dashboard extends React.Component {
     );
   }
 
-  renderReload() {
+  renderReload(status) {
     return (<Spinner animation="border" role="status" className="loading">
       <span className="sr-only">Loading...</span>
     </Spinner>);
@@ -354,8 +354,8 @@ class Dashboard extends React.Component {
     axios.post(utilities['backend-url'] + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price, userId: this.state.contract.freelancerId })
       .then(res => {
         console.log(res.data);
-        if (res.status === 201) {
-          this.changeStatus('closed');
+        if (res.status === 200 || res.status === 201) {
+          this.changeStatus("closed");
         }
       }).catch((err) => {
         console.error(err);
@@ -368,8 +368,9 @@ class Dashboard extends React.Component {
     axios.patch(utilities['backend-url'] + "/jobs/" + this.state.jobID, { status: jobStatus })
       .then(res => {
         console.log(res.status);
-        if (res.status === 201) {
-          this.componentDidMount();
+        if (res.status === 200 || res.status === 201) {
+          console.log("reload page with componentDidMount");
+          window.location.reload();
         }
       }).catch((err) => {
         console.error(err);
@@ -400,7 +401,7 @@ class Dashboard extends React.Component {
     }
 
     const totalPrice = this.state.contract ? this.state.contract.price : 0;
-    const down = parseInt(totalPrice * 0.1);
+    const down = Math.ceil(totalPrice * 0.1);
     const full = parseInt(totalPrice - down);
 
     if (status === 'accepted') {
@@ -413,30 +414,38 @@ class Dashboard extends React.Component {
     }
   }
 
-  render() {
+  renderContainer = (status) => {
     let container;
     if (this.loadAllData()) {
       if (this.state.mode === "client") {
-        container = this.renderClient();
+        container = this.renderClient(status);
       } else if (this.state.mode === "freelancer") {
-        container = this.renderFreelancer();
+        container = this.renderFreelancer(status);
       } else {
         container = "";
       }
 
+    } else {
+      container = this.renderReload(status);
+    }
+
+    return container;
+  }
+
+  render() {
+
+    if (this.loadAllData()) {
       if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId.toString() === LocalStorageService.getUserID()) {
         this.setState({ permissionToAccess: true });
       } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && (this.state.jobStatus === 'open' || (this.state.jobStatus !== 'open' && this.state.contract.freelancerId.toString() === LocalStorageService.getUserID()))) {
         this.setState({ permissionToAccess: true });
       }
-
-    } else {
-      container = this.renderReload();
     }
+
     return !this.loadAllData() ? <LoadingSpinner /> : this.state.permissionToAccess ?
       (<>
         {this.renderPayment(this.state.jobStatus)}
-        {container}
+        {this.renderContainer(this.state.jobStatus)}
       </>) : (<PageNotFoundNotAllow mode='not-allow' />);
   }
 }
@@ -1125,7 +1134,7 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
-  showButton=()=>{
+  showButton = () => {
     let status = this.state.status.toLowerCase()
     switch (status) {
       case "working":
