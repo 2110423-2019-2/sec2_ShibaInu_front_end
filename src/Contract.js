@@ -42,7 +42,7 @@ class Contract extends React.Component {
     }
     redirect(time) {
         setTimeout(() => {
-            window.history.back()
+            window.location=document.referrer;
         }, time);
     }
     handleEdit() {
