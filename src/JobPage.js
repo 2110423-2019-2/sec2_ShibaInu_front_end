@@ -1,16 +1,7 @@
 import React from "react";
 import "./JobPage.css";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  InputGroup,
-  Table,
-  Card
-} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, InputGroup, Table, Card } from "react-bootstrap";
 import { FaBtc, FaClock } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
 
@@ -21,18 +12,16 @@ class JobDetail extends React.Component {
       details: {
         requiredSkills: [],
         optionalSkills: [],
-        client: { firstName: "", lastName: "" }
-      }
+        client: { firstName: "", lastName: "" },
+      },
     };
   }
 
   componentDidMount() {
-    axios
-      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.props.jobid.jobid)
-      .then(res => {
-        const details = res.data;
-        this.setState({ details });
-      });
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.props.jobid.jobid).then((res) => {
+      const details = res.data;
+      this.setState({ details });
+    });
   }
 
   skilltostring(i) {
@@ -40,7 +29,7 @@ class JobDetail extends React.Component {
     if (i.length == 0) {
       return "-";
     }
-    i.map(s => out.push(" " + s["skill"]));
+    i.map((s) => out.push(" " + s["skill"]));
     return out.toString();
   }
 
@@ -70,8 +59,7 @@ class JobDetail extends React.Component {
             <div>
               <b>Client</b>
               <div>
-                {this.state.details.client.firstName}{" "}
-                {this.state.details.client.lastName}
+                {this.state.details.client.firstName} {this.state.details.client.lastName}
               </div>
             </div>
           </div>
@@ -89,31 +77,42 @@ class JobBid extends React.Component {
         jobId: this.props.jobid.jobid,
         userId: LocalStorageService.getUserID(),
         biddedWage: "",
-        biddedDuration: ""
-      }
+        biddedDuration: "",
+      },
+      cantBidMsg: "",
     };
     this.handleChange.bind(this);
     this.handleSubmit.bind(this);
   }
 
-  handleChange = e => {
+  componentDidMount() {
+    axios
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID())
+      .then((res) => {
+        if (!res.data.isVerified) this.setState({ cantBidMsg: "Please verify to bid" });
+      });
+    if (LocalStorageService.getUserMode() === "client")
+      this.setState({ cantBidMsg: "Please switch to freelancer to bid" });
+  }
+
+  handleChange = (e) => {
     let tempData = this.state.postData;
     tempData[e.target.name] = parseInt(e.target.value);
 
     this.setState({
-      postData: tempData
+      postData: tempData,
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
 
     axios
       .post(process.env.REACT_APP_BACKEND_URL + "/bids", this.state.postData)
-      .then(res => {
+      .then((res) => {
         console.log(res);
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === 400) {
           console.log("Error 400");
           this.setState({ errorMessage: error.response.data.message });
@@ -125,8 +124,8 @@ class JobBid extends React.Component {
     this.setState({
       postData: {
         biddedWage: "",
-        biddedDuration: ""
-      }
+        biddedDuration: "",
+      },
     });
     this.props.parentCallback(1);
   };
@@ -137,7 +136,9 @@ class JobBid extends React.Component {
         <Card.Header>Bid</Card.Header>
 
         <Card.Body>
-          {LocalStorageService.getUserMode() === "freelancer" ? (
+          {this.state.cantBidMsg ? (
+            <div>{this.state.cantBidMsg}</div>
+          ) : (
             <Form onSubmit={this.handleSubmit}>
               <Form.Group controlId="bidAmount">
                 <InputGroup>
@@ -150,9 +151,7 @@ class JobBid extends React.Component {
                     required
                   />
                   <InputGroup.Prepend>
-                    <InputGroup.Text id="inputGroupPrepend">
-                      THB
-                    </InputGroup.Text>
+                    <InputGroup.Text id="inputGroupPrepend">THB</InputGroup.Text>
                   </InputGroup.Prepend>
                 </InputGroup>
               </Form.Group>
@@ -167,9 +166,7 @@ class JobBid extends React.Component {
                     required
                   />
                   <InputGroup.Prepend>
-                    <InputGroup.Text id="inputGroupPrepend">
-                      Day
-                    </InputGroup.Text>
+                    <InputGroup.Text id="inputGroupPrepend">Day</InputGroup.Text>
                   </InputGroup.Prepend>
                 </InputGroup>
               </Form.Group>
@@ -177,8 +174,6 @@ class JobBid extends React.Component {
                 Submit
               </Button>
             </Form>
-          ) : (
-            <div>Please switch to freelancer mode to bid</div>
           )}
         </Card.Body>
       </Card>
@@ -211,7 +206,7 @@ class InterrestedFreelancer extends React.Component {
   componentDidMount() {
     axios
       .get(process.env.REACT_APP_BACKEND_URL + "/bids/bidId/" + this.props.jobid.jobid)
-      .then(res => {
+      .then((res) => {
         const bids = res.data;
         this.setState({ bids });
       });
@@ -221,7 +216,7 @@ class InterrestedFreelancer extends React.Component {
     if (this.props.refresh == 1) {
       axios
         .get(process.env.REACT_APP_BACKEND_URL + "/bids/bidId/" + this.props.jobid.jobid)
-        .then(res => {
+        .then((res) => {
           const bids = res.data;
           this.setState({ bids });
         });
@@ -244,7 +239,7 @@ class InterrestedFreelancer extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.bids.map(bid => (
+              {this.state.bids.map((bid) => (
                 <InterFreeRow
                   key={bid.bidId}
                   userId={bid.userId}
@@ -268,12 +263,10 @@ class InterFreeRow extends React.Component {
   }
 
   componentDidMount() {
-    axios
-      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.props.userId)
-      .then(res => {
-        const user = res.data;
-        this.setState({ user });
-      });
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.props.userId).then((res) => {
+      const user = res.data;
+      this.setState({ user });
+    });
   }
 
   render() {
@@ -293,7 +286,7 @@ class JobPage extends React.Component {
     super(props);
     this.state = { refresh: 0 };
   }
-  callbackFunction = childData => {
+  callbackFunction = (childData) => {
     this.setState({ refresh: childData });
   };
 
