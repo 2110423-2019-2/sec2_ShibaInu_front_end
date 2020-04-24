@@ -104,25 +104,13 @@ class JobBid extends React.Component {
     });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
-
-    axios
-      .post(process.env.REACT_APP_BACKEND_URL + "/bids", this.state.postData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        if (error.response.status === 400) {
-          console.log("Error 400");
-          this.setState({ errorMessage: error.response.data.message });
-        } else {
-          console.error(error);
-        }
-      });
-
+    await axios.post(process.env.REACT_APP_BACKEND_URL + "/bids", this.state.postData);
     this.setState({
       postData: {
+        jobId: this.props.jobid.jobid,
+        userId: LocalStorageService.getUserID(),
         biddedWage: "",
         biddedDuration: "",
       },

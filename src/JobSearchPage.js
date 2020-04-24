@@ -15,13 +15,13 @@ class Filter extends React.Component {
       t1: "",
       t2: "",
       cat: "",
-      sort: 0
+      sort: 0,
     };
     this.handleChange.bind(this);
     this.handleSubmit.bind(this);
     this.handleReset.bind(this);
   }
-  handleChange = e => {
+  handleChange = (e) => {
     var k = e.target.name;
     var v = e.target.value;
     if (k === "w1" || k === "w2" || k == "t1" || k === "t2") {
@@ -54,10 +54,10 @@ class Filter extends React.Component {
     obj[k] = v;
     this.setState(obj);
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
     var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs" + "?" + tmp1.join("&");
@@ -65,7 +65,7 @@ class Filter extends React.Component {
     this.props.parentCallback(ApiUrl);
   };
 
-  handleReset = e => {
+  handleReset = (e) => {
     this.setState({
       name: "",
       r1: "",
@@ -74,13 +74,13 @@ class Filter extends React.Component {
       t1: "",
       t2: "",
       cat: "",
-      sort: 0
+      sort: 0,
     });
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs?status=open&" + tmp1.join("&");
     console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
@@ -112,37 +112,21 @@ class Filter extends React.Component {
             <Form.Label>Wage</Form.Label>
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Min"
-                  name="w1"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Min" name="w1" onChange={this.handleChange} />
               </Form.Group>
               <Col lg="1">-</Col>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Max"
-                  name="w2"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Max" name="w2" onChange={this.handleChange} />
               </Form.Group>
             </Form.Row>
             <Form.Label>Duration</Form.Label>
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Min"
-                  name="t1"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Min" name="t1" onChange={this.handleChange} />
               </Form.Group>
               <Col lg="1">-</Col>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Max"
-                  name="t2"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Max" name="t2" onChange={this.handleChange} />
               </Form.Group>
             </Form.Row>
             <Form.Group>
@@ -158,11 +142,7 @@ class Filter extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Sort by</Form.Label>
-              <Form.Control
-                as="select"
-                name="sort"
-                onChange={this.handleChange}
-              >
+              <Form.Control as="select" name="sort" onChange={this.handleChange}>
                 <option>Newest</option>
                 <option>Oldest</option>
                 <option>Max wage first</option>
@@ -173,11 +153,7 @@ class Filter extends React.Component {
             </Form.Group>
             <Form.Row>
               <Col>
-                <Button
-                  variant="secondary"
-                  type="reset"
-                  onClick={this.handleReset}
-                >
+                <Button variant="secondary" type="reset" onClick={this.handleReset}>
                   Clear
                 </Button>
               </Col>
@@ -201,14 +177,14 @@ class Result extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(this.props.ApiUrl).then(res => {
+    axios.get(this.props.ApiUrl).then((res) => {
       this.setState({ jobList: res.data });
     });
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.ApiUrl !== this.props.ApiUrl) {
-      axios.get(this.props.ApiUrl).then(res => {
+      axios.get(this.props.ApiUrl).then((res) => {
         this.setState({ jobList: res.data });
       });
     }
@@ -219,9 +195,9 @@ class Result extends React.Component {
       <Card class="result">
         <Card.Header>Search Job</Card.Header>
         <Card.Body>
-          {this.state.jobList.map(j => {
+          {this.state.jobList.map((j) => {
             var tmp = [];
-            j.requiredSkills.map(s => tmp.push(s.skill));
+            j.requiredSkills.map((s) => tmp.push(s.skill));
             if (tmp.length == 0) tmp.push("-");
             return (
               <ResultRow
@@ -292,7 +268,7 @@ class JobSearchPage extends React.Component {
     this.state = { ApiUrl: process.env.REACT_APP_BACKEND_URL + "/jobs?sort=0" };
   }
 
-  callbackFunction = childData => {
+  callbackFunction = (childData) => {
     this.setState({ ApiUrl: childData });
   };
 
