@@ -18,7 +18,6 @@ import PaymentModal from './PaymentModal';
 import swal from 'sweetalert';
 import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 import LoadingSpinner from './utilities/LoadingSpinner';
-let utilities = require("./Utilities.json");
 // import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
 //import { ReactComponent } from '*.svg';
 // import logo from './material/Logo.png';
@@ -103,7 +102,7 @@ class Dashboard extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
 
     let { result, error } = await this.to(
-      axios.get(utilities["backend-url"] + "/users/profilePicture/" + userId, {
+      axios.get(process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + userId, {
         responseType: "arraybuffer"
       })
     );
@@ -118,7 +117,7 @@ class Dashboard extends React.Component {
 
   async getContract() {
     await axios
-      .get(utilities["backend-url"] + "/contracts/jobId/" + this.state.jobID)
+      .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobID)
       .then(res => {
         console.log(res.data);
         this.setState({ contract: res.data })
@@ -137,7 +136,7 @@ class Dashboard extends React.Component {
   }
   getUserBidWage = async (userId) => {
 
-    let { result, error } = await this.to(axios.get(utilities["backend-url"] + "/bids/jobuser/" + this.state.jobID + "," + userId));
+    let { result, error } = await this.to(axios.get(process.env.REACT_APP_BACKEND_URL + "/bids/jobuser/" + this.state.jobID + "," + userId));
     if (error !== null) {
       return { error: error, data: null };
     }
@@ -152,7 +151,7 @@ class Dashboard extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     await axios
-      .get(utilities["backend-url"] + "/jobs/freelancers/" + this.state.jobID)
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/freelancers/" + this.state.jobID)
       .then(async res => {
         console.log(res);
         for (let i = 0; i < res.data.length; i++) {
@@ -202,7 +201,7 @@ class Dashboard extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     await axios
-      .get(utilities["backend-url"] + "/jobs/" + this.state.jobID)
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.state.jobID)
       .then(res => {
         this.setState({
           jobname: res.data.name,
@@ -351,7 +350,7 @@ class Dashboard extends React.Component {
   transferMoneyToFreelancer = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-    axios.post(utilities['backend-url'] + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price, userId: this.state.contract.freelancerId })
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price, userId: this.state.contract.freelancerId })
       .then(res => {
         console.log(res.data);
         if (res.status === 200 || res.status === 201) {
@@ -365,7 +364,7 @@ class Dashboard extends React.Component {
   changeStatus = (jobStatus) => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-    axios.patch(utilities['backend-url'] + "/jobs/" + this.state.jobID, { status: jobStatus })
+    axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.state.jobID, { status: jobStatus })
       .then(res => {
         console.log(res.status);
         if (res.status === 200 || res.status === 201) {
@@ -502,7 +501,7 @@ class FreelancerBox extends React.Component {
     });
     var name;
     axios
-      .get(utilities["backend-url"] + "/users/" + userId)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + userId)
       .then(res => {
         name = res.data.firstName;
         firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
@@ -526,7 +525,7 @@ class FreelancerBox extends React.Component {
   async handleCancel() {
     axios
       .delete(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
         "/contracts/deleteByJobId/" +
         this.props.jobId
       )
@@ -748,7 +747,7 @@ class DashboardResponsible extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     await axios
       .get(
-        utilities["backend-url"] + "/users/profilePicture/" + this.state.userId,
+        process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + this.state.userId,
         { responseType: "arraybuffer" }
       )
       .then(res => {
@@ -804,7 +803,7 @@ class DashboardResponsible extends React.Component {
     });
     var name;
     axios
-      .get(utilities["backend-url"] + "/users/" + userId)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + userId)
       .then(res => {
         name = res.data.firstName;
         firebase.firestore().collection('message').doc('chatroom').collection(friendId.toString()).doc(chatroom).set({
@@ -823,7 +822,7 @@ class DashboardResponsible extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     await axios
-      .get(utilities["backend-url"] + "/jobs/" + this.state.jobId)
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.state.jobId)
       .then(res => {
         this.setState({
           userId: res.data.client.userId,
@@ -840,7 +839,7 @@ class DashboardResponsible extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     await axios
-      .get(utilities["backend-url"] + "/users/" + this.state.userId)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userId)
       .then(res => {
         console.log(res.data);
         this.setState({
@@ -1060,7 +1059,7 @@ class DashboardFeed extends React.Component {
       axios.defaults.headers.common["Authorization"] =
         "Bearer " + LocalStorageService.getAccessToken();
       res = await axios
-        .get(utilities["backend-url"] + "/jobs/finishedLink/" + this.state.jobId)
+        .get(process.env.REACT_APP_BACKEND_URL + "/jobs/finishedLink/" + this.state.jobId)
       console.log(res.data)
       this.setState({
         url: res.data,
@@ -1103,7 +1102,7 @@ class DashboardFeed extends React.Component {
             "Bearer " + LocalStorageService.getAccessToken();
           let res;
           try {
-            res = await axios.patch(utilities["backend-url"] + "/jobs/finishJob", {
+            res = await axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/finishJob", {
               jobId: this.state.jobId,
               url: this.state.url
             })
@@ -1158,7 +1157,7 @@ class DashboardFeed extends React.Component {
               "Bearer " + LocalStorageService.getAccessToken();
             let res;
             try {
-              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/" + this.state.jobId + "," + 1)
+              res = await axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/confirm/" + this.state.jobId + "," + 1)
               window.location.reload()
             } catch (err) {
               res = err.response.data
@@ -1182,7 +1181,7 @@ class DashboardFeed extends React.Component {
               "Bearer " + LocalStorageService.getAccessToken();
             let res;
             try {
-              res = await axios.patch(utilities["backend-url"] + "/jobs/confirm/" + this.state.jobId + "," + 0)
+              res = await axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/confirm/" + this.state.jobId + "," + 0)
               window.location.reload()
             } catch (err) {
               res = err.response.data
