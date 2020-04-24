@@ -388,7 +388,7 @@ class Dashboard extends React.Component {
     }
 
     if (reload) {
-      await this.componentDidMount();
+      // await this.componentDidMount();
       // window.location.reload();
     }
   }
