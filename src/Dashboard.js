@@ -547,6 +547,7 @@ class FreelancerBox extends React.Component {
         }
       });
   }
+
   showInterestedList() {
     return this.state.freelancerList.map(item => (
       <tr key={item.userId}>

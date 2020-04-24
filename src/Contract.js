@@ -5,7 +5,9 @@ import "./Contract.css"
 import example from './contractExample'
 import swal from 'sweetalert';
 import axios from 'axios';
-import LocalStorageService from './LocalStorageService'
+import LocalStorageService from './LocalStorageService';
+import firebase from "./firebase";
+
 class Contract extends React.Component {
     constructor(props) {
         super(props)
@@ -39,6 +41,26 @@ class Contract extends React.Component {
         this.handleAccept = this.handleAccept.bind(this);
         this.handleDecline = this.handleDecline.bind(this);
     }
+    makeData = (title,userId,detail,link) => {
+        if (userId !== "") {
+          firebase
+            .firestore()
+            .collection("notification")
+            .doc("notification")
+            .collection(userId.toString())
+            .add({
+              topic: title,
+              detail: detail,
+              link: link,
+              createtime: firebase.firestore.FieldValue.serverTimestamp(),
+              read: false,
+            })
+            .catch((error) => {
+              alert("Error adding noti:", error);
+            });
+        }
+      };
+    
     redirect(time) {
         setTimeout(() => {
             window.location=document.referrer;
@@ -100,8 +122,21 @@ class Contract extends React.Component {
                     let res;
                     if (this.state.creating) {
                         res = await this.onCreateContract();
+                        await this.makeData(
+                            "Contract",
+                            this.state.freelancerId,
+                            "You've got contract from "+this.state.clientName,
+                            "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                        )
                     } else {
                         res = await this.onUpdateContract();
+                        await this.makeData(
+                            "Contract",
+                            this.state.freelancerId,
+                            "Your contract has been updated by "+this.state.clientName,
+                            "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                        )
+
                     }
                     if (res.error !== null) {
                         swal("Error occured!", {
@@ -150,6 +185,14 @@ class Contract extends React.Component {
                         .patch(process.env.REACT_APP_BACKEND_URL + "/contracts/accept/" + this.state.contractId, {
                             status: "accepted"
                         })
+                        .then(()=>{
+                            this.makeData(
+                                "Contract",
+                                this.state.clientId,
+                                "Your contract has been accepted by "+this.state.freelancerName,
+                                "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                            )
+                        })
                         .then(() => {
                             swal("Your new contract has been submit, You will go back in 3 seconds", {
                                 icon: "success",
@@ -197,6 +240,14 @@ class Contract extends React.Component {
                     await axios
                         .patch(process.env.REACT_APP_BACKEND_URL + "/contracts/updateByJobId/" + this.state.jobId, {
                             status: "rejected"
+                        })
+                        .then(()=>{
+                            this.makeData(
+                                "Contract",
+                                this.state.clientId,
+                                "Your contract has been rejected by "+this.state.freelancerName,
+                                "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                            )
                         })
                         .then(() => {
                             swal("Your new contract has been submit, You will go back in 3 seconds", {
