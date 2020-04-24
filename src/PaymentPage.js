@@ -209,7 +209,7 @@ class PaymentPage extends React.Component {
                         </Card.Body>}
                     <Card.Footer>
                         <Button onClick={() => this.handleClickCardBank('card')}>
-                            {(this.state.bankAccount ? 'CHANGE' : 'ADD') + ' CARD'}
+                            {(this.state.creditCard ? 'CHANGE' : 'ADD') + ' CARD'}
                         </Button>
                     </Card.Footer>
                 </Card>
