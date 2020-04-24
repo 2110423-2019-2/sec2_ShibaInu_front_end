@@ -38,7 +38,7 @@ class PaymentModal extends React.Component {
         this.handleSubmitAddCardPayment = this.handleSubmitAddCardPayment.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if (this.state.mode === 'card' && this.state.addPay === 'pay') {
             this.fetchCardData();
         }
@@ -170,21 +170,21 @@ class PaymentModal extends React.Component {
                             Credit Card
                     </Card.Header>
                         <Card.Body>
-                            {props.isLoading ? (<this.renderLoading />) : 
-                            !this.state.cardData ? 
-                            (<>
-                                <p>No credit card. Please add at My payment.</p>
-                                <Button variant='success' onClick={() => {window.location.href = '/payment'}}>My payment</Button>
-                            </>) :
-                            (<>
-                                    <h5>{this.state.cardData.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.cardData.cardNumber.substring(12)}</h5><br />
-                                    <p>{this.state.cardData.name}</p>
-                                </>)}
+                            {props.isLoading ? (<this.renderLoading />) :
+                                !this.state.cardData.cardNumber ?
+                                    (<>
+                                        <p>No credit card. Please add at My payment.</p>
+                                        <Button variant='success' onClick={() => { window.location.href = '/payment' }}>My payment</Button>
+                                    </>) :
+                                    (<>
+                                        <h5>{this.state.cardData.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.cardData.cardNumber.substring(12)}</h5><br />
+                                        <p>{this.state.cardData.name}</p>
+                                    </>)}
                         </Card.Body>
                     </Card>
                 </Form.Group>
                 <Form.Group>
-                    <Button variant="success" onClick={this.handleSubmitPayCardPayment} disabled={this.state.isSendingData}>
+                    <Button variant="success" onClick={this.handleSubmitPayCardPayment} disabled={this.state.isSendingData} hidden={!this.state.cardData.cardNumber}>
                         <Spinner
                             as="span"
                             animation="border"
