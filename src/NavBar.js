@@ -206,7 +206,7 @@ class NavBar extends React.Component {
           }}
         >
           <h5>{notiData.topic}</h5>
-          <p>{notiData.detail}</p>
+          <p className="noti-detail">{notiData.detail}</p>
         </DropdownItem>
       ));
     }
