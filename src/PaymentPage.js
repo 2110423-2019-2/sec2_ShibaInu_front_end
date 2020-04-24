@@ -253,11 +253,11 @@ class PaymentPage extends React.Component {
         this.setState({ modalMode: mode, showModal: true });
     }
 
-    renderReload(){
-        return  (<Spinner animation="border" role="status" className="loading">
-                  <span className="sr-only">Loading...</span>
-                </Spinner>);
-      }
+    renderReload() {
+        return (<Spinner animation="border" role="status" className="loading">
+            <span className="sr-only">Loading...</span>
+        </Spinner>);
+    }
 
     render() {
         return !this.state.loadedData() ? <this.renderReload /> : (
@@ -299,7 +299,7 @@ class PaymentPage extends React.Component {
                             <Col className="shadow background-blue">
                                 <div id="balance-topic" className="text-light">
                                     <h2 className="mb-0">
-                                        Summary
+                                        {'Summary | ' + this.state.selectedTab}
                                     </h2>
                                 </div>
                                 <div className="card-container">
