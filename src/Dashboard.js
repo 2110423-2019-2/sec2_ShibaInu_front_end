@@ -356,6 +356,22 @@ class Dashboard extends React.Component {
         console.log(res.data);
         if (res.status === 200 || res.status === 201) {
           this.changeStatus("closed");
+
+          firebase
+            .firestore()
+            .collection("notification")
+            .doc("notification")
+            .collection(this.state.contract.freelancerId.toString())
+            .add({
+              topic: "Money Transfered",
+              detail: this.state.contract.price + "฿ from job: '" + this.state.jobname + "' is transfered to your account.",
+              link: "/payment",
+              createtime: firebase.firestore.FieldValue.serverTimestamp(),
+              read: false,
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         }
       }).catch((err) => {
         console.error(err);
@@ -363,6 +379,9 @@ class Dashboard extends React.Component {
   }
 
   changeStatus = (jobStatus) => {
+
+    this.setState({ jobStatus: jobStatus });
+
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
     axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.state.jobID, { status: jobStatus })
