@@ -331,7 +331,7 @@ class PaymentModal extends React.Component {
             });
     }
 
-    showHideModal = (status = false, reload = false) => {
+    showHideModal = (status = false, reload = true) => {
         this.setState({
             showModal: status,
             reloadPage: reload
