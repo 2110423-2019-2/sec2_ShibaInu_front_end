@@ -13,7 +13,6 @@ import {
 } from "react-bootstrap";
 import { FaBtc, FaClock } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 
 class JobDetail extends React.Component {
   constructor(props) {
@@ -29,7 +28,7 @@ class JobDetail extends React.Component {
 
   componentDidMount() {
     axios
-      .get(utilities["backend-url"] + "/jobs/" + this.props.jobid.jobid)
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.props.jobid.jobid)
       .then(res => {
         const details = res.data;
         this.setState({ details });
@@ -110,7 +109,7 @@ class JobBid extends React.Component {
     event.preventDefault();
 
     axios
-      .post(utilities["backend-url"] + "/bids", this.state.postData)
+      .post(process.env.REACT_APP_BACKEND_URL + "/bids", this.state.postData)
       .then(res => {
         console.log(res);
       })
@@ -211,7 +210,7 @@ class InterrestedFreelancer extends React.Component {
 
   componentDidMount() {
     axios
-      .get(utilities["backend-url"] + "/bids/bidId/" + this.props.jobid.jobid)
+      .get(process.env.REACT_APP_BACKEND_URL + "/bids/bidId/" + this.props.jobid.jobid)
       .then(res => {
         const bids = res.data;
         this.setState({ bids });
@@ -221,7 +220,7 @@ class InterrestedFreelancer extends React.Component {
   componentDidUpdate() {
     if (this.props.refresh == 1) {
       axios
-        .get(utilities["backend-url"] + "/bids/bidId/" + this.props.jobid.jobid)
+        .get(process.env.REACT_APP_BACKEND_URL + "/bids/bidId/" + this.props.jobid.jobid)
         .then(res => {
           const bids = res.data;
           this.setState({ bids });
@@ -270,7 +269,7 @@ class InterFreeRow extends React.Component {
 
   componentDidMount() {
     axios
-      .get(utilities["backend-url"] + "/users/" + this.props.userId)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.props.userId)
       .then(res => {
         const user = res.data;
         this.setState({ user });

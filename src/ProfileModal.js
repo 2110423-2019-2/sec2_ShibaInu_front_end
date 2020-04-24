@@ -7,7 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-var utilities = require("./Utilities.json");
+
 class ProfileModal extends Component {
   constructor(props) {
     super(props);
@@ -72,7 +72,7 @@ class ProfileModal extends Component {
   }
   handleSave() {
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         firstName: this.state.fname,
         lastName: this.state.lname,
         headline: this.state.headline,
@@ -256,7 +256,7 @@ class About extends Component {
   handleSave() {
     console.log(this.state.about);
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         about: this.state.about
       })
       .then(res => {
@@ -368,7 +368,7 @@ class ExperienceModal extends Component {
     let json = JSON.stringify(this.state.experiences);
     console.log(json);
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         experience: json
       })
       .then(res => {
@@ -673,7 +673,7 @@ class EducationModal extends Component {
     let json = JSON.stringify(this.state.edu);
     console.log(json);
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         education: json
       })
       .then(res => {
@@ -945,7 +945,7 @@ class SkillModal extends Component {
   handleSave() {
     console.log(this.state.usersId)
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         skills: this.state.skills
       })
       .then(res => {
@@ -1214,7 +1214,7 @@ class ProfileImageModal extends Component {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
         axios({
           method: 'post',
-          url: utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,
+          url: process.env.REACT_APP_BACKEND_URL+"/users/profilePicture/" + this.state.userId,
           data: fd,
           headers: {'Content-Type': 'multipart/form-data' }
           })
@@ -1293,7 +1293,7 @@ class VerifyDataModal extends Component{
       console.log("error")
       return;
     }
-    await axios.patch(utilities["backend-url"]+"/users/"+this.state.userId,
+    await axios.patch(process.env.REACT_APP_BACKEND_URL+"/users/"+this.state.userId,
       {
         identificationNumber : this.state.SSN
       }
@@ -1323,7 +1323,7 @@ class VerifyDataModal extends Component{
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios({
       method: 'post',
-      url: utilities["backend-url"]+"/users/IDCard/" + this.state.userId,
+      url: process.env.REACT_APP_BACKEND_URL+"/users/IDCard/" + this.state.userId,
       data: fd,
       headers: {'Content-Type': 'multipart/form-data' }
       })
@@ -1341,7 +1341,7 @@ class VerifyDataModal extends Component{
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios({
       method: 'post',
-      url: utilities["backend-url"]+"/users/IDCardWithFace/" + this.state.userId,
+      url: process.env.REACT_APP_BACKEND_URL+"/users/IDCardWithFace/" + this.state.userId,
       data: fd,
       headers: {'Content-Type': 'multipart/form-data' }
       })

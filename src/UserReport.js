@@ -4,7 +4,6 @@ import { CSSTransition } from 'react-transition-group';
 import axios from 'axios';
 import "./AdminReport.css";
 import LocalStorageService from "./LocalStorageService";
-let utilities = require("./Utilities.json");
 
 class UserReport extends React.Component {
     constructor(props) {
@@ -27,7 +26,7 @@ class UserReport extends React.Component {
         axios.defaults.headers.common["Authorization"] =
             "Bearer " + LocalStorageService.getAccessToken();
         await axios
-            .get(utilities["backend-url"] + "/reports/user/" + LocalStorageService.getUserID())
+            .get(process.env.REACT_APP_BACKEND_URL + "/reports/user/" + LocalStorageService.getUserID())
             .then(res => {
                 res.data
                     .forEach((item) => {
@@ -291,7 +290,7 @@ class Report extends React.Component {
         axios.defaults.headers.common["Authorization"] =
             "Bearer " + LocalStorageService.getAccessToken();
         await axios
-            .get(utilities["backend-url"] + "/reports/" + this.state.report.reportId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/reports/" + this.state.report.reportId)
             .then(res => {
                 /// get res.data as array which only have 1 member
                 this.setState({
@@ -304,7 +303,7 @@ class Report extends React.Component {
                 console.log(err);
             })
         await axios
-            .get(utilities["backend-url"] + "/reports/messages/" + this.state.report.reportId)
+            .get(process.env.REACT_APP_BACKEND_URL + "/reports/messages/" + this.state.report.reportId)
             .then(res => {
                 this.setState({
                     messages: res.data,
@@ -320,7 +319,7 @@ class Report extends React.Component {
         for (let i = 0; i < userList.length; i++) {
             if (userList[i].userId !== null && !map.has(userList[i].userId)) {
                 await axios
-                    .get(utilities["backend-url"] + "/users/" + userList[i].userId)
+                    .get(process.env.REACT_APP_BACKEND_URL + "/users/" + userList[i].userId)
                     .then(res => {
                         console.log(res.data)
                         if (res.data.isAdmin) {
@@ -343,7 +342,7 @@ class Report extends React.Component {
         /// sendMessage api
         e.preventDefault();
         await axios
-            .post(utilities["backend-url"] + "/reports/send", {
+            .post(process.env.REACT_APP_BACKEND_URL + "/reports/send", {
                 detail: this.state.sendingMessage,
                 report: this.state.report.reportId,
                 user: LocalStorageService.getUserID(),
@@ -493,7 +492,7 @@ class CreateReport extends React.Component {
             "Bearer " + LocalStorageService.getAccessToken();
 
         axios
-            .post(utilities["backend-url"] + "/reports", reportData)
+            .post(process.env.REACT_APP_BACKEND_URL + "/reports", reportData)
             .then(res => {
                 if (res.status === 201) {
                     this.handleClose();

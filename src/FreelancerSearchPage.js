@@ -13,7 +13,6 @@ import {
 } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
 import { FaUserCircle } from "react-icons/fa";
-var utilities = require("./Utilities.json");
 
 class Filter extends React.Component {
   constructor(props) {
@@ -54,7 +53,7 @@ class Filter extends React.Component {
     Object.entries(this.state).map(a => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/users" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/users" + "?" + tmp1.join("&");
     this.props.parentCallback(ApiUrl);
   };
 
@@ -64,7 +63,7 @@ class Filter extends React.Component {
     Object.entries(this.state).map(a => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/users" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/users" + "?" + tmp1.join("&");
     this.props.parentCallback(ApiUrl);
   };
 
@@ -207,7 +206,7 @@ class ResultRow extends React.Component {
   componentDidMount() {
     axios
       .get(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
           "/jobs/user/" +
           LocalStorageService.getUserID()
       )
@@ -270,7 +269,7 @@ class DropDownItem extends React.Component {
   }
 
   handleClick() {
-    axios.post(utilities["backend-url"] + "/notification", {
+    axios.post(process.env.REACT_APP_BACKEND_URL + "/notification", {
       topic: "You have been invited to job",
       description:
         "You have been invited to " +
@@ -294,7 +293,7 @@ class DropDownItem extends React.Component {
 class FreelancerSearchPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ApiUrl: utilities["backend-url"] + "/users?sort=2" };
+    this.state = { ApiUrl: process.env.REACT_APP_BACKEND_URL + "/users?sort=2" };
   }
 
   callbackFunction = childData => {

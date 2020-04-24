@@ -6,7 +6,6 @@ import { FaBullhorn } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
 import swal from "sweetalert";
 import { Redirect } from "react-router-dom";
-var utilities = require("./Utilities.json");
 class AdminAnnouncement extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +24,7 @@ class AdminAnnouncement extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     axios
-      .post(utilities["backend-url"] + "/announcement", {
+      .post(process.env.REACT_APP_BACKEND_URL+ "/announcement", {
         title: this.state.title,
         content: this.state.content,
         user: this.state.userID

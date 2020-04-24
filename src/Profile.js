@@ -4,7 +4,7 @@ import profilebg from "./material/profilebg.jpg";
 import "./Profile.css";
 import { FaGlobe, FaBirthdayCake } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
-import {IoMdCheckmarkCircleOutline} from "react-icons/io";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdEmail, MdMyLocation } from "react-icons/md";
 import axios from "axios";
 import {
@@ -16,23 +16,22 @@ import {
   ExperienceListItem,
   ExperienceModal,
   EducationModal,
-  ReviewListItem,
   ProfileImageModal,
   VerifyDataModal
 } from "./ProfileModal";
-import { Container,Spinner } from "react-bootstrap";
+import { Container, Spinner } from "react-bootstrap";
 import LocalStorageService from './LocalStorageService';
-var utilities = require("./Utilities.json");
+
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    if(!LocalStorageService.getUserID()){
+    if (!LocalStorageService.getUserID()) {
       window.location.href = '/';
     }
     this.state = {
       isMyProfile: false,
-      isLoaded:false,
-      userId: this.props.userId == null? LocalStorageService.getUserID():this.props.userId.userId,
+      isLoaded: false,
+      userId: this.props.userId == null ? LocalStorageService.getUserID() : this.props.userId.userId,
       data: {
         experience: [
           {
@@ -61,7 +60,7 @@ class Profile extends React.Component {
       email: "prayut1954@hotmail.com",
       website: "http://prayutchan-o-cha.com",
       location: "Bangkok,Thailand",
-      about:"About mes",
+      about: "About mes",
       birthdate: "21 March 1954",
       exp: [
         {
@@ -82,23 +81,23 @@ class Profile extends React.Component {
         }
       ],
       skills: ["C", "C++", "C#"],
-      reviewlist:[{reviewername:"itthi", description:"awesome!",score:10,jobname:"Building mobile application"}],
+      reviewlist: [{ reviewername: "itthi", description: "awesome!", score: 10, jobname: "Building mobile application" }],
       verified: false,
       imageProfileURL: profileimage
     };
     this.fetch = this.fetch.bind(this);
-    this.formatJPGtopath=this.formatJPGtopath.bind(this,);
+    this.formatJPGtopath = this.formatJPGtopath.bind(this);
   }
-  
-  componentDidMount(){
+
+  componentDidMount() {
     this.fetch();
   }
-  componentDidUpdate(prevProps){
-    if(this.props !== prevProps){
-      this.setState({userId : LocalStorageService.getUserID()})
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      this.setState({ userId: LocalStorageService.getUserID() })
     }
   }
-  formatJPGtopath(res){
+  formatJPGtopath(res) {
     return btoa(
       new Uint8Array(res.data).reduce(
         (data, byte) => data + String.fromCharCode(byte),
@@ -121,14 +120,14 @@ class Profile extends React.Component {
       "November",
       "December"
     ];
-    if(this.state.userId === LocalStorageService.getUserID()){
-      this.setState({isMyProfile : true})
-    }else{
-      this.setState({isMyProfile : false})
+    if (this.state.userId === LocalStorageService.getUserID()) {
+      this.setState({ isMyProfile: true })
+    } else {
+      this.setState({ isMyProfile: false })
     }
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios
-      .get(utilities["backend-url"]+"/users/" + this.state.userId)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userId)
       .then(async (res) => {
         console.log(res);
         let body = res.data;
@@ -147,14 +146,14 @@ class Profile extends React.Component {
         if (body.experience !== null) {
           exp_json = JSON.parse(body.experience);
         }
-        await axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,{ responseType: 'arraybuffer' },)
-        .then(res=>{
-          this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res)});
-          console.log(res);
-        })
-        .catch(err=>{
-          console.log(err);
-        })
+        await axios.get(process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + this.state.userId, { responseType: 'arraybuffer' })
+          .then(res => {
+            this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res) });
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
         this.setState({
           data: body,
           fname: body.firstName,
@@ -189,12 +188,12 @@ class Profile extends React.Component {
             verified: this.state.verified
           }
         });
-        this.setState({isLoaded:true});
+        this.setState({ isLoaded: true });
       })
       .catch(err => {
         console.log(err);
       });
-      
+
   }
   renderReload() {
     return (<Spinner animation="border" role="status" className="loading">
@@ -202,11 +201,11 @@ class Profile extends React.Component {
     </Spinner>);
   }
 
-  render() {  
-    if(!this.state.isLoaded){
-      return(
+  render() {
+    if (!this.state.isLoaded) {
+      return (
         <>
-         {this.renderReload()}
+          {this.renderReload()}
         </>
       );
     }
@@ -215,7 +214,7 @@ class Profile extends React.Component {
       userId={this.state.userId}
       hidden={!this.state.isMyProfile}
       onUpdate={this.fetch}
-       />)
+    />)
     return (
       <>
         <Container id="profile-container">
@@ -227,10 +226,10 @@ class Profile extends React.Component {
               <div className="col-3 mr " id="pro-img-frame">
                 <div id="img-f">
                   <img src={this.state.imageProfileURL} className="pro-img" alt="youngstar logo" />
-                  <ProfileImageModal id="profile-img" 
-                  userId={this.state.userId} 
-                  hidden={!this.state.isMyProfile}
-                  onUpdate={this.fetch}/>
+                  <ProfileImageModal id="profile-img"
+                    userId={this.state.userId}
+                    hidden={!this.state.isMyProfile}
+                    onUpdate={this.fetch} />
                 </div>
               </div>
               <div className="col-4">
@@ -241,7 +240,7 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className="col-1">
-              {this.state.verified?<IoMdCheckmarkCircleOutline size={30} color="green"/>:this.state.isMyProfile?verify_btn:null}
+                {this.state.verified ? <IoMdCheckmarkCircleOutline size={30} color="green" /> : this.state.isMyProfile ? verify_btn : null}
               </div>
               <div className="col-1" id="edit">
                 <ProfileModal
@@ -256,7 +255,7 @@ class Profile extends React.Component {
               <div className="col-7" id="sub-second-one">
                 <div>
                   <FiPhoneCall hidden={this.state.tel === ""} />
-                  <p className="tel">{this.state.tel === "" ?this.state.tel: (this.state.tel.substr(0,3)+"-"+this.state.tel.substr(3,))}</p>
+                  <p className="tel">{this.state.tel === "" ? this.state.tel : (this.state.tel.substr(0, 3) + "-" + this.state.tel.substr(3))}</p>
                 </div>
                 <div>
                   <MdEmail hidden={this.state.email === ""} />
@@ -310,15 +309,15 @@ class Profile extends React.Component {
             </div>
             <div className="Exp-content">
               {this.state.exp.length === 0
-              ? "No information yet"
-              : this.state.exp.map((item,idx) => (
-                <ExperienceListItem
-                  key={idx}
-                  role={item.role}
-                  location={item.location}
-                  year={item.year}
-                />
-              ))}
+                ? "No information yet"
+                : this.state.exp.map((item, idx) => (
+                  <ExperienceListItem
+                    key={idx}
+                    role={item.role}
+                    location={item.location}
+                    year={item.year}
+                  />
+                ))}
             </div>
             <div className="Edu">
               <h5>Education</h5>
@@ -332,10 +331,10 @@ class Profile extends React.Component {
             </div>
             <div className="Edu-content">
               {this.state.education.length === 0
-              ? "No information yet"
-              : this.state.education.map((item,idx) => (
-                <EducationListItem key={idx} location={item.location} year={item.year} />
-              ))}
+                ? "No information yet"
+                : this.state.education.map((item, idx) => (
+                  <EducationListItem key={idx} location={item.location} year={item.year} />
+                ))}
             </div>
           </div>
           <div className="row-1 shadow-sm" id="skill">
@@ -351,9 +350,9 @@ class Profile extends React.Component {
             </div>
             {this.state.skills.length === 0
               ? "No skill yet"
-            : this.state.skills.map((item,idx) => <SkillListItem key={idx} skill={item} />)}
+              : this.state.skills.map((item, idx) => <SkillListItem key={idx} skill={item} />)}
           </div>
-          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode()==="client"}>
+          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "client"}>
             <h5>Review</h5>
             {/// responsive problem div have more width than html width
             /*<div className="review">

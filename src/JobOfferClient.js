@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
+
 class JobOfferClient extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +49,7 @@ class JobOfferClient extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(
-        utilities["backend-url"] + "/users/" + LocalStorageService.getUserID()
+        process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID()
       )
       .then(res => {
         const userDatas = res.data;
@@ -58,7 +58,7 @@ class JobOfferClient extends React.Component {
       });
     axios
       .get(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
           "/jobs/user/" +
           LocalStorageService.getUserID()
       )

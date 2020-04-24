@@ -37,7 +37,6 @@ import AdminBan from "./AdminBan";
 import PageNotFoundNotAllow from "./PageNotFoundNotAllow";
 
 import LocalStorageService from './LocalStorageService';
-var utilities = require("./Utilities.json");
 
 class App extends React.Component {
   constructor(props) {
@@ -53,7 +52,7 @@ class App extends React.Component {
 
     if (LocalStorageService.getUserID()) {
       axios
-        .get(utilities["backend-url"] + "/auth/checkban/" + LocalStorageService.getUserID())
+        .get(process.env.REACT_APP_BACKEND_URL + "/auth/checkban/" + LocalStorageService.getUserID())
         .then((response) => {
         }).catch((error) => {
 

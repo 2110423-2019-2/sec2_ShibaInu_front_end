@@ -4,7 +4,6 @@ import { Container, Row, Col, Table, Modal, Spinner } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 class AdminVerify extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +19,7 @@ class AdminVerify extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
-    axios.get(utilities["backend-url"] + "/users").then((res) => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then((res) => {
       const userDatas = res.data;
       this.setState({ userDatas: userDatas, isUserDataLoad: true });
       console.log(this.state.userDatas);
@@ -42,7 +41,7 @@ class AdminVerify extends React.Component {
         axios.defaults.headers.common["Authorization"] =
           "Bearer " + LocalStorageService.getAccessToken();
         axios
-          .patch(utilities["backend-url"] + "/users/verify/verify", {
+          .patch(process.env.REACT_APP_BACKEND_URL + "/users/verify/verify", {
             user: id,
             approve: false,
           })
@@ -76,7 +75,7 @@ class AdminVerify extends React.Component {
         axios.defaults.headers.common["Authorization"] =
           "Bearer " + LocalStorageService.getAccessToken();
         axios
-          .patch(utilities["backend-url"] + "/users/verify/verify", {
+          .patch(process.env.REACT_APP_BACKEND_URL + "/users/verify/verify", {
             user: id,
             approve: true,
           })
@@ -111,7 +110,7 @@ class AdminVerify extends React.Component {
         axios.defaults.headers.common["Authorization"] =
           "Bearer " + LocalStorageService.getAccessToken();
         axios
-          .patch(utilities["backend-url"] + "/users/ban", {
+          .patch(process.env.REACT_APP_BACKEND_URL + "/users/ban", {
             user: id,
             isBanned: isBanned === false,
           })
@@ -272,7 +271,7 @@ class ImageModal extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
           "/users/IDCard/" +
           this.state.modalData.userId,
         { responseType: "blob" }
@@ -298,7 +297,7 @@ class ImageModal extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
           "/users/IDCardWithFace/" +
           this.state.modalData.userId,
         { responseType: "blob" }
