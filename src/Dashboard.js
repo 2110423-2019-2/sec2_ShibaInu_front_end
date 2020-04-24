@@ -1125,6 +1125,15 @@ class DashboardFeed extends React.Component {
         return true;
     }
   }
+  showButton=()=>{
+    let status = this.state.status.toLowerCase()
+    switch (status) {
+      case "working":
+        return true;
+      default:
+        return false;
+    }
+  }
   handleConfirm = async (status) => {
     if (status) {
       swal({
@@ -1209,7 +1218,7 @@ class DashboardFeed extends React.Component {
   }
   renderUrl() {
     let showButton = null;
-    if (this.state.mode === "client") {
+    if (this.state.mode === "client" && this.showButton()) {
       showButton = (<>
         <button
           type="submit"
