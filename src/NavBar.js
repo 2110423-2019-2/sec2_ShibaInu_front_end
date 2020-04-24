@@ -20,7 +20,6 @@ import { Badge } from "@material-ui/core";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
 
-var utilities = require("./Utilities.json");
 class NavBar extends React.Component {
   constructor(props) {
     super(props);
@@ -31,10 +30,7 @@ class NavBar extends React.Component {
         GUEST: "guest",
         ADMIN: "admin",
       },
-      mode:
-        LocalStorageService.getUserMode() == ""
-          ? "guest"
-          : LocalStorageService.getUserMode(),
+      mode: LocalStorageService.getUserMode() == "" ? "guest" : LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: [],
       notiDatas: [],
@@ -52,14 +48,13 @@ class NavBar extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     axios
-      .get(utilities["backend-url"] + "/users/" + this.state.userID)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userID)
       .then((res) => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
-      })
-      .then((res) => {
-        this.setState({ isUserDataLoad: true }); //tested
+      }).then((res) => {
+        this.setState({ isUserDataLoad: true }) //tested
       });
   };
 
@@ -190,8 +185,7 @@ class NavBar extends React.Component {
       .doc(notiData.id)
       .update({
         read: true,
-      })
-      .then(() => {
+      }).then(() => {
         console.log("a");
         window.location.href = notiData.link;
       })
@@ -216,8 +210,8 @@ class NavBar extends React.Component {
           }}
           
         >
-            <h5>{notiData.topic}</h5>
-            <p className="noti-detail">{notiData.detail}</p>
+          <h5>{notiData.topic}</h5>
+          <p className="noti-detail">{notiData.detail}</p>
         </DropdownItem>
         <DropdownItem divider />
         </div>
@@ -387,21 +381,21 @@ class NavBar extends React.Component {
             className="color-black"
           >
             User verification
-          </DropdownItem>
+        </DropdownItem>
           <DropdownItem
             href="/admin/ban"
             id="dropdown-item-balance"
             className="color-black"
           >
             Ban user
-          </DropdownItem>
+        </DropdownItem>
           <DropdownItem
             href="/admin/report"
             id="dropdown-item-balance"
             className="color-black"
           >
             Report list
-          </DropdownItem>
+        </DropdownItem>
           <DropdownItem divider />
           <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
             Sign out
@@ -450,11 +444,7 @@ class NavBar extends React.Component {
         {userMode}
       </Navbar.Brand>
     );
-    if (
-      this.state.mode !== this.state.status.GUEST &&
-      this.state.isUserDataLoad === false
-    ) {
-      //tested
+    if (this.state.mode !== this.state.status.GUEST && this.state.isUserDataLoad === false) { //tested
       return null;
     }
     return (

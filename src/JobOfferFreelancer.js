@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
-var utilities = require('./Utilities.json');
+
 class JobOfferFreelancer extends React.Component {
   constructor(props) {
     super(props);
@@ -27,46 +27,55 @@ class JobOfferFreelancer extends React.Component {
       statusFilter: "all",
       userDatas: "",
       jobDatas: "",
+      keyword: "",
       isUserDataLoad: false,
       isJobDataLoad: false
     };
+  }
+
+  keywordHandler = (check = false) => {
+    let word = document.getElementById("searchbox").value
+    console.log(word)
+    if (check) {
+      this.setState({ keyword: word })
+    }
   }
 
   statusHandler = (event, status) => {
     this.setState({ statusFilter: status });
   };
 
-  fetchDatas = async() => {
+  fetchDatas = async () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     await axios
-      .get(utilities['backend-url'] + "/users/" + LocalStorageService.getUserID())
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID())
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
-    let data=[]
+    let data = []
     await axios
-      .get(utilities['backend-url'] + "/bids/job/" + LocalStorageService.getUserID())
+      .get(process.env.REACT_APP_BACKEND_URL + "/bids/job/" + LocalStorageService.getUserID())
       .then(async res => {
-        for(let i=0;i<res.data.length;i++){
-          if(res.data[i].contractId === null){
-             data.push(res.data[i]);
-           }else{
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i].contractId === null) {
+            data.push(res.data[i]);
+          } else {
             await axios
-            .get(utilities['backend-url'] + "/contracts/jobId/" + res.data[i].jobId)
-            .then(contract=>{
-              console.log(contract.data)
-              if(contract.data.freelancerId === this.state.userDatas.userId)
-              data.push(res.data[i]);
-            })
-            .catch(err=>{
-              console.log(err)
-            })
-           }
+              .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + res.data[i].jobId)
+              .then(contract => {
+                console.log(contract.data)
+                if (contract.data.freelancerId === this.state.userDatas.userId)
+                  data.push(res.data[i]);
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
 
         }
-        await this.setState({ jobDatas: data,isJobDataLoad: true});
+        await this.setState({ jobDatas: data, isJobDataLoad: true });
         console.log(res.data);
       })
   };
@@ -75,7 +84,7 @@ class JobOfferFreelancer extends React.Component {
     this.fetchDatas();
   }
 
-  handleClickJobDetail = (e) =>{
+  handleClickJobDetail = (e) => {
     window.location.href = '/dashboard/' + e.target.id;
   }
 
@@ -85,24 +94,42 @@ class JobOfferFreelancer extends React.Component {
     }
     var recentJob;
     if (this.state.statusFilter === this.state.status.ALL) {
-      recentJob = this.state.jobDatas.map((job, index) => (
-        <tr key={index} className="text-center">
-          <td className="align-middle">
-            {job.name}
-          </td>
-          <td className="align-middle">{job.catergory}</td>
-          <td className="align-middle">{job.status}</td>
-          <td className="align-middle">
-            <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
-              Detail
+      recentJob = this.state.jobDatas
+        .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
+        .map((job, index) => (
+          <tr key={index} className="text-center">
+            <td className="align-middle">
+              {job.name}
+            </td>
+            <td className="align-middle">{job.catergory}</td>
+            <td className="align-middle">{job.status}</td>
+            <td className="align-middle">
+              <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
+                Detail
             </button>
-          </td>
-        </tr>
-      ));
+            </td>
+          </tr>
+        ));
     } else {
       recentJob = this.state.jobDatas
-        .filter(job => (job.status === this.state.statusFilter))
-        .map((job, index) =>  (
+        .filter(job => {
+          if (job.status === this.state.statusFilter) {
+            return true;
+          } else {
+            if (this.state.statusFilter === this.state.status.CONTRACT) {
+              switch (job.status) {
+                case this.state.status.INTERESTED:
+                  return false;
+                case this.state.status.MAKEDEAL:
+                  return false;
+                default:
+                  return true;
+              }
+            }
+          }
+        })
+        .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
+        .map((job, index) => (
           <tr key={index} className="text-center">
             <td className="align-middle">
               {job.name}
@@ -140,8 +167,8 @@ class JobOfferFreelancer extends React.Component {
               <h2 id="recentjob-topic">Job Offering</h2>
             </Col>
           </Row>
-            <Row className="bg-light shadow">
-              <Col lg={6} md={6.5}>
+          <Row className="bg-light shadow">
+            <Col lg={6} md={6.5}>
               <Nav variant="tabs" defaultActiveKey="link-1" id="joblist-table">
                 <Nav.Item>
                   <Nav.Link
@@ -182,25 +209,26 @@ class JobOfferFreelancer extends React.Component {
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
-              </Col>
-              <Col>
+            </Col>
+            <Col>
               <Form inline className="joboffer-search">
                 <FormControl
                   type="text"
+                  id="searchbox"
                   placeholder="Search"
                   className="mr-sm-2 joboffer-search-box"
                 />
-                <Button variant="outline-success" className="w-auto">Search</Button>
+                <Button variant="outline-success" className="w-auto" onClick={(e) => this.keywordHandler(true)}>Search</Button>
               </Form>
-              </Col>
-              </Row>
-              <Row className="bg-light shadow">
-              <Table responsive>
-                <thead className="background-blue text-light">
-                  {headTable}
-                </thead>
-                <tbody>{recentJob}</tbody>
-              </Table>
+            </Col>
+          </Row>
+          <Row className="bg-light shadow">
+            <Table responsive>
+              <thead className="background-blue text-light">
+                {headTable}
+              </thead>
+              <tbody>{recentJob}</tbody>
+            </Table>
           </Row>
         </Container>
       </div>

@@ -4,7 +4,6 @@ import { Form, Button, Col, Spinner, Container, Row } from "react-bootstrap";
 import logo from "./material/Logo.png";
 import "./SignInSignUp.css";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -22,7 +21,7 @@ class SignUp extends React.Component {
 
   submitLogin() {
     axios
-      .post(utilities["backend-url"] + "/auth/login", this.state.registerData)
+      .post(process.env.REACT_APP_BACKEND_URL + "/auth/login", this.state.registerData)
       .then((response) => {
         switch (response.status) {
           // Created
@@ -84,7 +83,7 @@ class SignUp extends React.Component {
     });
 
     axios
-      .post(utilities["backend-url"] + "/users", this.state.registerData)
+      .post(process.env.REACT_APP_BACKEND_URL + "/users", this.state.registerData)
       .then((response) => {
         switch (response.status) {
           // Created
@@ -128,7 +127,7 @@ class SignUp extends React.Component {
     });
 
     axios
-      .post(utilities["backend-url"] + "/users", fbData)
+      .post(process.env.REACT_APP_BACKEND_URL + "/users", fbData)
       .then((response) => {
         switch (response.status) {
           // Created

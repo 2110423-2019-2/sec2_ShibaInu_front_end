@@ -5,7 +5,6 @@ import { Container, Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
 import { FaBullhorn, FaInfoCircle } from "react-icons/fa";
-var utilities = require('./Utilities.json');
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -24,21 +23,21 @@ class Home extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
     axios
-      .get(utilities['backend-url'] + "/users/" + this.state.userID)
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userID)
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
     axios
-      .get(utilities['backend-url'] + "/jobs/recent/" + this.state.userID)
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/recent/" + this.state.userID)
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
         console.log(this.state.jobDatas);
       });
     axios
-      .get(utilities['backend-url'] + "/announcement")
+      .get(process.env.REACT_APP_BACKEND_URL + "/announcement")
       .then(res => {
         const announce = res.data;
         this.setState({ announce: announce, isAnnounceLoad:true });

@@ -3,7 +3,6 @@ import "./SearchPage.css";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FaCode, FaBtc, FaClock } from "react-icons/fa";
-var utilities = require("./Utilities.json");
 
 class Filter extends React.Component {
   constructor(props) {
@@ -61,7 +60,7 @@ class Filter extends React.Component {
     Object.entries(this.state).map(a => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs" + "?" + tmp1.join("&");
     console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
@@ -81,7 +80,7 @@ class Filter extends React.Component {
     Object.entries(this.state).map(a => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs" + "?" + tmp1.join("&");
     console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
@@ -290,7 +289,7 @@ class ResultRow extends React.Component {
 class JobSearchPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ApiUrl: utilities["backend-url"] + "/jobs?sort=0" };
+    this.state = { ApiUrl: process.env.REACT_APP_BACKEND_URL + "/jobs?sort=0" };
   }
 
   callbackFunction = childData => {

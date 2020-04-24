@@ -16,6 +16,9 @@ import {
   BrowserRouter as Router,
   useParams,
 } from "react-router-dom";
+import axios from 'axios';
+import swal from "sweetalert";
+
 import PrivateRoute from "./utilities/PrivateRoute";
 import GuestRoute from "./utilities/GuestRoute";
 import HomeGuest from "./HomeGuest";
@@ -31,14 +34,36 @@ import AdminReportList from "./AdminReport";
 import UserReport from './UserReport';
 import AdminVerify from './AdminVerify';
 import AdminBan from "./AdminBan";
+import PageNotFoundNotAllow from "./PageNotFoundNotAllow";
+
+import LocalStorageService from './LocalStorageService';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+
+    if (!process.env.REACT_APP_BACKEND_URL) {
+      alert("ยังไม่มี REACT_APP_BACKEND_URL ใน .env จ้า ไปใส่เร้ววววว");
+    }
   }
 
   render() {
+
+    if (LocalStorageService.getUserID()) {
+      axios
+        .get(process.env.REACT_APP_BACKEND_URL + "/auth/checkban/" + LocalStorageService.getUserID())
+        .then((response) => {
+        }).catch((error) => {
+
+          if (error.response && error.response.status === 403) {
+            console.log("Banned user");
+            swal("You are banned!", error.response.data.message, "error");
+            LocalStorageService.signOut();
+          }
+        });
+    }
+
     return (
       <div>
         <NavBar />
@@ -46,58 +71,59 @@ class App extends React.Component {
           <Switch>
             <GuestRoute exact path="/" component={() => <HomeGuest />} />
             <PrivateRoute
-              path="/client/home"
+              exact path="/client/home"
               component={() => <HomeClient />}
             />
             <Route
-              path="/profile/:userId"
+              exact path="/profile/:userId"
               component={() => <Profile userId={useParams()} />}
             />
             <Route
-              path="/profile/"
+              exact path="/profile/"
               component={() => <Profile userId={null} />}
             />
             <PrivateRoute
-              path="/client/job"
+              exact path="/client/job"
               component={() => <JobOfferClient />}
             />
             <PrivateRoute
-              path="/freelancer/home"
+              exact path="/freelancer/home"
               component={() => <HomeFreelancer />}
             />
             <PrivateRoute
-              path="/freelancer/job"
+              exact path="/freelancer/job"
               component={() => <JobOfferFreelancer />}
             />
             <Route
-              path="/job/:jobid"
+              exact path="/job/:jobid"
               component={() => <JobPage jobid={useParams()} />}
             />
-            <PrivateRoute path="/jobcreate" component={JobCreatePage} />
-            <Route path="/jobsearch" component={JobSearchPage} />
-            <Route path="/freelancersearch" component={FreelancerSearchPage} />
-            <GuestRoute path="/signin" component={SignIn} />
-            <GuestRoute path="/signup" component={SignUp} />
+            <PrivateRoute exact path="/jobcreate" component={JobCreatePage} />
+            <Route exact path="/jobsearch" component={JobSearchPage} />
+            <Route exact path="/freelancersearch" component={FreelancerSearchPage} />
+            <GuestRoute exact path="/signin" component={SignIn} />
+            <GuestRoute exact path="/signup" component={SignUp} />
             <PrivateRoute
-              path="/dashboard/:jobId"
+              exact path="/dashboard/:jobId"
               component={() => <Dashboard params={useParams()} />}
             />
-            <PrivateRoute path="/admin/home" component={AdminHome} />
+            <PrivateRoute exact path="/admin/home" component={AdminHome} />
             <PrivateRoute
-              path="/admin/announcement"
+              exact path="/admin/announcement"
               component={AdminAnnouncement}
             />
-            <PrivateRoute path="/client/review" component={ReviewFreelancer} />
-            <PrivateRoute path="/payment" component={PaymentPage} />
-            <PrivateRoute path="/chat" component={ChatSystem} />
+            <PrivateRoute exact path="/client/review" component={ReviewFreelancer} />
+            <PrivateRoute exact path="/payment" component={PaymentPage} />
+            <PrivateRoute exact path="/chat" component={ChatSystem} />
             <PrivateRoute
-              path="/contract/:jobId/:freelancerId"
+              exact path="/contract/:jobId/:freelancerId"
               component={() => <Contract params={useParams()} />}
             />
-            <PrivateRoute path="/admin/report" component={AdminReportList} />
-            <PrivateRoute path="/report" component={UserReport} />
-            <PrivateRoute path="/admin/verify" component={AdminVerify} />
-            <PrivateRoute path="/admin/ban" component={AdminBan} />
+            <PrivateRoute exact path="/admin/report" component={AdminReportList} />
+            <PrivateRoute exact path="/report" component={UserReport} />
+            <PrivateRoute exact path="/admin/verify" component={AdminVerify} />
+            <PrivateRoute exact path="/admin/ban" component={AdminBan} />
+            <Route path="*" component={PageNotFoundNotAllow} />
           </Switch>
         </Router>
       </div>

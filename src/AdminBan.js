@@ -4,7 +4,6 @@ import { Container, Row, Col, Table, Nav } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 class AdminBan extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +26,7 @@ class AdminBan extends React.Component {
   fetchDatas = () => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
-    axios.get(utilities["backend-url"] + "/users").then((res) => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then((res) => {
       const resUserDatas = res.data;
       var userDatas = [];
       for (let i = 0; i < resUserDatas.length; i++) {
@@ -70,7 +69,7 @@ class AdminBan extends React.Component {
           axios.defaults.headers.common["Authorization"] =
             "Bearer " + LocalStorageService.getAccessToken();
           axios
-            .patch(utilities["backend-url"] + "/users/ban", {
+            .patch(process.env.REACT_APP_BACKEND_URL + "/users/ban", {
               user: id,
               isBanned: isBanned === false,
               banReason: val,

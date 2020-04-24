@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
+
 class JobOfferClient extends React.Component {
   constructor(props) {
     super(props);
@@ -28,11 +28,18 @@ class JobOfferClient extends React.Component {
       statusFilter: "all",
       userDatas: "",
       jobDatas: "",
+      keyword: "",
       isUserDataLoad: false,
       isJobDataLoad: false
     };
   }
-
+  keywordHandler = (check=false)=>{
+    let word = document.getElementById("searchbox").value
+    console.log(word)
+    if(check){
+      this.setState({keyword:word})
+    }
+  }
   statusHandler = (event, status) => {
     this.setState({ statusFilter: status });
   };
@@ -42,7 +49,7 @@ class JobOfferClient extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(
-        utilities["backend-url"] + "/users/" + LocalStorageService.getUserID()
+        process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID()
       )
       .then(res => {
         const userDatas = res.data;
@@ -51,7 +58,7 @@ class JobOfferClient extends React.Component {
       });
     axios
       .get(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
           "/jobs/user/" +
           LocalStorageService.getUserID()
       )
@@ -76,7 +83,9 @@ class JobOfferClient extends React.Component {
     }
     var recentJob;
     if (this.state.statusFilter === this.state.status.ALL) {
-      recentJob = this.state.jobDatas.map((job, index) => (
+      recentJob = this.state.jobDatas
+      .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
+      .map((job, index) => (
         <tr key={index} className="text-center">
           <td className="align-middle">
             {job.name}
@@ -98,6 +107,7 @@ class JobOfferClient extends React.Component {
     } else {
       recentJob = this.state.jobDatas
         .filter(job => job.status === this.state.statusFilter)
+        .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
         .map((job, index) => (
           <tr key={index} className="text-center">
             <td className="align-middle">{job.name}</td>
@@ -193,9 +203,10 @@ class JobOfferClient extends React.Component {
                 <FormControl
                   type="text"
                   placeholder="Search"
+                  id = "searchbox"
                   className="mr-sm-2 joboffer-search-box"
                 />
-                <Button variant="outline-success" className="w-auto">Search</Button>
+                <Button variant="outline-success" className="w-auto" onClick={(e)=>this.keywordHandler(true)}>Search</Button>
               </Form>
               </Col>
               </Row>

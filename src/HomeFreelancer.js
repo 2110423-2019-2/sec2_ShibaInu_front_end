@@ -6,7 +6,6 @@ import { Card, CardImg, CardBody, CardTitle } from "reactstrap";
 import logo from "./material/Logo.png";
 import axios from "axios";
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
 class HomeFreelancer extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +25,7 @@ class HomeFreelancer extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(
-        utilities["backend-url"] + "/users/" + LocalStorageService.getUserID()
+        process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID()
       )
       .then((res) => {
         const userDatas = res.data;
@@ -35,7 +34,7 @@ class HomeFreelancer extends React.Component {
       });
     axios
       .get(
-        utilities["backend-url"] +
+        process.env.REACT_APP_BACKEND_URL +
           "/jobs/recommend/" +
           LocalStorageService.getUserID()
       )
@@ -44,7 +43,7 @@ class HomeFreelancer extends React.Component {
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
         console.log(this.state.jobDatas);
       });
-    axios.get(utilities["backend-url"] + "/announcement").then((res) => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/announcement").then((res) => {
       const announce = res.data;
       this.setState({ announce: announce, isAnnounceLoad: true });
       console.log(this.state.announce);
