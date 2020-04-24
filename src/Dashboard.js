@@ -214,9 +214,10 @@ class Dashboard extends React.Component {
           openTime: res.data.createdTime,
           acceptedTime: res.data.acceptedTime,
           workingTime: res.data.startWorkingTime,
-          doneTime: res.data.doneTime
+          doneTime: res.data.doneTime,
+          closedTime: res.data.closedTime
         };
-
+        console.log(res.data)
         this.setState({
           timelineDetail: timelineDetail
         });
@@ -1075,18 +1076,31 @@ class DashboardFeed extends React.Component {
     console.log(this.state.loadUrl)
   }
   onLinkChange = (e) => {
-    console.log(e.target.value)
     this.setState({ url: e.target.value })
-    console.log(this.state.url)
   }
   onSubmit = (e) => {
     e.preventDefault()
+    let buttonStyle = {
+      cancel: {
+        text: "Cancel",
+        value: null,
+        visible: true,
+        className: "btn btn-secondary",
+        closeModal: true,
+      },
+      confirm: {
+        text: "OK",
+        value: true,
+        visible: true,
+        className: "btn btn-success",
+        closeModal: true
+      }
+    }
     swal({
       title: "Are you sure?",
       text: "Once submit, you will not be able to change this! ",
       icon: "success",
-      buttons: true,
-      dangerMode: true,
+      buttons: buttonStyle,
     })
       .then(async (confirm) => {
         if (confirm) {
@@ -1135,13 +1149,28 @@ class DashboardFeed extends React.Component {
     }
   }
   handleConfirm = async (status) => {
+    let buttonStyle = {
+      cancel: {
+        text: "Cancel",
+        value: null,
+        visible: true,
+        className: "btn btn-secondary",
+        closeModal: true,
+      },
+      confirm: {
+        text: "OK",
+        value: true,
+        visible: true,
+        className: "btn btn-success",
+        closeModal: true
+      }
+    }
     if (status) {
       swal({
         title: "Are you sure?",
         text: "Once Accept, you will not be able to change this! ",
         icon: "success",
-        buttons: true,
-        dangerMode: true,
+        buttons: buttonStyle,
       })
         .then(async (confirm) => {
           if (confirm) {
@@ -1162,10 +1191,9 @@ class DashboardFeed extends React.Component {
     } else {
       swal({
         title: "Are you sure?",
-        text: "Once Decline, you will have to wait for a new link ",
+        text: "Once Reject, you will have to wait for a new link ",
         icon: "warning",
-        buttons: true,
-        dangerMode: true,
+        buttons: buttonStyle,
       })
         .then(async (confirm) => {
           if (confirm) {
@@ -1197,6 +1225,7 @@ class DashboardFeed extends React.Component {
             </Form.Label>
             <Col sm="8">
               <Form.Control
+                placeholder="e.g. http://github.com"
                 onChange={(e) => this.onLinkChange(e)}
                 required
               />
@@ -1225,7 +1254,7 @@ class DashboardFeed extends React.Component {
           className="btn btn-danger"
           onClick={() => this.handleConfirm(false)}
         >
-          Decline
+          Reject
         </button>
         {' '}
         <button
@@ -1245,7 +1274,6 @@ class DashboardFeed extends React.Component {
     );
   }
   render() {
-    console.log(this.state.status)
     if (this.state.loadUrl) {
       if (this.state.hasbeenSent) {
         return <DashboardBox topic="Feed" component={this.renderUrl()} hidden={this.checkStatus()} />;
