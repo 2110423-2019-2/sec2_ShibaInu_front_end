@@ -36,6 +36,10 @@
     background: #FFC655; 
     border-radius: 5px;
 }
+::-webkit-scrollbar-thumb {
+    width: 10px;
+    background: #254380; 
+}
 .msg-allarea {
     background-color: #fafafa;
     height: 76%;

@@ -8,7 +8,7 @@ import {
   FaSearch,
   FaFacebookMessenger,
 } from "react-icons/fa";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar, Container, Row } from "react-bootstrap";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -31,16 +31,20 @@ class NavBar extends React.Component {
         GUEST: "guest",
         ADMIN: "admin",
       },
-      mode: LocalStorageService.getUserMode()==""?"guest":LocalStorageService.getUserMode(),
+      mode:
+        LocalStorageService.getUserMode() == ""
+          ? "guest"
+          : LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: [],
       notiDatas: [],
       isNotiLoad: false,
       unreadRoom: 0,
       newNoti: 0,
+      haveNewNoti: false,
       firstLoadUnreadChat: true,
       firstLoadNoti: true,
-      isUserDataLoad : false, //tested
+      isUserDataLoad: false, //tested
     };
   }
 
@@ -53,8 +57,9 @@ class NavBar extends React.Component {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
-      }).then((res)=>{
-        this.setState({isUserDataLoad : true}) //tested
+      })
+      .then((res) => {
+        this.setState({ isUserDataLoad: true }); //tested
       });
   };
 
@@ -125,9 +130,9 @@ class NavBar extends React.Component {
         if (this.state.firstLoadNoti) {
           var notiDatas = [];
           var newNoti = 0;
+          var haveNewNoti = false;
         } else {
-          var notiDatas = this.state.notiDatas;
-          var newNoti = this.state.newNoti;
+          var {notiDatas, newNoti, haveNewNoti} = this.state;
         }
         snapshot.docChanges().forEach((change) => {
           var noti = change.doc.data();
@@ -147,6 +152,7 @@ class NavBar extends React.Component {
               newNoti -= 1;
             } else {
               newNoti += 1;
+              haveNewNoti = true;
             }
             for (let i = 0; i < notiDatas.length; i++) {
               if (change.doc.id === notiDatas[i].id) {
@@ -159,6 +165,7 @@ class NavBar extends React.Component {
           notiDatas: notiDatas,
           newNoti: newNoti,
           firstLoadNoti: false,
+          haveNewNoti: haveNewNoti,
         });
         console.log(this.state.notiDatas);
       });
@@ -183,7 +190,8 @@ class NavBar extends React.Component {
       .doc(notiData.id)
       .update({
         read: true,
-      }).then(()=>{
+      })
+      .then(() => {
         console.log("a");
         window.location.href = notiData.link;
       })
@@ -192,11 +200,12 @@ class NavBar extends React.Component {
       });
   };
 
-  notiList = () => {
-    if (this.state.notiDatas !== []) {
-      return this.state.notiDatas.map((notiData, idx) => (
+  showNotiFilterByRead = (read) => {
+    return this.state.notiDatas
+      .filter((notiData) => notiData.read === read)
+      .map((notiData, idx) => (
+        <div key={idx}>
         <DropdownItem
-          key={idx}
           className={
             notiData.read
               ? "color-black noti"
@@ -205,11 +214,27 @@ class NavBar extends React.Component {
           onClick={() => {
             this.readNoti(notiData);
           }}
+          
         >
-          <h5>{notiData.topic}</h5>
-          <p>{notiData.detail}</p>
+            <h5>{notiData.topic}</h5>
+            <p className="noti-detail">{notiData.detail}</p>
         </DropdownItem>
+        <DropdownItem divider />
+        </div>
       ));
+  };
+
+  notiList = () => {
+    if (this.state.haveNewNoti===true || this.state.notiDatas !== []) {
+      if(this.state.haveNewNoti===true){
+        this.setState({haveNewNoti: false});
+      }
+      return (
+        <div>
+          {this.showNotiFilterByRead(false)}
+          {this.showNotiFilterByRead(true)}
+        </div>
+      );
     }
   };
 
@@ -231,39 +256,6 @@ class NavBar extends React.Component {
       changeMode,
       chatMenu;
     var jobPath = "/" + this.state.mode + "/job";
-
-    /*var newNotiDetail, oldNotiDetail;
-    if (this.state.isNotiLoad) {
-      newNotiDetail = this.state.notiDatas
-        .filter((noti) => noti.isRead === false)
-        .map((noti, idx) => (
-          <DropdownItem
-            key={idx}
-            className="color-black background-yellow noti"
-            onClick={() => {
-              this.readNoti(noti.notificationId, idx);
-            }}
-          >
-            <h5>{noti.topic}</h5>
-            <p>{noti.description}</p>
-          </DropdownItem>
-        ));
-      oldNotiDetail = this.state.notiDatas
-        .filter((noti) => noti.isRead === true)
-        .map((noti, idx) => (
-          <DropdownItem
-            key={idx}
-            className="color-black noti"
-            onClick={() => {
-              this.readNoti(noti.notificationId, idx);
-            }}
-          >
-            <h5>{noti.topic}</h5>
-            <p>{noti.description}</p>
-          </DropdownItem>
-        ));
-    }
-*/
 
     notiMenu = (
       <UncontrolledDropdown nav inNavbar>
@@ -336,16 +328,8 @@ class NavBar extends React.Component {
       changeMode = "client";
     } else if (this.state.mode === this.state.status.GUEST) {
       userMode = YOUNGSTAR;
-      signInMenu = (
-        <Nav.Link href="/signin">
-          Sign in
-        </Nav.Link>
-      );
-      signUpMenu = (
-        <Nav.Link href="/signup">
-          Sign up
-        </Nav.Link>
-      );
+      signInMenu = <Nav.Link href="/signin">Sign in</Nav.Link>;
+      signUpMenu = <Nav.Link href="/signup">Sign up</Nav.Link>;
       homePath = "/";
     }
     dropDownMenu = (
@@ -398,27 +382,27 @@ class NavBar extends React.Component {
       dropDownMenu = (
         <DropdownMenu right>
           <DropdownItem
-          href="/admin/verify"
-          id="dropdown-item-balance"
-          className="color-black"
-        >
-          User verification
-        </DropdownItem>
-        <DropdownItem
-          href="/admin/ban"
-          id="dropdown-item-balance"
-          className="color-black"
-        >
-          Ban user
-        </DropdownItem>
+            href="/admin/verify"
+            id="dropdown-item-balance"
+            className="color-black"
+          >
+            User verification
+          </DropdownItem>
           <DropdownItem
-          href="/admin/report"
-          id="dropdown-item-balance"
-          className="color-black"
-        >
-          Report list
-        </DropdownItem>
-        <DropdownItem divider />
+            href="/admin/ban"
+            id="dropdown-item-balance"
+            className="color-black"
+          >
+            Ban user
+          </DropdownItem>
+          <DropdownItem
+            href="/admin/report"
+            id="dropdown-item-balance"
+            className="color-black"
+          >
+            Report list
+          </DropdownItem>
+          <DropdownItem divider />
           <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
             Sign out
           </DropdownItem>
@@ -466,8 +450,12 @@ class NavBar extends React.Component {
         {userMode}
       </Navbar.Brand>
     );
-    if(this.state.mode !== this.state.status.GUEST && this.state.isUserDataLoad === false){ //tested
-      return null; 
+    if (
+      this.state.mode !== this.state.status.GUEST &&
+      this.state.isUserDataLoad === false
+    ) {
+      //tested
+      return null;
     }
     return (
       <Navbar expand="lg" id="navbar" sticky="top" className="shadow">

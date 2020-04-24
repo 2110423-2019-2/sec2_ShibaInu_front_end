@@ -43,3 +43,11 @@
     overflow: scroll;
     overflow-x: hidden;
 }
+.noti-detail {
+    flex-direction: column;
+    word-wrap: normal;
+}
+.noti {
+    flex-direction: column;
+    word-wrap: normal;
+}

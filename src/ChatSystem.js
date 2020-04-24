@@ -324,7 +324,7 @@ class ChatSystem extends React.Component {
               {this.chatRoom()}
               </Container>
             </Col>
-            <Col className="bg-white text-center shadow">
+            <Col className="bg-white text-center">
               <Container fluid>
               {this.chatWith()}
               {this.msgDisp()}
