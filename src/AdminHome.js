@@ -6,38 +6,12 @@ import { Doughnut } from "react-chartjs-2";
 
 import LocalStorageService from "./LocalStorageService";
 import LoadingSpinner from "./utilities/LoadingSpinner";
+import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 
 class AdminHome extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isDataLoad: false,
-      userDatas: {},
-      isUserDataLoad: false,
-      showModal: false,
-      modalData: { userId: "", mode: "" }
-    };
-  }
-
-  fetchDatas = () => {
-    axios.defaults.headers.common["Authorization"] =
-      "Bearer " + LocalStorageService.getAccessToken();
-    axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then(res => {
-      const userDatas = res.data;
-      this.setState({ userDatas: userDatas, isUserDataLoad: true });
-    }).catch((error) => {
-      console.error(error);
-    });
-  };
-
-  componentDidMount = () => {
-    this.fetchDatas();
-  };
 
   render() {
-    if (!this.state.isUserDataLoad) {
-      return null;
-    }
+
     return (
       <div className="main-background">
         <Container id="adminHome-box">
@@ -54,13 +28,13 @@ class AdminHome extends React.Component {
               <Col>
                 <AdminCard mode='total-admin' />
               </Col>
-            {/* </Row>
-            <Row> */}
+            </Row>
+            <Row>
               <Col>
                 <AdminCard mode="verification" />
               </Col>
               <Col>
-                <AdminCard mode="report" />
+                <AdminCard mode="report" cb={this.callbackBox} />
               </Col>
               <Col>
                 <AdminCard mode="ban" />
@@ -210,6 +184,7 @@ class AdminCard extends React.Component {
 
     }).catch((error) => {
       console.error(error);
+
     }).finally(() => {
       this.setState({ isLoading: false });
     });

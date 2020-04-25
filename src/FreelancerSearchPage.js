@@ -1,18 +1,9 @@
 import React from "react";
 import "./SearchPage.css";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card,
-  Dropdown,
-  DropdownButton
-} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card, Dropdown, DropdownButton } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaStar } from "react-icons/fa";
 
 class Filter extends React.Component {
   constructor(props) {
@@ -22,7 +13,7 @@ class Filter extends React.Component {
     this.handleSubmit.bind(this);
     this.handleReset.bind(this);
   }
-  handleChange = e => {
+  handleChange = (e) => {
     var k = e.target.name;
     var v = e.target.value;
     if (k === "sort") {
@@ -47,20 +38,20 @@ class Filter extends React.Component {
     obj[k] = v;
     this.setState(obj);
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
     var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/users" + "?" + tmp1.join("&");
     this.props.parentCallback(ApiUrl);
   };
 
-  handleReset = e => {
+  handleReset = (e) => {
     this.setState({ name: "", s1: "", cat: "", sort: 2 });
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
     var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/users" + "?" + tmp1.join("&");
@@ -104,11 +95,7 @@ class Filter extends React.Component {
             </Form.Group> */}
             <Form.Group>
               <Form.Label>Sort by</Form.Label>
-              <Form.Control
-                as="select"
-                name="sort"
-                onChange={this.handleChange}
-              >
+              <Form.Control as="select" name="sort" onChange={this.handleChange}>
                 <option>Rating (High to Low)</option>
                 <option>Rating (Low to High)</option>
                 <option>Newest Users</option>
@@ -117,11 +104,7 @@ class Filter extends React.Component {
             </Form.Group>
             <Form.Row>
               <Col>
-                <Button
-                  variant="secondary"
-                  type="reset"
-                  onClick={this.handleReset}
-                >
+                <Button variant="secondary" type="reset" onClick={this.handleReset}>
                   Clear
                 </Button>
               </Col>
@@ -145,7 +128,7 @@ class Result extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(this.props.ApiUrl).then(res => {
+    axios.get(this.props.ApiUrl).then((res) => {
       this.setState({ freelancerList: res.data });
     });
   }
@@ -154,10 +137,10 @@ class Result extends React.Component {
     if (prevProps.ApiUrl !== this.props.ApiUrl) {
       axios
         .get(this.props.ApiUrl)
-        .then(res => {
+        .then((res) => {
           this.setState({ freelancerList: res.data });
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ freelancerList: [] });
           console.log(error);
         });
@@ -168,16 +151,17 @@ class Result extends React.Component {
     var emptyMessage = "";
     if (this.state.freelancerList.length == 0) emptyMessage = "Not Found";
     else emptyMessage = "";
+    console.log(this.state.freelancerList[0]);
     return (
       <Card className="result">
         <Card.Header>Search Freelancer</Card.Header>
         <Card.Body>
           {emptyMessage}
-          {this.state.freelancerList.map(u => {
+          {this.state.freelancerList.map((u) => {
             var tmp = [];
             var tmp2 = [];
-            u.skills.map(s => tmp.push(s.skill));
-            u.interestedCategories.map(c => tmp2.push(c.interestedCategory));
+            u.skills.map((s) => tmp.push(s.skill));
+            u.interestedCategories.map((c) => tmp2.push(c.interestedCategory));
             if (tmp.length == 0) tmp.push("-");
             if (tmp2.length == 0) tmp2.push("-");
             return (
@@ -186,6 +170,7 @@ class Result extends React.Component {
                 userId={u.userId}
                 firstName={u.firstName}
                 lastName={u.lastName}
+                rating={u.reviewedNumber ? u.sumReviewedScore / u.reviewedNumber : 0}
                 skill={tmp.join(", ")}
                 intCat={tmp2.join(",")}
               />
@@ -205,12 +190,8 @@ class ResultRow extends React.Component {
 
   componentDidMount() {
     axios
-      .get(
-        process.env.REACT_APP_BACKEND_URL +
-          "/jobs/user/" +
-          LocalStorageService.getUserID()
-      )
-      .then(res => {
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/user/" + LocalStorageService.getUserID())
+      .then((res) => {
         this.setState({ jobList: res.data });
       });
   }
@@ -223,7 +204,7 @@ class ResultRow extends React.Component {
             <Col lg="0.5">
               <FaUserCircle color="Blue" />
             </Col>
-            <Col lg={8} md={5} sm={6} xs={5}>
+            <Col lg={3} md={5} sm={6} xs={5}>
               <div id="name-and-des">
                 <a href={"/profile/" + this.props.userId}>
                   <b>{this.props.firstName + " " + this.props.lastName}</b>
@@ -238,10 +219,14 @@ class ResultRow extends React.Component {
                 {this.props.intCat}
               </div> */}
             </Col>
+            <Col lg={5} style={{ color: "yellow" }}>
+              <FaStar color="Yellow" />
+              {" " + this.props.rating}
+            </Col>
             {LocalStorageService.getUserMode() === "client" ? (
               <Col>
                 <DropdownButton title="Invite to job...">
-                  {this.state.jobList.map(j => (
+                  {this.state.jobList.map((j) => (
                     <DropDownItem
                       key={j.jobId}
                       jobId={j.jobId}
@@ -277,16 +262,12 @@ class DropDownItem extends React.Component {
         ". You can join via this link " +
         "http://localhost:3000/job/" +
         this.props.jobId,
-      user: this.props.userId
+      user: this.props.userId,
     });
   }
 
   render() {
-    return (
-      <Dropdown.Item onClick={this.handleClick}>
-        {this.props.jobName}
-      </Dropdown.Item>
-    );
+    return <Dropdown.Item onClick={this.handleClick}>{this.props.jobName}</Dropdown.Item>;
   }
 }
 
@@ -296,7 +277,7 @@ class FreelancerSearchPage extends React.Component {
     this.state = { ApiUrl: process.env.REACT_APP_BACKEND_URL + "/users?sort=2" };
   }
 
-  callbackFunction = childData => {
+  callbackFunction = (childData) => {
     this.setState({ ApiUrl: childData });
   };
 
