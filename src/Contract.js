@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 import axios from 'axios';
 import LocalStorageService from './LocalStorageService';
 import firebase from "./firebase";
+import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 
 class Contract extends React.Component {
     constructor(props) {
@@ -475,7 +476,7 @@ class Contract extends React.Component {
             if (this.state.fetchError.loadJob || this.state.fetchError.loadUser) {
                 return (
                     <>
-                        <h1 align="center">you're not allowed to access this page</h1>
+                        <PageNotFoundNotAllow mode='not-allow' />
                     </>
                 )
             }
@@ -488,14 +489,14 @@ class Contract extends React.Component {
         if (this.state.mode === "client" && parseInt(LocalStorageService.getUserID()) !== this.state.clientId) {
             return (
                 <>
-                    <h1 align="center">you're not allowed to access this page</h1>
+                        <PageNotFoundNotAllow mode='not-allow' />
                 </>
             )
         }
         if (this.state.mode === "freelancer" && parseInt(LocalStorageService.getUserID()) !== this.state.freelancerId) {
             return (
                 <>
-                    <h1 align="center">you're not allowed to access this page</h1>
+                        <PageNotFoundNotAllow mode='not-allow' />
                 </>
             )
         }
@@ -503,7 +504,7 @@ class Contract extends React.Component {
             (!this.state.creating) && this.state.freelancerId.toString() !== this.props.params.freelancerId.toString()) {
             return (
                 <>
-                    <h1 align="center">you're not allowed to access this page</h1>
+                        <PageNotFoundNotAllow mode='not-allow' />
                 </>
             )
         }
