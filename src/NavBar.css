@@ -54,3 +54,11 @@
   overflow: scroll;
   overflow-x: hidden;
 }
+.noti-delete:hover {
+  cursor: pointer;
+  color: red !important;
+}
+.noti-delete {
+  position: absolute;
+  right: 10px;
+}

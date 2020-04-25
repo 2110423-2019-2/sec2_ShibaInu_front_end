@@ -1,8 +1,8 @@
 import React from "react";
 import './AdminHome.css';
-import { Container, Modal, Spinner, Card, Row, Col, Button } from "react-bootstrap";
+import { Container, Card, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
-import swal from "sweetalert";
+import { Doughnut } from "react-chartjs-2";
 
 import LocalStorageService from "./LocalStorageService";
 import LoadingSpinner from "./utilities/LoadingSpinner";
@@ -49,10 +49,13 @@ class AdminHome extends React.Component {
             </Row>
             <Row>
               <Col>
-                <AdminCard mode='total' />
+                <AdminCard mode='total-user' />
               </Col>
-            </Row>
-            <Row>
+              <Col>
+                <AdminCard mode='total-admin' />
+              </Col>
+            {/* </Row>
+            <Row> */}
               <Col>
                 <AdminCard mode="verification" />
               </Col>
@@ -61,6 +64,11 @@ class AdminHome extends React.Component {
               </Col>
               <Col>
                 <AdminCard mode="ban" />
+              </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+              <Col md={8}>
+                <AdminCard mode='job' />
               </Col>
             </Row>
           </Container>
@@ -82,13 +90,16 @@ class AdminCard extends React.Component {
         verification: 'User Verification',
         report: 'Report',
         ban: 'Banned User',
-        total: 'Total user'
+        'total-user': 'Total user',
+        'total-admin': 'Total admin',
+        job: 'Jobs'
       },
       description: {
         verification: 'users waiting for verified',
         report: 'reports left',
         ban: 'users being banned',
-        total: 'users in the system'
+        'total-user': 'users in the system',
+        'total-admin': 'admins in the system'
       },
       goTo: {
         verification: 'User Verification',
@@ -126,8 +137,14 @@ class AdminCard extends React.Component {
       case 'ban':
         this.fetchUser();
         break;
-      case 'total':
+      case 'total-user':
         this.fetchUser();
+        break;
+      case 'total-admin':
+        this.fetchUser();
+        break;
+      case 'job':
+        this.fetchJob();
         break;
       default:
         this.setState({ isLoading: false });
@@ -154,9 +171,15 @@ class AdminCard extends React.Component {
               return user.isBanned;
             }).length;
             break;
-          case 'total':
-            amount = res.data.length;
+          case 'total-user':
+            amount = res.data.filter((user) => {
+              return !user.isAdmin;
+            }).length;
             break;
+          case 'total-admin':
+            amount = res.data.filter((user) => {
+              return user.isAdmin;
+            }).length;
         }
 
         this.setState({
@@ -192,6 +215,53 @@ class AdminCard extends React.Component {
     });
   }
 
+  fetchJob = () => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/jobs").then((res) => {
+
+      if (res.status === 200) {
+        const jobDatas = res.data;
+        const status = ['open', 'accepted', 'working', 'done', 'closed'];
+        let amount = [0, 0, 0, 0, 0];
+
+        for (let i = 0; i < status.length; i++) {
+          amount[i] = jobDatas.filter((job) => {
+            return job.status === status[i];
+          }).length;
+        }
+        this.setState({
+          amount: amount
+        });
+      }
+
+    }).catch((error) => {
+      console.error(error);
+    }).finally(() => {
+      this.setState({ isLoading: false });
+    });
+  }
+
+
+  JobChart = (amount) => {
+    return (
+      <Doughnut data={{
+        labels: ["Open", "Accepted", "Working", "Done", "Closed"],
+        datasets: [
+          {
+            data: amount,
+            backgroundColor: ["#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#F7464A"],
+            hoverBackgroundColor: [
+              "#5AD3D1",
+              "#FFC870",
+              "#A8B3C5",
+              "#616774",
+              "#FF5A5E"
+            ]
+          }
+        ]
+      }} options={{ responsive: true }} />
+    );
+  }
+
   render() {
     return (
       <Card
@@ -199,12 +269,13 @@ class AdminCard extends React.Component {
       >
         <Card.Header className="box-topic"><h5>{this.state.topicName[this.state.mode]}</h5></Card.Header>
         <Card.Body>
-          {this.state.isLoading ? (<LoadingSpinner customClass="false" />) : (
-            <>
-              <h1>{this.state.amount}</h1>
-              <h5>{this.state.description[this.state.mode]}</h5>
-            </>
-          )}
+          {this.state.isLoading ? (<LoadingSpinner customClass="false" />) :
+            this.state.mode === 'job' ? this.JobChart(this.state.amount) : (
+              <>
+                <h1>{this.state.amount}</h1>
+                <h5>{this.state.description[this.state.mode]}</h5>
+              </>
+            )}
         </Card.Body>
         {!this.state.goTo[this.state.mode] ? '' :
           (<Card.Footer>
