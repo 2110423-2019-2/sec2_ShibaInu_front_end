@@ -31,3 +31,7 @@
 .image-container.col{
     padding-bottom: 8px;
 }
+#image-error{
+    margin-top: 1vh;
+    color: red;
+}

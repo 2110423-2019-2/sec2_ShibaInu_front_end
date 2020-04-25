@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { Modal, Button, Form, Col, ModalTitle, Table } from "react-bootstrap";
+import { Modal, Button, Form, Col, ModalTitle, Table, Spinner } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 import ImageUploader from "./ImageUploader"
-import FileUploader from "./FileUploader"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-
 class ProfileModal extends Component {
   constructor(props) {
     super(props);
@@ -1188,31 +1186,42 @@ class ProfileImageModal extends Component {
     this.state={
       upload : false,
       show:false,
-      userId:null
+      userId:null,
+      file : null,
+      isUploading : false,
+      error : null,
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handlerUpload = this.handlerUpload.bind(this,);
   }
-  handleClose(){
-    this.setState({show:false})
+  handleClose=async()=>{
+    await this.setState({file:null,show:false,error : null})
   }
   handleShow(){
     this.setState({show:true})
   }
   handleSave(){
-    this.setState({upload:true})
+    this.handlerUpload()
   }
   componentDidMount(){
     this.setState({userId : this.props.userId})
   }
-  handlerUpload(fd){
+  handleSetImage=(fd)=>{
+    console.log(fd)
+    this.setState({file:fd})
+  }
+  handlerUpload=async(fd=this.state.file)=>{
+        if(fd===null){
+          this.setState({error:"image cannot be null"})
+        }
         if(!(fd instanceof FormData)){
           return;
         }
+        await this.setState({isUploading : true})
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        axios({
+        await axios({
           method: 'post',
           url: process.env.REACT_APP_BACKEND_URL+"/users/profilePicture/" + this.state.userId,
           data: fd,
@@ -1223,9 +1232,12 @@ class ProfileImageModal extends Component {
             this.handleClose();
             this.props.onUpdate();
           })
-          .catch(err => {
-            console.log(err);
-        });
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(()=>{
+          this.setState({isUploading:false})
+        })
   }
   render(){
     if(this.state.upload){
@@ -1246,14 +1258,23 @@ class ProfileImageModal extends Component {
             <ModalTitle>Profile Image</ModalTitle>
           </Modal.Header>
           <Modal.Body>
-            <ImageUploader upload={this.state.upload} handlerUpload={this.handlerUpload}/>
+            <ImageUploader handlerUpload={this.handleSetImage} error={this.state.error}/>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-danger" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose} disabled={this.state.isUploading}>
               Cancel
             </Button>
-            <Button variant="outline-success" onClick={this.handleSave}>
-              Save
+            <Button variant="outline-success" onClick={this.handleSave} disabled={this.state.isUploading}>
+              Save{' '}
+              {this.state.isUploading?
+               <Spinner
+               as="span"
+               animation="border"
+               size="sm"
+               role="status"
+               aria-hidden="true"
+             />
+              :null}
             </Button>
           </Modal.Footer>
         </Modal>
@@ -1270,8 +1291,11 @@ class VerifyDataModal extends Component{
       show:false,
       userId:null,
       SSN:"",
-      formatSSN : "",
-      error : {selfie : null,IDcard : null},
+      file_selfie: null,
+      file_card:null,
+      error : {err0 : null,err1 : null,err2:null},
+      isUploading : false,
+      loadData : false,
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
@@ -1286,38 +1310,60 @@ class VerifyDataModal extends Component{
   handleShow(){
     this.setState({show:true})
   }
-  async handleSave(){
-    this.setState({upload:true})
-    let error = {err1:null,}
-    if(this.state.error.selfie !== null || this.state.error.IDcard !== null){
-      console.log("error")
-      return;
+
+  handleSave =async()=>{
+    console.log(this.state.file_card instanceof FormData)
+    if(this.state.SSN===""||this.state.SSN.length<13){
+      await this.setState({error:{...(this.state.error),err0:"National ID must have 13 numbers"}})
+    }else{
+      await this.setState({error:{...(this.state.error),err0:null}})
     }
-    await axios.patch(process.env.REACT_APP_BACKEND_URL+"/users/"+this.state.userId,
+    if(!(this.state.file_card instanceof FormData)){
+      await this.setState({error:{...(this.state.error),err1:"image cannot be null"}})
+    }else{
+      await this.setState({error:{...(this.state.error),err1:null}})
+    }
+    if(!(this.state.file_selfie instanceof FormData)){
+      await this.setState({error:{...(this.state.error),err2:"image cannot be null"}})
+    }else{
+      await this.setState({error:{...(this.state.error),err2:null}})
+    }
+    if(this.state.error.err0!==null||this.state.error.err1!==null
+      ||this.state.error.err2!==null){
+      return
+    }
+    console.log("d",this.state.error.err0,this.state.error.err1,this.state.error.err2)
+    this.setState({isUploading:true})
+    await axios.patch(process.env.REACT_APP_BACKEND_URL+"/users/"+this.props.userId,
       {
         identificationNumber : this.state.SSN
       }
     )
     .then(res => {
       console.log(res);
-      this.handleClose();
+      this.handlerUploadSelfie();
+      this.handlerUploadNationalIDcard();
       this.props.onUpdate();
+      this.handleClose();
     })
     .catch(err => {
-      error.err1 = err;
       console.log(err);
-    });
+    })
+    .finally(()=>{
+      this.setState({isUploading:false})
+    })
   }
   handleWrite=(e)=>{
-    let format = e.target.value 
-    if(format.length >13){
+    let format = /^$|[0-9]+$/i.test(e.target.value)?(e.target.value):this.state.SSN;
+    if(format && format.length >13){
       return;
     }
     this.setState({SSN:format})
   }
-  async handlerUploadNationalIDcard(fd){
+  async handlerUploadNationalIDcard(fd=this.state.file_card){
     let error = {err1:null,}
     if(!(fd instanceof FormData)){
+      console.log("fd is null")
       return;
     }
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
@@ -1331,11 +1377,11 @@ class VerifyDataModal extends Component{
       error.err1 = err;
       console.log(err);
     });
-    await this.setState({error : {...this.state.error,IDcard : error.err1}})
   }
-  async handlerUploadSelfie(fd){
+  async handlerUploadSelfie(fd=this.state.file_selfie){
     let error = {err1:null,}
     if(!(fd instanceof FormData)){
+      console.log("fd is null")
       return;
     }
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
@@ -1349,28 +1395,30 @@ class VerifyDataModal extends Component{
       error.err1 = err;
       console.log(err);
     });
-    if(error.err1!==null){
-      return
-    }
-    await this.setState({error : {...this.state.error,selfie : error.err1}})
+    
   }
-  async componentDidMount(){
-    await this.setState({userId : this.props.userId})
+  componentDidMount=async()=>{
+    await this.setState({userId : this.props.userId,loadData:true})
   }
-  onExit=()=>{
-    this.setState({
-      upload : false,
-      show:false,
+  handleSetSelfie=(fd)=>{
+    this.setState({file_selfie:fd})
+  }
+  handleSetCard=(fd)=>{
+    this.setState({file_card:fd})
+  }
+  onExit=async()=>{
+   await this.setState({
       userId:null,
       SSN:"",
-      formatSSN : "",
-      error : {selfie : null,IDcard : null},
+      file_card : null,
+      file_selfie : null,
+      error : {err0 : null,err1 : null,err2:null},
     })
       
   }
   render(){
-    if(this.state.upload){
-      this.setState({upload:false})
+    if(!this.state.loadData){
+      return "load";
     }
     return (
       <>
@@ -1388,25 +1436,49 @@ class VerifyDataModal extends Component{
             <Modal.Title>Verify</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form.Label>National ID</Form.Label>
+            <Form>
+              <Form.Label>National ID</Form.Label>
             <Col>
             <Form.Control
               placeholder="1234567890123"
               value={this.state.SSN}
               onChange={this.handleWrite}
               />
+            <p className="unauthorized-message">{this.state.error.err0}</p>
             </Col>
+            </Form>
+            <br/>
+            <label>National ID card image</label>
+            <ImageUploader 
+            upload={this.state.upload} name="1" 
+            handlerUpload={this.handleSetCard}
+            label="National ID card image"
+            error={this.state.error.err1}
+            />             
+            <br/>
             <label>Selfie image with national ID card</label>
-            <ImageUploader upload={this.state.upload} name="1" handlerUpload={this.handlerUploadNationalIDcard} />
-            <label>Selfie image with national ID card</label>
-            <ImageUploader upload={this.state.upload} name="2" handlerUpload={this.handlerUploadSelfie} />
+            <ImageUploader 
+            upload={this.state.upload} name="2" 
+            handlerUpload={this.handleSetSelfie}
+            label="Selfie image with national ID card"
+            error={this.state.error.err2}
+             />
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-danger" onClick={this.handleClose} >
+            <Button variant="outline-danger" onClick={this.handleClose} disabled={this.state.isUploading}>
               Cancel
             </Button>
-            <Button variant="outline-success" onClick={this.handleSave}>
-              Save
+            <Button variant="outline-success" onClick={this.handleSave} disabled={this.state.isUploading}>
+            Save{' '}
+              {this.state.isUploading?
+               <Spinner
+               as="span"
+               animation="border"
+               size="sm"
+               role="status"
+               aria-hidden="true"
+             />
+              :null}
             </Button>
           </Modal.Footer>
         </Modal>
