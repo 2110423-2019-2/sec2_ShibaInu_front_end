@@ -1347,7 +1347,7 @@ class DashBoardReview extends React.Component {
     this.state = {
       jobId: "",
       jobName: "",
-      client : {clientId : "",cleintName : "",rating : 3,description: "",},
+      client : {clientId : "",clientName : "",rating : 3,description: "",},
       freelancer : {freelancerId : "",freelancerName : "",rating : 3,description: "",},
       price:"",
       duration:"",
@@ -1417,6 +1417,7 @@ class DashBoardReview extends React.Component {
         reviewee : this.state.client.clientId,
         reviewer : this.state.freelancer.freelancerId
       })
+      window.location.reload()
     }catch(err){
       console.log(err.response)
     }
@@ -1435,6 +1436,7 @@ class DashBoardReview extends React.Component {
         reviewee : this.state.freelancer.freelancerId,
         reviewer : this.state.client.clientId
       })
+      window.location.reload()
     }catch(err){
       console.log(err)
     }
@@ -1530,7 +1532,7 @@ class DashBoardReview extends React.Component {
   renderFreelancerReview(){
     return <ReviewFreelancer
     jobName={this.state.jobName}
-    targetName={this.state.client.cleintName}
+    targetName={this.state.client.clientName}
     price={this.state.price}
     duration={this.state.duration}
     description={this.state.freelancer.description}
@@ -1541,7 +1543,7 @@ class DashBoardReview extends React.Component {
   />
   }
   render(){
-    if(!this.state.status!== "closed"){
+    if(this.state.status!== "closed"){
       return null;
     }
     if(!this.state.loadReview){
