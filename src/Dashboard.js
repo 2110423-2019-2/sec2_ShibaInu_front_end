@@ -279,9 +279,9 @@ class Dashboard extends React.Component {
                 <DashBoardReview 
                   jobId={this.state.jobID}
                   jobName={this.state.jobname}
-                  freelancerId={this.state.contract.freelancerId}
+                  freelancerId={this.state.contract===null?null:this.state.contract.freelancerId}
                   clientId={this.state.clientId}
-                  price={this.state.contract.price}
+                  price={this.state.contract===null?null:this.state.contract.price}
                   workingTime={this.state.timelineDetail.workingTime}
                   doneTime={this.state.timelineDetail.doneTime}
                   mode={this.state.mode}
@@ -338,8 +338,8 @@ class Dashboard extends React.Component {
                   jobId={this.state.jobID}
                   jobName={this.state.jobname}
                   clientId={this.state.clientId}
-                  freelancerId={this.state.contract.freelancerId}
-                  price={this.state.contract.price}
+                  freelancerId={this.state.contract===null?null:this.state.contract.freelancerId}
+                  price={this.state.contract===null?null:this.state.contract.price}
                   workingTime={this.state.timelineDetail.workingTime}
                   doneTime={this.state.timelineDetail.doneTime}
                   mode={this.state.mode}
@@ -1482,6 +1482,9 @@ class DashBoardReview extends React.Component {
       status : this.props.status,
       jobId : this.props.jobId,
     })
+    if(this.state.status !== "closed"){
+      return null
+    }
     await this.getClientReview()
     await this.getFreelancerReview()
     let duration = this.calculateDuration(this.props.workingTime,this.props.doneTime)
@@ -1538,6 +1541,9 @@ class DashBoardReview extends React.Component {
   />
   }
   render(){
+    if(!this.state.status!== "closed"){
+      return null;
+    }
     if(!this.state.loadReview){
       return null;
     }
