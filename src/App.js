@@ -75,11 +75,11 @@ class App extends React.Component {
               exact path="/client/home"
               component={() => <HomeClient />}
             />
-            <Route
+            <PrivateRoute
               exact path="/profile/:userId"
               component={() => <Profile userId={useParams()} />}
             />
-            <Route
+            <PrivateRoute
               exact path="/profile/"
               component={() => <Profile userId={null} />}
             />
