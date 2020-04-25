@@ -195,22 +195,27 @@ class Result extends React.Component {
       <Card class="result">
         <Card.Header>Search Job</Card.Header>
         <Card.Body>
-          {this.state.jobList.map((j) => {
-            var tmp = [];
-            j.requiredSkills.map((s) => tmp.push(s.skill));
-            if (tmp.length == 0) tmp.push("-");
-            return (
-              <ResultRow
-                key={j.jobId}
-                jobId={j.jobId}
-                jobName={j.name}
-                jobDes={j.description}
-                requireSkill={tmp.join(", ")}
-                wage={j.estimatedWage}
-                duration={j.estimatedDuration}
-              />
-            );
-          })}
+          {this.state.jobList
+            .filter((job) => {
+              console.log(job);
+              return job.status === 'open';
+            })
+            .map((j) => {
+              var tmp = [];
+              j.requiredSkills.map((s) => tmp.push(s.skill));
+              if (tmp.length == 0) tmp.push("-");
+              return (
+                <ResultRow
+                  key={j.jobId}
+                  jobId={j.jobId}
+                  jobName={j.name}
+                  jobDes={j.description}
+                  requireSkill={tmp.join(", ")}
+                  wage={j.estimatedWage}
+                  duration={j.estimatedDuration}
+                />
+              );
+            })}
         </Card.Body>
       </Card>
     );
