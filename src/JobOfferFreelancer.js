@@ -22,7 +22,9 @@ class JobOfferFreelancer extends React.Component {
         ALL: "all",
         INTERESTED: "open",
         MAKEDEAL: "accepted",
-        CONTRACT: "working"
+        CONTRACT: "working",
+        DONE : "done",
+        CLOSED : "closed",
       },
       statusFilter: "all",
       userDatas: "",
@@ -122,6 +124,10 @@ class JobOfferFreelancer extends React.Component {
                   return false;
                 case this.state.status.MAKEDEAL:
                   return false;
+                case this.state.status.DONE:
+                  return false;
+                case this.state.status.CLOSED:
+                  return false;
                 default:
                   return true;
               }
@@ -205,7 +211,27 @@ class JobOfferFreelancer extends React.Component {
                       this.statusHandler(e, this.state.status.CONTRACT)
                     }
                   >
-                    Contract
+                    Working
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-5"
+                    onClick={e =>
+                      this.statusHandler(e, this.state.status.DONE)
+                    }
+                  >
+                    Done
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-6"
+                    onClick={e =>
+                      this.statusHandler(e, this.state.status.CLOSED)
+                    }
+                  >
+                    Closed
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
