@@ -20,67 +20,66 @@ import {
   VerifyDataModal
 } from "./ProfileModal";
 import { Container, Spinner } from "react-bootstrap";
+import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 import LocalStorageService from './LocalStorageService';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    if (!LocalStorageService.getUserID()) {
-      window.location.href = '/';
-    }
     this.state = {
+      err_count : 0,
       isMyProfile: false,
       isLoaded: false,
       userId: this.props.userId == null ? LocalStorageService.getUserID() : this.props.userId.userId,
       data: {
         experience: [
           {
-            role: "Royal Thai Army Headquarters (Office of The Command)",
-            location: "Commander in Chief, Royal Thai Army",
-            year: "2010 - 2014"
+            role: "",
+            location: "",
+            year: ""
           },
           {
-            role: "Office of the Prime Minister",
-            location: "Prime minister of Thailand ",
-            year: "2014 - Present"
+            role: "",
+            location: "",
+            year: ""
           }
         ],
         education: [
           {
-            location: "Armed Forces Academies Preparatory School ",
-            year: " 1971 - 1974"
+            location: "",
+            year: ""
           }
         ],
-        skills: ["C", "C++", "C#"]
+        skills: []
       },
-      fname: "Prayut",
-      lname: "ChanOCha",
-      headline: "Prime minister of Thailand",
-      tel: "0812345678",
-      email: "prayut1954@hotmail.com",
-      website: "http://prayutchan-o-cha.com",
-      location: "Bangkok,Thailand",
-      about: "About mes",
-      birthdate: "21 March 1954",
+      fname: "",
+      lname: "",
+      headline: "",
+      tel: "",
+      email: "",
+      website: "",
+      location: "",
+      about: "",
+      birthdate: "",
       exp: [
         {
-          role: "Royal Thai Army Headquarters (Office of The Command)",
-          location: "Commander in Chief, Royal Thai Army",
-          year: "2010 - 2014"
+          role: "",
+          location: "",
+          year: ""
         },
         {
-          role: "Office of the Prime Minister",
-          location: "Prime minister of Thailand ",
-          year: "2014 - Present"
+          role: "",
+          location: "",
+          year: ""
         }
       ],
       education: [
         {
-          location: "Armed Forces Academies Preparatory School ",
-          year: " 1971 - 1974"
+          location: "",
+          year: ""
         }
       ],
-      skills: ["C", "C++", "C#"],
+      skills: [],
       reviewlist: [{ reviewername: "itthi", description: "awesome!", score: 10, jobname: "Building mobile application" }],
       verified: false,
       imageProfileURL: profileimage
@@ -190,9 +189,16 @@ class Profile extends React.Component {
         });
         this.setState({ isLoaded: true });
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch(async err => {
+        console.log(this.state.isLoaded,this.state.err_count)
+        let count = this.state.err_count+1
+        await this.setState({err_count:count})
+        if(this.state.err_count<2){
+          this.fetch()
+        }else{
+          this.setState({ isLoaded: true });
+        }
+      })
 
   }
   renderReload() {
@@ -202,6 +208,9 @@ class Profile extends React.Component {
   }
 
   render() {
+    if(this.state.err_count>=2){
+      return <PageNotFoundNotAllow/>
+    }
     if (!this.state.isLoaded) {
       return (
         <>
@@ -209,6 +218,7 @@ class Profile extends React.Component {
         </>
       );
     }
+
     let verify_btn = (<VerifyDataModal
       id="verify-btn"
       userId={this.state.userId}
