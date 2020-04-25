@@ -341,13 +341,14 @@ class Contract extends React.Component {
                     }
 
                 }
+                console.log(res.data.status)
                 this.setState({
                     contractId: res.data.contractId,
                     currData: { price: res.data.price, text: res.data.description || example },
                     editedData: { price: res.data.price, text: res.data.description || example },
                     freelancerId: res.data.freelancerId,
                     modifiedTime: time,
-                    status: res.data.status,
+                    status: res.data.status.toString(),
                     loadContractData: true,
                     creating: false,
                 })
