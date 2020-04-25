@@ -20,6 +20,7 @@ import axios from 'axios';
 import swal from "sweetalert";
 
 import PrivateRoute from "./utilities/PrivateRoute";
+import AdminRoute from "./utilities/AdminRoute";
 import GuestRoute from "./utilities/GuestRoute";
 import HomeGuest from "./HomeGuest";
 import AdminHome from "./AdminHome";
@@ -107,8 +108,8 @@ class App extends React.Component {
               exact path="/dashboard/:jobId"
               component={() => <Dashboard params={useParams()} />}
             />
-            <PrivateRoute exact path="/admin/home" component={AdminHome} />
-            <PrivateRoute
+            <AdminRoute exact path="/admin/home" component={AdminHome} />
+            <AdminRoute
               exact path="/admin/announcement"
               component={AdminAnnouncement}
             />
@@ -119,10 +120,10 @@ class App extends React.Component {
               exact path="/contract/:jobId/:freelancerId"
               component={() => <Contract params={useParams()} />}
             />
-            <PrivateRoute exact path="/admin/report" component={AdminReportList} />
+            <AdminRoute exact path="/admin/report" component={AdminReportList} />
             <PrivateRoute exact path="/report" component={UserReport} />
-            <PrivateRoute exact path="/admin/verify" component={AdminVerify} />
-            <PrivateRoute exact path="/admin/ban" component={AdminBan} />
+            <AdminRoute exact path="/admin/verify" component={AdminVerify} />
+            <AdminRoute exact path="/admin/ban" component={AdminBan} />
             <Route path="*" component={PageNotFoundNotAllow} />
           </Switch>
         </Router>
