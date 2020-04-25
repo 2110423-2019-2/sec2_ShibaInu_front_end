@@ -32,7 +32,7 @@ class ReviewFreelancer extends React.Component{
         str+= this.state.duration.min+" min"
       }
       else{
-        str+=0
+        str+="0 min"
       }
       return str
     }
