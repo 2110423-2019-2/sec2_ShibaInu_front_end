@@ -1,9 +1,11 @@
 import React from "react";
-import "./AdminHome.css";
 import { Container, Row, Col, Table, Modal, Spinner } from "react-bootstrap";
 import axios from "axios";
 import swal from "sweetalert";
+
 import LocalStorageService from "./LocalStorageService";
+import "./AdminHome.css";
+
 class AdminVerify extends React.Component {
   constructor(props) {
     super(props);
@@ -272,8 +274,8 @@ class ImageModal extends React.Component {
     axios
       .get(
         process.env.REACT_APP_BACKEND_URL +
-          "/users/IDCard/" +
-          this.state.modalData.userId,
+        "/users/IDCard/" +
+        this.state.modalData.userId,
         { responseType: "blob" }
       )
       .then((res) => {
@@ -298,8 +300,8 @@ class ImageModal extends React.Component {
     axios
       .get(
         process.env.REACT_APP_BACKEND_URL +
-          "/users/IDCardWithFace/" +
-          this.state.modalData.userId,
+        "/users/IDCardWithFace/" +
+        this.state.modalData.userId,
         { responseType: "blob" }
       )
       .then((res) => {
@@ -375,13 +377,13 @@ class ImageModal extends React.Component {
               {this.state.isFetching ? (
                 this.renderLoading()
               ) : (
-                <a href={this.state.image}>
-                  <img
-                    src={this.state.image}
-                    alt={"image-" + this.state.mode}
-                  />
-                </a>
-              )}
+                  <a href={this.state.image}>
+                    <img
+                      src={this.state.image}
+                      alt={"image-" + this.state.mode}
+                    />
+                  </a>
+                )}
             </Container>
           </Modal.Body>
           <Modal.Footer>
