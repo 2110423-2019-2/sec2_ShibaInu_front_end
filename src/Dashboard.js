@@ -292,7 +292,7 @@ class Dashboard extends React.Component {
                   status={status}
                   mode={this.state.mode}
                   clientId={this.state.clientId}
-                  freelancerId={this.state.contract===null?null:this.state.contract.freelancerId}
+                  freelancerId={this.state.contract === null ? null : this.state.contract.freelancerId}
                 />
               </Row>
               <Row>
@@ -353,7 +353,7 @@ class Dashboard extends React.Component {
                   status={status}
                   mode={this.state.mode}
                   clientId={this.state.clientId}
-                  freelancerId={this.state.contract===null?null:this.state.contract.freelancerId}
+                  freelancerId={this.state.contract === null ? null : this.state.contract.freelancerId}
                 />
               </Row>
               <Row>
@@ -665,19 +665,19 @@ class FreelancerBox extends React.Component {
                       <tr>
                         <th></th>
                         <th>Name</th>
-                        <th>score</th>
-                        <th>BiddedWage(THB)</th>
-                        <th>select</th>
+                        <th>Score</th>
+                        <th>Wage</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>{this.showInterestedList()}</tbody>
                   </Table>
                 </div>
-                <div className="footer">
+                {/* <div className="footer">
                   <button type="button" className="btn btn-success" onClick={this.onInvite}>
                     invite
                 </button>
-                </div>
+                </div> */}
               </>
             )
         }
@@ -1100,11 +1100,11 @@ class DashboardFeed extends React.Component {
       mode: this.props.mode,
       status: this.props.status,
       linkStatus: false,
-      freelancerId : "",
-      clientId : "",
+      freelancerId: "",
+      clientId: "",
     };
   }
-  notify = async(title,userId,detail,link,mode="client") => {
+  notify = async (title, userId, detail, link, mode = "client") => {
     if (userId !== "") {
       await firebase
         .firestore()
@@ -1117,7 +1117,7 @@ class DashboardFeed extends React.Component {
           link: link,
           createtime: firebase.firestore.FieldValue.serverTimestamp(),
           read: false,
-          mode : mode,
+          mode: mode,
         })
         .catch((error) => {
           alert("Error adding noti:", error);
@@ -1149,8 +1149,8 @@ class DashboardFeed extends React.Component {
       jobId: this.props.jobId,
       status: this.props.status,
       mode: this.props.mode,
-      clientId : this.props.clientId,
-      freelancerId : this.props.freelancerId,
+      clientId: this.props.clientId,
+      freelancerId: this.props.freelancerId,
     });
     await this.getUrl();
     console.log(this.state.loadUrl)
@@ -1197,7 +1197,7 @@ class DashboardFeed extends React.Component {
               "Job",
               this.state.clientId,
               "Your job has been finished",
-              "/dashboard/"+this.state.jobId,
+              "/dashboard/" + this.state.jobId,
               "client"
             )
             window.location.reload()
@@ -1271,11 +1271,11 @@ class DashboardFeed extends React.Component {
                 "Job",
                 this.state.freelancerId,
                 "Your job has been accpeted",
-                "/dashboard/"+this.state.jobId,
+                "/dashboard/" + this.state.jobId,
                 "freelancer"
               )
               window.location.reload()
-              } catch (err) {
+            } catch (err) {
               res = err.response.data
               swal("Error occured, code: " + res.statusCode, {
                 icon: "error",
@@ -1297,18 +1297,18 @@ class DashboardFeed extends React.Component {
             let res;
             try {
               res = await axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/confirm/" + this.state.jobId + "," + 0)
-              
+
               await this.notify(
                 "Job",
                 this.state.freelancerId,
                 "Your job has been rejected",
-                "/dashboard/"+this.state.jobId,
+                "/dashboard/" + this.state.jobId,
                 "freelancer"
               )
-              window.location.reload()              
+              window.location.reload()
             } catch (err) {
               console.log(err)
-              res =  err.response.data
+              res = err.response.data
               swal("Error occured, code: " + res.statusCode, {
                 icon: "error",
               });
@@ -1409,13 +1409,13 @@ class DashBoardReview extends React.Component {
       mode: this.props.mode,
       status: this.props.status,
     };
-    this.writeClientReview=this.writeClientReview.bind(this,)
-    this.writeFreelancerReview=this.writeFreelancerReview.bind(this,)
+    this.writeClientReview = this.writeClientReview.bind(this)
+    this.writeFreelancerReview = this.writeFreelancerReview.bind(this)
     this.getFreelancerReview = this.getFreelancerReview.bind(this)
     this.getClientReview = this.getClientReview.bind(this)
   }
 
-  notify = async(title,userId,detail,link,mode="client") => {
+  notify = async (title, userId, detail, link, mode = "client") => {
     if (userId !== "") {
       await firebase
         .firestore()
@@ -1428,14 +1428,14 @@ class DashBoardReview extends React.Component {
           link: link,
           createtime: firebase.firestore.FieldValue.serverTimestamp(),
           read: false,
-          mode : mode,
+          mode: mode,
         })
         .catch((error) => {
           alert("Error adding noti:", error);
         });
     }
   };
-  
+
   getFreelancerReview = async () => {
     let res;
     axios.defaults.headers.common["Authorization"] =
@@ -1486,49 +1486,49 @@ class DashBoardReview extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     try {
       res = await axios
-      .post(process.env.REACT_APP_BACKEND_URL + "/review",{
-        job : this.state.jobId,
-        score : score,
-        description : desc,
-        reviewee : this.state.client.clientId,
-        reviewer : this.state.freelancer.freelancerId
-      })
+        .post(process.env.REACT_APP_BACKEND_URL + "/review", {
+          job: this.state.jobId,
+          score: score,
+          description: desc,
+          reviewee: this.state.client.clientId,
+          reviewer: this.state.freelancer.freelancerId
+        })
       await this.notify(
         "Review",
         this.state.client.clientId,
-        "You've been reviewed by "+this.state.freelancer.freelancerName,
-        "/dashboard/"+this.state.jobId,
+        "You've been reviewed by " + this.state.freelancer.freelancerName,
+        "/dashboard/" + this.state.jobId,
         "client"
       )
       window.location.reload()
-    }catch(err){
+    } catch (err) {
       console.log(err.response)
     }
   }
 
-  writeClientReview = async (desc,score) => {
+  writeClientReview = async (desc, score) => {
     /// client do
     let res;
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     try {
       res = await axios
-      .post(process.env.REACT_APP_BACKEND_URL + "/review",{
-        job : this.state.jobId,
-        score : score,
-        description : desc,
-        reviewee : this.state.freelancer.freelancerId,
-        reviewer : this.state.client.clientId
-      })
+        .post(process.env.REACT_APP_BACKEND_URL + "/review", {
+          job: this.state.jobId,
+          score: score,
+          description: desc,
+          reviewee: this.state.freelancer.freelancerId,
+          reviewer: this.state.client.clientId
+        })
       await this.notify(
         "Review",
         this.state.freelancer.freelancerId,
-        "You've been reviewed by "+this.state.client.clientName,
-        "/dashboard/"+this.state.jobId,
+        "You've been reviewed by " + this.state.client.clientName,
+        "/dashboard/" + this.state.jobId,
         "freelancer"
       )
       window.location.reload()
-    }catch(err){
+    } catch (err) {
       console.log(err)
     }
   }
@@ -1563,18 +1563,18 @@ class DashBoardReview extends React.Component {
   calculateDuration = (workingTime, doneTime) => {
     let start = Date.parse(workingTime)
     let end = Date.parse(doneTime)
-    let sec = Math.floor((end-start)/(1000))%60
-    let min = Math.floor((end-start)/(1000*60))%60
-    let hour = Math.floor((end-start)/(1000*60*60))%24
-    let day = Math.floor((end-start)/(1000*60*60*24))
-    console.log("day:"+day+"hour:"+hour+":"+min+":"+sec)
-    return {day:day,hour:hour,min:min,sec:sec}
+    let sec = Math.floor((end - start) / (1000)) % 60
+    let min = Math.floor((end - start) / (1000 * 60)) % 60
+    let hour = Math.floor((end - start) / (1000 * 60 * 60)) % 24
+    let day = Math.floor((end - start) / (1000 * 60 * 60 * 24))
+    console.log("day:" + day + "hour:" + hour + ":" + min + ":" + sec)
+    return { day: day, hour: hour, min: min, sec: sec }
   }
-  fetch =async()=>{
+  fetch = async () => {
     await this.getClientReview()
     await this.getFreelancerReview()
   }
-  componentDidMount=async()=>{
+  componentDidMount = async () => {
     await this.setState({
       status: this.props.status,
       jobId: this.props.jobId,
@@ -1583,8 +1583,8 @@ class DashBoardReview extends React.Component {
       return null
     }
     await this.fetch()
-    let duration = this.calculateDuration(this.props.workingTime,this.props.doneTime)
-    if(!this.state.getClientReview || !this.state.getFreelancerReview){
+    let duration = this.calculateDuration(this.props.workingTime, this.props.doneTime)
+    if (!this.state.getClientReview || !this.state.getFreelancerReview) {
       await this.setState({
         mode: this.props.mode,
         jobName: this.props.jobName,
@@ -1611,7 +1611,7 @@ class DashBoardReview extends React.Component {
     await this.setState({ loadReview: true })
   }
 
-  renderClientReview(){
+  renderClientReview() {
     return <ReviewFreelancer
       jobName={this.state.jobName}
       targetName={this.state.freelancer.freelancerName}
@@ -1653,7 +1653,7 @@ class DashBoardReview extends React.Component {
             <DashboardBox size="auto" topic="Client Review" component={this.renderClientReview()} />
             {freelancer}
           </>)
-      }else if(this.state.mode==="freelancer" && !this.state.getFreelancerReview){
+      } else if (this.state.mode === "freelancer" && !this.state.getFreelancerReview) {
         return (
           <>
             <DashboardBox size="auto" topic="Freelancer Review" component={this.renderFreelancerReview()} />
@@ -1661,7 +1661,7 @@ class DashBoardReview extends React.Component {
           </>)
       } else if (this.state.mode === "client" && this.state.getClientReview) {
         return (<>{client}{freelancer}</>)
-      }else if(this.state.mode==="freelancer" && this.state.getFreelancerReview){
+      } else if (this.state.mode === "freelancer" && this.state.getFreelancerReview) {
         return (<>{freelancer}{client}</>)
       } else {
         return null;
