@@ -6,7 +6,6 @@ import { Doughnut } from "react-chartjs-2";
 
 import LocalStorageService from "./LocalStorageService";
 import LoadingSpinner from "./utilities/LoadingSpinner";
-import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 
 class AdminHome extends React.Component {
 
@@ -154,6 +153,8 @@ class AdminCard extends React.Component {
             amount = res.data.filter((user) => {
               return user.isAdmin;
             }).length;
+          default:
+            amount = -1;
         }
 
         this.setState({
