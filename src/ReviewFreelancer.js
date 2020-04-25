@@ -9,7 +9,7 @@ class ReviewFreelancer extends React.Component{
             jobname:"",
             targetName:"",
             price : "",
-            duration : "",
+            duration : {day:"",hour:"",min:"",sec:""},
             description : "",
             mode: "" ,
             closed : false,
@@ -23,13 +23,16 @@ class ReviewFreelancer extends React.Component{
     handleShowDuration=()=>{
       let str = "";
       if(this.state.duration.day>0){
-        str+= this.state.duration.day+" day"+(this.state.duration.day>1?"s":"")
+        str+= this.state.duration.day+" day"
       }
       if(this.state.duration.hour>0){
-        str+= this.state.duration.hour+" hour"+(this.state.duration.hour>1?"s":"")
+        str+= this.state.duration.hour+" hour"
       }
       if(this.state.duration.min>0){
         str+= this.state.duration.min+" min"
+      }
+      else{
+        str+=0
       }
       return str
     }
@@ -63,7 +66,7 @@ class ReviewFreelancer extends React.Component{
                                 {this.state.mode==="client"?"Freelancer":"Client"} : {this.state.targetName}
                                 </Row>
                                 <Row>
-                                <Rating name="half-rating" value={this.state.rating} onChange={this.handleRating} precision={1} disabled={this.state.closed} />
+                                <Rating name="half-rating" value={this.state.rating} onChange={this.handleRating} precision={1} readOnly={this.state.closed} />
                                 </Row>
                                 <Row className="txtinput">
                                 <div className="title">detail </div>
