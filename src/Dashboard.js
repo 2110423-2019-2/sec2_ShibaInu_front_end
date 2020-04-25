@@ -1104,14 +1104,9 @@ class DashboardFeed extends React.Component {
       clientId : "",
     };
   }
-  redirect(time,path) {
-    setTimeout(() => {
-        window.location=path;
-    }, time);
-  }
-  notify = (title,userId,detail,link,mode="client") => {
+  notify = async(title,userId,detail,link,mode="client") => {
     if (userId !== "") {
-      firebase
+      await firebase
         .firestore()
         .collection("notification")
         .doc("notification")
@@ -1205,7 +1200,7 @@ class DashboardFeed extends React.Component {
               "/dashboard/"+this.state.jobId,
               "client"
             )
-            this.redirect(250,"/dashboard/"+this.state.jobId)
+            window.location.reload()
           } catch (err) {
             res = err.response.data
             swal("Error occured, code: " + res.statusCode, {
@@ -1279,7 +1274,7 @@ class DashboardFeed extends React.Component {
                 "/dashboard/"+this.state.jobId,
                 "freelancer"
               )
-              this.redirect(250,"/dashboard/"+this.state.jobId)
+              window.location.reload()
               } catch (err) {
               res = err.response.data
               swal("Error occured, code: " + res.statusCode, {
@@ -1302,6 +1297,7 @@ class DashboardFeed extends React.Component {
             let res;
             try {
               res = await axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/confirm/" + this.state.jobId + "," + 0)
+              
               await this.notify(
                 "Job",
                 this.state.freelancerId,
@@ -1309,7 +1305,7 @@ class DashboardFeed extends React.Component {
                 "/dashboard/"+this.state.jobId,
                 "freelancer"
               )
-              this.redirect(250,"/dashboard/"+this.state.jobId)
+              window.location.reload()              
             } catch (err) {
               console.log(err)
               res =  err.response.data
@@ -1418,14 +1414,10 @@ class DashBoardReview extends React.Component {
     this.getFreelancerReview = this.getFreelancerReview.bind(this)
     this.getClientReview = this.getClientReview.bind(this)
   }
-  redirect(time,path) {
-    setTimeout(() => {
-        window.location=path;
-    }, time);
-  }
-  notify = (title,userId,detail,link,mode="client") => {
+
+  notify = async(title,userId,detail,link,mode="client") => {
     if (userId !== "") {
-      firebase
+      await firebase
         .firestore()
         .collection("notification")
         .doc("notification")
@@ -1501,14 +1493,14 @@ class DashBoardReview extends React.Component {
         reviewee : this.state.client.clientId,
         reviewer : this.state.freelancer.freelancerId
       })
-      this.notify(
+      await this.notify(
         "Review",
         this.state.client.clientId,
         "You've been reviewed by "+this.state.freelancer.freelancerName,
         "/dashboard/"+this.state.jobId,
         "client"
       )
-      this.redirect(300,"/dashboard/"+this.state.jobId)
+      window.location.reload()
     }catch(err){
       console.log(err.response)
     }
@@ -1528,14 +1520,14 @@ class DashBoardReview extends React.Component {
         reviewee : this.state.freelancer.freelancerId,
         reviewer : this.state.client.clientId
       })
-      this.notify(
+      await this.notify(
         "Review",
         this.state.freelancer.freelancerId,
         "You've been reviewed by "+this.state.client.clientName,
         "/dashboard/"+this.state.jobId,
         "freelancer"
       )
-      this.redirect(300,"/dashboard/"+this.state.jobId)
+      window.location.reload()
     }catch(err){
       console.log(err)
     }
