@@ -12,6 +12,7 @@ class HomeFreelancer extends React.Component {
     this.state = {
       userDatas: "",
       jobDatas: "",
+      sumMoney: 0,
       isUserDataLoad: false,
       isJobDataLoad: false,
       announce: [],
@@ -20,10 +21,15 @@ class HomeFreelancer extends React.Component {
     };
   }
 
-  fetchDatas = () => {
+  fetchDatas = async () => {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
-    axios
+    await axios
+      .get(process.env.REACT_APP_BACKEND_URL + "/payment/sum")
+      .then(res => {
+        this.setState({ sumMoney: -1 * Number(res.data.sum) });
+      });
+    await axios
       .get(
         process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID()
       )
@@ -32,22 +38,23 @@ class HomeFreelancer extends React.Component {
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         console.log(this.state.userDatas);
       });
-    axios
+    await axios
       .get(
         process.env.REACT_APP_BACKEND_URL +
-          "/jobs/recommend/" +
-          LocalStorageService.getUserID()
+        "/jobs/recommend/" +
+        LocalStorageService.getUserID()
       )
       .then((res) => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
         console.log(this.state.jobDatas);
       });
-    axios.get(process.env.REACT_APP_BACKEND_URL + "/announcement").then((res) => {
-      const announce = res.data;
-      this.setState({ announce: announce, isAnnounceLoad: true });
-      console.log(this.state.announce);
-    });
+    await axios
+      .get(process.env.REACT_APP_BACKEND_URL + "/announcement").then((res) => {
+        const announce = res.data;
+        this.setState({ announce: announce, isAnnounceLoad: true });
+        console.log(this.state.announce);
+      });
   };
 
   handleClickJobDetail(e) {
@@ -100,29 +107,16 @@ class HomeFreelancer extends React.Component {
         </Row>
       ));
     }
-    //var limit5 = (typeof(this.state.userDatas.skills) === 'string')?(this.state.interest):(this.state.userDatas.skills).slice(0,5);
-    /*var interest = this.state.interest.map((type, index) => (
-      <Card className="w-25 p-3 text-center shadow" key={index}>
-        <a className="text-decoration-none text-dark" href="/freelancer/home">
-          <CardImg className="bg-dark shadow" src={logo} alt="Card image cap" />
-          <CardBody>
-            <CardTitle>
-              <h5>{type}</h5>
-            </CardTitle>
-          </CardBody>
-        </a>
-      </Card>
-    ));*/
     var headTable = (
       <tr className="text-center">
         <td className="align-middle">
           <h5>Name</h5>
         </td>
         <td className="align-middle">
-          <h5>Freelancer</h5>
+          <h5>Wage</h5>
         </td>
         <td className="align-middle">
-          <h5>Status</h5>
+          <h5>Duration</h5>
         </td>
         <td className="align-middle"></td>
       </tr>
@@ -145,7 +139,7 @@ class HomeFreelancer extends React.Component {
           </Row>
           <Row className="mt-3">
             <Col className="bg-light shadow" xl={8} offset={1}>
-              <h2 id="recommend-topic">Recommend</h2>
+              <h2 id="recommend-topic">Recommended Job</h2>
               <Table responsive>
                 <thead className="background-blue text-light">
                   {headTable}
@@ -164,13 +158,8 @@ class HomeFreelancer extends React.Component {
               <div className="bg-light rounded shadow">
                 <Container fluid={true}>
                   <Row>
-                    <Col xs={8}>
-                      <h5>Account</h5>
-                      <br />
-                      <h5>Balance</h5>
-                    </Col>
                     <Col>
-                      <h5>{this.state.userDatas.money} USD</h5>
+                      <h3>Total {this.state.sumMoney}฿</h3>
                     </Col>
                   </Row>
                 </Container>
