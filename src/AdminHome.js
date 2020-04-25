@@ -153,8 +153,9 @@ class AdminCard extends React.Component {
             amount = res.data.filter((user) => {
               return user.isAdmin;
             }).length;
+            break;
           default:
-            amount = -1;
+            amount = null;
         }
 
         this.setState({
