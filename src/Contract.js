@@ -41,7 +41,7 @@ class Contract extends React.Component {
         this.handleAccept = this.handleAccept.bind(this);
         this.handleDecline = this.handleDecline.bind(this);
     }
-    makeData = (title,userId,detail,link) => {
+    notify = (title,userId,detail,link,mode="client") => {
         if (userId !== "") {
           firebase
             .firestore()
@@ -54,6 +54,7 @@ class Contract extends React.Component {
               link: link,
               createtime: firebase.firestore.FieldValue.serverTimestamp(),
               read: false,
+              mode : mode,
             })
             .catch((error) => {
               alert("Error adding noti:", error);
@@ -61,9 +62,9 @@ class Contract extends React.Component {
         }
       };
     
-    redirect(time) {
+    redirect(time,path) {
         setTimeout(() => {
-            window.location=document.referrer;
+            window.location=path;
         }, time);
     }
     handleEdit() {
@@ -122,19 +123,21 @@ class Contract extends React.Component {
                     let res;
                     if (this.state.creating) {
                         res = await this.onCreateContract();
-                        await this.makeData(
+                        await this.notify(
                             "Contract",
                             this.state.freelancerId,
                             "You've got contract from "+this.state.clientName,
-                            "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                            "/contract/"+this.state.jobId+"/"+this.state.freelancerId,
+                            "freelancer"
                         )
                     } else {
                         res = await this.onUpdateContract();
-                        await this.makeData(
+                        await this.notify(
                             "Contract",
                             this.state.freelancerId,
                             "Your contract has been updated by "+this.state.clientName,
-                            "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                            "/contract/"+this.state.jobId+"/"+this.state.freelancerId,
+                            "freelancer"
                         )
 
                     }
@@ -148,7 +151,7 @@ class Contract extends React.Component {
                             timer: 3000,
                             buttons: false,
                         });
-                        this.redirect(3000)
+                        this.redirect(3000,"/dashboard/"+this.state.jobId)
 
 
                     }
@@ -186,11 +189,12 @@ class Contract extends React.Component {
                             status: "accepted"
                         })
                         .then(()=>{
-                            this.makeData(
+                            this.notify(
                                 "Contract",
                                 this.state.clientId,
                                 "Your contract has been accepted by "+this.state.freelancerName,
-                                "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                                "/contract/"+this.state.jobId+"/"+this.state.freelancerId,
+                                "client"
                             )
                         })
                         .then(() => {
@@ -199,7 +203,7 @@ class Contract extends React.Component {
                                 timer: 3000,
                                 buttons: false,
                             });
-                            this.redirect(3000)
+                            this.redirect(3000,"/dashboard/"+this.state.jobId)
                         })
                         .catch(err => {
                             console.log(err);
@@ -242,11 +246,12 @@ class Contract extends React.Component {
                             status: "rejected"
                         })
                         .then(()=>{
-                            this.makeData(
+                            this.notify(
                                 "Contract",
                                 this.state.clientId,
                                 "Your contract has been rejected by "+this.state.freelancerName,
-                                "/contract/"+this.state.jobId+"/"+this.state.freelancerId
+                                "/contract/"+this.state.jobId+"/"+this.state.freelancerId,
+                                "client"
                             )
                         })
                         .then(() => {
@@ -255,7 +260,7 @@ class Contract extends React.Component {
                                 timer: 3000,
                                 buttons: false,
                             });
-                            this.redirect(3000)
+                            this.redirect(3000,"/dashboard/"+this.state.jobId)
                         })
                         .catch(err => {
                             console.log(err);
