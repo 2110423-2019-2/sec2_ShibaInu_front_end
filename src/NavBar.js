@@ -137,56 +137,50 @@ class NavBar extends React.Component {
         snapshot.docChanges().forEach((change) => {
           var noti = change.doc.data();
           if (noti.createtime !== null) {
-            if (
-              this.state.firstLoadNoti &&
-              LocalStorageService.getUserMode() === noti.mode
-            ) {
+            if (this.state.firstLoadNoti) {
               notiDatas.push({
                 id: change.doc.id,
                 topic: noti.topic,
                 detail: noti.detail,
                 link: noti.link,
                 read: noti.read,
+                mode: noti.mode
               });
-              if (
-                noti.read === false &&
-                LocalStorageService.getUserMode() === noti.mode
-              ) {
+              if (noti.read === false) {
                 newNoti += 1;
               }
             } else {
-              if (LocalStorageService.getUserMode() === noti.mode) {
-                var newNotiDatas = [];
-                for (let i = 0; i < notiDatas.length; i++) {
-                  if (this.state.hasDeleteNoti === true) {
-                    if (change.doc.id === notiDatas[i].id) {
-                      continue;
-                    }
-                  } else {
-                    if (change.doc.id === notiDatas[i].id) {
-                      notiDatas[i].read = true;
-                    }
-                  }
-                  newNotiDatas.push(notiDatas[i]);
-                }
-                notiDatas = newNotiDatas;
-                if (this.state.hasDeleteNoti === false) {
-                  if (noti.read === true) {
-                    newNoti -= 1;
-                  } else {
-                    newNoti += 1;
-                    notiDatas.push({
-                      id: change.doc.id,
-                      topic: noti.topic,
-                      detail: noti.detail,
-                      link: noti.link,
-                      read: noti.read,
-                    });
+              var newNotiDatas = [];
+              for (let i = 0; i < notiDatas.length; i++) {
+                if (this.state.hasDeleteNoti === true) {
+                  if (change.doc.id === notiDatas[i].id) {
+                    continue;
                   }
                 } else {
-                  if (noti.read === false) {
-                    newNoti -= 1;
+                  if (change.doc.id === notiDatas[i].id) {
+                    notiDatas[i].read = true;
                   }
+                }
+                newNotiDatas.push(notiDatas[i]);
+              }
+              notiDatas = newNotiDatas;
+              if (this.state.hasDeleteNoti === false) {
+                if (noti.read === true) {
+                  newNoti -= 1;
+                } else {
+                  newNoti += 1;
+                  notiDatas.push({
+                    id: change.doc.id,
+                    topic: noti.topic,
+                    detail: noti.detail,
+                    link: noti.link,
+                    read: noti.read,
+                    mode: noti.mode
+                  });
+                }
+              } else {
+                if (noti.read === false) {
+                  newNoti -= 1;
                 }
               }
             }
@@ -224,6 +218,9 @@ class NavBar extends React.Component {
       })
       .then(() => {
         console.log("a");
+        if(notiData.mode !== ""){
+          LocalStorageService.setUserMode(notiData.mode);
+        }
         window.location.href = notiData.link;
       })
       .catch(function (error) {
