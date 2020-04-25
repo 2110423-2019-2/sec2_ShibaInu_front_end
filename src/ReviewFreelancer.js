@@ -7,22 +7,47 @@ class ReviewFreelancer extends React.Component{
         super(props)
         this.state= {
             jobname:"",
-            freelancername:"",
+            targetName:"",
             price : "",
             duration : "",
             description : "",
+            mode: "" ,
             closed : false,
+            rating : 3,
+            writeReview : null,
         }
+    }
+    handleRating=(e)=>{
+      this.setState({rating:e.target.value})
+    }
+    handleShowDuration=()=>{
+      let str = "";
+      if(this.state.duration.day>0){
+        str+= this.state.duration.day+" day"+(this.state.duration.day>1?"s":"")
+      }
+      if(this.state.duration.hour>0){
+        str+= this.state.duration.hour+" hour"+(this.state.duration.hour>1?"s":"")
+      }
+      if(this.state.duration.min>0){
+        str+= this.state.duration.min+" min"
+      }
+      return str
     }
     componentDidMount=()=>{
       this.setState({
         jobname : this.props.jobName,
-        freelancername : this.props.freelancerName,
+        targetName : this.props.targetName,
         price : this.props.price,
         duration : this.props.duration,
         description : this.props.description,
-        closed : this.props.closed===undefined?true:this.props.closed
+        rating : this.props.rating,
+        mode : this.props.mode,
+        closed : this.props.closed===undefined?true:this.props.closed,
+        writeReview : this.props.handleWrite
       })
+    }
+    handleWriteReview=()=>{
+      this.state.writeReview(this.state.description,this.state.rating)
     }
     render(){
         return(
@@ -35,10 +60,10 @@ class ReviewFreelancer extends React.Component{
                                 <h3>{this.state.jobname}</h3>
                                 </Row>
                                 <Row>
-                                Responsible : {this.state.freelancername}
+                                {this.state.mode==="client"?"Freelancer":"Client"} : {this.state.targetName}
                                 </Row>
                                 <Row>
-                                <Rating name="half-rating" defaultValue={4} precision={1}  />
+                                <Rating name="half-rating" value={this.state.rating} onChange={this.handleRating} precision={1} disabled={this.state.closed} />
                                 </Row>
                                 <Row className="txtinput">
                                 <div className="title">detail </div>
@@ -58,13 +83,13 @@ class ReviewFreelancer extends React.Component{
                             </Col>
                             <Col md={4}>
                                 <Row>
-                                baht : {this.state.price}
+                                price : {this.state.price}
                                 </Row>
                                 <Row>
-                                duration : {this.state.duration}
+                                duration : {this.handleShowDuration()}
                                 </Row>
                                 <Row className="button-container">
-                                <button type="button" className="btn btn-warning" hidden={this.state.closed}>
+                                <button type="button" className="btn btn-warning" hidden={this.state.closed} onClick={this.handleWriteReview}>
                                     Submit
                                 </button>
                                 </Row>
