@@ -105,7 +105,7 @@ class JobCreatePage extends React.Component {
               <Row>
                 <Col>
                   <Form.Group controlId="bidAmount">
-                    <Form.Label>Essimate Wage</Form.Label>
+                    <Form.Label>Estimate Wage</Form.Label>
                     <InputGroup>
                       <Form.Control
                         type="number"
@@ -124,7 +124,7 @@ class JobCreatePage extends React.Component {
                 </Col>
                 <Col>
                   <Form.Group controlId="bidDuration">
-                    <Form.Label>Essimate Duration</Form.Label>
+                    <Form.Label>Estimate Duration</Form.Label>
                     <InputGroup>
                       <Form.Control
                         type="number"
