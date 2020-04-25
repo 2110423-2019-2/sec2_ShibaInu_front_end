@@ -1347,14 +1347,10 @@ class DashBoardReview extends React.Component {
     this.state = {
       jobId: "",
       jobName: "",
-      clientId: "",
-      clientName : "",
-      freelancerId : "",
-      freelancerName : "",
+      client : {clientId : "",cleintName : "",rating : 3,description: "",},
+      freelancer : {freelancerId : "",freelancerName : "",rating : 3,description: "",},
       price:"",
       duration:"",
-      description: "",
-      rating : 3,
       getClientReview: false,
       getFreelancerReview : false,
       loadReview: false,
@@ -1372,8 +1368,11 @@ class DashBoardReview extends React.Component {
       res = await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/review/freelancer/"+this.state.jobId)
       this.setState({
-        rating: res.data[0].score,
-        description : res.data[0].description,
+        freelancer:{
+          ...this.state.freelancer,
+          rating: res.data[0].score,
+          description : res.data[0].description,
+          },
         getFreelancerReview : true
       })
       console.log(res.data[0])
@@ -1390,8 +1389,11 @@ class DashBoardReview extends React.Component {
       res = await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/review/client/"+this.state.jobId)
       this.setState({
-        rating: res.data[0].score,
-        description : res.data[0].description,
+        client:{
+          ...this.state.client,
+          rating: res.data[0].score,
+          description : res.data[0].description,
+          },
         getClientReview : true
       })
       console.log(res.data[0])
@@ -1412,8 +1414,8 @@ class DashBoardReview extends React.Component {
         job : this.state.jobId,
         score : score,
         description : desc,
-        reviewee : this.state.clientId,
-        reviewer : this.state.freelancerId
+        reviewee : this.state.client.clientId,
+        reviewer : this.state.freelancer.freelancerId
       })
     }catch(err){
       console.log(err.response)
@@ -1430,8 +1432,8 @@ class DashBoardReview extends React.Component {
         job : this.state.jobId,
         score : score,
         description : desc,
-        reviewee : this.state.freelancerId,
-        reviewer : this.state.clientId
+        reviewee : this.state.freelancer.freelancerId,
+        reviewer : this.state.client.clientId
       })
     }catch(err){
       console.log(err)
@@ -1444,8 +1446,9 @@ class DashBoardReview extends React.Component {
     "Bearer " + LocalStorageService.getAccessToken();
     try{
       res = await axios
-      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.clientId)
-      this.setState({clientName : res.data.firstName+" "+res.data.lastName})
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.client.clientId)
+      console.log(res.data)
+      this.setState({client:{...this.state.client,clientName : res.data.firstName+" "+res.data.lastName}})
     }catch(err){
       console.log(err)
     }
@@ -1456,8 +1459,9 @@ class DashBoardReview extends React.Component {
     "Bearer " + LocalStorageService.getAccessToken();
     try{
       res = await axios
-      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.freelancerId)
-      this.setState({freelancerName : res.data.firstName+" "+res.data.lastName})
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.freelancer.freelancerId)
+      console.log(res.data)
+      this.setState({freelancer:{...this.state.freelancer,freelancerName : res.data.firstName+" "+res.data.lastName}})
     }catch(err){
       console.log(err)
     }
@@ -1485,8 +1489,8 @@ class DashBoardReview extends React.Component {
       await this.setState({
         mode : this.props.mode,
         jobName : this.props.jobName,
-        clientId : this.props.clientId,
-        freelancerId : this.props.freelancerId,
+        client : {...this.state.client,clientId : this.props.clientId,},
+        freelancer : {...this.state.freelancer,freelancerId : this.props.freelancerId,},
         price : this.props.price,
         duration : duration,
       })
@@ -1497,8 +1501,8 @@ class DashBoardReview extends React.Component {
       await this.setState({
         mode : this.props.mode,
         jobName : this.props.jobName,
-        clientId : this.props.clientId,
-        freelancerId : this.props.freelancerId,
+        client : {...this.state.client,clientId : this.props.clientId,},
+        freelancer : {...this.state.freelancer,freelancerId : this.props.freelancerId,},
         price : this.props.price,
         duration : duration,
       })
@@ -1510,11 +1514,11 @@ class DashBoardReview extends React.Component {
   renderClientReview(){
     return <ReviewFreelancer
     jobName={this.state.jobName}
-    targetName={this.state.freelancerName}
+    targetName={this.state.freelancer.freelancerName}
     price={this.state.price}
     duration={this.state.duration}
-    description={this.state.description}
-    rating={this.state.rating}
+    description={this.state.client.description}
+    rating={this.state.client.rating}
     mode={"client"}
     closed={this.state.getClientReview}
     handleWrite = {this.writeClientReview}
@@ -1523,11 +1527,11 @@ class DashBoardReview extends React.Component {
   renderFreelancerReview(){
     return <ReviewFreelancer
     jobName={this.state.jobName}
-    targetName={this.state.clientName}
+    targetName={this.state.client.cleintName}
     price={this.state.price}
     duration={this.state.duration}
-    description={this.state.description}
-    rating={this.state.rating}
+    description={this.state.freelancer.description}
+    rating={this.state.freelancer.rating}
     mode={"freelancer"}
     closed={this.state.getFreelancerReview}
     handleWrite = {this.writeFreelancerReview}
