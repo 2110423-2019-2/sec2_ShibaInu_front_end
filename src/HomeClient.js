@@ -35,6 +35,10 @@ class Home extends React.Component {
         .get(process.env.REACT_APP_BACKEND_URL + "/payment/sum")
         .then(res => {
           this.setState({ sumMoney: -1 * Number(res.data.sum) });
+        }).catch((error) => {
+          if (error.response && error.response.status === 400) {
+            this.setState({ sumMoney: 0 });
+          }
         });
       await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userID)
