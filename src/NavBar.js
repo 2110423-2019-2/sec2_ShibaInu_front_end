@@ -7,8 +7,9 @@ import {
   FaUserCircle,
   FaSearch,
   FaFacebookMessenger,
+  FaWindowClose,
 } from "react-icons/fa";
-import { Nav, Navbar, Container, Row } from "react-bootstrap";
+import { Nav, Navbar, Container, Row, Button } from "react-bootstrap";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -30,14 +31,17 @@ class NavBar extends React.Component {
         GUEST: "guest",
         ADMIN: "admin",
       },
-      mode: LocalStorageService.getUserMode() == "" ? "guest" : LocalStorageService.getUserMode(),
+      mode:
+        LocalStorageService.getUserMode() == ""
+          ? "guest"
+          : LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: [],
       notiDatas: [],
       isNotiLoad: false,
       unreadRoom: 0,
       newNoti: 0,
-      haveNewNoti: false,
+      hasDeleteNoti: false,
       firstLoadUnreadChat: true,
       firstLoadNoti: true,
       isUserDataLoad: false, //tested
@@ -53,8 +57,9 @@ class NavBar extends React.Component {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
         console.log(this.state.userDatas);
-      }).then((res) => {
-        this.setState({ isUserDataLoad: true }) //tested
+      })
+      .then((res) => {
+        this.setState({ isUserDataLoad: true }); //tested
       });
   };
 
@@ -100,11 +105,12 @@ class NavBar extends React.Component {
         .doc("notification")
         .collection(this.state.userID.toString())
         .add({
-          topic: "TestNoti3",
-          detail: "noti3",
-          link: "/freelancer/home",
+          topic: "TestNoti15",
+          detail: "noti15",
+          link: "/client/job",
           createtime: firebase.firestore.FieldValue.serverTimestamp(),
           read: false,
+          mode: "client",
         })
         .catch((error) => {
           alert("Error adding noti:", error);
@@ -125,33 +131,63 @@ class NavBar extends React.Component {
         if (this.state.firstLoadNoti) {
           var notiDatas = [];
           var newNoti = 0;
-          var haveNewNoti = false;
         } else {
-          var {notiDatas, newNoti, haveNewNoti} = this.state;
+          var { notiDatas, newNoti } = this.state;
         }
         snapshot.docChanges().forEach((change) => {
           var noti = change.doc.data();
-          if (this.state.firstLoadNoti) {
-            notiDatas.push({
-              id: change.doc.id,
-              topic: noti.topic,
-              detail: noti.detail,
-              link: noti.link,
-              read: noti.read,
-            });
-            if (noti.read === false) {
-              newNoti += 1;
-            }
-          } else {
-            if (noti.read === true) {
-              newNoti -= 1;
+          if (noti.createtime !== null) {
+            if (
+              this.state.firstLoadNoti &&
+              LocalStorageService.getUserMode() === noti.mode
+            ) {
+              notiDatas.push({
+                id: change.doc.id,
+                topic: noti.topic,
+                detail: noti.detail,
+                link: noti.link,
+                read: noti.read,
+              });
+              if (
+                noti.read === false &&
+                LocalStorageService.getUserMode() === noti.mode
+              ) {
+                newNoti += 1;
+              }
             } else {
-              newNoti += 1;
-              haveNewNoti = true;
-            }
-            for (let i = 0; i < notiDatas.length; i++) {
-              if (change.doc.id === notiDatas[i].id) {
-                notiDatas[i].read = true;
+              if (LocalStorageService.getUserMode() === noti.mode) {
+                var newNotiDatas = [];
+                for (let i = 0; i < notiDatas.length; i++) {
+                  if (this.state.hasDeleteNoti === true) {
+                    if (change.doc.id === notiDatas[i].id) {
+                      continue;
+                    }
+                  } else {
+                    if (change.doc.id === notiDatas[i].id) {
+                      notiDatas[i].read = true;
+                    }
+                  }
+                  newNotiDatas.push(notiDatas[i]);
+                }
+                notiDatas = newNotiDatas;
+                if (this.state.hasDeleteNoti === false) {
+                  if (noti.read === true) {
+                    newNoti -= 1;
+                  } else {
+                    newNoti += 1;
+                    notiDatas.push({
+                      id: change.doc.id,
+                      topic: noti.topic,
+                      detail: noti.detail,
+                      link: noti.link,
+                      read: noti.read,
+                    });
+                  }
+                } else {
+                  if (noti.read === false) {
+                    newNoti -= 1;
+                  }
+                }
               }
             }
           }
@@ -160,7 +196,7 @@ class NavBar extends React.Component {
           notiDatas: notiDatas,
           newNoti: newNoti,
           firstLoadNoti: false,
-          haveNewNoti: haveNewNoti,
+          hasDeleteNoti: false,
         });
         console.log(this.state.notiDatas);
       });
@@ -185,7 +221,8 @@ class NavBar extends React.Component {
       .doc(notiData.id)
       .update({
         read: true,
-      }).then(() => {
+      })
+      .then(() => {
         console.log("a");
         window.location.href = notiData.link;
       })
@@ -194,35 +231,54 @@ class NavBar extends React.Component {
       });
   };
 
+  deleteNoti = (id) => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc("notification")
+      .collection(this.state.userID.toString())
+      .doc(id)
+      .delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
+    this.setState({ hasDeleteNoti: true });
+  };
+
   showNotiFilterByRead = (read) => {
     return this.state.notiDatas
       .filter((notiData) => notiData.read === read)
       .map((notiData, idx) => (
         <div key={idx}>
-        <DropdownItem
-          className={
-            notiData.read
-              ? "color-black noti"
-              : "color-black background-yellow noti"
-          }
-          onClick={() => {
-            this.readNoti(notiData);
-          }}
-          
-        >
-          <h5>{notiData.topic}</h5>
-          <p className="noti-detail">{notiData.detail}</p>
-        </DropdownItem>
-        <DropdownItem divider />
+          <DropdownItem
+            className={
+              notiData.read
+                ? "color-black noti"
+                : "color-black background-yellow noti"
+            }
+          >
+            <FaWindowClose
+              className="float-right text-danger noti-delete"
+              onClick={() => this.deleteNoti(notiData.id)}
+            />
+            <div
+              onClick={() => {
+                this.readNoti(notiData);
+              }}
+            >
+              <h5>{notiData.topic}</h5>
+              <p className="noti-detail">{notiData.detail}</p>
+            </div>
+          </DropdownItem>
         </div>
       ));
   };
 
   notiList = () => {
-    if (this.state.haveNewNoti===true || this.state.notiDatas !== []) {
-      if(this.state.haveNewNoti===true){
-        this.setState({haveNewNoti: false});
-      }
+    if (this.state.notiDatas !== []) {
       return (
         <div>
           {this.showNotiFilterByRead(false)}
@@ -381,21 +437,21 @@ class NavBar extends React.Component {
             className="color-black"
           >
             User verification
-        </DropdownItem>
+          </DropdownItem>
           <DropdownItem
             href="/admin/ban"
             id="dropdown-item-balance"
             className="color-black"
           >
             Ban user
-        </DropdownItem>
+          </DropdownItem>
           <DropdownItem
             href="/admin/report"
             id="dropdown-item-balance"
             className="color-black"
           >
             Report list
-        </DropdownItem>
+          </DropdownItem>
           <DropdownItem divider />
           <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
             Sign out
@@ -444,7 +500,11 @@ class NavBar extends React.Component {
         {userMode}
       </Navbar.Brand>
     );
-    if (this.state.mode !== this.state.status.GUEST && this.state.isUserDataLoad === false) { //tested
+    if (
+      this.state.mode !== this.state.status.GUEST &&
+      this.state.isUserDataLoad === false
+    ) {
+      //tested
       return null;
     }
     return (
