@@ -32,7 +32,7 @@ class NavBar extends React.Component {
         ADMIN: "admin",
       },
       mode:
-        LocalStorageService.getUserMode() ? "guest"
+        LocalStorageService.getUserMode() === "" ? "guest"
           : LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: [],
