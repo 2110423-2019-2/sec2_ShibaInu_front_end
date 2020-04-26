@@ -14,6 +14,7 @@ import axios from 'axios';
 
 import LocalStorageService from './LocalStorageService';
 import LoadingSpinner from './utilities/LoadingSpinner';
+import StatusBadge from './utilities/StatusBadge';
 
 class JobOfferFreelancer extends React.Component {
   constructor(props) {
@@ -108,7 +109,7 @@ class JobOfferFreelancer extends React.Component {
               {job.name}
             </td>
             <td className="align-middle">{job.catergory}</td>
-            <td className="align-middle">{job.status}</td>
+            <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
                 Detail
@@ -136,7 +137,7 @@ class JobOfferFreelancer extends React.Component {
                   return true;
               }
             }
-            else{
+            else {
               return false;
             }
           }
@@ -148,7 +149,7 @@ class JobOfferFreelancer extends React.Component {
               {job.name}
             </td>
             <td className="align-middle">{job.catergory}</td>
-            <td className="align-middle">{job.status}</td>
+            <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
                 Detail
