@@ -1,11 +1,11 @@
 import React from "react";
-import "./HomeFreelancer.css";
-import { Container, Row, Col, Table, CardDeck } from "react-bootstrap";
+import { Container, Row, Col, Table } from "react-bootstrap";
 import { FaClock, FaMoneyBill, FaBullhorn, FaInfoCircle } from "react-icons/fa";
-import { Card, CardImg, CardBody, CardTitle } from "reactstrap";
-import logo from "./material/Logo.png";
 import axios from "axios";
+
+import "./HomeFreelancer.css";
 import LocalStorageService from "./LocalStorageService";
+
 class HomeFreelancer extends React.Component {
   constructor(props) {
     super(props);
