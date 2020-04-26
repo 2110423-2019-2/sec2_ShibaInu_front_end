@@ -655,8 +655,9 @@ class FreelancerBox extends React.Component {
         topic="Interested Freelancer"
         size="large-box"
         component={
-          this.state.freelancerList.length === 0 ? (
-            "No one interested yet"
+          <>
+          {this.state.freelancerList.length === 0 ? (
+            <p align="center">No one interested yet</p>
           ) : (
               <>
                 <div className="table-container-f">
@@ -673,13 +674,15 @@ class FreelancerBox extends React.Component {
                     <tbody>{this.showInterestedList()}</tbody>
                   </Table>
                 </div>
-                <div className="footer">
+                
+              </>
+            )}
+            <div className="footer">
                   <button type="button" className="btn btn-success" onClick={this.onInvite}>
                     invite
                 </button>
                 </div>
-              </>
-            )
+          </>
         }
       />
     );
