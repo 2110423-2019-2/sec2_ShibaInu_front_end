@@ -53,10 +53,12 @@ class ChatSystem extends React.Component {
       .orderBy("lasttime", "desc");
     // Start listening to the query.
     query.onSnapshot((snapshot) => {
+      var chatrooms;
+
       if (this.state.firstLoadChatroom) {
-        var chatrooms = [];
+        chatrooms = [];
       } else {
-        var chatrooms = this.state.chatrooms;
+        chatrooms = this.state.chatrooms;
       }
       snapshot.docChanges().forEach((change) => {
         var room = change.doc.data();
@@ -145,8 +147,8 @@ class ChatSystem extends React.Component {
       snapshot.docChanges().forEach((change) => {
         var message = change.doc.data();
         var pos = "text-left w-100";
-        if (message.sender == this.state.userID) {
-          var pos = "text-right w-100";
+        if (String(message.sender) === String(this.state.userID)) {
+          pos = "text-right w-100";
         }
         if (message.timesent !== null) {
           chatmsgs.push({
@@ -238,8 +240,8 @@ class ChatSystem extends React.Component {
                 {chatmsg.msg.substring(80, chatmsg.msg.length)}
               </h5>
             ) : (
-              <h5>{chatmsg.msg}</h5>
-            )}
+                <h5>{chatmsg.msg}</h5>
+              )}
           </Badge>
         </div>
       </div>
@@ -272,7 +274,7 @@ class ChatSystem extends React.Component {
             aria-label="Text Here"
             aria-describedby="basic-addon2"
             onChange={(e) => {
-              if(e.target.value.length <= 50){
+              if (e.target.value.length <= 50) {
                 this.setState({ msg: e.target.value });
               }
             }}
@@ -318,17 +320,17 @@ class ChatSystem extends React.Component {
           <Row className="h-100">
             <Col lg={3} className="bg-white shadow text-center">
               <Container fluid>
-              <Row className="background-blue text-light pl-3 pt-3">
-                <h2>#Chat Room</h2>
-              </Row>
-              {this.chatRoom()}
+                <Row className="background-blue text-light pl-3 pt-3">
+                  <h2>#Chat Room</h2>
+                </Row>
+                {this.chatRoom()}
               </Container>
             </Col>
             <Col className="bg-white text-center">
               <Container fluid>
-              {this.chatWith()}
-              {this.msgDisp()}
-              {this.sendMsgDisp()}
+                {this.chatWith()}
+                {this.msgDisp()}
+                {this.sendMsgDisp()}
               </Container>
             </Col>
           </Row>
