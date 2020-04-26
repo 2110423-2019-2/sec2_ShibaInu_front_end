@@ -12,7 +12,7 @@ class FileUploader extends React.Component{
         }
     }
     selectHandler=(event)=>{
-        console.log(event.target.files[0])
+        //console.log(event.target.files[0])
         if(event.target.files[0].size > 20_000_000){
             swal("Error","File size cannot exceed 1 MB","error");
             return;
@@ -31,7 +31,7 @@ class FileUploader extends React.Component{
     }
 
     uploadHandler(){
-        console.log("Uploaded");
+        //console.log("Uploaded");
         if(this.state.selectedImage === null){
             swal("Error","Image file cannot be null","error");
             return;
@@ -39,7 +39,7 @@ class FileUploader extends React.Component{
         const timestamp = new Date();
         const fd = new FormData();
         fd.append('image',this.state.selectedImage,this.userId+timestamp.toString());
-        console.log(this.state.file)
+        //console.log(this.state.file)
         this.props.handlerUpload(fd);
         this.setState({uploadstate : false/*selectedImage:null,imageUrl:null*/});
     }

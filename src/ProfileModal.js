@@ -41,7 +41,7 @@ class ProfileModal extends Component {
           body.location !== "" &&
           body.location.split(",").length > 0
         ) {
-          ///console.log(body.location.split(",").shift());
+          /////console.log(body.location.split(",").shift());
           let arr = body.location.split(",");
           this.setState({ country: arr[0] });
           arr.shift();
@@ -145,12 +145,12 @@ class ProfileModal extends Component {
     }else{
       await this.setState({error:{...this.state.error,lname:""}})
     }
-    //console.log(this.state.error.fname+this.state.error.lname)
+    ////console.log(this.state.error.fname+this.state.error.lname)
     if(this.state.error.fname+this.state.error.lname!==""){
       return;
     }
     this.setState({isUploading : true})
-    //console.log(this.state.country===""&&this.state.address==="")
+    ////console.log(this.state.country===""&&this.state.address==="")
     await axios
       .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         firstName: this.state.fname,
@@ -163,12 +163,12 @@ class ProfileModal extends Component {
         location: (this.state.country===""&&this.state.address==="")?null:this.state.country + "," + this.state.address
       })
       .then(res => {
-        //console.log(res);
+        ////console.log(res);
         this.handleClose();
         this.props.onUpdate(this.state.usersId);
       })
       .catch(err => {
-        //console.log(err);
+        ////console.log(err);
       }).finally(()=>{
         this.setState({isUploading : false})
       })
@@ -361,19 +361,19 @@ class About extends Component {
     this.componentDidMount();
   }
   handleSave= async()=>{
-    //console.log(this.state.about);
+    ////console.log(this.state.about);
     await this.setState({isUploading : true})
     await axios
       .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         about: this.state.about
       })
       .then(res => {
-        //console.log(res);
+        ////console.log(res);
         this.handleClose();
         this.props.onUpdate(this.state.usersId);
       })
       .catch(err => {
-        //console.log(err);
+        ////console.log(err);
       })
       .finally(()=>{
         this.setState({isUploading : false})
@@ -476,7 +476,7 @@ class ExperienceModal extends Component {
         usersId: this.props.userId
       });
     }
-    //console.log(this.state.experiences);
+    ////console.log(this.state.experiences);
   }
   handleClose() {
     this.setState({ show: false });
@@ -493,12 +493,12 @@ class ExperienceModal extends Component {
         experience: json
       })
       .then(res => {
-        //console.log(res);
+        ////console.log(res);
         this.handleClose();
         this.props.onUpdate(this.state.usersId);
       })
       .catch(err => {
-        //console.log(err);
+        ////console.log(err);
       })
       .finally(()=>{
         this.setState({isUploading : false})
@@ -689,7 +689,7 @@ class ExperienceEditList extends Component {
     });
   }
   render() {
-    //console.log(this.state.editable);
+    ////console.log(this.state.editable);
     if (this.state.editable) {
       return (
         <>
@@ -805,19 +805,19 @@ class EducationModal extends Component {
   }
   async handleSave() {
     let json = JSON.stringify(this.state.edu);
-    //console.log(json);
+    ////console.log(json);
     await this.setState({isUploading : true})
     await axios
       .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         education: json
       })
       .then(res => {
-        //console.log(res);
+        ////console.log(res);
         this.handleClose();
         this.props.onUpdate();
       })
       .catch(err => {
-        //console.log(err);
+        ////console.log(err);
       })
       .finally(()=>{
         this.setState({isUploading : false})
@@ -991,7 +991,7 @@ class EducationEditList extends Component {
   }
  
   render() {
-    //console.log(this.state.editable);
+    ////console.log(this.state.editable);
     if (this.state.editable) {
       return (
         <>

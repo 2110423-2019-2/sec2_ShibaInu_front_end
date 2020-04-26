@@ -40,7 +40,7 @@ class JobOfferFreelancer extends React.Component {
 
   keywordHandler = (check = false) => {
     let word = document.getElementById("searchbox").value
-    console.log(word)
+    //console.log(word)
     if (check) {
       this.setState({ keyword: word })
     }
@@ -57,7 +57,7 @@ class JobOfferFreelancer extends React.Component {
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
-        console.log(this.state.userDatas);
+        //console.log(this.state.userDatas);
       });
     let data = []
     await axios
@@ -67,7 +67,7 @@ class JobOfferFreelancer extends React.Component {
           if (res.data[i].contractId === null) {
             data.push(res.data[i]);
           } else {
-            console.log(res.data[i])
+            //console.log(res.data[i])
             if(res.data[i].freelancerId!==null&& res.data[i].freelancerId.toString() === LocalStorageService.getUserID().toString()){
               data.push(res.data[i]);
             }
@@ -75,7 +75,7 @@ class JobOfferFreelancer extends React.Component {
 
         }
         await this.setState({ jobDatas: data, isJobDataLoad: true });
-        console.log(res.data);
+        //console.log(res.data);
       })
   };
 

@@ -44,7 +44,7 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ sum: res.data.sum * -1 });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 if (err.response && err.response.status === 400) {
                     this.setState({ sum: 0 });
                 }
@@ -54,7 +54,7 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ sumCharge: res.data.sum * -1 });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 if (err.response && err.response.status === 400) {
                     this.setState({ sumCharge: 0 });
                 }
@@ -64,7 +64,7 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ sumTransfer: res.data.sum * -1 });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 if (err.response && err.response.status === 400) {
                     this.setState({ sumTransfer: 0 });
                 }
@@ -79,7 +79,7 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ transaction: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 if (err.response && err.response.status === 400) {
                     this.setState({ transaction: [] });
                 }
@@ -89,7 +89,7 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ transactionCharge: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 if (err.response && err.response.status === 400) {
                     this.setState({ transactionCharge: [] });
                 }
@@ -99,7 +99,7 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ transactionTransfer: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 if (err.response && err.response.status === 400) {
                     this.setState({ transactionTransfer: [] });
                 }
@@ -113,14 +113,14 @@ class PaymentPage extends React.Component {
             .then(res => {
                 this.setState({ creditCard: res.data });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
             });
 
         axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount")
             .then(res => {
                 this.setState({ bankAccount: res.data });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
             });
     }
 

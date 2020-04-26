@@ -164,7 +164,7 @@ class AdminCard extends React.Component {
       }
 
     }).catch((error) => {
-      console.error(error);
+      //console.error(error);
     }).finally(() => {
       this.setState({ isLoading: false });
     });
@@ -185,7 +185,7 @@ class AdminCard extends React.Component {
       }
 
     }).catch((error) => {
-      console.error(error);
+      //console.error(error);
 
     }).finally(() => {
       this.setState({ isLoading: false });
@@ -211,7 +211,7 @@ class AdminCard extends React.Component {
       }
 
     }).catch((error) => {
-      console.error(error);
+      //console.error(error);
     }).finally(() => {
       this.setState({ isLoading: false });
     });

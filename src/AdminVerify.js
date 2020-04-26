@@ -24,7 +24,7 @@ class AdminVerify extends React.Component {
     axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then((res) => {
       const userDatas = res.data;
       this.setState({ userDatas: userDatas, isUserDataLoad: true });
-      console.log(this.state.userDatas);
+      //console.log(this.state.userDatas);
     });
   };
 
@@ -51,12 +51,12 @@ class AdminVerify extends React.Component {
             switch (response.status) {
               // Created
               case 201:
-                console.log("already push");
+                //console.log("already push");
                 break;
 
               // Other case
               default:
-                console.log("Status code is " + response.status);
+                //console.log("Status code is " + response.status);
             }
           });
         swal("Approved success!", {
@@ -85,12 +85,12 @@ class AdminVerify extends React.Component {
             switch (response.status) {
               // Created
               case 201:
-                console.log("already push");
+                //console.log("already push");
                 break;
 
               // Other case
               default:
-                console.log("Status code is " + response.status);
+                //console.log("Status code is " + response.status);
             }
           });
         swal("Approved success!", {
@@ -120,7 +120,7 @@ class AdminVerify extends React.Component {
             switch (response.status) {
               // Created
               case 201:
-                console.log("already push");
+                //console.log("already push");
                 var { userDatas } = this.state;
                 for (let i = 0; i < this.state.userDatas.length; i++) {
                   if (userDatas.userId === id) {
@@ -133,7 +133,7 @@ class AdminVerify extends React.Component {
 
               // Other case
               default:
-                console.log("Status code is " + response.status);
+                //console.log("Status code is " + response.status);
             }
           });
         swal("Success!", {
@@ -280,13 +280,13 @@ class ImageModal extends React.Component {
       )
       .then((res) => {
         let blob = URL.createObjectURL(res.data);
-        console.log(blob, "1");
+        //console.log(blob, "1");
         this.setState({
           image: blob,
         });
       })
       .catch((err) => {
-        console.error(err);
+        //console.error(err);
       })
       .finally(() => {
         this.setState({
@@ -311,7 +311,7 @@ class ImageModal extends React.Component {
         });
       })
       .catch((err) => {
-        console.error(err);
+        //console.error(err);
       })
       .finally(() => {
         this.setState({

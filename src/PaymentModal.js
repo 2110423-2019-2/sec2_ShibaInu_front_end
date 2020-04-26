@@ -53,7 +53,7 @@ class PaymentModal extends React.Component {
             .then(res => {
                 this.setState({ cardData: res.data });
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
             }).finally(() => {
                 this.setState({ isFetching: false, });
             });
@@ -256,10 +256,10 @@ class PaymentModal extends React.Component {
 
         axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard", this.state.cardData)
             .then(res => {
-                console.log(res.data.message)
+                //console.log(res.data.message)
                 this.showHideModal(false, true);
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 this.setState({ formText: err.response.message })
             }).finally(() => {
                 this.setState({ isSendingData: false });
@@ -300,10 +300,10 @@ class PaymentModal extends React.Component {
 
         axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount", this.state.bankData)
             .then(res => {
-                console.log(res.data.message)
+                //console.log(res.data.message)
                 this.showHideModal(false, true);
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
                 this.setState({ formText: err.response.message })
             }).finally(() => {
                 this.setState({ isSendingData: false });
@@ -319,12 +319,12 @@ class PaymentModal extends React.Component {
 
         axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/charge", { job: this.props.jobId, amount: this.props.amount })
             .then(res => {
-                console.log(res.status);
+                //console.log(res.status);
                 if (res.status === 201) {
                     this.showHideModal(false, true);
                 }
             }).catch((err) => {
-                console.error(err);
+                //console.error(err);
             }).finally(() => {
                 this.setState({ isSendingData: false });
             });

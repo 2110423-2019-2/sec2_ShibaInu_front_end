@@ -43,7 +43,7 @@ class ImageUploader extends React.Component{
                         imageUrl: resizedImageUrl
                     })
                 }
-                this.setState({selectedImage : image},console.log(image))
+                this.setState({selectedImage : image})
                 
             }
             reader.onloadend = ()=>{

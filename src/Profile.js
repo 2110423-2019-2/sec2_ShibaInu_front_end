@@ -129,7 +129,7 @@ class Profile extends React.Component {
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userId)
       .then(async (res) => {
-        //console.log(res);
+        ////console.log(res);
         let body = res.data;
         let bdate = new Date(body.dateOfBirth);
         this.setState({realBirthDate : body.dateOfBirth})
@@ -149,20 +149,20 @@ class Profile extends React.Component {
         }
         await axios.get(process.env.REACT_APP_BACKEND_URL + "/review/reviewee/"+this.state.userId)
           .then(res =>{
-            //console.log(res)
+            ////console.log(res)
             this.setState({reviewlist : res.data})
           })
           .catch(err=>{
             this.setState({reviewlist : []})
-            //console.log(err);
+            ////console.log(err);
           })
         await axios.get(process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + this.state.userId, { responseType: 'arraybuffer' })
           .then(res => {
             this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res) });
-            //console.log(res);
+            ////console.log(res);
           })
           .catch(err => {
-            //console.log(err);
+            ////console.log(err);
           })
         this.setState({
           data: body,
@@ -201,7 +201,7 @@ class Profile extends React.Component {
         this.setState({ isLoaded: true });
       })
       .catch(async err => {
-        //console.log(this.state.isLoaded,this.state.err_count)
+        ////console.log(this.state.isLoaded,this.state.err_count)
         let count = this.state.err_count+1
         await this.setState({err_count:count})
         if(this.state.err_count<2){
@@ -213,7 +213,7 @@ class Profile extends React.Component {
   }
   handleShowReview=()=>{
       if(this.state.limitReview+3>=this.state.reviewlist.length){
-        //console.log(this.state.limitReview+1)
+        ////console.log(this.state.limitReview+1)
         this.setState({limitReview : this.state.reviewlist.length+1})
       }else{
         let prev = this.state.limitReview+3

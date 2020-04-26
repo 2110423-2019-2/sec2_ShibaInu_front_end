@@ -31,7 +31,7 @@ class SignUp extends React.Component {
             response.data.isAdmin
               ? LocalStorageService.setUserMode("admin")
               : LocalStorageService.setUserMode("client");
-            console.log("Logged in. Redirecting...");
+            //console.log("Logged in. Redirecting...");
             response.data.isAdmin
               ? (window.location.href = "/admin/home")
               : (window.location.href = "/client/home");
@@ -39,14 +39,14 @@ class SignUp extends React.Component {
 
           // Other case
           default:
-            console.log("Status code is " + response.status);
+            //console.log("Status code is " + response.status);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
-          console.log("Unauthorization");
+          //console.log("Unauthorization");
         } else {
-          console.error(error);
+          //console.error(error);
         }
         window.location.href = "/login";
       });
@@ -93,15 +93,15 @@ class SignUp extends React.Component {
 
           // Other case
           default:
-            console.log("Status code is " + response.status);
+            //console.log("Status code is " + response.status);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 400) {
-          console.log("Error 400");
+          //console.log("Error 400");
           this.setState({ errorMessage: error.response.data.message });
         } else {
-          console.error(error);
+          //console.error(error);
         }
       })
       .finally(() => {
@@ -112,8 +112,8 @@ class SignUp extends React.Component {
   };
 
   responseFacebook = (response) => {
-    console.log("FB LOGIN");
-    console.log(response);
+    //console.log("FB LOGIN");
+    //console.log(response);
 
     const fbData = {
       firstName: response.first_name,
@@ -137,15 +137,15 @@ class SignUp extends React.Component {
 
           // Other case
           default:
-            console.log("Status code is " + response.status);
+            //console.log("Status code is " + response.status);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 400) {
-          console.log("Error 400");
+          //console.log("Error 400");
           this.setState({ errorMessage: error.response.data.message });
         } else {
-          console.error(error);
+          //console.error(error);
         }
 
         this.setState({

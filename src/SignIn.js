@@ -55,7 +55,7 @@ class SignIn extends React.Component {
             response.data.isAdmin
               ? LocalStorageService.setUserMode("admin")
               : LocalStorageService.setUserMode("client");
-            console.log("Logged in. Redirecting...");
+            //console.log("Logged in. Redirecting...");
             response.data.isAdmin
               ? (window.location.href = "/admin/home")
               : (window.location.href = "/client/home");
@@ -63,18 +63,18 @@ class SignIn extends React.Component {
 
           // Other case
           default:
-            console.log("Status code is " + response.status);
+            //console.log("Status code is " + response.status);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
-          console.log("Unauthorization");
+          //console.log("Unauthorization");
           this.setState({ unauthorized: true });
         } else if (error.response && error.response.status === 403) {
-          console.log("Banned user");
+          //console.log("Banned user");
           swal("You are banned!", error.response.data.message, "error");
         } else {
-          console.error(error);
+          //console.error(error);
         }
 
         this.setState({
@@ -84,8 +84,8 @@ class SignIn extends React.Component {
   };
 
   responseFacebook = (fb_response) => {
-    console.log("FB LOGIN");
-    console.log(fb_response);
+    //console.log("FB LOGIN");
+    //console.log(fb_response);
 
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + fb_response.accessToken;
@@ -100,7 +100,7 @@ class SignIn extends React.Component {
             response.data.isAdmin
               ? LocalStorageService.setUserMode("admin")
               : LocalStorageService.setUserMode("client");
-            console.log("Logged in. Redirecting...");
+            //console.log("Logged in. Redirecting...");
             response.data.isAdmin
               ? (window.location.href = "/admin/home")
               : (window.location.href = "/client/home");
@@ -108,18 +108,18 @@ class SignIn extends React.Component {
 
           // Other case
           default:
-            console.log("Status code is " + response.status);
+            //console.log("Status code is " + response.status);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 401) {
-          console.log("Unauthorization");
+          //console.log("Unauthorization");
           this.setState({ unauthorized: true });
         } else if (error.response && error.response.status === 403) {
-          console.log("Banned user");
+          //console.log("Banned user");
           swal("You are banned!", error.response.data.message, "error");
         } else {
-          console.error(error);
+          //console.error(error);
         }
       })
       .finally(() => {

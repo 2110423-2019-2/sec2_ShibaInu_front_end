@@ -118,11 +118,11 @@ class Dashboard extends React.Component {
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobID)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({ contract: res.data })
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         if (err.response.status === 400) {
 
         }
@@ -152,14 +152,18 @@ class Dashboard extends React.Component {
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/jobs/freelancers/" + this.state.jobID)
       .then(async res => {
-        console.log(res);
+        ////console.log(res.data);
         for (let i = 0; i < res.data.length; i++) {
           let item = res.data[i];
+          let b = 0;
+          if(item.reviewedNumber!==0){
+            b = Math.ceil((item.sumReviewedScore/item.reviewedNumber)*100)/100
+          }
           let d = {
             userId: item.userId,
             fname: item.firstName,
             lname: item.lastName,
-            score: item.sumReviewedScore,
+            score: b,
             bid: 0,
             img: profileimage
           };
@@ -169,14 +173,13 @@ class Dashboard extends React.Component {
           }
           let bid = await this.getUserBidWage(item.userId);
           if (bid.error === null) {
-            console.log(bid)
             d.bid = bid.data.biddedWage;
           } else {
             continue;
           }
           freelancerList.push(d);
         }
-        console.log(freelancerList);
+        ////console.log(freelancerList);
         return freelancerList;
       })
       .then(freelancerList => {
@@ -187,11 +190,11 @@ class Dashboard extends React.Component {
       })
       .catch(error => {
         if (error.response.status === 401) {
-          console.log("Unauthorization");
+          ////console.log("Unauthorization");
           alert("Please login first!");
           window.location.href = "/signin";
         } else {
-          console.error(error);
+          ////console.error(error);
         }
       });
   }
@@ -215,7 +218,7 @@ class Dashboard extends React.Component {
           doneTime: res.data.doneTime,
           closedTime: res.data.closedTime
         };
-        console.log(res.data)
+        ////console.log(res.data)
         this.setState({
           timelineDetail: timelineDetail
         });
@@ -230,11 +233,11 @@ class Dashboard extends React.Component {
       })
       .catch(error => {
         if (error.response.status === 401) {
-          console.log("Unauthorization");
+          ////console.log("Unauthorization");
           alert("Please login first!");
           window.location.href = "/signin";
         } else if (error.response.status === 400) {
-          console.log(this.state.notFound)
+          ////console.log(this.state.notFound)
           if (this.state.notFound < 2) {
             let i = this.state.notFound + 1
             this.setState({ notFound: i })
@@ -243,7 +246,7 @@ class Dashboard extends React.Component {
           }
           this.getjobDetail()
         } else {
-          console.error(error);
+          ////console.error(error);
         }
       });
   }
@@ -387,7 +390,7 @@ class Dashboard extends React.Component {
 
     axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/transfer", { job: this.state.jobID, amount: this.state.contract.price, userId: this.state.contract.freelancerId })
       .then(res => {
-        console.log(res.data);
+        ////console.log(res.data);
         if (res.status === 200 || res.status === 201) {
           this.changeStatus("closed");
 
@@ -405,11 +408,11 @@ class Dashboard extends React.Component {
               read: false,
             })
             .catch((error) => {
-              console.error(error);
+              ////console.error(error);
             });
         }
       }).catch((err) => {
-        console.error(err);
+        ////console.error(err);
       });
   }
 
@@ -421,13 +424,13 @@ class Dashboard extends React.Component {
 
     axios.patch(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.state.jobID, { status: jobStatus })
       .then(res => {
-        console.log(res.status);
+        ////console.log(res.status);
         if (res.status === 200 || res.status === 201) {
-          console.log("reload page with componentDidMount");
+          //console.log("reload page with componentDidMount");
           window.location.reload();
         }
       }).catch((err) => {
-        console.error(err);
+        //console.error(err);
       });
   }
 
@@ -533,7 +536,7 @@ class FreelancerBox extends React.Component {
         window.location.href = '/chat';
       }
     }).catch(error => {
-      console.log("Error getting document:", error);
+      //console.log("Error getting document:", error);
     });
   }
 
@@ -568,7 +571,7 @@ class FreelancerBox extends React.Component {
   handleSelect = e => {
     window.location.href =
       "/contract/" + this.props.jobId + "/" + e.target.name;
-    console.log(window.location.href);
+    //console.log(window.location.href);
   };
   async handleCancel() {
     axios
@@ -578,7 +581,7 @@ class FreelancerBox extends React.Component {
         this.props.jobId
       )
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({
           selected: null,
           load: false
@@ -586,7 +589,7 @@ class FreelancerBox extends React.Component {
         window.location.reload();
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         if (err.response.status === 400) {
           this.setState({
             load: true
@@ -809,7 +812,7 @@ class DashboardResponsible extends React.Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       }).finally(() => {
         this.setState({
           loadImg: true
@@ -839,7 +842,7 @@ class DashboardResponsible extends React.Component {
         window.location.href = '/chat';
       }
     }).catch(error => {
-      console.log("Error getting document:", error);
+      //console.log("Error getting document:", error);
     });
   }
 
@@ -884,7 +887,7 @@ class DashboardResponsible extends React.Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   }
   async getUserDetail() {
@@ -893,7 +896,7 @@ class DashboardResponsible extends React.Component {
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userId)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({
           fname: res.data.firstName,
           lname: res.data.lastName,
@@ -901,7 +904,7 @@ class DashboardResponsible extends React.Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   }
 
@@ -1134,14 +1137,14 @@ class DashboardFeed extends React.Component {
         "Bearer " + LocalStorageService.getAccessToken();
       res = await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/jobs/finishedLink/" + this.state.jobId)
-      console.log(res.data)
+      //console.log(res.data)
       this.setState({
         url: res.data,
         hasbeenSent: true,
         loadUrl: true
       })
     } catch (err) {
-      console.log(err.response)
+      //console.log(err.response)
     } finally {
       this.setState({ loadUrl: true })
     }
@@ -1156,7 +1159,7 @@ class DashboardFeed extends React.Component {
       freelancerId: this.props.freelancerId,
     });
     await this.getUrl();
-    console.log(this.state.loadUrl)
+    //console.log(this.state.loadUrl)
   }
   onLinkChange = (e) => {
     this.setState({ url: e.target.value })
@@ -1195,7 +1198,7 @@ class DashboardFeed extends React.Component {
               jobId: this.state.jobId,
               url: this.state.url
             })
-            console.log(this.state.clientId)
+            //console.log(this.state.clientId)
             await this.notify(
               "Job",
               this.state.clientId,
@@ -1310,7 +1313,7 @@ class DashboardFeed extends React.Component {
               )
               window.location.reload()
             } catch (err) {
-              console.log(err)
+              //console.log(err)
               res = err.response.data
               swal("Error occured, code: " + res.statusCode, {
                 icon: "error",
@@ -1454,9 +1457,9 @@ class DashBoardReview extends React.Component {
         },
         getFreelancerReview: true
       })
-      console.log(res.data[0])
+      //console.log(res.data[0])
     } catch (err) {
-      console.log(err.response)
+      //console.log(err.response)
     }
 
   }
@@ -1475,15 +1478,15 @@ class DashBoardReview extends React.Component {
         },
         getClientReview: true
       })
-      console.log(res.data[0])
+      //console.log(res.data[0])
     } catch (err) {
-      console.log(err.response)
+      //console.log(err.response)
     }
   }
 
   writeFreelancerReview = async (desc, score) => {
     /// freelancer do
-    console.log(this.state.jobId, this.state.freelancerId, this.state.clientId, desc)
+    //console.log(this.state.jobId, this.state.freelancerId, this.state.clientId, desc)
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     try {
@@ -1504,7 +1507,7 @@ class DashBoardReview extends React.Component {
       )
       window.location.reload()
     } catch (err) {
-      console.log(err.response)
+      //console.log(err.response)
     }
   }
 
@@ -1530,7 +1533,7 @@ class DashBoardReview extends React.Component {
       )
       window.location.reload()
     } catch (err) {
-      console.log(err)
+      //console.log(err)
     }
   }
 
@@ -1541,10 +1544,10 @@ class DashBoardReview extends React.Component {
     try {
       res = await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.client.clientId)
-      console.log(res.data)
+      //console.log(res.data)
       this.setState({ client: { ...this.state.client, clientName: res.data.firstName + " " + res.data.lastName } })
     } catch (err) {
-      console.log(err)
+      //console.log(err)
     }
   }
   getFreelancerName = async () => {
@@ -1554,10 +1557,10 @@ class DashBoardReview extends React.Component {
     try {
       res = await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.freelancer.freelancerId)
-      console.log(res.data)
+      //console.log(res.data)
       this.setState({ freelancer: { ...this.state.freelancer, freelancerName: res.data.firstName + " " + res.data.lastName } })
     } catch (err) {
-      console.log(err)
+      //console.log(err)
     }
   }
 
@@ -1568,7 +1571,7 @@ class DashBoardReview extends React.Component {
     let min = Math.floor((end - start) / (1000 * 60)) % 60
     let hour = Math.floor((end - start) / (1000 * 60 * 60)) % 24
     let day = Math.floor((end - start) / (1000 * 60 * 60 * 24))
-    console.log("day:" + day + "hour:" + hour + ":" + min + ":" + sec)
+    //console.log("day:" + day + "hour:" + hour + ":" + min + ":" + sec)
     return { day: day, hour: hour, min: min, sec: sec }
   }
   fetch = async () => {

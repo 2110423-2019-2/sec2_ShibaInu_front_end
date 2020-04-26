@@ -57,7 +57,7 @@ class NavBar extends React.Component {
       .then((res) => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
-        // console.log(this.state.userDatas);
+        // //console.log(this.state.userDatas);
       })
       .then((res) => {
         this.setState({ isUserDataLoad: true }); //tested
@@ -95,7 +95,7 @@ class NavBar extends React.Component {
           }
         });
         this.setState({ unreadRoom: unreadRoom, firstLoadUnreadChat: false });
-        // console.log(this.state.unreadRoom);
+        // //console.log(this.state.unreadRoom);
       });
     }
   };
@@ -196,7 +196,7 @@ class NavBar extends React.Component {
           hasDeleteNoti: false,
           isNotiLoad: true,
         });
-        // console.log(this.state.notiDatas);
+        // //console.log(this.state.notiDatas);
       });
     }
   };
@@ -206,7 +206,7 @@ class NavBar extends React.Component {
     this.checkNewMessage();
     //this.makeData();
     this.checkNoti();
-    // console.log(this.state.mode);
+    // //console.log(this.state.mode);
   };
 
   readNoti = (notiData) => {
@@ -221,14 +221,14 @@ class NavBar extends React.Component {
         read: true,
       })
       .then(() => {
-        // console.log("a");
+        // //console.log("a");
         if (notiData.mode !== "") {
           LocalStorageService.setUserMode(notiData.mode);
         }
         window.location.href = notiData.link;
       })
       .catch(function (error) {
-        console.error("Error updating status read", error);
+        //console.error("Error updating status read", error);
       });
   };
 
@@ -241,10 +241,10 @@ class NavBar extends React.Component {
       .doc(id)
       .delete()
       .then(() => {
-        console.log("Document successfully deleted!");
+        //console.log("Document successfully deleted!");
       })
       .catch((error) => {
-        console.error("Error removing document: ", error);
+        //console.error("Error removing document: ", error);
       });
     this.setState({ hasDeleteNoti: true });
   };
@@ -526,7 +526,7 @@ class NavBar extends React.Component {
   }
 
   signOut() {
-    console.log("signout");
+    //console.log("signout");
     LocalStorageService.signOut();
     window.location.href = "/";
   }

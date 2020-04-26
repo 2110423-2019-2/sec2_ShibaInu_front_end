@@ -94,7 +94,7 @@ class ChatSystem extends React.Component {
         loadChatroomFinished: true,
         firstLoadChatroom: false,
       });
-      console.log(this.state.chatrooms);
+      //console.log(this.state.chatrooms);
     });
   };
 
@@ -110,7 +110,7 @@ class ChatSystem extends React.Component {
         timesent: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .catch(function (error) {
-        console.error("Error writing new message to database", error);
+        //console.error("Error writing new message to database", error);
       });
     this.setState({ msg: "" });
 
@@ -125,7 +125,7 @@ class ChatSystem extends React.Component {
         read: false,
       })
       .catch(function (error) {
-        console.error("Error updating status unread", error);
+        //console.error("Error updating status unread", error);
       });}
   };
 
@@ -161,7 +161,7 @@ class ChatSystem extends React.Component {
       this.setState(
         { chatmsgs: chatmsgs, firstLoadMsg: false, loadChatmsgFinished: true },
         () => {
-          console.log(this.state.chatmsgs);
+          //console.log(this.state.chatmsgs);
           this.scrollToBottom();
         }
       );
@@ -177,7 +177,7 @@ class ChatSystem extends React.Component {
         read: true,
       })
       .catch(function (error) {
-        console.error("Error updating status read", error);
+        //console.error("Error updating status read", error);
       });
   };
 
@@ -210,7 +210,7 @@ class ChatSystem extends React.Component {
                 this.loadMsg();
               }
             );
-            console.log(this.state.selectedRoom);
+            //console.log(this.state.selectedRoom);
           }}
         >
           <h4>
