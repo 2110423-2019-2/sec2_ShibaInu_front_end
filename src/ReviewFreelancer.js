@@ -15,10 +15,17 @@ class ReviewFreelancer extends React.Component{
             closed : false,
             rating : 3,
             writeReview : null,
+            description_num : 0,
         }
     }
     handleRating=(e)=>{
       this.setState({rating:e.target.value})
+    }
+    handleWriteDescription=(e)=>{
+      if(e.target.value.length>100){
+        return 
+      }
+      this.setState({description : e.target.value,description_num : e.target.value.length})
     }
     handleShowDuration=()=>{
       let str = "";
@@ -68,19 +75,20 @@ class ReviewFreelancer extends React.Component{
                                 <Row>
                                 <Rating name="half-rating" value={this.state.rating} onChange={this.handleRating} precision={1} readOnly={this.state.closed} />
                                 </Row>
-                                <Row className="txtinput">
-                                <div className="title">detail </div>
+                                <Row className="txtinput" hidden={this.state.closed&&this.state.description===""}>
                                 <Form.Group controlId="reviewtext" >
+                                    <Form.Label>detail</Form.Label>
+                                    <Col>
                                     <Form.Control
                                     disabled={this.state.closed}
                                     plaintext={this.state.closed}
                                     value={this.state.description}
                                     className="reviewarea"
                                     as="textarea"
-                                    onChange={e => {
-                                        this.setState({ description: e.target.value });
-                                    }}
+                                    onChange={e =>this.handleWriteDescription(e)}
                                     />
+                                    </Col>
+                                  <p style={{color:"green",textAlign:"right"}} hidden={this.state.closed}>{this.state.description_num}/100</p>
                                 </Form.Group>
                                 </Row>
                             </Col>
