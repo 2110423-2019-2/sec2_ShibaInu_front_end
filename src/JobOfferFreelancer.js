@@ -68,7 +68,7 @@ class JobOfferFreelancer extends React.Component {
             data.push(res.data[i]);
           } else {
             console.log(res.data[i])
-            if(res.data[i].freelancerId.toString() === LocalStorageService.getUserID().toString()){
+            if(res.data[i].freelancerId!==null&& res.data[i].freelancerId.toString() === LocalStorageService.getUserID().toString()){
               data.push(res.data[i]);
             }
           }
