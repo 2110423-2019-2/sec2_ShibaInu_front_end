@@ -1,9 +1,11 @@
 import React from "react";
-import "./SearchPage.css";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card, Dropdown, DropdownButton } from "react-bootstrap";
-import LocalStorageService from "./LocalStorageService";
 import { FaUserCircle, FaStar } from "react-icons/fa";
+
+import "./SearchPage.css";
+import LocalStorageService from "./LocalStorageService";
+import firebase from './firebase';
 
 class Filter extends React.Component {
   constructor(props) {
@@ -219,26 +221,30 @@ class ResultRow extends React.Component {
                 {this.props.intCat}
               </div> */}
             </Col>
-            <Col lg={5} style={{ color: "yellow" }}>
+            <Col lg={5} >
               <FaStar color="Yellow" />
               {" " + this.props.rating}
             </Col>
             {LocalStorageService.getUserMode() === "client" ? (
               <Col>
                 <DropdownButton title="Invite to job...">
-                  {this.state.jobList.map((j) => (
-                    <DropDownItem
-                      key={j.jobId}
-                      jobId={j.jobId}
-                      jobName={j.name}
-                      userId={this.props.userId}
-                    />
-                  ))}
+                  {this.state.jobList
+                    .filter((job) => {
+                      return job.status === 'open';
+                    })
+                    .map((j) => (
+                      <DropDownItem
+                        key={j.jobId}
+                        jobId={j.jobId}
+                        jobName={j.name}
+                        userId={this.props.userId}
+                      />
+                    ))}
                 </DropdownButton>
               </Col>
             ) : (
-              ""
-            )}
+                ""
+              )}
           </Row>
         </Container>
       </div>
@@ -254,16 +260,32 @@ class DropDownItem extends React.Component {
   }
 
   handleClick() {
-    axios.post(process.env.REACT_APP_BACKEND_URL + "/notification", {
-      topic: "You have been invited to job",
-      description:
-        "You have been invited to " +
-        this.props.jobName +
-        ". You can join via this link " +
-        "http://localhost:3000/job/" +
-        this.props.jobId,
-      user: this.props.userId,
-    });
+    // axios.post(process.env.REACT_APP_BACKEND_URL + "/notification", {
+    //   topic: "You have been invited to job",
+    //   description:
+    //     "You have been invited to " +
+    //     this.props.jobName +
+    //     ". You can join via this link " +
+    //     "http://localhost:3000/job/" +
+    //     this.props.jobId,
+    //   user: this.props.userId,
+    // });
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc("notification")
+      .collection(String(this.props.userId))
+      .add({
+        topic: "Job Invitation",
+        detail: "You have been invited to " + this.props.jobName,
+        link: "/job/" + this.props.jobId,
+        mode: "freelancer",
+        createtime: firebase.firestore.FieldValue.serverTimestamp(),
+        read: false,
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   render() {
