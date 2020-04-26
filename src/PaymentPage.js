@@ -149,6 +149,8 @@ class PaymentPage extends React.Component {
             case 'freelancer':
                 data = this.state.transactionTransfer;
                 break;
+            default:
+                data = null;
         }
 
         return data.length === 0 ? (
