@@ -5,7 +5,7 @@ import { FaUserCircle, FaStar } from "react-icons/fa";
 
 import "./SearchPage.css";
 import LocalStorageService from "./LocalStorageService";
-import firebase from './firebase';
+import firebase from "./firebase";
 
 class Filter extends React.Component {
   constructor(props) {
@@ -153,7 +153,6 @@ class Result extends React.Component {
     var emptyMessage = "";
     if (this.state.freelancerList.length == 0) emptyMessage = "Not Found";
     else emptyMessage = "";
-    console.log(this.state.freelancerList[0]);
     return (
       <Card className="result">
         <Card.Header>Search Freelancer</Card.Header>
@@ -216,21 +215,19 @@ class ResultRow extends React.Component {
                 <b>Skill : </b>
                 {this.props.skill}
               </div>
-              {/* <div>
-                <b>Interested Catergory : </b>
-                {this.props.intCat}
-              </div> */}
             </Col>
-            <Col lg={5} >
-              <FaStar color="Yellow" />
-              {" " + this.props.rating}
+            <Col lg={5} style={{ color: "#FFC70F" }}>
+              <div>
+                <FaStar color="#FFC70F" />
+                {" " + this.props.rating <= 5 ? 5 : this.props.rating.toFixed(2)}
+              </div>
             </Col>
             {LocalStorageService.getUserMode() === "client" ? (
               <Col>
                 <DropdownButton title="Invite to job...">
                   {this.state.jobList
                     .filter((job) => {
-                      return job.status === 'open';
+                      return job.status === "open";
                     })
                     .map((j) => (
                       <DropDownItem
@@ -243,8 +240,8 @@ class ResultRow extends React.Component {
                 </DropdownButton>
               </Col>
             ) : (
-                ""
-              )}
+              ""
+            )}
           </Row>
         </Container>
       </div>
