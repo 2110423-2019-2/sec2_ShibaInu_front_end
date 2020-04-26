@@ -43,6 +43,7 @@ class Dashboard extends React.Component {
       loadContract: false,
       showPayment: false,
       permissionToAccess: false,
+      notFound : 0,
     };
   }
 
@@ -232,6 +233,15 @@ class Dashboard extends React.Component {
           console.log("Unauthorization");
           alert("Please login first!");
           window.location.href = "/signin";
+        } else if(error.response.status===400){
+          console.log(this.state.notFound)
+          if(this.state.notFound <2){
+            let i = this.state.notFound+1
+            this.setState({notFound : i})
+          } else{
+            return
+          }
+          this.getjobDetail()
         } else {
           console.error(error);
         }
@@ -478,6 +488,9 @@ class Dashboard extends React.Component {
 
   render() {
 
+    if (this.state.notFound==2){
+      return <PageNotFoundNotAllow/>
+    }
     if (this.loadAllData()) {
       if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId.toString() === LocalStorageService.getUserID()) {
         this.setState({ permissionToAccess: true });
