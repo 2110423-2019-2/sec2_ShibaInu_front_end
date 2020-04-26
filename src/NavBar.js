@@ -57,7 +57,7 @@ class NavBar extends React.Component {
       .then((res) => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
-        console.log(this.state.userDatas);
+        // console.log(this.state.userDatas);
       })
       .then((res) => {
         this.setState({ isUserDataLoad: true }); //tested
@@ -95,7 +95,7 @@ class NavBar extends React.Component {
           }
         });
         this.setState({ unreadRoom: unreadRoom, firstLoadUnreadChat: false });
-        console.log(this.state.unreadRoom);
+        // console.log(this.state.unreadRoom);
       });
     }
   };
@@ -221,7 +221,7 @@ class NavBar extends React.Component {
         read: true,
       })
       .then(() => {
-        console.log("a");
+        // console.log("a");
         if (notiData.mode !== "") {
           LocalStorageService.setUserMode(notiData.mode);
         }
