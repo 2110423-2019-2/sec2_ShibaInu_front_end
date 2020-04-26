@@ -13,19 +13,21 @@ class ImageUploader extends React.Component{
             uploadstate : this.props.upload,
             maxHeight:1920,
             maxWidth:1080,
+            limit_file_size : 5_000_000,
             fd : null,
-            function : null,
+            file : null,
         }
         this.selectHandler = this.selectHandler.bind(this,);
         this.uploadHandler = this.uploadHandler.bind(this);
         this.resizeImage = this.resizeImage.bind(this);
     }
     selectHandler=async(event)=>{
-        if(event.target.files[0]&&event.target.files[0].size > 2_000_000){
-            swal("Error","Image file size cannot exceed 2 MB","error");
+        if(event.target.files[0]&&event.target.files[0].size > this.state.limit_file_size){
+            swal("Error","Image file size cannot exceed "+(this.state.limit_file_size/10**6)+" MB","error");
+            document.getElementById("image"+this.props.name||"").value = ""
             return;
         }
-        if(event.target.files[0]){
+        else if(event.target && event.target.files[0]){
             let image = event.target.files[0];
             let reader = new FileReader();
             this.setState({imageUrl:null})
