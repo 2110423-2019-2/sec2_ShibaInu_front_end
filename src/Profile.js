@@ -210,8 +210,13 @@ class Profile extends React.Component {
       })
   }
   handleShowReview=()=>{
-      let prev = this.state.limitReview+3
-      this.setState({limitReview : prev})
+      if(this.state.limitReview+3>=this.state.reviewlist.length){
+        console.log(this.state.limitReview+1)
+        this.setState({limitReview : this.state.reviewlist.length+1})
+      }else{
+        let prev = this.state.limitReview+3
+        this.setState({limitReview : prev})
+      }
   }
   renderReload() {
     return (<Spinner animation="border" role="status" className="loading">
@@ -383,7 +388,7 @@ class Profile extends React.Component {
               : this.state.reviewlist
                 .sort((x,y)=>{return y.score-x.score})
                 .map((item,idx) =>
-                idx>this.state.limitReview?null:
+                idx+1>this.state.limitReview?null:
                 <ReviewListItem
                   key={idx}
                   reviewername={item.createdTime}
@@ -392,10 +397,10 @@ class Profile extends React.Component {
                   jobname={item.jobName}
                 />
               )}
-              <p hidden={this.state.limitReview>=this.state.reviewlist.length}
+              <p hidden={this.state.reviewlist.length<=3||this.state.limitReview>this.state.reviewlist.length}
                 onClick={this.handleShowReview}
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show more</p>
-               <p hidden={this.state.limitReview<=this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
+              <p hidden={this.state.reviewlist.length<=3||this.state.limitReview<=this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show less</p>
               </div>}
           </div>
