@@ -18,8 +18,10 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { Badge } from "@material-ui/core";
+
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
+import LoadingSpinner from './utilities/LoadingSpinner';
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -55,7 +57,7 @@ class NavBar extends React.Component {
       .then((res) => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas });
-        console.log(this.state.userDatas);
+        // console.log(this.state.userDatas);
       })
       .then((res) => {
         this.setState({ isUserDataLoad: true }); //tested
@@ -93,7 +95,7 @@ class NavBar extends React.Component {
           }
         });
         this.setState({ unreadRoom: unreadRoom, firstLoadUnreadChat: false });
-        console.log(this.state.unreadRoom);
+        // console.log(this.state.unreadRoom);
       });
     }
   };
@@ -192,8 +194,9 @@ class NavBar extends React.Component {
           newNoti: newNoti,
           firstLoadNoti: false,
           hasDeleteNoti: false,
+          isNotiLoad: true,
         });
-        console.log(this.state.notiDatas);
+        // console.log(this.state.notiDatas);
       });
     }
   };
@@ -203,7 +206,7 @@ class NavBar extends React.Component {
     this.checkNewMessage();
     //this.makeData();
     this.checkNoti();
-    console.log(this.state.mode);
+    // console.log(this.state.mode);
   };
 
   readNoti = (notiData) => {
@@ -218,7 +221,7 @@ class NavBar extends React.Component {
         read: true,
       })
       .then(() => {
-        console.log("a");
+        // console.log("a");
         if (notiData.mode !== "") {
           LocalStorageService.setUserMode(notiData.mode);
         }
@@ -276,13 +279,21 @@ class NavBar extends React.Component {
   };
 
   notiList = () => {
-    if (this.state.notiDatas !== []) {
+    if (this.state.notiDatas.length > 0) {
       return (
         <div>
           {this.showNotiFilterByRead(false)}
           {this.showNotiFilterByRead(true)}
         </div>
       );
+    } else if (!this.state.isNotiLoad) {
+      return <LoadingSpinner />
+    } else {
+      return <div>
+        <DropdownItem className='text-center'>
+          <h5>NO NOTIFICATION</h5>
+        </DropdownItem>
+      </div>
     }
   };
 
