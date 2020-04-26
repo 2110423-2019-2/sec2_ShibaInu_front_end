@@ -136,6 +136,9 @@ class JobOfferFreelancer extends React.Component {
                   return true;
               }
             }
+            else{
+              return false;
+            }
           }
         })
         .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
