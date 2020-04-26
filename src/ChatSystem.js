@@ -98,7 +98,7 @@ class ChatSystem extends React.Component {
     });
   };
 
-  sendMsg = () => {
+  sendMsg = () => {if (this.state.msg) {
     firebase
       .firestore()
       .collection("message")
@@ -126,7 +126,7 @@ class ChatSystem extends React.Component {
       })
       .catch(function (error) {
         console.error("Error updating status unread", error);
-      });
+      });}
   };
 
   loadMsg = () => {
