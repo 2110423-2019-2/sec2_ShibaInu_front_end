@@ -19,10 +19,10 @@ import {
   ProfileImageModal,
   VerifyDataModal
 } from "./ProfileModal";
-import { Container, Spinner } from "react-bootstrap";
+import { Container, Spinner, Row, Col } from "react-bootstrap";
 import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 import LocalStorageService from './LocalStorageService';
-
+import Rating from "@material-ui/lab/Rating"
 class Profile extends React.Component {
   constructor(props) {
     super(props);
@@ -82,7 +82,8 @@ class Profile extends React.Component {
       skills: [],
       reviewlist: [{ reviewername: "itthi", description: "awesome!", score: 10, jobname: "Building mobile application" }],
       verified: false,
-      imageProfileURL: profileimage
+      imageProfileURL: profileimage,
+      limitReview : 2,
     };
     this.fetch = this.fetch.bind(this);
     this.formatJPGtopath = this.formatJPGtopath.bind(this);
@@ -145,6 +146,14 @@ class Profile extends React.Component {
         if (body.experience !== null) {
           exp_json = JSON.parse(body.experience);
         }
+        await axios.get(process.env.REACT_APP_BACKEND_URL + "/review/reviewee/"+this.state.userId)
+          .then(res =>{
+            console.log(res)
+            this.setState({reviewlist : res.data})
+          })
+          .catch(err=>{
+            console.log(err);
+          })
         await axios.get(process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + this.state.userId, { responseType: 'arraybuffer' })
           .then(res => {
             this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res) });
@@ -199,7 +208,10 @@ class Profile extends React.Component {
           this.setState({ isLoaded: true });
         }
       })
-
+  }
+  handleShowReview=()=>{
+      let prev = this.state.limitReview+3
+      this.setState({limitReview : prev})
   }
   renderReload() {
     return (<Spinner animation="border" role="status" className="loading">
@@ -365,23 +377,62 @@ class Profile extends React.Component {
           <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "client"}>
             <h5>Review</h5>
             {/// responsive problem div have more width than html width
-            /*<div className="review">
+            <div className="review">
               {this.state.reviewlist.length === 0
               ? "No skill yet"
-              : this.state.reviewlist.map((item,idx) => 
+              : this.state.reviewlist
+                .sort((x,y)=>{return y.score-x.score})
+                .map((item,idx) =>
+                idx>this.state.limitReview?null:
                 <ReviewListItem
                   key={idx}
-                  reviewername={item.reviewername}
+                  reviewername={item.createdTime}
                   description={item.description}
                   score={item.score}
-                  jobname={item.jobname}
+                  jobname={item.jobName}
                 />
               )}
-              </div>*/}
+              <p hidden={this.state.limitReview>=this.state.reviewlist.length}
+                onClick={this.handleShowReview}
+               align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show more</p>
+               <p hidden={this.state.limitReview<this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
+               align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show less</p>
+              </div>}
           </div>
         </Container>
       </>
     );
   }
 }
+class ReviewListItem extends React.Component {
+  render() {
+    return (
+      <>
+        <Container >
+          <Row>
+            <Col>
+            <p >Job name : {this.props.jobname}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            <p style={{textIndent:"5vh"}}>{this.props.description}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            <p>score : <Rating style={{paddingTop:10,marginTop:10,bottom:0}} name="half-rating" value={this.props.score} precision={1} readOnly={true} /></p>
+
+            </Col>
+            <Col>
+            <p align="right" style={{color:"gray"}}>when : {this.props.reviewername}</p>
+            </Col>
+          </Row>
+        </Container>
+        <hr/>
+      </>
+    );
+  }
+}
+
 export default Profile;
