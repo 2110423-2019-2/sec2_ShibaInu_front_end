@@ -663,11 +663,11 @@ class FreelancerBox extends React.Component {
                     <tbody>{this.showInterestedList()}</tbody>
                   </Table>
                 </div>
-                {/* <div className="footer">
+                <div className="footer">
                   <button type="button" className="btn btn-success" onClick={this.onInvite}>
                     invite
                 </button>
-                </div> */}
+                </div>
               </>
             )
         }

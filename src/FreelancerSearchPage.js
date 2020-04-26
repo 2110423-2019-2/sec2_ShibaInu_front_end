@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card, Dropdown, DropdownButton } from "react-bootstrap";
 import { FaUserCircle, FaStar } from "react-icons/fa";
+import swal from 'sweetalert';
 
 import "./SearchPage.css";
 import LocalStorageService from "./LocalStorageService";
@@ -240,8 +241,8 @@ class ResultRow extends React.Component {
                 </DropdownButton>
               </Col>
             ) : (
-              ""
-            )}
+                ""
+              )}
           </Row>
         </Container>
       </div>
@@ -257,32 +258,59 @@ class DropDownItem extends React.Component {
   }
 
   handleClick() {
-    // axios.post(process.env.REACT_APP_BACKEND_URL + "/notification", {
-    //   topic: "You have been invited to job",
-    //   description:
-    //     "You have been invited to " +
-    //     this.props.jobName +
-    //     ". You can join via this link " +
-    //     "http://localhost:3000/job/" +
-    //     this.props.jobId,
-    //   user: this.props.userId,
-    // });
-    firebase
-      .firestore()
-      .collection("notification")
-      .doc("notification")
-      .collection(String(this.props.userId))
-      .add({
-        topic: "Job Invitation",
-        detail: "You have been invited to " + this.props.jobName,
-        link: "/job/" + this.props.jobId,
-        mode: "freelancer",
-        createtime: firebase.firestore.FieldValue.serverTimestamp(),
-        read: false,
-      })
-      .catch((error) => {
-        console.error(error);
+
+    let buttonStyle = {
+      cancel: {
+        text: "Cancel",
+        value: null,
+        visible: true,
+        className: "btn btn-secondary",
+        closeModal: true,
+      },
+      confirm: {
+        text: "OK",
+        value: true,
+        visible: true,
+        className: "btn btn-success",
+        closeModal: true
+      }
+    }
+    swal({
+      title: "Confirm Invitation ?",
+      text: "Once submit, you will not be able to change this! ",
+      icon: "warning",
+      buttons: buttonStyle,
+    })
+      .then(async (confirm) => {
+        if (confirm) {
+          firebase
+            .firestore()
+            .collection("notification")
+            .doc("notification")
+            .collection(String(this.props.userId))
+            .add({
+              topic: "Job Invitation",
+              detail: "You have been invited to " + this.props.jobName,
+              link: "/job/" + this.props.jobId,
+              mode: "freelancer",
+              createtime: firebase.firestore.FieldValue.serverTimestamp(),
+              read: false,
+            })
+            .then(() => {
+              swal("Invited", {
+                icon: "success",
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+              swal("Error occured!", {
+                icon: "error",
+              });
+            });
+        }
       });
+
+
   }
 
   render() {
