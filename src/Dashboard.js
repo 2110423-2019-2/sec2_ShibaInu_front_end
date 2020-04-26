@@ -19,9 +19,6 @@ import swal from 'sweetalert';
 import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 import LoadingSpinner from './utilities/LoadingSpinner';
 import ReviewFreelancer from './ReviewFreelancer';
-// import { DashboardBox, DashboardStatus, DashboardResponsible, DashboardContract, DashboardTimeline } from "./DashboardComponent";
-//import { ReactComponent } from '*.svg';
-// import logo from './material/Logo.png';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -484,7 +481,7 @@ class Dashboard extends React.Component {
     if (this.loadAllData()) {
       if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'client' && this.state.clientId.toString() === LocalStorageService.getUserID()) {
         this.setState({ permissionToAccess: true });
-      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && (this.state.jobStatus === 'open' || (this.state.jobStatus !== 'open' && this.state.contract.freelancerId.toString() === LocalStorageService.getUserID()))) {
+      } else if (!this.state.permissionToAccess && LocalStorageService.getUserMode() === 'freelancer' && String(this.state.clientId) !== String(LocalStorageService.getUserID()) && (this.state.jobStatus === 'open' || (this.state.jobStatus !== 'open' && this.state.contract.freelancerId.toString() === LocalStorageService.getUserID()))) {
         this.setState({ permissionToAccess: true });
       }
     }
