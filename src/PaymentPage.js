@@ -150,7 +150,7 @@ class PaymentPage extends React.Component {
                 data = this.state.transactionTransfer;
                 break;
             default:
-                data = null;
+                data = [];
         }
 
         return data.length === 0 ? (
