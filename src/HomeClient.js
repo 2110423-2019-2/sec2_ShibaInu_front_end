@@ -79,6 +79,7 @@ class Home extends React.Component {
         <td className="align-middle">
           {job.name}
         </td>
+        <td className="align-middle"><a href={job.freelanerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullName || '-'}</a></td>
         <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
         <td className="align-middle">
           <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
@@ -91,6 +92,9 @@ class Home extends React.Component {
       <tr className="text-center">
         <td>
           <h5>Name</h5>
+        </td>
+        <td>
+          <h5>Freelancer</h5>
         </td>
         <td>
           <h5>Status</h5>
