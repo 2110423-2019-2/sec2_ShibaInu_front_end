@@ -87,17 +87,18 @@ class JobBid extends React.Component {
 
   async componentDidMount() {
     if (LocalStorageService.getUserMode() === "client")
-      this.setState({ cantBidMsg: "Please switch to freelancer to bid" });
+      this.setState({ cantBidMsg: "Please switch to freelancer to bid." });
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID())
       .then((res) => {
-        if (!res.data.isVerified) this.setState({ cantBidMsg: "Please verified to bid" });
+        if (!res.data.isVerified) this.setState({ cantBidMsg: "Please verified to bid." });
       });
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.props.jobid.jobid)
       .then((res) => {
+        if (res.data.status !== "open") this.setState({ cantBidMsg: "This job is open for bid." });
         if (parseInt(res.data.client.userId) === parseInt(LocalStorageService.getUserID()))
-          this.setState({ cantBidMsg: "You can't bid your job" });
+          this.setState({ cantBidMsg: "You can't bid your job." });
       });
   }
 
