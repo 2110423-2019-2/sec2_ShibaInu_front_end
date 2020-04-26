@@ -14,6 +14,7 @@ import axios from "axios";
 
 import LocalStorageService from "./LocalStorageService";
 import LoadingSpinner from './utilities/LoadingSpinner';
+import StatusBadge from './utilities/StatusBadge';
 
 class JobOfferClient extends React.Component {
   constructor(props) {
@@ -96,7 +97,7 @@ class JobOfferClient extends React.Component {
               {job.name}
             </td>
             <td className="align-middle">-</td>
-            <td className="align-middle">{job.status}</td>
+            <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button
                 type="button"
@@ -117,7 +118,7 @@ class JobOfferClient extends React.Component {
           <tr key={index} className="text-center">
             <td className="align-middle">{job.name}</td>
             <td className="align-middle">-</td>
-            <td className="align-middle">{job.status}</td>
+            <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button
                 type="button"
