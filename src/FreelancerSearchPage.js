@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card, Dropdown, DropdownButton } from "react-bootstrap";
 import { FaUserCircle, FaStar } from "react-icons/fa";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 
 import "./SearchPage.css";
 import LocalStorageService from "./LocalStorageService";
@@ -85,17 +85,6 @@ class Filter extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-            {/* <Form.Group>
-              <Form.Label>Interested Catergory</Form.Label>
-              <Form.Control as="select" name="cat" onChange={this.handleChange}>
-                <option>All</option>
-                <option>Website</option>
-                <option>Software</option>
-                <option>Mobile</option>
-                <option>Game</option>
-                <option>Other</option>
-              </Form.Control>
-            </Form.Group> */}
             <Form.Group>
               <Form.Label>Sort by</Form.Label>
               <Form.Control as="select" name="sort" onChange={this.handleChange}>
@@ -160,6 +149,7 @@ class Result extends React.Component {
         <Card.Body>
           {emptyMessage}
           {this.state.freelancerList.map((u) => {
+            if (parseInt(u.userId) === parseInt(LocalStorageService.getUserID())) return "";
             var tmp = [];
             var tmp2 = [];
             u.skills.map((s) => tmp.push(s.skill));
@@ -241,8 +231,8 @@ class ResultRow extends React.Component {
                 </DropdownButton>
               </Col>
             ) : (
-                ""
-              )}
+              ""
+            )}
           </Row>
         </Container>
       </div>
@@ -258,7 +248,6 @@ class DropDownItem extends React.Component {
   }
 
   handleClick() {
-
     let buttonStyle = {
       cancel: {
         text: "Cancel",
@@ -272,45 +261,42 @@ class DropDownItem extends React.Component {
         value: true,
         visible: true,
         className: "btn btn-success",
-        closeModal: true
-      }
-    }
+        closeModal: true,
+      },
+    };
     swal({
       title: "Confirm Invitation ?",
       text: "Once submit, you will not be able to change this! ",
       icon: "warning",
       buttons: buttonStyle,
-    })
-      .then(async (confirm) => {
-        if (confirm) {
-          firebase
-            .firestore()
-            .collection("notification")
-            .doc("notification")
-            .collection(String(this.props.userId))
-            .add({
-              topic: "Job Invitation",
-              detail: "You have been invited to " + this.props.jobName,
-              link: "/job/" + this.props.jobId,
-              mode: "freelancer",
-              createtime: firebase.firestore.FieldValue.serverTimestamp(),
-              read: false,
-            })
-            .then(() => {
-              swal("Invited", {
-                icon: "success",
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-              swal("Error occured!", {
-                icon: "error",
-              });
+    }).then(async (confirm) => {
+      if (confirm) {
+        firebase
+          .firestore()
+          .collection("notification")
+          .doc("notification")
+          .collection(String(this.props.userId))
+          .add({
+            topic: "Job Invitation",
+            detail: "You have been invited to " + this.props.jobName,
+            link: "/job/" + this.props.jobId,
+            mode: "freelancer",
+            createtime: firebase.firestore.FieldValue.serverTimestamp(),
+            read: false,
+          })
+          .then(() => {
+            swal("Invited", {
+              icon: "success",
             });
-        }
-      });
-
-
+          })
+          .catch((error) => {
+            console.error(error);
+            swal("Error occured!", {
+              icon: "error",
+            });
+          });
+      }
+    });
   }
 
   render() {
