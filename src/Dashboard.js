@@ -147,7 +147,7 @@ class Dashboard extends React.Component {
     };
   }
   async getInterestedFreelancer() {
-    let freelancerList = new Array();
+    let freelancerList = [];
 
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
@@ -504,16 +504,6 @@ class FreelancerBox extends React.Component {
       freelancerList: this.props.freelancerList,
       contract: this.props.contract,
       load: false
-      // oldFreelancerList:
-      //   [
-      //     { userId: "1", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //     { userId: "2", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //     { userId: "3", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //     { userId: "4", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //     { userId: "5", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //     { userId: "6", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //     { userId: "7", fname: "Irma", lname: "Williamson", score: 10, img: profileimage },
-      //   ],
     };
     this.showInterestedList = this.showInterestedList.bind(this);
   }
@@ -630,7 +620,7 @@ class FreelancerBox extends React.Component {
                 className="btn btn-primary"
                 disabled={
                   this.state.contract !== null &&
-                  this.state.contract.freelancerId != item.userId
+                  String(this.state.contract.freelancerId) !== String(item.userId)
                 }
                 name={item.userId}
                 onClick={this.handleSelect.bind(this)}
@@ -1480,12 +1470,11 @@ class DashBoardReview extends React.Component {
 
   writeFreelancerReview = async (desc, score) => {
     /// freelancer do
-    let res;
     console.log(this.state.jobId, this.state.freelancerId, this.state.clientId, desc)
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     try {
-      res = await axios
+      await axios
         .post(process.env.REACT_APP_BACKEND_URL + "/review", {
           job: this.state.jobId,
           score: score,
@@ -1508,11 +1497,10 @@ class DashBoardReview extends React.Component {
 
   writeClientReview = async (desc, score) => {
     /// client do
-    let res;
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     try {
-      res = await axios
+      await axios
         .post(process.env.REACT_APP_BACKEND_URL + "/review", {
           job: this.state.jobId,
           score: score,
