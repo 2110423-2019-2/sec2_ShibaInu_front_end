@@ -374,7 +374,7 @@ class Profile extends React.Component {
               ? "No skill yet"
               : this.state.skills.map((item, idx) => <SkillListItem key={idx} skill={item} />)}
           </div>
-          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "client"}>
+          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "freelancer"}>
             <h5>Review</h5>
             {/// responsive problem div have more width than html width
             <div className="review">
