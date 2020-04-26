@@ -67,16 +67,10 @@ class JobOfferFreelancer extends React.Component {
           if (res.data[i].contractId === null) {
             data.push(res.data[i]);
           } else {
-            await axios
-              .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + res.data[i].jobId)
-              .then(contract => {
-                console.log(contract.data)
-                if (contract.data.freelancerId === this.state.userDatas.userId)
-                  data.push(res.data[i]);
-              })
-              .catch(err => {
-                console.log(err)
-              })
+            console.log(res.data[i])
+            if(res.data[i].freelancerId.toString() === LocalStorageService.getUserID().toString()){
+              data.push(res.data[i]);
+            }
           }
 
         }
