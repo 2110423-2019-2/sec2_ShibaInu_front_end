@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
+import { auto } from "@popperjs/core";
 class ProfileModal extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +20,7 @@ class ProfileModal extends Component {
       website: "",
       country: "",
       show: false,
+      address: "",
       birthDate: new Date()
     };
     this.handleClose = this.handleClose.bind(this);
@@ -39,7 +41,7 @@ class ProfileModal extends Component {
           body.location !== "" &&
           body.location.split(",").length > 0
         ) {
-          console.log(body.location.split(",").shift());
+          ///console.log(body.location.split(",").shift());
           let arr = body.location.split(",");
           this.setState({ country: arr[0] });
           arr.shift();
@@ -67,6 +69,57 @@ class ProfileModal extends Component {
   handleShow() {
     this.setState({ show: true });
     this.componentDidMount();
+  }
+  handleWrite=(e)=>{
+    if(e.target.name === "tel"){
+      let format = /^$|[0-9]+$/i.test(e.target.value)?(e.target.value):this.state.tel;
+      if(format && format.length >10){
+        return;
+      }
+      this.setState({tel:format})
+    } else if(e.target.name === "address"){
+      let format = e.target.value
+      if(format.length >200){
+        return;
+      }
+      this.setState({address:format})
+    } else if(e.target.name === "country"){
+      let format = e.target.value
+      if(format.length >20){
+        return;
+      }
+      this.setState({country:format})
+    } else if(e.target.name === "firstname"){
+      let format = e.target.value
+      if(format.length >20){
+        return;
+      }
+      this.setState({fname:format})
+    } else if(e.target.name === "lastname"){
+      let format = e.target.value
+      if(format.length >20){
+        return;
+      }
+      this.setState({lname:format})
+    } else if(e.target.name === "headline"){
+      let format = e.target.value
+      if(format.length >50){
+        return;
+      }
+      this.setState({headline:format})
+    } else if(e.target.name === "email"){
+      let format = e.target.value
+      if(format.length >50){
+        return;
+      }
+      this.setState({email:format})
+    } else if(e.target.name === "website"){
+      let format = e.target.value
+      if(format.length >60){
+        return;
+      }
+      this.setState({website:format})
+    }
   }
   handleSave() {
     axios
@@ -113,19 +166,19 @@ class ProfileModal extends Component {
                   <Col md="4">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control
+                      name="firstname"
+                      value={this.state.fname}
                       defaultValue={this.state.fname}
-                      onChange={e => {
-                        this.setState({ fname: e.target.value });
-                      }}
+                      onChange={e => this.handleWrite(e)}
                     />
                   </Col>
                   <Col md="4">
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control
+                      name="lastname"
+                      value={this.state.lname}
                       defaultValue={this.state.lname}
-                      onChange={e => {
-                        this.setState({ lname: e.target.value });
-                      }}
+                      onChange={e => this.handleWrite(e)}
                     />
                   </Col>
                 </Form.Row>
@@ -133,40 +186,42 @@ class ProfileModal extends Component {
               <Form.Group controlId="Headline">
                   <Form.Label>Headline</Form.Label>
                   <Form.Control
+                    name="headline"
+                    value={this.state.headline}
                     defaultValue={this.state.headline}
-                    as="textarea"
-                    onChange={e => {
-                      this.setState({ headline: e.target.value });
-                    }}
+                    onChange={e =>this.handleWrite(e)}
                   />
               </Form.Group>
               <Form.Label>Date of birth</Form.Label>
               <Form.Row>
+                <Col>
                 <DatePicker
                   selected={this.state.birthDate}
                   onChange={d => this.setState({ birthDate: d })}
                 />
+                </Col>
               </Form.Row>
 
               <Form.Group controlId="location">
                 <Form.Row>
-                  <Col md="4">
-                    <Form.Label>Country/Region</Form.Label>
+                  <Col md="3">
+                    <Form.Label>Country</Form.Label>
                     <Form.Control
+                      name="country"
+                      value={this.state.country}
                       defaultValue={this.state.country}
-                      onChange={e => {
-                        this.setState({ country: e.target.value });
-                      }}
+                      onChange={e =>this.handleWrite(e)}
                     />
                   </Col>
-                  <Col md="4">
+                  <Col md="9">
                     <Form.Label>Address</Form.Label>
                     <Form.Control
+                      name="address"
                       as="textarea"
+                      style={{resize:"none",height:"15vh"}}
+                      value={this.state.address}
                       defaultValue={this.state.address}
-                      onChange={e => {
-                        this.setState({ address: e.target.value });
-                      }}
+                      onChange={e =>this.handleWrite(e)}
                     />
                   </Col>
                 </Form.Row>
@@ -174,32 +229,28 @@ class ProfileModal extends Component {
               <Form.Group controlId="phone">
                 <Form.Label>Phone Number</Form.Label>
                 <Form.Control
+                  name="tel"
                   defaultValue={this.state.tel}
                   value={this.state.tel}
-                  onChange={e => {
-                    if(e.target.value.length >10){
-                      return;
-                    }
-                    this.setState({ tel: e.target.value });
-                  }}
+                  onChange={e =>this.handleWrite(e)}
                 />
               </Form.Group>
               <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
+                  name="email"
+                  value={this.state.email}
                   defaultValue={this.state.email}
-                  onChange={e => {
-                    this.setState({ email: e.target.value });
-                  }}
+                  onChange={e => this.handleWrite(e)}
                 />
               </Form.Group>
               <Form.Group controlId="website">
                 <Form.Label>Website</Form.Label>
                 <Form.Control
+                  name="website"
+                  value={this.state.website}
                   defaultValue={this.state.website}
-                  onChange={e => {
-                    this.setState({ website: e.target.value });
-                  }}
+                  onChange={e => this.handleWrite(e)}
                 />
               </Form.Group>
             </Form>
@@ -242,6 +293,15 @@ class About extends Component {
         usersId: this.props.userId,
         about: body.about
       });
+    }
+  }
+  handleWrite=(e)=>{
+    if(e.target.name==="about"){
+      let format = e.target.value
+      if(format.length >200){
+        return;
+      }
+      this.setState({about:format})
     }
   }
   handleClose() {
@@ -287,12 +347,13 @@ class About extends Component {
             <Form.Group controlId="Headline">
               <Form.Row>
                 <Form.Control
+                  name="about"
+                  value={this.state.about}
+                  style={{resize:"none",height:"15vh"}}
                   placeholder="write something"
                   defaultValue={this.state.about}
                   as="textarea"
-                  onChange={e => {
-                    this.setState({ about: e.target.value });
-                  }}
+                  onChange={e => this.handleWrite(e)}
                 />
               </Form.Row>
             </Form.Group>
