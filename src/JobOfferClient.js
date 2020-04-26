@@ -11,7 +11,9 @@ import {
   Button
 } from "react-bootstrap";
 import axios from "axios";
+
 import LocalStorageService from "./LocalStorageService";
+import LoadingSpinner from './utilities/LoadingSpinner';
 
 class JobOfferClient extends React.Component {
   constructor(props) {
@@ -33,11 +35,11 @@ class JobOfferClient extends React.Component {
       isJobDataLoad: false
     };
   }
-  keywordHandler = (check=false)=>{
+  keywordHandler = (check = false) => {
     let word = document.getElementById("searchbox").value
     console.log(word)
-    if(check){
-      this.setState({keyword:word})
+    if (check) {
+      this.setState({ keyword: word })
     }
   }
   statusHandler = (event, status) => {
@@ -59,8 +61,8 @@ class JobOfferClient extends React.Component {
     axios
       .get(
         process.env.REACT_APP_BACKEND_URL +
-          "/jobs/user/" +
-          LocalStorageService.getUserID()
+        "/jobs/user/" +
+        LocalStorageService.getUserID()
       )
       .then(res => {
         const jobDatas = res.data;
@@ -78,32 +80,34 @@ class JobOfferClient extends React.Component {
   };
 
   render() {
-    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
-      return null;
+    if (!this.state.isUserDataLoad) {
+      return <LoadingSpinner />;
     }
     var recentJob;
-    if (this.state.statusFilter === this.state.status.ALL) {
+    if (!this.state.isJobDataLoad) {
+      recentJob = <td colSpan="4" className="text-center"><LoadingSpinner customClass="false" /></td>;
+    } else if (this.state.statusFilter === this.state.status.ALL) {
       recentJob = this.state.jobDatas
-      .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
-      .map((job, index) => (
-        <tr key={index} className="text-center">
-          <td className="align-middle">
-            {job.name}
-          </td>
-          <td className="align-middle">-</td>
-          <td className="align-middle">{job.status}</td>
-          <td className="align-middle">
-            <button
-              type="button"
-              className="btn btn-secondary btn-block"
-              id={job.jobId}
-              onClick={this.handleClickJobDetail.bind(this)}
-            >
-              Detail
+        .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
+        .map((job, index) => (
+          <tr key={index} className="text-center">
+            <td className="align-middle">
+              {job.name}
+            </td>
+            <td className="align-middle">-</td>
+            <td className="align-middle">{job.status}</td>
+            <td className="align-middle">
+              <button
+                type="button"
+                className="btn btn-secondary btn-block"
+                id={job.jobId}
+                onClick={this.handleClickJobDetail.bind(this)}
+              >
+                Detail
             </button>
-          </td>
-        </tr>
-      ));
+            </td>
+          </tr>
+        ));
     } else {
       recentJob = this.state.jobDatas
         .filter(job => job.status === this.state.statusFilter)
@@ -197,26 +201,26 @@ class JobOfferClient extends React.Component {
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
-              </Col>
-              <Col>
+            </Col>
+            <Col>
               <Form inline className="joboffer-search">
                 <FormControl
                   type="text"
                   placeholder="Search"
-                  id = "searchbox"
+                  id="searchbox"
                   className="mr-sm-2 joboffer-search-box"
                 />
-                <Button variant="outline-success" className="w-auto" onClick={(e)=>this.keywordHandler(true)}>Search</Button>
+                <Button variant="outline-success" className="w-auto" onClick={(e) => this.keywordHandler(true)}>Search</Button>
               </Form>
-              </Col>
-              </Row>
-              <Row className="bg-light shadow">
-              <Table responsive>
-                <thead className="background-blue text-light">
-                  {headTable}
-                </thead>
-                <tbody>{recentJob}</tbody>
-              </Table>
+            </Col>
+          </Row>
+          <Row className="bg-light shadow">
+            <Table responsive>
+              <thead className="background-blue text-light">
+                {headTable}
+              </thead>
+              <tbody>{recentJob}</tbody>
+            </Table>
           </Row>
         </Container>
       </div>

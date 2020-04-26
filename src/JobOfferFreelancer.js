@@ -11,7 +11,9 @@ import {
   Button
 } from "react-bootstrap";
 import axios from 'axios';
+
 import LocalStorageService from './LocalStorageService';
+import LoadingSpinner from './utilities/LoadingSpinner';
 
 class JobOfferFreelancer extends React.Component {
   constructor(props) {
@@ -23,8 +25,8 @@ class JobOfferFreelancer extends React.Component {
         INTERESTED: "open",
         MAKEDEAL: "accepted",
         CONTRACT: "working",
-        DONE : "done",
-        CLOSED : "closed",
+        DONE: "done",
+        CLOSED: "closed",
       },
       statusFilter: "all",
       userDatas: "",
@@ -91,11 +93,13 @@ class JobOfferFreelancer extends React.Component {
   }
 
   render() {
-    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
-      return null;
+    if (!this.state.isUserDataLoad) {
+      return <LoadingSpinner />;
     }
     var recentJob;
-    if (this.state.statusFilter === this.state.status.ALL) {
+    if (!this.state.isJobDataLoad) {
+      recentJob = <td colSpan="4" className="text-center"><LoadingSpinner customClass="false" /></td>;
+    } else if (this.state.statusFilter === this.state.status.ALL) {
       recentJob = this.state.jobDatas
         .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
         .map((job, index) => (
