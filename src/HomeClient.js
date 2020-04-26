@@ -1,10 +1,13 @@
 import React from "react";
+import { Container, Row, Col, Table } from "react-bootstrap";
+import axios from "axios";
+import { FaBullhorn, FaInfoCircle } from "react-icons/fa";
+
 import "./HomeClient.css";
 import "./HomeFreelancer.css";
-import { Container, Row, Col, Table, Badge } from "react-bootstrap";
-import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-import { FaBullhorn, FaInfoCircle } from "react-icons/fa";
+import StatusBadge from './utilities/StatusBadge';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -17,14 +20,7 @@ class Home extends React.Component {
       announce: "",
       sumMoney: 0,
       userID: LocalStorageService.getUserID(),
-      isAnnounceLoad: false,
-      badgeStyle: {
-        open: "success",
-        accepted: "primary",
-        working: "warning",
-        done: "primary",
-        closed: "danger"
-      }
+      isAnnounceLoad: false
     };
   }
 
@@ -83,7 +79,7 @@ class Home extends React.Component {
         <td className="align-middle">
           {job.name}
         </td>
-        <td className="align-middle"><h5><Badge variant={this.state.badgeStyle[job.status]}>{job.status}</Badge></h5></td>
+        <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
         <td className="align-middle">
           <button type="button" className="btn btn-secondary btn-block" id={job.jobId} onClick={this.handleClickJobDetail.bind(this)}>
             Detail

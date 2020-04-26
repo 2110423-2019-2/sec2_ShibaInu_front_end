@@ -25,7 +25,8 @@ class JobOfferClient extends React.Component {
         OPEN: "open",
         ACCEPTED: "accepted",
         WORKING: "working",
-        DONE: "done"
+        DONE: "done",
+        CLOSED: "closed",
       },
       statusFilter: "all",
       userDatas: "",
@@ -198,6 +199,14 @@ class JobOfferClient extends React.Component {
                     onClick={e => this.statusHandler(e, this.state.status.DONE)}
                   >
                     Done
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-6"
+                    onClick={e => this.statusHandler(e, this.state.status.CLOSED)}
+                  >
+                    Closed
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
