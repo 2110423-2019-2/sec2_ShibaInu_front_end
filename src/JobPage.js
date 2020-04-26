@@ -89,7 +89,7 @@ class JobBid extends React.Component {
     axios
       .get(process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID())
       .then((res) => {
-        if (!res.data.isVerified) this.setState({ cantBidMsg: "Please verify to bid" });
+        if (!res.data.isVerified) this.setState({ cantBidMsg: "Please verified to bid" });
       });
     if (LocalStorageService.getUserMode() === "client")
       this.setState({ cantBidMsg: "Please switch to freelancer to bid" });
