@@ -18,8 +18,10 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import { Badge } from "@material-ui/core";
+
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
+import LoadingSpinner from './utilities/LoadingSpinner';
 
 class NavBar extends React.Component {
   constructor(props) {
@@ -192,6 +194,7 @@ class NavBar extends React.Component {
           newNoti: newNoti,
           firstLoadNoti: false,
           hasDeleteNoti: false,
+          isNotiLoad: true,
         });
         console.log(this.state.notiDatas);
       });
@@ -276,13 +279,21 @@ class NavBar extends React.Component {
   };
 
   notiList = () => {
-    if (this.state.notiDatas !== []) {
+    if (this.state.notiDatas.length > 0) {
       return (
         <div>
           {this.showNotiFilterByRead(false)}
           {this.showNotiFilterByRead(true)}
         </div>
       );
+    } else if (!this.state.isNotiLoad) {
+      return <LoadingSpinner />
+    } else {
+      return <div>
+        <DropdownItem className='text-center'>
+          <h5>NO NOTIFICATION</h5>
+        </DropdownItem>
+      </div>
     }
   };
 
