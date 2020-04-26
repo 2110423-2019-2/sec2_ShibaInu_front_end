@@ -9,7 +9,7 @@ import {
   FaFacebookMessenger,
   FaWindowClose,
 } from "react-icons/fa";
-import { Nav, Navbar, Container, Row, Button } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -32,8 +32,7 @@ class NavBar extends React.Component {
         ADMIN: "admin",
       },
       mode:
-        LocalStorageService.getUserMode() == ""
-          ? "guest"
+        LocalStorageService.getUserMode() ? "guest"
           : LocalStorageService.getUserMode(),
       userID: LocalStorageService.getUserID(),
       userDatas: [],
@@ -72,10 +71,12 @@ class NavBar extends React.Component {
         .collection(this.state.userID);
       // Start listening to the query.
       query.onSnapshot((snapshot) => {
+        var unreadRoom;
+
         if (this.state.firstLoadUnreadChat) {
-          var unreadRoom = 0;
+          unreadRoom = 0;
         } else {
-          var unreadRoom = this.state.unreadRoom;
+          unreadRoom = this.state.unreadRoom;
         }
         snapshot.docChanges().forEach((change) => {
           var room = change.doc.data();
@@ -218,7 +219,7 @@ class NavBar extends React.Component {
       })
       .then(() => {
         console.log("a");
-        if(notiData.mode !== ""){
+        if (notiData.mode !== "") {
           LocalStorageService.setUserMode(notiData.mode);
         }
         window.location.href = notiData.link;
