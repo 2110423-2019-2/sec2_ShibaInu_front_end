@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import "./AdminAnnouncement.css";
@@ -7,7 +6,6 @@ import { FaBullhorn } from "react-icons/fa";
 import LocalStorageService from "./LocalStorageService";
 import swal from "sweetalert";
 import { Redirect } from "react-router-dom";
-var utilities = require("./Utilities.json");
 class AdminAnnouncement extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +24,7 @@ class AdminAnnouncement extends React.Component {
     axios.defaults.headers.common["Authorization"] =
       "Bearer " + LocalStorageService.getAccessToken();
     axios
-      .post(utilities["backend-url"] + "/announcement", {
+      .post(process.env.REACT_APP_BACKEND_URL+ "/announcement", {
         title: this.state.title,
         content: this.state.content,
         user: this.state.userID
@@ -85,7 +83,6 @@ class AdminAnnouncement extends React.Component {
     }
     return (
       <div className="main-background">
-        <NavBar mode="admin" userDatas={this.state.userDatas} />
         <Container id="admin-announce-box">
           <Row>
             <Col className="background-blue text-light">

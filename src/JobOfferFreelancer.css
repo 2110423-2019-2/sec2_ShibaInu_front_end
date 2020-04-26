@@ -1,0 +1,7 @@
+.joboffer-search {
+    display: flex;
+    justify-content: flex-end;
+}
+.joboffer-search-box {
+    width: 100px;
+}

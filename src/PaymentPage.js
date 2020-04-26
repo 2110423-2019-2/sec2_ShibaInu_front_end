@@ -1,11 +1,8 @@
 import React from 'react';
-import { Nav, Container, Row, Col, Table, Card, Button } from 'react-bootstrap';
+import { Nav, Container, Row, Col, Table, Card, Button, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-
-import NavBar from './NavBar';
 import PaymentModal from './PaymentModal';
 import LocalStorageService from './LocalStorageService';
-const utilities = require('./Utilities.json');
 
 class PaymentPage extends React.Component {
 
@@ -43,32 +40,32 @@ class PaymentPage extends React.Component {
     fetchSumFromDB() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment/sum")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/sum")
             .then(res => {
                 this.setState({ sum: res.data.sum * -1 });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     this.setState({ sum: 0 });
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/sum/charge")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/sum/charge")
             .then(res => {
                 this.setState({ sumCharge: res.data.sum * -1 });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     this.setState({ sumCharge: 0 });
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/sum/transfer")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/sum/transfer")
             .then(res => {
                 this.setState({ sumTransfer: res.data.sum * -1 });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     this.setState({ sumTransfer: 0 });
                 }
             });
@@ -78,32 +75,32 @@ class PaymentPage extends React.Component {
     fetchTransactionFromDB() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment")
             .then(res => {
                 this.setState({ transaction: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     this.setState({ transaction: [] });
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/charge")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/charge")
             .then(res => {
                 this.setState({ transactionCharge: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     this.setState({ transactionCharge: [] });
                 }
             });
 
-        axios.get(utilities['backend-url'] + "/payment/transfer")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/transfer")
             .then(res => {
                 this.setState({ transactionTransfer: res.data.map(item => { return ({ ...item, 'amount': item.amount * -1 }) }) });
             }).catch((err) => {
                 console.error(err);
-                if (err.response.status === 400) {
+                if (err.response && err.response.status === 400) {
                     this.setState({ transactionTransfer: [] });
                 }
             });
@@ -112,14 +109,14 @@ class PaymentPage extends React.Component {
     fetchCardAndBankAccountFromDB() {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.get(utilities['backend-url'] + "/payment/creditCard")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard")
             .then(res => {
                 this.setState({ creditCard: res.data });
             }).catch((err) => {
                 console.error(err);
             });
 
-        axios.get(utilities['backend-url'] + "/payment/bankAccount")
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount")
             .then(res => {
                 this.setState({ bankAccount: res.data });
             }).catch((err) => {
@@ -152,6 +149,8 @@ class PaymentPage extends React.Component {
             case 'freelancer':
                 data = this.state.transactionTransfer;
                 break;
+            default:
+                data = [];
         }
 
         return data.length === 0 ? (
@@ -211,7 +210,7 @@ class PaymentPage extends React.Component {
                         </Card.Body>}
                     <Card.Footer>
                         <Button onClick={() => this.handleClickCardBank('card')}>
-                            {(this.state.bankAccount ? 'CHANGE' : 'ADD') + ' CARD'}
+                            {(this.state.creditCard ? 'CHANGE' : 'ADD') + ' CARD'}
                         </Button>
                     </Card.Footer>
                 </Card>
@@ -256,11 +255,16 @@ class PaymentPage extends React.Component {
         this.setState({ modalMode: mode, showModal: true });
     }
 
+    renderReload() {
+        return (<Spinner animation="border" role="status" className="loading">
+            <span className="sr-only">Loading...</span>
+        </Spinner>);
+    }
+
     render() {
-        return !this.state.loadedData() ? '' : (
+        return !this.state.loadedData() ? <this.renderReload /> : (
             <div>
                 {!this.state.showModal ? '' : <PaymentModal mode={this.state.modalMode} addPay='add' callback={this.showHideModalCallback} />}
-                <NavBar mode='' userDatas='' />
                 <Container id="homeclient-box">
                     <Container className="bg-light shadow">
                         <Row>
@@ -297,7 +301,7 @@ class PaymentPage extends React.Component {
                             <Col className="shadow background-blue">
                                 <div id="balance-topic" className="text-light">
                                     <h2 className="mb-0">
-                                        Summary
+                                        {'Summary | ' + this.state.selectedTab}
                                     </h2>
                                 </div>
                                 <div className="card-container">

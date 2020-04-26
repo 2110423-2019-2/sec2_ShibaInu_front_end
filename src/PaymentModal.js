@@ -1,9 +1,8 @@
 import React from 'react';
-import { Modal, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
+import { Modal, Button, Form, Row, Col, Spinner, Card } from 'react-bootstrap';
 import axios from 'axios';
 
 import LocalStorageService from './LocalStorageService';
-const utilities = require('./Utilities.json');
 
 class PaymentModal extends React.Component {
 
@@ -14,6 +13,7 @@ class PaymentModal extends React.Component {
             mode: this.props.mode || 'card',
             addPay: this.props.addPay || 'add',
             amount: this.props.amount || '0',
+            payMode: this.props.payMode || 'Deposit',
             formText: '',
             cardData: {
                 cardNumber: '',
@@ -28,11 +28,35 @@ class PaymentModal extends React.Component {
                 branchName: ''
             },
             isSendingData: false,
+            isFetching: false,
+            reloadPage: false,
         }
 
         this.AddCardPayment = this.AddCardPayment.bind(this);
         this.handleAddCardPaymentChange = this.handleAddCardPaymentChange.bind(this);
         this.handleSubmitAddCardPayment = this.handleSubmitAddCardPayment.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.state.mode === 'card' && this.state.addPay === 'pay') {
+            this.fetchCardData();
+        }
+    }
+
+    fetchCardData = () => {
+
+        this.setState({ isFetching: true });
+
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard")
+            .then(res => {
+                this.setState({ cardData: res.data });
+            }).catch((err) => {
+                console.error(err);
+            }).finally(() => {
+                this.setState({ isFetching: false, });
+            });
     }
 
     AddCardPayment() {
@@ -136,6 +160,51 @@ class PaymentModal extends React.Component {
         );
     }
 
+    PayCardPayment = (props) => {
+        return (
+            <Form>
+                <Form.Group>
+                    <Card border='secondary'>
+                        <Card.Header>
+                            Credit Card
+                    </Card.Header>
+                        <Card.Body>
+                            {props.isLoading ? (<this.renderLoading />) :
+                                !this.state.cardData.cardNumber ?
+                                    (<>
+                                        <p>No credit card. Please add at My payment.</p>
+                                        <Button variant='success' onClick={() => { window.location.href = '/payment' }}>My payment</Button>
+                                    </>) :
+                                    (<>
+                                        <h5>{this.state.cardData.cardNumber.substring(0, 6) + 'XXXXXX' + this.state.cardData.cardNumber.substring(12)}</h5><br />
+                                        <p>{this.state.cardData.name}</p>
+                                    </>)}
+                        </Card.Body>
+                    </Card>
+                </Form.Group>
+                <Form.Group>
+                    <Button variant="success" onClick={this.handleSubmitPayCardPayment} disabled={this.state.isSendingData} hidden={!this.state.cardData.cardNumber}>
+                        <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            hidden={!this.state.isSendingData}
+                        />
+                        {' PAY ' + this.props.amount + ' THB (' + this.state.payMode + ')'}
+                    </Button>
+                </Form.Group>
+            </Form>
+        );
+    }
+
+    renderLoading() {
+        return (<Spinner animation="border" role="status" className="loading">
+            <span className="sr-only">Loading...</span>
+        </Spinner>);
+    }
+
     handleAddCardPaymentChange = (e) => {
         let temp = this.state.cardData;
         temp[e.target.name] = e.target.value;
@@ -185,7 +254,7 @@ class PaymentModal extends React.Component {
         // Send data to backend
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.post(utilities['backend-url'] + "/payment/creditCard", this.state.cardData)
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/creditCard", this.state.cardData)
             .then(res => {
                 console.log(res.data.message)
                 this.showHideModal(false, true);
@@ -200,7 +269,7 @@ class PaymentModal extends React.Component {
 
     handleSubmitAddBankAccount = () => {
         const bankData = this.state.bankData;
-        if (isNaN(bankData.accountNumber) ) {
+        if (isNaN(bankData.accountNumber)) {
             this.setState({
                 formText: 'Please enter a valid account number.'
             });
@@ -229,7 +298,7 @@ class PaymentModal extends React.Component {
         // Send data to backend
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
 
-        axios.post(utilities['backend-url'] + "/payment/bankAccount", this.state.bankData)
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount", this.state.bankData)
             .then(res => {
                 console.log(res.data.message)
                 this.showHideModal(false, true);
@@ -242,15 +311,40 @@ class PaymentModal extends React.Component {
 
     }
 
-    showHideModal = (status, reload = false) => {
-        this.setState({ showModal: status || false });
+    handleSubmitPayCardPayment = () => {
 
+        this.setState({ isSendingData: true });
+
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+
+        axios.post(process.env.REACT_APP_BACKEND_URL + "/payment/charge", { job: this.props.jobId, amount: this.props.amount })
+            .then(res => {
+                console.log(res.status);
+                if (res.status === 201) {
+                    this.showHideModal(false, true);
+                }
+            }).catch((err) => {
+                console.error(err);
+            }).finally(() => {
+                this.setState({ isSendingData: false });
+            });
+    }
+
+    showHideModal = (status = false, reload = true) => {
+        this.setState({
+            showModal: status,
+            reloadPage: reload
+        });
+
+    }
+
+    modalExited = () => {
         if (this.props.callback) {
-            this.props.callback(false, reload);
+            this.props.callback(false, this.state.reloadPage);
         }
     }
 
-    getModalBody = () => {
+    getModalBody = (isFetching) => {
         const isCard = (this.state.mode === 'card');
         const isAdd = (this.state.addPay === 'add');
 
@@ -259,7 +353,7 @@ class PaymentModal extends React.Component {
         } else if (!isCard && isAdd) {
             return <this.AddBankAccount />
         } else if (isCard && !isAdd) {
-            return ''
+            return <this.PayCardPayment isLoading={isFetching} />
         } else {
             return ''
         }
@@ -270,18 +364,20 @@ class PaymentModal extends React.Component {
             <Modal
                 // {...props}
                 show={this.state.showModal}
-                size="sm"
+                size='sm'
                 aria-labelledby="contained-modal-title-vcenter"
                 onHide={this.showHideModal}
+                onExited={this.modalExited}
+                backdrop={this.state.addPay === 'add' ? true : 'static'}
                 centered
             >
-                <Modal.Header closeButton>
+                <Modal.Header closeButton={this.state.addPay === 'add'}>
                     <Modal.Title id="contained-modal-title-vcenter">
                         YoungStar Payment
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.getModalBody()}
+                    {this.getModalBody(this.state.isFetching)}
                 </Modal.Body>
             </Modal>
         );

@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-import NavBar from "./NavBar";
+import React from "react";
 import "./ChatSystem.css";
 import {
   Container,
@@ -9,25 +8,28 @@ import {
   InputGroup,
   FormControl,
   Badge,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import LocalStorageService from "./LocalStorageService";
 import firebase from "./firebase";
+import { FaCircle } from "react-icons/fa";
 
 class ChatSystem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedRoom: LocalStorageService.getChatroom(),
-      chatwith: LocalStorageService.getChatName(),
+      chatwith: LocalStorageService.getChatWithName(),
+      chatwithId: LocalStorageService.getChatWithId(),
       msg: "",
       userID: LocalStorageService.getUserID(),
       chatrooms: [],
       chatmsgs: [],
       firstLoadMsg: true,
+      firstLoadChatroom: true,
       ref: React.createRef(),
       loadChatroomFinished: false,
-      loadChatmsgFinished: false
+      loadChatmsgFinished: false,
     };
   }
 
@@ -50,21 +52,53 @@ class ChatSystem extends React.Component {
       .collection(this.state.userID)
       .orderBy("lasttime", "desc");
     // Start listening to the query.
-    query.onSnapshot(snapshot => {
-      var chatrooms = [];
-      snapshot.docChanges().forEach(change => {
+    query.onSnapshot((snapshot) => {
+      var chatrooms;
+
+      if (this.state.firstLoadChatroom) {
+        chatrooms = [];
+      } else {
+        chatrooms = this.state.chatrooms;
+      }
+      snapshot.docChanges().forEach((change) => {
         var room = change.doc.data();
-        chatrooms.push({
-          id: change.doc.id,
-          chatwith: room.name,
-          lasttime: room.lasttime
-        });
+        if (this.state.firstLoadChatroom) {
+          chatrooms.push({
+            id: change.doc.id,
+            chatwith: room.name,
+            chatwithId: room.id,
+            lasttime: room.lasttime,
+            read: room.read,
+          });
+        } else {
+          var isNewRoom = true;
+          for (let i = 0; i < chatrooms.length; i++) {
+            if (chatrooms[i].id === change.doc.id) {
+              chatrooms[i].read = true;
+              isNewRoom = false;
+            }
+          }
+          if (isNewRoom) {
+            chatrooms.push({
+              id: change.doc.id,
+              chatwith: room.name,
+              chatwithId: room.id,
+              lasttime: room.lasttime,
+              read: room.read,
+            });
+          }
+        }
       });
-      this.setState({ chatrooms: chatrooms, loadChatroomFinished: true });
+      this.setState({
+        chatrooms: chatrooms,
+        loadChatroomFinished: true,
+        firstLoadChatroom: false,
+      });
+      console.log(this.state.chatrooms);
     });
   };
 
-  sendMsg = () => {
+  sendMsg = () => {if (this.state.msg) {
     firebase
       .firestore()
       .collection("message")
@@ -73,12 +107,26 @@ class ChatSystem extends React.Component {
       .add({
         msg: this.state.msg,
         sender: this.state.userID,
-        timesent: firebase.firestore.FieldValue.serverTimestamp()
+        timesent: firebase.firestore.FieldValue.serverTimestamp(),
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.error("Error writing new message to database", error);
       });
     this.setState({ msg: "" });
+
+    //update status unread to another user
+    firebase
+      .firestore()
+      .collection("message")
+      .doc("chatroom")
+      .collection(this.state.chatwithId)
+      .doc(this.state.selectedRoom)
+      .update({
+        read: false,
+      })
+      .catch(function (error) {
+        console.error("Error updating status unread", error);
+      });}
   };
 
   loadMsg = () => {
@@ -91,22 +139,22 @@ class ChatSystem extends React.Component {
       .orderBy("timesent", "asc");
 
     // Start listening to the query.
-    query.onSnapshot(snapshot => {
+    query.onSnapshot((snapshot) => {
       var chatmsgs = this.state.chatmsgs;
       if (this.state.firstLoadMsg) {
         chatmsgs = [];
       }
-      snapshot.docChanges().forEach(change => {
+      snapshot.docChanges().forEach((change) => {
         var message = change.doc.data();
         var pos = "text-left w-100";
-        if (message.sender == this.state.userID) {
-          var pos = "text-right w-100";
+        if (String(message.sender) === String(this.state.userID)) {
+          pos = "text-right w-100";
         }
         if (message.timesent !== null) {
           chatmsgs.push({
             sender: message.sender,
             msg: message.msg,
-            pos: pos
+            pos: pos,
           });
         }
       });
@@ -118,13 +166,26 @@ class ChatSystem extends React.Component {
         }
       );
     });
+    //update status read
+    firebase
+      .firestore()
+      .collection("message")
+      .doc("chatroom")
+      .collection(this.state.userID)
+      .doc(this.state.selectedRoom)
+      .update({
+        read: true,
+      })
+      .catch(function (error) {
+        console.error("Error updating status read", error);
+      });
   };
 
   chatRoom = () => {
     if (!this.state.loadChatroomFinished) {
       return this.loadingChat();
     }
-    return this.state.chatrooms.map(chatroom => (
+    return this.state.chatrooms.map((chatroom) => (
       <Row key={chatroom.id}>
         <Button
           variant="link"
@@ -136,12 +197,14 @@ class ChatSystem extends React.Component {
           id="chatroom"
           onClick={() => {
             LocalStorageService.setChatroom(chatroom.id);
-            LocalStorageService.setChatName(chatroom.chatwith);
+            LocalStorageService.setChatWithName(chatroom.chatwith);
+            LocalStorageService.setChatWithId(chatroom.chatwithId);
             this.setState(
               {
                 selectedRoom: chatroom.id,
                 chatwith: chatroom.chatwith,
-                firstLoadMsg: true
+                chatwithId: chatroom.chatwithId,
+                firstLoadMsg: true,
               },
               () => {
                 this.loadMsg();
@@ -150,63 +213,96 @@ class ChatSystem extends React.Component {
             console.log(this.state.selectedRoom);
           }}
         >
-          <h4>{chatroom.chatwith}</h4>
+          <h4>
+            {chatroom.chatwith}
+            {this.hasNewMessage(chatroom)}
+          </h4>
         </Button>
       </Row>
     ));
   };
 
+  hasNewMessage = (chatroom) => {
+    if (chatroom.read === false) {
+      return <FaCircle className="ml-3 text-danger" />;
+    }
+  };
+
   chatMsg = () => {
-    return this.state.chatmsgs.map(chatmsg => (
+    return this.state.chatmsgs.map((chatmsg) => (
       <div key={chatmsg.id} className="ml-3 mt-3 mr-4 ">
         <div className={chatmsg.pos}>
           <Badge pill variant="info" className="pl-3 pr-3 pt-1 pb-1">
-            <h5>{chatmsg.msg}</h5>
+            {chatmsg.msg.length >= 80 ? (
+              <h5>
+                {chatmsg.msg.substring(0, 80)}
+                <br />
+                {chatmsg.msg.substring(80, chatmsg.msg.length)}
+              </h5>
+            ) : (
+                <h5>{chatmsg.msg}</h5>
+              )}
           </Badge>
         </div>
       </div>
     ));
   };
 
-  sendMsgDisp = () => {
+  msgDisp = () => {
     if (!this.state.loadChatmsgFinished) {
       return this.loadingChat();
     }
     return (
-      <div>
+      <Row className="msg-allarea">
         <div id="msgarea">
           {this.chatMsg()}
           <div ref={this.state.ref} />
         </div>
-        <div id="sendmsg">
-          <InputGroup className="mb-3 mt-3 ml-1">
-            <FormControl
-              placeholder="Text Here"
-              aria-label="Text Here"
-              aria-describedby="basic-addon2"
-              onChange={e => {
+      </Row>
+    );
+  };
+
+  sendMsgDisp = () => {
+    if (!this.state.loadChatmsgFinished) {
+      return;
+    }
+    return (
+      <Row className="pt-3 pb-3 shadow">
+        <InputGroup className="mb-3">
+          <FormControl
+            placeholder="Text Here"
+            aria-label="Text Here"
+            aria-describedby="basic-addon2"
+            onChange={(e) => {
+              if (e.target.value.length <= 50) {
                 this.setState({ msg: e.target.value });
-              }}
-              value={this.state.msg}
-              onKeyDown={e => {
-                if (e.keyCode === 13) {
-                  this.sendMsg();
-                }
-              }}
-            />
-            <InputGroup.Append>
-              <Button variant="dark" onClick={() => this.sendMsg()}>
-                Send
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
-        </div>
-      </div>
+              }
+            }}
+            value={this.state.msg}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) {
+                this.sendMsg();
+              }
+            }}
+          />
+          <InputGroup.Append>
+            <Button variant="dark" onClick={() => this.sendMsg()}>
+              Send
+            </Button>
+          </InputGroup.Append>
+        </InputGroup>
+      </Row>
     );
   };
 
   chatWith = () => {
-    return <h2>{"Chat with " + this.state.chatwith}</h2>;
+    return (
+      <Row className="background-blue text-light pt-3 shadow">
+        <Col>
+          <h2>{this.state.chatwith}</h2>
+        </Col>
+      </Row>
+    );
   };
 
   loadingChat = () => {
@@ -215,25 +311,27 @@ class ChatSystem extends React.Component {
         <span className="sr-only">Loading...</span>
       </Spinner>
     );
-  }
+  };
 
   render() {
     return (
       <div className="main-background h-100">
-        <NavBar />
         <Container id="chatsystem-box">
           <Row className="h-100">
-            <Col xs={4} className="bg-white shadow text-center">
-              <Row className="background-blue text-light pl-3 pt-3">
-                <h2>#Chat Room</h2>
-              </Row>
-              {this.chatRoom()}
+            <Col lg={3} className="bg-white shadow text-center">
+              <Container fluid>
+                <Row className="background-blue text-light pl-3 pt-3">
+                  <h2>#Chat Room</h2>
+                </Row>
+                {this.chatRoom()}
+              </Container>
             </Col>
-            <Col xs={7} className="bg-white shadow ml-3 text-center">
-              <Row className="background-blue text-light pt-3 pl-3">
+            <Col className="bg-white text-center">
+              <Container fluid>
                 {this.chatWith()}
-              </Row>
-              {this.sendMsgDisp()}
+                {this.msgDisp()}
+                {this.sendMsgDisp()}
+              </Container>
             </Col>
           </Row>
         </Container>

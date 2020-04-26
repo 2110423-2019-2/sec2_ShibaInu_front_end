@@ -1,26 +1,33 @@
 import React from 'react';
-import {Spinner,Badge} from 'react-bootstrap';
+import {Spinner,Container,Row,Col} from 'react-bootstrap';
 import swal from 'sweetalert'
+import "./ImageUploader.css"
 
 class ImageUploader extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            userId : null,
             selectedImage : null,
             imageUrl : null,
             onloadUpload : false,
             uploadstate : this.props.upload,
             maxHeight:1920,
             maxWidth:1080,
+            limit_file_size : 5_000_000,
+            fd : null,
+            file : null,
         }
         this.selectHandler = this.selectHandler.bind(this,);
         this.uploadHandler = this.uploadHandler.bind(this);
         this.resizeImage = this.resizeImage.bind(this);
     }
-    selectHandler(event){
-        console.log("do")
-        if(event.target.files[0]){
+    selectHandler=async(event)=>{
+        if(event.target.files[0]&&event.target.files[0].size > this.state.limit_file_size){
+            swal("Error","Image file size cannot exceed "+(this.state.limit_file_size/10**6)+" MB","error");
+            document.getElementById("image"+this.props.name||"").value = ""
+            return;
+        }
+        else if(event.target && event.target.files[0]){
             let image = event.target.files[0];
             let reader = new FileReader();
             this.setState({imageUrl:null})
@@ -41,9 +48,9 @@ class ImageUploader extends React.Component{
             }
             reader.onloadend = ()=>{
                 this.setState({onloadUpload:false})
+                this.uploadHandler()
             }
             reader.readAsDataURL(image);
-            
         }
         
     }
@@ -75,41 +82,41 @@ class ImageUploader extends React.Component{
         }, "image/jpg",quality);*/
         return canvas.toDataURL("image/jpg", quality);
     }
-    componentDidUpdate(prevProps){
-        if(this.props.upload !== prevProps.upload){
-            this.setState({uploadstate : this.props.upload})
-        }
-    }
-    uploadHandler(){
-        console.log("Uploaded");
+    uploadHandler=async()=>{
         if(this.state.selectedImage === null){
-            swal("Error","Image file cannot be null","error");
             return;
         }
         const timestamp = new Date();
         const fd = new FormData();
-        fd.append('image',this.state.selectedImage,this.userId+timestamp.toString()+".jpg");
-        console.log(this.state.selectedImage)
-        this.props.handlerUpload(fd);
-        this.setState({uploadstate : false/*selectedImage:null,imageUrl:null*/});
+        fd.append('image',this.state.selectedImage,timestamp.toString()+".jpg");
+        this.setState({fd:fd})
+        this.props.handlerUpload(fd)
+        //this.setState({uploadstate : false,selectedImage:null,imageUrl:null});
     }
     render(){
-        if(this.state.uploadstate){
-            this.uploadHandler()
-        }
         return(
-        <div className="image-uploader">
-            
-            <div className="image-container">
+        <Container className="image-uploader">
+            <Row>
+                <Col className="image-container">
                 {this.state.onloadUpload?<Spinner animation="border" />:null}
                 {this.state.imageUrl===null? null: <img src={this.state.imageUrl} alt="profile" width="200" height="200"/>}
-            </div>
-            <label>
-                <input type="file" onChange={this.selectHandler} value={this.state.image} accept="image/*" hidden={true}/>
-                <Badge variant={this.state.imageUrl===null?"secondary":"primary"}>choose</Badge>
-            </label>{' '}
-            {this.state.selectedImage!==null?this.state.selectedImage.name:"no file choosen"}
-        </div>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                <input type="file" id={"image"+this.props.name||""} onChange={this.selectHandler} accept="image/*" hidden={true} key={this.props.name||""}/>
+                <div id="image-upload-bar">
+                <span>{this.state.selectedImage!==null?this.state.selectedImage.name:"no file choosen"}</span>
+                    <label htmlFor={"image"+this.props.name||""} >
+                    <span id="image-upload-button" variant={this.state.imageUrl===null?"secondary":"primary"}>choose</span>
+                    </label>
+                </div>
+                <p className="unauthorized-message" id="image-error">{this.props.error}</p>
+                </Col>
+            </Row>
+            
+           
+        </Container>
         )
     }
 }

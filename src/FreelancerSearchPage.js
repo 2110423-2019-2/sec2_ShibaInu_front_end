@@ -1,20 +1,12 @@
 import React from "react";
-import "./SearchPage.css";
-import NavBar from "./NavBar";
 import axios from "axios";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  Button,
-  Card,
-  Dropdown,
-  DropdownButton
-} from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Card, Dropdown, DropdownButton } from "react-bootstrap";
+import { FaUserCircle, FaStar } from "react-icons/fa";
+import swal from "sweetalert";
+
+import "./SearchPage.css";
 import LocalStorageService from "./LocalStorageService";
-import { FaUserCircle } from "react-icons/fa";
-var utilities = require("./Utilities.json");
+import firebase from "./firebase";
 
 class Filter extends React.Component {
   constructor(props) {
@@ -24,7 +16,7 @@ class Filter extends React.Component {
     this.handleSubmit.bind(this);
     this.handleReset.bind(this);
   }
-  handleChange = e => {
+  handleChange = (e) => {
     var k = e.target.name;
     var v = e.target.value;
     if (k === "sort") {
@@ -49,23 +41,23 @@ class Filter extends React.Component {
     obj[k] = v;
     this.setState(obj);
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/users" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/users" + "?" + tmp1.join("&");
     this.props.parentCallback(ApiUrl);
   };
 
-  handleReset = e => {
+  handleReset = (e) => {
     this.setState({ name: "", s1: "", cat: "", sort: 2 });
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/users" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/users" + "?" + tmp1.join("&");
     this.props.parentCallback(ApiUrl);
   };
 
@@ -93,24 +85,9 @@ class Filter extends React.Component {
                 onChange={this.handleChange}
               />
             </Form.Group>
-            {/* <Form.Group>
-              <Form.Label>Interested Catergory</Form.Label>
-              <Form.Control as="select" name="cat" onChange={this.handleChange}>
-                <option>All</option>
-                <option>Website</option>
-                <option>Software</option>
-                <option>Mobile</option>
-                <option>Game</option>
-                <option>Other</option>
-              </Form.Control>
-            </Form.Group> */}
             <Form.Group>
               <Form.Label>Sort by</Form.Label>
-              <Form.Control
-                as="select"
-                name="sort"
-                onChange={this.handleChange}
-              >
+              <Form.Control as="select" name="sort" onChange={this.handleChange}>
                 <option>Rating (High to Low)</option>
                 <option>Rating (Low to High)</option>
                 <option>Newest Users</option>
@@ -118,12 +95,8 @@ class Filter extends React.Component {
               </Form.Control>
             </Form.Group>
             <Form.Row>
-              <Col lg={{ offset: "3" }}>
-                <Button
-                  variant="secondary"
-                  type="reset"
-                  onClick={this.handleReset}
-                >
+              <Col>
+                <Button variant="secondary" type="reset" onClick={this.handleReset}>
                   Clear
                 </Button>
               </Col>
@@ -147,7 +120,7 @@ class Result extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(this.props.ApiUrl).then(res => {
+    axios.get(this.props.ApiUrl).then((res) => {
       this.setState({ freelancerList: res.data });
     });
   }
@@ -156,10 +129,10 @@ class Result extends React.Component {
     if (prevProps.ApiUrl !== this.props.ApiUrl) {
       axios
         .get(this.props.ApiUrl)
-        .then(res => {
+        .then((res) => {
           this.setState({ freelancerList: res.data });
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ freelancerList: [] });
           console.log(error);
         });
@@ -175,11 +148,12 @@ class Result extends React.Component {
         <Card.Header>Search Freelancer</Card.Header>
         <Card.Body>
           {emptyMessage}
-          {this.state.freelancerList.map(u => {
+          {this.state.freelancerList.map((u) => {
+            if (parseInt(u.userId) === parseInt(LocalStorageService.getUserID())) return "";
             var tmp = [];
             var tmp2 = [];
-            u.skills.map(s => tmp.push(s.skill));
-            u.interestedCategories.map(c => tmp2.push(c.interestedCategory));
+            u.skills.map((s) => tmp.push(s.skill));
+            u.interestedCategories.map((c) => tmp2.push(c.interestedCategory));
             if (tmp.length == 0) tmp.push("-");
             if (tmp2.length == 0) tmp2.push("-");
             return (
@@ -188,6 +162,7 @@ class Result extends React.Component {
                 userId={u.userId}
                 firstName={u.firstName}
                 lastName={u.lastName}
+                rating={u.reviewedNumber ? u.sumReviewedScore / u.reviewedNumber : 0}
                 skill={tmp.join(", ")}
                 intCat={tmp2.join(",")}
               />
@@ -207,12 +182,8 @@ class ResultRow extends React.Component {
 
   componentDidMount() {
     axios
-      .get(
-        utilities["backend-url"] +
-          "/jobs/user/" +
-          LocalStorageService.getUserID()
-      )
-      .then(res => {
+      .get(process.env.REACT_APP_BACKEND_URL + "/jobs/user/" + LocalStorageService.getUserID())
+      .then((res) => {
         this.setState({ jobList: res.data });
       });
   }
@@ -225,7 +196,7 @@ class ResultRow extends React.Component {
             <Col lg="0.5">
               <FaUserCircle color="Blue" />
             </Col>
-            <Col lg="8">
+            <Col lg={3} md={5} sm={6} xs={5}>
               <div id="name-and-des">
                 <a href={"/profile/" + this.props.userId}>
                   <b>{this.props.firstName + " " + this.props.lastName}</b>
@@ -235,22 +206,28 @@ class ResultRow extends React.Component {
                 <b>Skill : </b>
                 {this.props.skill}
               </div>
-              {/* <div>
-                <b>Interested Catergory : </b>
-                {this.props.intCat}
-              </div> */}
+            </Col>
+            <Col lg={5} style={{ color: "#FFC70F" }}>
+              <div>
+                <FaStar color="#FFC70F" />
+                {" " + this.props.rating <= 5 ? 5 : this.props.rating.toFixed(2)}
+              </div>
             </Col>
             {LocalStorageService.getUserMode() === "client" ? (
               <Col>
                 <DropdownButton title="Invite to job...">
-                  {this.state.jobList.map(j => (
-                    <DropDownItem
-                      key={j.jobId}
-                      jobId={j.jobId}
-                      jobName={j.name}
-                      userId={this.props.userId}
-                    />
-                  ))}
+                  {this.state.jobList
+                    .filter((job) => {
+                      return job.status === "open";
+                    })
+                    .map((j) => (
+                      <DropDownItem
+                        key={j.jobId}
+                        jobId={j.jobId}
+                        jobName={j.name}
+                        userId={this.props.userId}
+                      />
+                    ))}
                 </DropdownButton>
               </Col>
             ) : (
@@ -271,48 +248,82 @@ class DropDownItem extends React.Component {
   }
 
   handleClick() {
-    axios.post(utilities["backend-url"] + "/notification", {
-      topic: "You have been invited to job",
-      description:
-        "You have been invited to " +
-        this.props.jobName +
-        ". You can join via this link " +
-        "http://localhost:3000/job/" +
-        this.props.jobId,
-      user: this.props.userId
+    let buttonStyle = {
+      cancel: {
+        text: "Cancel",
+        value: null,
+        visible: true,
+        className: "btn btn-secondary",
+        closeModal: true,
+      },
+      confirm: {
+        text: "OK",
+        value: true,
+        visible: true,
+        className: "btn btn-success",
+        closeModal: true,
+      },
+    };
+    swal({
+      title: "Confirm Invitation ?",
+      text: "Once submit, you will not be able to change this! ",
+      icon: "warning",
+      buttons: buttonStyle,
+    }).then(async (confirm) => {
+      if (confirm) {
+        firebase
+          .firestore()
+          .collection("notification")
+          .doc("notification")
+          .collection(String(this.props.userId))
+          .add({
+            topic: "Job Invitation",
+            detail: "You have been invited to " + this.props.jobName,
+            link: "/job/" + this.props.jobId,
+            mode: "freelancer",
+            createtime: firebase.firestore.FieldValue.serverTimestamp(),
+            read: false,
+          })
+          .then(() => {
+            swal("Invited", {
+              icon: "success",
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+            swal("Error occured!", {
+              icon: "error",
+            });
+          });
+      }
     });
   }
 
   render() {
-    return (
-      <Dropdown.Item onClick={this.handleClick}>
-        {this.props.jobName}
-      </Dropdown.Item>
-    );
+    return <Dropdown.Item onClick={this.handleClick}>{this.props.jobName}</Dropdown.Item>;
   }
 }
 
 class FreelancerSearchPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ApiUrl: utilities["backend-url"] + "/users?sort=2" };
+    this.state = { ApiUrl: process.env.REACT_APP_BACKEND_URL + "/users?sort=2" };
   }
 
-  callbackFunction = childData => {
+  callbackFunction = (childData) => {
     this.setState({ ApiUrl: childData });
   };
 
   render() {
     return (
       <div>
-        <NavBar />
         <div className="search-page">
           <Container>
             <Row>
-              <Col>
+              <Col lg={3} md={4}>
                 <Filter parentCallback={this.callbackFunction} />
               </Col>
-              <Col lg="9">
+              <Col lg={9} md={8}>
                 <Result ApiUrl={this.state.ApiUrl} />
               </Col>
             </Row>

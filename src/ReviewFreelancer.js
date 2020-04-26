@@ -1,24 +1,61 @@
 import React from "react";
-import {Card, Container, Row, Col, Form} from "react-bootstrap";
+import {Container, Row, Col, Form} from "react-bootstrap";
 import Rating from "@material-ui/lab/Rating"
 import "./ReviewFreelancer.css";
 class ReviewFreelancer extends React.Component{
     constructor(props){
         super(props)
         this.state= {
-            jobname:"Build",
-            freelancername:"ABC",
-            price : "10000",
-            duration : "100",
+            jobname:"",
+            targetName:"",
+            price : "",
+            duration : {day:"",hour:"",min:"",sec:""},
             description : "",
+            mode: "" ,
+            closed : false,
+            rating : 3,
+            writeReview : null,
         }
+    }
+    handleRating=(e)=>{
+      this.setState({rating:e.target.value})
+    }
+    handleShowDuration=()=>{
+      let str = "";
+      if(this.state.duration.day>0){
+        str+= this.state.duration.day+" day"
+      }
+      if(this.state.duration.hour>0){
+        str+= this.state.duration.hour+" hour"
+      }
+      if(this.state.duration.min>0){
+        str+= this.state.duration.min+" min"
+      }
+      else{
+        str+="0 min"
+      }
+      return str
+    }
+    componentDidMount=()=>{
+      this.setState({
+        jobname : this.props.jobName,
+        targetName : this.props.targetName,
+        price : this.props.price,
+        duration : this.props.duration,
+        description : this.props.description,
+        rating : this.props.rating,
+        mode : this.props.mode,
+        closed : this.props.closed===undefined?true:this.props.closed,
+        writeReview : this.props.handleWrite
+      })
+    }
+    handleWriteReview=()=>{
+      this.state.writeReview(this.state.description,this.state.rating)
     }
     render(){
         return(
             <>
-                <ReviewBox topic={"Review freelancer"}
-                component={
-                    
+               
                     <Container fluid>
                         <Row>
                             <Col md={8}>
@@ -26,15 +63,18 @@ class ReviewFreelancer extends React.Component{
                                 <h3>{this.state.jobname}</h3>
                                 </Row>
                                 <Row>
-                                Responsible : {this.state.freelancername}
+                                {this.state.mode==="client"?"Freelancer":"Client"} : {this.state.targetName}
                                 </Row>
                                 <Row>
-                                <Rating name="half-rating" defaultValue={2.5} precision={1}  />
+                                <Rating name="half-rating" value={this.state.rating} onChange={this.handleRating} precision={1} readOnly={this.state.closed} />
                                 </Row>
                                 <Row className="txtinput">
-                                <div className="title">details </div>
+                                <div className="title">detail </div>
                                 <Form.Group controlId="reviewtext" >
                                     <Form.Control
+                                    disabled={this.state.closed}
+                                    plaintext={this.state.closed}
+                                    value={this.state.description}
                                     className="reviewarea"
                                     as="textarea"
                                     onChange={e => {
@@ -46,21 +86,21 @@ class ReviewFreelancer extends React.Component{
                             </Col>
                             <Col md={4}>
                                 <Row>
-                                baht : {this.state.price}
+                                price : {this.state.price}
                                 </Row>
                                 <Row>
-                                duration : {this.state.duration}
+                                duration : {this.handleShowDuration()}
                                 </Row>
                                 <Row className="button-container">
-                                <button type="button" className="btn btn-warning" onClick={""}>
+                                <button type="button" className="btn btn-warning" hidden={this.state.closed} onClick={this.handleWriteReview}>
                                     Submit
                                 </button>
                                 </Row>
                             </Col>
                         </Row>
                     </Container>
-                }
-                />
+                
+                
             </>
         )
     }
@@ -68,29 +108,4 @@ class ReviewFreelancer extends React.Component{
 
 // DEFAULT COMPONENT -----------------------------------------------------------------------------
 
-class ReviewBox extends React.Component {
-
-    constructor(props) {
-      super(props);
-      this.state = {
-        topic: this.props.topic || 'NO TOPIC',
-        component: this.props.component || 'NO DATA',
-        size: this.props.size || 'small-box',
-      };
-    }
-  
-    render() {
-  
-      return (
-        <Card className={'review-box' } hidden={this.props.hidden}>
-          <Card.Header as="h5" className='box-topic'>
-            {this.state.topic}
-          </Card.Header>
-          <Card.Body className='box-body'>
-            {this.state.component}
-          </Card.Body>
-        </Card>
-      );
-    }
-  }
 export default ReviewFreelancer

@@ -1,0 +1,86 @@
+#admin-report-table{
+    margin-top : 2%;
+}
+#admin-report-box{
+    margin-top : 2%;
+    align-items: center;
+    margin-bottom: 5vh;
+}
+#admin-report-card{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+#admin-report-card .header{
+    background-color: #254380;
+    color: white;
+    font-size: 16px;
+}
+.report-message{
+    width : 80%;
+    margin-top:1px ;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 2%;
+}
+.report-message p{
+    text-indent: 5%;
+}
+.report-message.admin{
+    background: rgb(213, 248, 216);
+}
+.report-message.admin h6{
+    color: rgb(105, 6, 6);
+}
+.report-send-message{
+    width : 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background: white;
+    border-radius: 5px;
+    border-top: 2px solid #F5F5F5;
+    padding: 2%;
+}
+#report-back{
+    cursor: pointer;
+}
+#report-back:hover{
+    color: #254380;
+    text-decoration-line: underline;
+}
+
+.fade-enter{
+    opacity: 0;
+    z-index: 1;
+  }
+  .fade-enter.fade-enter-active{
+    opacity: 1;
+    transition: opacity 300ms linear 150ms;
+  }
+  .fade-exit{
+    opacity: 0;
+  }
+  .fade-exit.fade-exit-active{
+    opacity: 1;
+    transition: opacity 300ms linear 150ms;
+  }
+  .loading{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+  #admin-report-box #closed{
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+  }
+  #admin-report-box #closed button{
+    width: 10rem;
+    font-size: 20px;
+  }
+ #homeclient-box{
+     margin-bottom:5vh ;
+ }

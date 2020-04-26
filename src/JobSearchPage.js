@@ -1,10 +1,8 @@
 import React from "react";
 import "./SearchPage.css";
-import NavBar from "./NavBar";
 import axios from "axios";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 import { FaCode, FaBtc, FaClock } from "react-icons/fa";
-var utilities = require("./Utilities.json");
 
 class Filter extends React.Component {
   constructor(props) {
@@ -17,13 +15,13 @@ class Filter extends React.Component {
       t1: "",
       t2: "",
       cat: "",
-      sort: 0
+      sort: 0,
     };
     this.handleChange.bind(this);
     this.handleSubmit.bind(this);
     this.handleReset.bind(this);
   }
-  handleChange = e => {
+  handleChange = (e) => {
     var k = e.target.name;
     var v = e.target.value;
     if (k === "w1" || k === "w2" || k == "t1" || k === "t2") {
@@ -56,18 +54,18 @@ class Filter extends React.Component {
     obj[k] = v;
     this.setState(obj);
   };
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs" + "?" + tmp1.join("&");
     console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
 
-  handleReset = e => {
+  handleReset = (e) => {
     this.setState({
       name: "",
       r1: "",
@@ -76,13 +74,13 @@ class Filter extends React.Component {
       t1: "",
       t2: "",
       cat: "",
-      sort: 0
+      sort: 0,
     });
     var tmp1 = [];
-    Object.entries(this.state).map(a => {
+    Object.entries(this.state).map((a) => {
       tmp1.push(a.join("="));
     });
-    var ApiUrl = utilities["backend-url"] + "/jobs" + "?" + tmp1.join("&");
+    var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs?status=open&" + tmp1.join("&");
     console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
@@ -114,37 +112,21 @@ class Filter extends React.Component {
             <Form.Label>Wage</Form.Label>
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Min"
-                  name="w1"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Min" name="w1" onChange={this.handleChange} />
               </Form.Group>
               <Col lg="1">-</Col>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Max"
-                  name="w2"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Max" name="w2" onChange={this.handleChange} />
               </Form.Group>
             </Form.Row>
             <Form.Label>Duration</Form.Label>
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Min"
-                  name="t1"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Min" name="t1" onChange={this.handleChange} />
               </Form.Group>
               <Col lg="1">-</Col>
               <Form.Group as={Col}>
-                <Form.Control
-                  placeholder="Max"
-                  name="t2"
-                  onChange={this.handleChange}
-                />
+                <Form.Control placeholder="Max" name="t2" onChange={this.handleChange} />
               </Form.Group>
             </Form.Row>
             <Form.Group>
@@ -160,11 +142,7 @@ class Filter extends React.Component {
             </Form.Group>
             <Form.Group>
               <Form.Label>Sort by</Form.Label>
-              <Form.Control
-                as="select"
-                name="sort"
-                onChange={this.handleChange}
-              >
+              <Form.Control as="select" name="sort" onChange={this.handleChange}>
                 <option>Newest</option>
                 <option>Oldest</option>
                 <option>Max wage first</option>
@@ -174,12 +152,8 @@ class Filter extends React.Component {
               </Form.Control>
             </Form.Group>
             <Form.Row>
-              <Col lg={{ offset: "3" }}>
-                <Button
-                  variant="secondary"
-                  type="reset"
-                  onClick={this.handleReset}
-                >
+              <Col>
+                <Button variant="secondary" type="reset" onClick={this.handleReset}>
                   Clear
                 </Button>
               </Col>
@@ -203,14 +177,14 @@ class Result extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(this.props.ApiUrl).then(res => {
+    axios.get(this.props.ApiUrl).then((res) => {
       this.setState({ jobList: res.data });
     });
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.ApiUrl !== this.props.ApiUrl) {
-      axios.get(this.props.ApiUrl).then(res => {
+      axios.get(this.props.ApiUrl).then((res) => {
         this.setState({ jobList: res.data });
       });
     }
@@ -221,22 +195,27 @@ class Result extends React.Component {
       <Card class="result">
         <Card.Header>Search Job</Card.Header>
         <Card.Body>
-          {this.state.jobList.map(j => {
-            var tmp = [];
-            j.requiredSkills.map(s => tmp.push(s.skill));
-            if (tmp.length == 0) tmp.push("-");
-            return (
-              <ResultRow
-                key={j.jobId}
-                jobId={j.jobId}
-                jobName={j.name}
-                jobDes={j.description}
-                requireSkill={tmp.join(", ")}
-                wage={j.estimatedWage}
-                duration={j.estimatedDuration}
-              />
-            );
-          })}
+          {this.state.jobList
+            .filter((job) => {
+              console.log(job);
+              return job.status === 'open';
+            })
+            .map((j) => {
+              var tmp = [];
+              j.requiredSkills.map((s) => tmp.push(s.skill));
+              if (tmp.length == 0) tmp.push("-");
+              return (
+                <ResultRow
+                  key={j.jobId}
+                  jobId={j.jobId}
+                  jobName={j.name}
+                  jobDes={j.description}
+                  requireSkill={tmp.join(", ")}
+                  wage={j.estimatedWage}
+                  duration={j.estimatedDuration}
+                />
+              );
+            })}
         </Card.Body>
       </Card>
     );
@@ -257,7 +236,7 @@ class ResultRow extends React.Component {
             <Col lg="0.5">
               <FaCode color="Blue" />
             </Col>
-            <Col lg="9">
+            <Col lg="9" md={6} sm={8} xs={7}>
               <div id="name-and-des">
                 <div>
                   <a href={"/job/" + this.props.jobId}>
@@ -291,24 +270,23 @@ class ResultRow extends React.Component {
 class JobSearchPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ApiUrl: utilities["backend-url"] + "/jobs?sort=0" };
+    this.state = { ApiUrl: process.env.REACT_APP_BACKEND_URL + "/jobs?sort=0" };
   }
 
-  callbackFunction = childData => {
+  callbackFunction = (childData) => {
     this.setState({ ApiUrl: childData });
   };
 
   render() {
     return (
       <div>
-        <NavBar />
         <div class="search-page">
           <Container>
             <Row>
-              <Col>
+              <Col lg={3} md={4}>
                 <Filter parentCallback={this.callbackFunction} />
               </Col>
-              <Col lg="9">
+              <Col lg={9} md={8}>
                 <Result ApiUrl={this.state.ApiUrl} />
               </Col>
             </Row>

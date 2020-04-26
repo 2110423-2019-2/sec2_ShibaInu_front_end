@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Modal, Button, Form, Col, ModalTitle, Table } from "react-bootstrap";
+import { Modal, Button, Form, Col, ModalTitle, Table, Spinner } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 import ImageUploader from "./ImageUploader"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-var utilities = require("./Utilities.json");
 class ProfileModal extends Component {
   constructor(props) {
     super(props);
@@ -20,6 +19,7 @@ class ProfileModal extends Component {
       website: "",
       country: "",
       show: false,
+      address: "",
       birthDate: new Date()
     };
     this.handleClose = this.handleClose.bind(this);
@@ -40,7 +40,7 @@ class ProfileModal extends Component {
           body.location !== "" &&
           body.location.split(",").length > 0
         ) {
-          console.log(body.location.split(",").shift());
+          ///console.log(body.location.split(",").shift());
           let arr = body.location.split(",");
           this.setState({ country: arr[0] });
           arr.shift();
@@ -69,9 +69,60 @@ class ProfileModal extends Component {
     this.setState({ show: true });
     this.componentDidMount();
   }
+  handleWrite=(e)=>{
+    if(e.target.name === "tel"){
+      let format = /^$|[0-9]+$/i.test(e.target.value)?(e.target.value):this.state.tel;
+      if(format && format.length >10){
+        return;
+      }
+      this.setState({tel:format})
+    } else if(e.target.name === "address"){
+      let format = e.target.value
+      if(format.length >200){
+        return;
+      }
+      this.setState({address:format})
+    } else if(e.target.name === "country"){
+      let format = e.target.value
+      if(format.length >20){
+        return;
+      }
+      this.setState({country:format})
+    } else if(e.target.name === "firstname"){
+      let format = e.target.value
+      if(format.length >20){
+        return;
+      }
+      this.setState({fname:format})
+    } else if(e.target.name === "lastname"){
+      let format = e.target.value
+      if(format.length >20){
+        return;
+      }
+      this.setState({lname:format})
+    } else if(e.target.name === "headline"){
+      let format = e.target.value
+      if(format.length >50){
+        return;
+      }
+      this.setState({headline:format})
+    } else if(e.target.name === "email"){
+      let format = e.target.value
+      if(format.length >50){
+        return;
+      }
+      this.setState({email:format})
+    } else if(e.target.name === "website"){
+      let format = e.target.value
+      if(format.length >60){
+        return;
+      }
+      this.setState({website:format})
+    }
+  }
   handleSave() {
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         firstName: this.state.fname,
         lastName: this.state.lname,
         headline: this.state.headline,
@@ -114,62 +165,62 @@ class ProfileModal extends Component {
                   <Col md="4">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control
+                      name="firstname"
+                      value={this.state.fname}
                       defaultValue={this.state.fname}
-                      onChange={e => {
-                        this.setState({ fname: e.target.value });
-                      }}
+                      onChange={e => this.handleWrite(e)}
                     />
                   </Col>
                   <Col md="4">
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control
+                      name="lastname"
+                      value={this.state.lname}
                       defaultValue={this.state.lname}
-                      onChange={e => {
-                        this.setState({ lname: e.target.value });
-                      }}
+                      onChange={e => this.handleWrite(e)}
                     />
                   </Col>
                 </Form.Row>
               </Form.Group>
               <Form.Group controlId="Headline">
-                <Form.Row>
                   <Form.Label>Headline</Form.Label>
                   <Form.Control
-                    defaultValue=""
-                    as="textarea"
-                    onChange={e => {
-                      this.setState({ headline: e.target.value });
-                    }}
+                    name="headline"
+                    value={this.state.headline}
+                    defaultValue={this.state.headline}
+                    onChange={e =>this.handleWrite(e)}
                   />
-                </Form.Row>
               </Form.Group>
               <Form.Label>Date of birth</Form.Label>
               <Form.Row>
+                <Col>
                 <DatePicker
                   selected={this.state.birthDate}
                   onChange={d => this.setState({ birthDate: d })}
                 />
+                </Col>
               </Form.Row>
 
               <Form.Group controlId="location">
                 <Form.Row>
-                  <Col md="4">
-                    <Form.Label>Country/Region</Form.Label>
+                  <Col md="3">
+                    <Form.Label>Country</Form.Label>
                     <Form.Control
+                      name="country"
+                      value={this.state.country}
                       defaultValue={this.state.country}
-                      onChange={e => {
-                        this.setState({ country: e.target.value });
-                      }}
+                      onChange={e =>this.handleWrite(e)}
                     />
                   </Col>
-                  <Col md="4">
+                  <Col md="9">
                     <Form.Label>Address</Form.Label>
                     <Form.Control
+                      name="address"
                       as="textarea"
+                      style={{resize:"none",height:"15vh"}}
+                      value={this.state.address}
                       defaultValue={this.state.address}
-                      onChange={e => {
-                        this.setState({ address: e.target.value });
-                      }}
+                      onChange={e =>this.handleWrite(e)}
                     />
                   </Col>
                 </Form.Row>
@@ -177,28 +228,28 @@ class ProfileModal extends Component {
               <Form.Group controlId="phone">
                 <Form.Label>Phone Number</Form.Label>
                 <Form.Control
+                  name="tel"
                   defaultValue={this.state.tel}
-                  onChange={e => {
-                    this.setState({ tel: e.target.value });
-                  }}
+                  value={this.state.tel}
+                  onChange={e =>this.handleWrite(e)}
                 />
               </Form.Group>
               <Form.Group controlId="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
+                  name="email"
+                  value={this.state.email}
                   defaultValue={this.state.email}
-                  onChange={e => {
-                    this.setState({ email: e.target.value });
-                  }}
+                  onChange={e => this.handleWrite(e)}
                 />
               </Form.Group>
               <Form.Group controlId="website">
                 <Form.Label>Website</Form.Label>
                 <Form.Control
+                  name="website"
+                  value={this.state.website}
                   defaultValue={this.state.website}
-                  onChange={e => {
-                    this.setState({ website: e.target.value });
-                  }}
+                  onChange={e => this.handleWrite(e)}
                 />
               </Form.Group>
             </Form>
@@ -243,6 +294,15 @@ class About extends Component {
       });
     }
   }
+  handleWrite=(e)=>{
+    if(e.target.name==="about"){
+      let format = e.target.value
+      if(format.length >200){
+        return;
+      }
+      this.setState({about:format})
+    }
+  }
   handleClose() {
     this.setState({ show: false });
   }
@@ -253,7 +313,7 @@ class About extends Component {
   handleSave() {
     console.log(this.state.about);
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         about: this.state.about
       })
       .then(res => {
@@ -286,12 +346,13 @@ class About extends Component {
             <Form.Group controlId="Headline">
               <Form.Row>
                 <Form.Control
+                  name="about"
+                  value={this.state.about}
+                  style={{resize:"none",height:"15vh"}}
                   placeholder="write something"
                   defaultValue={this.state.about}
                   as="textarea"
-                  onChange={e => {
-                    this.setState({ about: e.target.value });
-                  }}
+                  onChange={e => this.handleWrite(e)}
                 />
               </Form.Row>
             </Form.Group>
@@ -365,7 +426,7 @@ class ExperienceModal extends Component {
     let json = JSON.stringify(this.state.experiences);
     console.log(json);
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         experience: json
       })
       .then(res => {
@@ -670,7 +731,7 @@ class EducationModal extends Component {
     let json = JSON.stringify(this.state.edu);
     console.log(json);
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         education: json
       })
       .then(res => {
@@ -942,7 +1003,7 @@ class SkillModal extends Component {
   handleSave() {
     console.log(this.state.usersId)
     axios
-      .patch(utilities["backend-url"]+"/users/" + this.state.usersId, {
+      .patch(process.env.REACT_APP_BACKEND_URL+"/users/" + this.state.usersId, {
         skills: this.state.skills
       })
       .then(res => {
@@ -1164,54 +1225,50 @@ class EducationListItem extends Component {
   }
 }
 
-class ReviewListItem extends Component {
-  render() {
-    return (
-      <>
-        <div className="review-box">
-          <p>{this.props.reviewername}</p>
-          <p>{this.props.description}</p>
-          <p>score : {this.props.score}</p>
-          <p>{this.props.jobname}</p>
-        </div>
-      </>
-    );
-  }
-}
-
 class ProfileImageModal extends Component {
   constructor(props){
     super(props);
     this.state={
       upload : false,
       show:false,
-      userId:null
+      userId:null,
+      file : null,
+      isUploading : false,
+      error : null,
     }
     this.handleClose = this.handleClose.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handlerUpload = this.handlerUpload.bind(this,);
   }
-  handleClose(){
-    this.setState({show:false})
+  handleClose=async()=>{
+    await this.setState({file:null,show:false,error : null})
   }
   handleShow(){
     this.setState({show:true})
   }
   handleSave(){
-    this.setState({upload:true})
+    this.handlerUpload()
   }
   componentDidMount(){
     this.setState({userId : this.props.userId})
   }
-  handlerUpload(fd){
+  handleSetImage=(fd)=>{
+    console.log(fd)
+    this.setState({file:fd})
+  }
+  handlerUpload=async(fd=this.state.file)=>{
+        if(fd===null){
+          this.setState({error:"image cannot be null"})
+        }
         if(!(fd instanceof FormData)){
           return;
         }
+        await this.setState({isUploading : true})
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-        axios({
+        await axios({
           method: 'post',
-          url: utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,
+          url: process.env.REACT_APP_BACKEND_URL+"/users/profilePicture/" + this.state.userId,
           data: fd,
           headers: {'Content-Type': 'multipart/form-data' }
           })
@@ -1220,9 +1277,12 @@ class ProfileImageModal extends Component {
             this.handleClose();
             this.props.onUpdate();
           })
-          .catch(err => {
-            console.log(err);
-        });
+        .catch(err => {
+          console.log(err);
+        })
+        .finally(()=>{
+          this.setState({isUploading:false})
+        })
   }
   render(){
     if(this.state.upload){
@@ -1236,25 +1296,238 @@ class ProfileImageModal extends Component {
           onClick={this.handleShow}
           hidden={this.props.hidden}
         >
-          change profile image
+          <p>change profile image</p>
         </button>
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header className="modalHead" closeButton>
             <ModalTitle>Profile Image</ModalTitle>
           </Modal.Header>
           <Modal.Body>
-            <ImageUploader upload={this.state.upload} handlerUpload={this.handlerUpload}/>
+            <ImageUploader handlerUpload={this.handleSetImage} error={this.state.error}/>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="outline-danger" onClick={this.handleClose}>
+            <Button variant="outline-danger" onClick={this.handleClose} disabled={this.state.isUploading}>
               Cancel
             </Button>
-            <Button variant="outline-success" onClick={this.handleSave}>
-              Save
+            <Button variant="outline-success" onClick={this.handleSave} disabled={this.state.isUploading}>
+              Save{' '}
+              {this.state.isUploading?
+               <Spinner
+               as="span"
+               animation="border"
+               size="sm"
+               role="status"
+               aria-hidden="true"
+             />
+              :null}
             </Button>
           </Modal.Footer>
         </Modal>
     </>
+    )
+  }
+}
+
+class VerifyDataModal extends Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      upload : false,
+      show:false,
+      userId:null,
+      SSN:"",
+      file_selfie: null,
+      file_card:null,
+      error : {err0 : null,err1 : null,err2:null},
+      isUploading : false,
+      loadData : false,
+    }
+    this.handleClose = this.handleClose.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handlerUploadSelfie = this.handlerUploadSelfie.bind(this,);
+    this.handlerUploadNationalIDcard = this.handlerUploadNationalIDcard.bind(this,);
+  }
+  
+  handleClose(){
+    this.setState({show:false})
+  }
+  handleShow(){
+    this.setState({show:true})
+  }
+
+  handleSave =async()=>{
+    console.log(this.state.file_card instanceof FormData)
+    if(this.state.SSN===""||this.state.SSN.length<13){
+      await this.setState({error:{...(this.state.error),err0:"National ID must have 13 numbers"}})
+    }else{
+      await this.setState({error:{...(this.state.error),err0:null}})
+    }
+    if(!(this.state.file_card instanceof FormData)){
+      await this.setState({error:{...(this.state.error),err1:"image cannot be null"}})
+    }else{
+      await this.setState({error:{...(this.state.error),err1:null}})
+    }
+    if(!(this.state.file_selfie instanceof FormData)){
+      await this.setState({error:{...(this.state.error),err2:"image cannot be null"}})
+    }else{
+      await this.setState({error:{...(this.state.error),err2:null}})
+    }
+    if(this.state.error.err0!==null||this.state.error.err1!==null
+      ||this.state.error.err2!==null){
+      return
+    }
+    console.log("d",this.state.error.err0,this.state.error.err1,this.state.error.err2)
+    this.setState({isUploading:true})
+    await axios.patch(process.env.REACT_APP_BACKEND_URL+"/users/"+this.props.userId,
+      {
+        identificationNumber : this.state.SSN
+      }
+    )
+    .then(res => {
+      console.log(res);
+      this.handlerUploadSelfie();
+      this.handlerUploadNationalIDcard();
+      this.props.onUpdate();
+      this.handleClose();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .finally(()=>{
+      this.setState({isUploading:false})
+    })
+  }
+  handleWrite=(e)=>{
+    let format = /^$|[0-9]+$/i.test(e.target.value)?(e.target.value):this.state.SSN;
+    if(format && format.length >13){
+      return;
+    }
+    this.setState({SSN:format})
+  }
+  async handlerUploadNationalIDcard(fd=this.state.file_card){
+    let error = {err1:null,}
+    if(!(fd instanceof FormData)){
+      console.log("fd is null")
+      return;
+    }
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    await axios({
+      method: 'post',
+      url: process.env.REACT_APP_BACKEND_URL+"/users/IDCard/" + this.state.userId,
+      data: fd,
+      headers: {'Content-Type': 'multipart/form-data' }
+      })
+    .catch(err => {
+      error.err1 = err;
+      console.log(err);
+    });
+  }
+  async handlerUploadSelfie(fd=this.state.file_selfie){
+    let error = {err1:null,}
+    if(!(fd instanceof FormData)){
+      console.log("fd is null")
+      return;
+    }
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+    await axios({
+      method: 'post',
+      url: process.env.REACT_APP_BACKEND_URL+"/users/IDCardWithFace/" + this.state.userId,
+      data: fd,
+      headers: {'Content-Type': 'multipart/form-data' }
+      })
+    .catch(err => {
+      error.err1 = err;
+      console.log(err);
+    });
+    
+  }
+  componentDidMount=async()=>{
+    await this.setState({userId : this.props.userId,loadData:true})
+  }
+  handleSetSelfie=(fd)=>{
+    this.setState({file_selfie:fd})
+  }
+  handleSetCard=(fd)=>{
+    this.setState({file_card:fd})
+  }
+  onExit=async()=>{
+   await this.setState({
+      userId:null,
+      SSN:"",
+      file_card : null,
+      file_selfie : null,
+      error : {err0 : null,err1 : null,err2:null},
+    })
+      
+  }
+  render(){
+    if(!this.state.loadData){
+      return "load";
+    }
+    return (
+      <>
+      <button
+          type="button"
+          id= {this.props.id}
+          onClick={this.handleShow}
+          hidden={this.props.hidden}
+          className = "btn btn-outline-secondary "
+        >
+          verify
+        </button>
+        <Modal show={this.state.show} onHide={this.handleClose} onExited={this.onExit}>
+          <Modal.Header className="modalHead" closeButton>
+            <Modal.Title>Verify</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Label>National ID</Form.Label>
+            <Col>
+            <Form.Control
+              placeholder="1234567890123"
+              value={this.state.SSN}
+              onChange={this.handleWrite}
+              />
+            <p className="unauthorized-message">{this.state.error.err0}</p>
+            </Col>
+            </Form>
+            <br/>
+            <label>National ID card image</label>
+            <ImageUploader 
+            upload={this.state.upload} name="1" 
+            handlerUpload={this.handleSetCard}
+            label="National ID card image"
+            error={this.state.error.err1}
+            />             
+            <br/>
+            <label>Selfie image with national ID card</label>
+            <ImageUploader 
+            upload={this.state.upload} name="2" 
+            handlerUpload={this.handleSetSelfie}
+            label="Selfie image with national ID card"
+            error={this.state.error.err2}
+             />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-danger" onClick={this.handleClose} disabled={this.state.isUploading}>
+              Cancel
+            </Button>
+            <Button variant="outline-success" onClick={this.handleSave} disabled={this.state.isUploading}>
+            Save{' '}
+              {this.state.isUploading?
+               <Spinner
+               as="span"
+               animation="border"
+               size="sm"
+               role="status"
+               aria-hidden="true"
+             />
+              :null}
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        </>
     )
   }
 }
@@ -1267,8 +1540,8 @@ export {
   ExperienceListItem,
   ExperienceModal,
   EducationModal,
-  ReviewListItem,
-  ProfileImageModal
+  ProfileImageModal,
+  VerifyDataModal
 };
 
 /*

@@ -1,39 +1,64 @@
 #logo-img {
-    width: 40px;
-    height: 40px;
-    padding-right: 5px;
+  width: 40px;
+  height: 40px;
+  padding-right: 5px;
 }
 #navbar {
-    background-color: #254380;
+  background-color: #254380;
 }
-#logo{
-    color: #FFC655;
+#logo {
+  color: #ffc655;
 }
 .navbar-icon {
-    margin-right: 3px;
+  margin-right: 3px;
 }
 #navbar a {
-   color: #FFC655;
+  color: #ffc655;
 }
-#dropdown-item-profile, #dropdown-item-job, #dropdown-item-balance, #dropdown-item-chat {
-    color: black;
+#dropdown-item-profile,
+#dropdown-item-job,
+#dropdown-item-balance {
+  color: black;
 }
 #dropdown-item-switch {
-    color: forestgreen !important;
+  color: forestgreen !important;
 }
 #dropdown-item-signout {
-    color: red;
+  color: red;
 }
 .color-black {
-    color: black !important;
+  color: black !important;
 }
 .background-yellow {
-    background-color: #FFC655;
+  background-color: #ffc655;
 }
+
+
+.noti-detail {
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+    width: 100%;
+}
+
 .noti:hover {
-    background-color: #254380;
-    color: white !important;
+  background-color: #254380;
+  color: white !important;
 }
 .new-noti {
-    color: rgb(255, 70, 70) !important;
+  color: rgb(255, 70, 70) !important;
+}
+#noti-box {
+  height: 400px;
+  width: 300px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.noti-delete:hover {
+  cursor: pointer;
+  color: red !important;
+}
+.noti-delete {
+  position: absolute;
+  right: 10px;
 }

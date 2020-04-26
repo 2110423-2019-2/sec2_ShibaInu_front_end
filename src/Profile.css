@@ -1,7 +1,7 @@
 body {
   /* background-color: black; */
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1200px ) {
   svg {
     font-size: 5px;
   }
@@ -29,42 +29,52 @@ body {
     font-size: 12px;
   }
   .pro-img {
-    width: 75px;
-    height: 75px;
+    width: 10vh;
+    height: 10vh;
+  }
+  #profile-img {
+    width: 10vh;
+    height: 10vh;
   }
   #img-f {
-    width: 75px;
-    height: 75px;
+    width: 10vh;
+    height: 10vh;
   }
   #pro-bg.row{
-      height: 10%;
+      height: 30vh;
   }
-
 }
 @media screen and (min-width: 1201px) {
   #profile-container {
     width:65%;
   }
   .pro-img {
-    width: 150px;
-    height: 150px;
+    width: 20vh;
+    height: 20vh;
+  }
+  #profile-img {
+    width: 20vh;
+    height: 20vh;
   }
   #img-f {
-    width: 150px;
-    height: 150px;
+    width: 20vh;
+    height: 20vh;
   }
 
 }
 #pro-bg {
+  background-size: 100% 100%;
   position: relative;
-  background-color: #8e8e8f;
-  height: 300px;
+  height: 40vh;
   padding-left: 0px;
   overflow: hidden;
+  z-index: 0;
+  box-shadow: inset 0px -103px 34px -96px rgba(0,0,0,0.62);
 }
-#pro-bg img{
-    width: 100%;
-    height: 100%;
+#pro-bg-img{
+  width: 100%;
+  height: 40vh;
+  z-index: 1;
 }
 
 #personal {
@@ -90,7 +100,7 @@ body {
   padding-left: 4%;
   padding-bottom: 2%;
 }
-#img-f {
+#img-f{
   position: absolute;
   display: block;
   background-color: white;
@@ -100,9 +110,15 @@ body {
   overflow: hidden;
   opacity: 1;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
   text-align: center;
 }
+#img-f::after{
+  display: inline-block;
+  top:0;
+  box-shadow: 0px 4px 0px 14px rgba(0,0,0,0.69);
 
+}
 @keyframes myfadeIn {
   0% {
     opacity: 1;
@@ -161,14 +177,19 @@ body {
   top: 50%;
   left: 50%;
   border-radius: 50%;
-  width: 150px;
-  height: 150px;
   transition-property: all;
-  opacity: 0;
+  background: rgb(0, 0, 0, 0.0);
+  color: rgb(0, 0, 0, 0.0);
+}
+#profile-img p{
+  margin:0;
 }
 #profile-img:hover {
   display: block;
-  opacity: 0.8;
+  background: rgb(0, 0, 0, 0.5);
+  color: rgb(255, 255, 255, 1);
+  font-display: auto;
+  font-size-adjust: inherit;
 }
 
 #verify {
@@ -303,4 +324,11 @@ p.weak {
   flex: 0 1 auto;
   align-items: flex-end;
   display: flex;
+}
+#verify-btn{
+  display: flex;
+  width: 3rem;
+  height: 2rem;
+  font-size: 100%;
+  justify-content: center;
 }

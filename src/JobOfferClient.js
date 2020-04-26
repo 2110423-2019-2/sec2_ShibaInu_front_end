@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "./NavBar";
 import "./JobOfferClient.css";
 import {
   Container,
@@ -12,8 +11,11 @@ import {
   Button
 } from "react-bootstrap";
 import axios from "axios";
+
 import LocalStorageService from "./LocalStorageService";
-var utilities = require("./Utilities.json");
+import LoadingSpinner from './utilities/LoadingSpinner';
+import StatusBadge from './utilities/StatusBadge';
+
 class JobOfferClient extends React.Component {
   constructor(props) {
     super(props);
@@ -24,16 +26,24 @@ class JobOfferClient extends React.Component {
         OPEN: "open",
         ACCEPTED: "accepted",
         WORKING: "working",
-        DONE: "done"
+        DONE: "done",
+        CLOSED: "closed",
       },
       statusFilter: "all",
       userDatas: "",
       jobDatas: "",
+      keyword: "",
       isUserDataLoad: false,
       isJobDataLoad: false
     };
   }
-
+  keywordHandler = (check = false) => {
+    let word = document.getElementById("searchbox").value
+    console.log(word)
+    if (check) {
+      this.setState({ keyword: word })
+    }
+  }
   statusHandler = (event, status) => {
     this.setState({ statusFilter: status });
   };
@@ -43,7 +53,7 @@ class JobOfferClient extends React.Component {
       "Bearer " + LocalStorageService.getAccessToken();
     axios
       .get(
-        utilities["backend-url"] + "/users/" + LocalStorageService.getUserID()
+        process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID()
       )
       .then(res => {
         const userDatas = res.data;
@@ -52,9 +62,9 @@ class JobOfferClient extends React.Component {
       });
     axios
       .get(
-        utilities["backend-url"] +
-          "/jobs/user/" +
-          LocalStorageService.getUserID()
+        process.env.REACT_APP_BACKEND_URL +
+        "/jobs/user/" +
+        LocalStorageService.getUserID()
       )
       .then(res => {
         const jobDatas = res.data;
@@ -72,41 +82,43 @@ class JobOfferClient extends React.Component {
   };
 
   render() {
-    if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
-      return null;
+    if (!this.state.isUserDataLoad) {
+      return <LoadingSpinner />;
     }
     var recentJob;
-    if (this.state.statusFilter === this.state.status.ALL) {
-      recentJob = this.state.jobDatas.map((job, index) => (
-        <tr key={index} className="text-center">
-          <td className="align-middle">
-            {job.name}
-            <br />
-            <br />
-            {job.category}
-          </td>
-          <td className="align-middle">-</td>
-          <td className="align-middle">{job.status}</td>
-          <td className="align-middle">
-            <button
-              type="button"
-              className="btn btn-secondary btn-block"
-              id={job.jobId}
-              onClick={this.handleClickJobDetail.bind(this)}
-            >
-              Detail
+    if (!this.state.isJobDataLoad) {
+      recentJob = <td colSpan="4" className="text-center"><LoadingSpinner customClass="false" /></td>;
+    } else if (this.state.statusFilter === this.state.status.ALL) {
+      recentJob = this.state.jobDatas
+        .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
+        .map((job, index) => (
+          <tr key={index} className="text-center">
+            <td className="align-middle">
+              {job.name}
+            </td>
+            <td className="align-middle"><a href={job.freelanerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullName || '-'}</a></td>
+            <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
+            <td className="align-middle">
+              <button
+                type="button"
+                className="btn btn-secondary btn-block"
+                id={job.jobId}
+                onClick={this.handleClickJobDetail.bind(this)}
+              >
+                Detail
             </button>
-          </td>
-        </tr>
-      ));
+            </td>
+          </tr>
+        ));
     } else {
       recentJob = this.state.jobDatas
         .filter(job => job.status === this.state.statusFilter)
+        .filter(job => job.name.toLowerCase().includes(this.state.keyword.toLowerCase()))
         .map((job, index) => (
           <tr key={index} className="text-center">
             <td className="align-middle">{job.name}</td>
-            <td className="align-middle">-</td>
-            <td className="align-middle">{job.status}</td>
+            <td className="align-middle"><a href={job.freelanerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullName || '-'}</a></td>
+            <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button
                 type="button"
@@ -137,19 +149,14 @@ class JobOfferClient extends React.Component {
 
     return (
       <div className="main-background">
-        <NavBar />
         <Container id="homeclient-box">
           <Row>
-            <Col className="bg-light shadow">
+            <Col className="bg-light">
               <h2 id="recentjob-topic">Job Offering</h2>
-              <Form inline className="float-right">
-                <FormControl
-                  type="text"
-                  placeholder="Search"
-                  className="mr-sm-2"
-                />
-                <Button variant="outline-success" className="w-25">Search</Button>
-              </Form>
+            </Col>
+          </Row>
+          <Row className="bg-light shadow">
+            <Col lg={6} md={6.5}>
               <Nav variant="tabs" defaultActiveKey="link-1" id="joblist-table">
                 <Nav.Item>
                   <Nav.Link
@@ -195,14 +202,35 @@ class JobOfferClient extends React.Component {
                     Done
                   </Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="link-6"
+                    onClick={e => this.statusHandler(e, this.state.status.CLOSED)}
+                  >
+                    Closed
+                  </Nav.Link>
+                </Nav.Item>
               </Nav>
-              <Table responsive>
-                <thead className="background-blue text-light">
-                  {headTable}
-                </thead>
-                <tbody>{recentJob}</tbody>
-              </Table>
             </Col>
+            <Col>
+              <Form inline className="joboffer-search">
+                <FormControl
+                  type="text"
+                  placeholder="Search"
+                  id="searchbox"
+                  className="mr-sm-2 joboffer-search-box"
+                />
+                <Button variant="outline-success" className="w-auto" onClick={(e) => this.keywordHandler(true)}>Search</Button>
+              </Form>
+            </Col>
+          </Row>
+          <Row className="bg-light shadow">
+            <Table responsive>
+              <thead className="background-blue text-light">
+                {headTable}
+              </thead>
+              <tbody>{recentJob}</tbody>
+            </Table>
           </Row>
         </Container>
       </div>

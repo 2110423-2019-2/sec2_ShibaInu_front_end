@@ -1,208 +1,264 @@
 import React from "react";
-import NavBar from "./NavBar";
 import './AdminHome.css';
-import { Container, Row, Col, Table } from "react-bootstrap";
+import { Container, Card, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
-import swal from "sweetalert";
+import { Doughnut } from "react-chartjs-2";
+
 import LocalStorageService from "./LocalStorageService";
-var utilities = require('./Utilities.json');
+import LoadingSpinner from "./utilities/LoadingSpinner";
+
 class AdminHome extends React.Component {
+
+  render() {
+
+    return (
+      <div className="main-background">
+        <Container id="adminHome-box">
+          <Container className="bg-white shadow">
+            <Row>
+              <Col >
+                <h2 id="recentjob-topic">Admin Home</h2>
+              </Col >
+            </Row>
+            <Row>
+              <Col>
+                <AdminCard mode='total-user' />
+              </Col>
+              <Col>
+                <AdminCard mode='total-admin' />
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <AdminCard mode="verification" />
+              </Col>
+              <Col>
+                <AdminCard mode="report" cb={this.callbackBox} />
+              </Col>
+              <Col>
+                <AdminCard mode="ban" />
+              </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+              <Col md={8}>
+                <AdminCard mode='job' />
+              </Col>
+            </Row>
+          </Container>
+        </Container>
+      </div>
+    );
+  }
+}
+
+class AdminCard extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      isDataLoad: false,
-      userDatas: {},
-      isUserDataLoad: false,
-      banned: []
+      mode: this.props.mode || null,
+      amount: "ERROR",
+      isLoading: true,
+      topicName: {
+        verification: 'User Verification',
+        report: 'Report',
+        ban: 'Banned User',
+        'total-user': 'Total user',
+        'total-admin': 'Total admin',
+        job: 'Jobs'
+      },
+      description: {
+        verification: 'users waiting for verified',
+        report: 'reports left',
+        ban: 'users being banned',
+        'total-user': 'users in the system',
+        'total-admin': 'admins in the system'
+      },
+      goTo: {
+        verification: 'User Verification',
+        report: 'Report List',
+        ban: 'Banned User'
+
+      },
+      link: {
+        verification: '/admin/verify',
+        report: '/admin/report',
+        ban: '/admin/ban'
+      }
     };
   }
 
-  fetchDatas = () => {
-    axios.defaults.headers.common["Authorization"] =
-      "Bearer " + LocalStorageService.getAccessToken();
-    axios.get(utilities['backend-url'] + "/users").then(res => {
-      const userDatas = res.data;
-      var banned = [];
-      for(let i=0;i<userDatas.length;i++){
-        var ban = "Ban";
-        if (userDatas[i].isBanned){
-          ban = "Unban"
-        }
-        banned.push(ban);
-      }
-      this.setState({ userDatas: userDatas, isUserDataLoad: true, banned: banned });
-      console.log(this.state.userDatas);
-      console.log(this.state.isBanned);
-    });
-  };
+  componentDidMount() {
 
-  componentDidMount = () => {
     this.fetchDatas();
-  };
 
-  disapproveHandler = () => {
-    swal({
-      title: "Are you sure to disapprove?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((willDisapprove) => {
-      if (willDisapprove) {
-        var status = 
-        swal("Disapproved success!", {
-          icon: "success",
-        });
-        
-      }
-    });
   }
 
-  approveHandler = (index) => {
-    swal({
-      title: "Are you sure to approve?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((willApprove) => {
-      if (willApprove) {
-      axios
-      .patch(utilities["backend-url"] + "/users/verify/verify",{
-        user: this.state.userDatas[index].userId,
-        approve: true
-      })
-      .then(response => {
-        switch (response.status) {
-          // Created
-          case 201:
-            console.log("already push");
+  fetchDatas = () => {
+
+    this.setState({ isLoading: true });
+
+    axios.defaults.headers.common["Authorization"] = "Bearer " + LocalStorageService.getAccessToken();
+
+    switch (this.state.mode) {
+      case 'verification':
+        this.fetchUser();
+        break;
+      case 'report':
+        this.fetchReport();
+        break;
+      case 'ban':
+        this.fetchUser();
+        break;
+      case 'total-user':
+        this.fetchUser();
+        break;
+      case 'total-admin':
+        this.fetchUser();
+        break;
+      case 'job':
+        this.fetchJob();
+        break;
+      default:
+        this.setState({ isLoading: false });
+        break;
+    }
+  }
+
+  fetchUser = () => {
+
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/users").then((res) => {
+
+      if (res.status === 200) {
+
+        let amount = "ERROR";
+
+        switch (this.state.mode) {
+          case 'verification':
+            amount = res.data.filter((user) => {
+              return !user.isVerified;
+            }).length;
             break;
-
-          // Other case
-          default:
-            console.log("Status code is " + response.status);
-        }
-      });
-        swal("Approved success!", {
-          icon: "success",
-        });
-
-      }
-    });
-  }
-
-  banHandler = (index) => {
-    var title = "Are you sure to " + this.state.banned[index] + "?";
-    swal({
-      title: title,
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((willBan) => {
-      if (willBan) {
-      var banned = this.state.banned;
-      var isBanned = false;
-      if(banned[index] === "Ban"){
-        isBanned = true;
-        banned[index] = "Unban";
-      } else {
-        banned[index] = "Ban";
-      }
-      this.setState({banned: banned});
-      axios
-      .patch(utilities["backend-url"] + "/users/ban", {
-        user: this.state.userDatas[index].userId,
-        isBanned: isBanned
-      })
-      .then(response => {
-        switch (response.status) {
-          // Created
-          case 201:
-            console.log("already push");
+          case 'ban':
+            amount = res.data.filter((user) => {
+              return user.isBanned;
+            }).length;
             break;
-
-          // Other case
+          case 'total-user':
+            amount = res.data.filter((user) => {
+              return !user.isAdmin;
+            }).length;
+            break;
+          case 'total-admin':
+            amount = res.data.filter((user) => {
+              return user.isAdmin;
+            }).length;
+            break;
           default:
-            console.log("Status code is " + response.status);
+            amount = null;
         }
-      });
-        swal("Success!", {
-          icon: "success",
-        });
 
+        this.setState({
+          amount: amount
+        });
       }
+
+    }).catch((error) => {
+      console.error(error);
+    }).finally(() => {
+      this.setState({ isLoading: false });
     });
   }
 
-  headTable = () => {
+  fetchReport = () => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/reports").then((res) => {
+
+      if (res.status === 200) {
+        const reportDatas = res.data;
+        const amount = reportDatas.filter((report) => {
+          return report.status === 'open';
+        }).length;
+
+        this.setState({
+          amount: amount
+        });
+      }
+
+    }).catch((error) => {
+      console.error(error);
+
+    }).finally(() => {
+      this.setState({ isLoading: false });
+    });
+  }
+
+  fetchJob = () => {
+    axios.get(process.env.REACT_APP_BACKEND_URL + "/jobs").then((res) => {
+
+      if (res.status === 200) {
+        const jobDatas = res.data;
+        const status = ['open', 'accepted', 'working', 'done', 'closed'];
+        let amount = [0, 0, 0, 0, 0];
+
+        for (let i = 0; i < status.length; i++) {
+          amount[i] = jobDatas.filter((job) => {
+            return job.status === status[i];
+          }).length;
+        }
+        this.setState({
+          amount: amount
+        });
+      }
+
+    }).catch((error) => {
+      console.error(error);
+    }).finally(() => {
+      this.setState({ isLoading: false });
+    });
+  }
+
+
+  JobChart = (amount) => {
     return (
-      <tr className="text-center background-blue text-light">
-        <td>
-          <h5>Name</h5>
-        </td>
-        <td>
-          <h5>National ID</h5>
-        </td>
-        <td>
-          <h5>Selfie</h5>
-        </td>
-        <td>National ID Card</td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
+      <Doughnut data={{
+        labels: ["Open", "Accepted", "Working", "Done", "Closed"],
+        datasets: [
+          {
+            data: amount,
+            backgroundColor: ["#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#F7464A"],
+            hoverBackgroundColor: [
+              "#5AD3D1",
+              "#FFC870",
+              "#A8B3C5",
+              "#616774",
+              "#FF5A5E"
+            ]
+          }
+        ]
+      }} options={{ responsive: true }} />
     );
   }
 
-  detailTable = () => {
-    return this.state.userDatas.map((user,index)=>(
-      <tr key={index} className="text-center">
-      <td className="align-middle">
-        {user.firstName}
-        {user.lastName}
-      </td>
-      <td className="align-middle">{user.identificationNumber}</td>
-      <td className="align-middle">{user.identificationCardWithFacePic}</td>
-      <td className="align-middle">{user.identificationCardPic}</td>
-      <td className="align-middle">
-        <button type="button" className="btn btn-secondary btn-block" onClick={()=>this.disapproveHandler(index)}>
-          Disapprove
-        </button>
-      </td>
-      <td className="align-middle">
-        <button type="button" className="btn btn-success btn-block" onClick={()=>this.approveHandler(index)}>
-          Approve
-        </button>
-      </td>
-      <td className="align-middle">
-        <button type="button" className="btn btn-danger btn-block" onClick={()=>this.banHandler(index)}>
-          {this.state.banned[index]}
-        </button>
-      </td>
-    </tr>
-  ));
-  }
-
   render() {
-    if (!this.state.isUserDataLoad) {
-      return null;
-    }
     return (
-      <div className="main-background">
-        <NavBar />
-        <Container id="adminHome-box">
-          <Row>
-            <Col>
-              <Table responsive>
-                <thead>{this.headTable()}</thead>
-                <tbody>{this.detailTable()}</tbody>
-              </Table>
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Card
+        className={"text-center dashboard-box shadow"} style={{ margin: "0px", "margin-bottom": "20px" }}
+      >
+        <Card.Header className="box-topic"><h5>{this.state.topicName[this.state.mode]}</h5></Card.Header>
+        <Card.Body>
+          {this.state.isLoading ? (<LoadingSpinner customClass="false" />) :
+            this.state.mode === 'job' ? this.JobChart(this.state.amount) : (
+              <>
+                <h1>{this.state.amount}</h1>
+                <h5>{this.state.description[this.state.mode]}</h5>
+              </>
+            )}
+        </Card.Body>
+        {!this.state.goTo[this.state.mode] ? '' :
+          (<Card.Footer>
+            <Button variant="primary" href={this.state.link[this.state.mode]} >{this.state.goTo[this.state.mode]}</Button>
+          </Card.Footer>)}
+      </Card>
     );
   }
 }

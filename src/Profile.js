@@ -4,8 +4,8 @@ import profilebg from "./material/profilebg.jpg";
 import "./Profile.css";
 import { FaGlobe, FaBirthdayCake } from "react-icons/fa";
 import { FiPhoneCall } from "react-icons/fi";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdEmail, MdMyLocation } from "react-icons/md";
-import NavBar from "./NavBar";
 import axios from "axios";
 import {
   ProfileModal,
@@ -16,89 +16,88 @@ import {
   ExperienceListItem,
   ExperienceModal,
   EducationModal,
-  ReviewListItem,
-  ProfileImageModal
+  ProfileImageModal,
+  VerifyDataModal
 } from "./ProfileModal";
-import { Container } from "react-bootstrap";
+import { Container, Spinner, Row, Col } from "react-bootstrap";
+import PageNotFoundNotAllow from './PageNotFoundNotAllow';
 import LocalStorageService from './LocalStorageService';
-var utilities = require("./Utilities.json");
+import Rating from "@material-ui/lab/Rating"
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-    if(!LocalStorageService.getUserID()){
-      window.location.href = '/';
-    }
     this.state = {
+      err_count : 0,
       isMyProfile: false,
-      isLoaded:false,
-      userId: this.props.userId == null? LocalStorageService.getUserID():this.props.userId.userId,
+      isLoaded: false,
+      userId: this.props.userId == null ? LocalStorageService.getUserID() : this.props.userId.userId,
       data: {
         experience: [
           {
-            role: "Royal Thai Army Headquarters (Office of The Command)",
-            location: "Commander in Chief, Royal Thai Army",
-            year: "2010 - 2014"
+            role: "",
+            location: "",
+            year: ""
           },
           {
-            role: "Office of the Prime Minister",
-            location: "Prime minister of Thailand ",
-            year: "2014 - Present"
+            role: "",
+            location: "",
+            year: ""
           }
         ],
         education: [
           {
-            location: "Armed Forces Academies Preparatory School ",
-            year: " 1971 - 1974"
+            location: "",
+            year: ""
           }
         ],
-        skills: ["C", "C++", "C#"]
+        skills: []
       },
-      fname: "Prayut",
-      lname: "ChanOCha",
-      headline: "Prime minister of Thailand",
-      tel: "0812345678",
-      email: "prayut1954@hotmail.com",
-      website: "http://prayutchan-o-cha.com",
-      location: "Bangkok,Thailand",
-      about:"About mes",
-      birthdate: "21 March 1954",
+      fname: "",
+      lname: "",
+      headline: "",
+      tel: "",
+      email: "",
+      website: "",
+      location: "",
+      about: "",
+      birthdate: "",
       exp: [
         {
-          role: "Royal Thai Army Headquarters (Office of The Command)",
-          location: "Commander in Chief, Royal Thai Army",
-          year: "2010 - 2014"
+          role: "",
+          location: "",
+          year: ""
         },
         {
-          role: "Office of the Prime Minister",
-          location: "Prime minister of Thailand ",
-          year: "2014 - Present"
+          role: "",
+          location: "",
+          year: ""
         }
       ],
       education: [
         {
-          location: "Armed Forces Academies Preparatory School ",
-          year: " 1971 - 1974"
+          location: "",
+          year: ""
         }
       ],
-      skills: ["C", "C++", "C#"],
-      reviewlist:[{reviewername:"itthi", description:"awesome!",score:10,jobname:"Building mobile application"}],
+      skills: [],
+      reviewlist: [{ reviewername: "itthi", description: "awesome!", score: 10, jobname: "Building mobile application" }],
       verified: false,
-      imageProfileURL: profileimage
+      imageProfileURL: profileimage,
+      limitReview : 2,
     };
     this.fetch = this.fetch.bind(this);
-    this.formatJPGtopath=this.formatJPGtopath.bind(this,);
+    this.formatJPGtopath = this.formatJPGtopath.bind(this);
   }
-  
-  componentDidMount(){
+
+  componentDidMount() {
     this.fetch();
   }
-  componentDidUpdate(prevProps){
-    if(this.props !== prevProps){
-      this.setState({userId : LocalStorageService.getUserID()})
-      console.log(2)
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      this.setState({ userId: LocalStorageService.getUserID() })
     }
   }
-  formatJPGtopath(res){
+  formatJPGtopath(res) {
     return btoa(
       new Uint8Array(res.data).reduce(
         (data, byte) => data + String.fromCharCode(byte),
@@ -106,7 +105,7 @@ class Profile extends React.Component {
       ),
     );
   }
-  fetch() {
+  async fetch() {
     let months = [
       "January",
       "Febuary",
@@ -121,15 +120,15 @@ class Profile extends React.Component {
       "November",
       "December"
     ];
-    if(this.state.userId === LocalStorageService.getUserID()){
-      this.setState({isMyProfile : true})
-    }else{
-      this.setState({isMyProfile : false})
+    if (this.state.userId === LocalStorageService.getUserID()) {
+      this.setState({ isMyProfile: true })
+    } else {
+      this.setState({ isMyProfile: false })
     }
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
-    axios
-      .get(utilities["backend-url"]+"/users/" + this.state.userId)
-      .then(res => {
+    await axios
+      .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userId)
+      .then(async (res) => {
         console.log(res);
         let body = res.data;
         let bdate = new Date(body.dateOfBirth);
@@ -147,14 +146,22 @@ class Profile extends React.Component {
         if (body.experience !== null) {
           exp_json = JSON.parse(body.experience);
         }
-        axios.get(utilities["backend-url"]+"/users/profilePicture/" + this.state.userId,{ responseType: 'arraybuffer' },)
-        .then(res=>{
-          this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res)});
-          console.log(res);
-        })
-        .catch(err=>{
-          console.log(err);
-        })
+        await axios.get(process.env.REACT_APP_BACKEND_URL + "/review/reviewee/"+this.state.userId)
+          .then(res =>{
+            console.log(res)
+            this.setState({reviewlist : res.data})
+          })
+          .catch(err=>{
+            console.log(err);
+          })
+        await axios.get(process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + this.state.userId, { responseType: 'arraybuffer' })
+          .then(res => {
+            this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res) });
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
         this.setState({
           data: body,
           fname: body.firstName,
@@ -189,52 +196,66 @@ class Profile extends React.Component {
             verified: this.state.verified
           }
         });
-        this.setState({isLoaded:true});
+        this.setState({ isLoaded: true });
       })
-      .catch(err => {
-        console.log(err);
-      });
-      
+      .catch(async err => {
+        console.log(this.state.isLoaded,this.state.err_count)
+        let count = this.state.err_count+1
+        await this.setState({err_count:count})
+        if(this.state.err_count<2){
+          this.fetch()
+        }else{
+          this.setState({ isLoaded: true });
+        }
+      })
   }
+  handleShowReview=()=>{
+      if(this.state.limitReview+3>=this.state.reviewlist.length){
+        console.log(this.state.limitReview+1)
+        this.setState({limitReview : this.state.reviewlist.length+1})
+      }else{
+        let prev = this.state.limitReview+3
+        this.setState({limitReview : prev})
+      }
+  }
+  renderReload() {
+    return (<Spinner animation="border" role="status" className="loading">
+      <span className="sr-only">Loading...</span>
+    </Spinner>);
+  }
+
   render() {
-    let invite_btn = <button
-    type="button"
-    className="btn btn-outline-success"
-    id="verify"
-    hidden={this.state.verified}
-    >
-    invite
-    </button>
-    let verify_btn = <button
-    type="button"
-    className="btn btn-outline-dark"
-    id="verify"
-    hidden={this.state.verified}
-    >
-    verify
-    </button>
-    /*if(!this.state.isLoaded){
-      return(
+    if(this.state.err_count>=2){
+      return <PageNotFoundNotAllow/>
+    }
+    if (!this.state.isLoaded) {
+      return (
         <>
+          {this.renderReload()}
         </>
       );
-    }*/
+    }
+
+    let verify_btn = (<VerifyDataModal
+      id="verify-btn"
+      userId={this.state.userId}
+      hidden={!this.state.isMyProfile}
+      onUpdate={this.fetch}
+    />)
     return (
       <>
-        <NavBar mode="client" userDatas={this.state.data} />
         <Container id="profile-container">
           <div className="row-5-xs shadow-sm" id="personal">
-            <div className="row" id="pro-bg">
-              <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />
+            <div className="row" id="pro-bg" style={{backgroundImage : "url("+profilebg+")"}}>
             </div>
             <div className="row " id="upper-second">
               <div className="col-3 mr " id="pro-img-frame">
                 <div id="img-f">
                   <img src={this.state.imageProfileURL} className="pro-img" alt="youngstar logo" />
-                  <ProfileImageModal id="profile-img" 
-                  userId={this.state.userId} 
-                  hidden={!this.state.isMyProfile}
-                  onUpdate={this.fetch}/>
+                  <ProfileImageModal id="profile-img"
+                    userId={this.state.userId}
+                    hidden={!this.state.isMyProfile}
+                    onUpdate={this.fetch} />
                 </div>
               </div>
               <div className="col-4">
@@ -245,10 +266,7 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className="col-1">
-              {this.state.isMyProfile&&!this.state.verified?verify_btn:null}
-              </div>
-              <div className="col-1">
-              {!this.state.isMyProfile?invite_btn:null}
+                {this.state.verified ? <IoMdCheckmarkCircleOutline size={30} color="green" /> : this.state.isMyProfile ? verify_btn : null}
               </div>
               <div className="col-1" id="edit">
                 <ProfileModal
@@ -263,7 +281,7 @@ class Profile extends React.Component {
               <div className="col-7" id="sub-second-one">
                 <div>
                   <FiPhoneCall hidden={this.state.tel === ""} />
-                  <p className="tel">{this.state.tel === "" ?this.state.tel: (this.state.tel.substr(0,3)+"-"+this.state.tel.substr(3,))}</p>
+                  <p className="tel">{this.state.tel === "" ? this.state.tel : (this.state.tel.substr(0, 3) + "-" + this.state.tel.substr(3))}</p>
                 </div>
                 <div>
                   <MdEmail hidden={this.state.email === ""} />
@@ -317,15 +335,15 @@ class Profile extends React.Component {
             </div>
             <div className="Exp-content">
               {this.state.exp.length === 0
-              ? "No information yet"
-              : this.state.exp.map((item,idx) => (
-                <ExperienceListItem
-                  key={idx}
-                  role={item.role}
-                  location={item.location}
-                  year={item.year}
-                />
-              ))}
+                ? "No information yet"
+                : this.state.exp.map((item, idx) => (
+                  <ExperienceListItem
+                    key={idx}
+                    role={item.role}
+                    location={item.location}
+                    year={item.year}
+                  />
+                ))}
             </div>
             <div className="Edu">
               <h5>Education</h5>
@@ -339,10 +357,10 @@ class Profile extends React.Component {
             </div>
             <div className="Edu-content">
               {this.state.education.length === 0
-              ? "No information yet"
-              : this.state.education.map((item,idx) => (
-                <EducationListItem key={idx} location={item.location} year={item.year} />
-              ))}
+                ? "No information yet"
+                : this.state.education.map((item, idx) => (
+                  <EducationListItem key={idx} location={item.location} year={item.year} />
+                ))}
             </div>
           </div>
           <div className="row-1 shadow-sm" id="skill">
@@ -358,26 +376,67 @@ class Profile extends React.Component {
             </div>
             {this.state.skills.length === 0
               ? "No skill yet"
-            : this.state.skills.map((item,idx) => <SkillListItem key={idx} skill={item} />)}
+              : this.state.skills.map((item, idx) => <SkillListItem key={idx} skill={item} />)}
           </div>
-          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode()==="client"}>
+          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "freelancer"}>
             <h5>Review</h5>
+            {/// responsive problem div have more width than html width
             <div className="review">
               {this.state.reviewlist.length === 0
               ? "No skill yet"
-              : this.state.reviewlist.map((item,idx) => 
+              : this.state.reviewlist
+                .sort((x,y)=>{return y.score-x.score})
+                .map((item,idx) =>
+                idx+1>this.state.limitReview?null:
                 <ReviewListItem
-                  reviewername={item.reviewername}
+                  key={idx}
+                  reviewername={item.createdTime}
                   description={item.description}
                   score={item.score}
-                  jobname={item.jobname}
+                  jobname={item.jobName}
                 />
               )}
-            </div>
+              <p hidden={this.state.reviewlist.length<=3||this.state.limitReview>this.state.reviewlist.length}
+                onClick={this.handleShowReview}
+               align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show more</p>
+              <p hidden={this.state.reviewlist.length<=3||this.state.limitReview<=this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
+               align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show less</p>
+              </div>}
           </div>
         </Container>
       </>
     );
   }
 }
+class ReviewListItem extends React.Component {
+  render() {
+    return (
+      <>
+        <Container >
+          <Row>
+            <Col>
+            <p >Job name : {this.props.jobname}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            <p style={{textIndent:"5vh"}}>{this.props.description}</p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+            <p>score : <Rating style={{paddingTop:10,marginTop:10,bottom:0}} name="half-rating" value={this.props.score} precision={1} readOnly={true} /></p>
+
+            </Col>
+            <Col>
+            <p align="right" style={{color:"gray"}}>when : {this.props.reviewername}</p>
+            </Col>
+          </Row>
+        </Container>
+        <hr/>
+      </>
+    );
+  }
+}
+
 export default Profile;
