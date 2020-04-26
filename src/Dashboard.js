@@ -603,7 +603,7 @@ class FreelancerBox extends React.Component {
             className="profile-img"
             onClick={() => this.checkChatRoom(item.userId, item.fname)}
           >
-            <img src={item.img} alt="youngstar logo" />
+            <img src={item.img} alt="youngstar logo"/>
           </div>
         </td>
         <td>{item.fname + " " + item.lname}</td>
