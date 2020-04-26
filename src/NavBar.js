@@ -196,7 +196,7 @@ class NavBar extends React.Component {
           hasDeleteNoti: false,
           isNotiLoad: true,
         });
-        console.log(this.state.notiDatas);
+        // console.log(this.state.notiDatas);
       });
     }
   };
@@ -206,7 +206,7 @@ class NavBar extends React.Component {
     this.checkNewMessage();
     //this.makeData();
     this.checkNoti();
-    console.log(this.state.mode);
+    // console.log(this.state.mode);
   };
 
   readNoti = (notiData) => {
