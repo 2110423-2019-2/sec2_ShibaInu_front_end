@@ -395,7 +395,7 @@ class Profile extends React.Component {
               <p hidden={this.state.limitReview>=this.state.reviewlist.length}
                 onClick={this.handleShowReview}
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show more</p>
-               <p hidden={this.state.limitReview<this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
+               <p hidden={this.state.limitReview<=this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show less</p>
               </div>}
           </div>
