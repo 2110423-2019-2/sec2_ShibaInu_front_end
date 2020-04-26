@@ -1226,21 +1226,6 @@ class EducationListItem extends Component {
   }
 }
 
-class ReviewListItem extends Component {
-  render() {
-    return (
-      <>
-        <div className="review-box">
-          <p>{this.props.reviewername}</p>
-          <p>{this.props.description}</p>
-          <p>score : {this.props.score}</p>
-          <p>{this.props.jobname}</p>
-        </div>
-      </>
-    );
-  }
-}
-
 class ProfileImageModal extends Component {
   constructor(props){
     super(props);
@@ -1556,7 +1541,6 @@ export {
   ExperienceListItem,
   ExperienceModal,
   EducationModal,
-  ReviewListItem,
   ProfileImageModal,
   VerifyDataModal
 };
