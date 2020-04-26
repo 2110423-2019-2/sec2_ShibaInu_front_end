@@ -246,8 +246,7 @@ class Profile extends React.Component {
       <>
         <Container id="profile-container">
           <div className="row-5-xs shadow-sm" id="personal">
-            <div className="row" id="pro-bg">
-              <img src={profilebg} className="pro-bg-img" alt="youngstar logo" />
+            <div className="row" id="pro-bg" style={{backgroundImage : "url("+profilebg+")"}}>
             </div>
             <div className="row " id="upper-second">
               <div className="col-3 mr " id="pro-img-frame">

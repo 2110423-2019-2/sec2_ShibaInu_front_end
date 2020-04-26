@@ -6,7 +6,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import LocalStorageService from './LocalStorageService';
-import { auto } from "@popperjs/core";
 class ProfileModal extends Component {
   constructor(props) {
     super(props);
