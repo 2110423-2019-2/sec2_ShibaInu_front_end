@@ -9,7 +9,6 @@ import { MdEmail, MdMyLocation } from "react-icons/md";
 import axios from "axios";
 import {
   ProfileModal,
-  SkillListItem,
   SkillModal,
   About,
   EducationListItem,
@@ -378,16 +377,20 @@ class Profile extends React.Component {
 
               />
             </div>
+            <Container>
+            <ul>
             {this.state.skills.length === 0
-              ? "No Review yet"
-              : this.state.skills.map((item, idx) => <SkillListItem key={idx} skill={item} />)}
+              ? "No skill yet"
+              : this.state.skills.map((item, idx) => <li key={idx}>{item.skill}</li>)}
+            </ul>
+            </Container>
           </div>
           <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "freelancer"}>
             <h5>Review</h5>
             {/// responsive problem div have more width than html width
             <div className="review">
               {this.state.reviewlist.length === 0
-              ? "No skill yet"
+              ? "No review yet"
               : this.state.reviewlist
                 .sort((x,y)=>{return y.score-x.score})
                 .map((item,idx) =>

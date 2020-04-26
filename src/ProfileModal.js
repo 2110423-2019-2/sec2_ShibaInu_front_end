@@ -130,7 +130,8 @@ class ProfileModal extends Component {
       website: "",
       country: "",
       address: "",
-      birthDate: ""
+      birthDate: "",
+      error :{fname:"",lname:""}
     })
   }
   handleSave=async()=> {
@@ -468,7 +469,7 @@ class ExperienceModal extends Component {
       }
       if (body.experience instanceof Array) {
         this.setState({
-          experiences: body.experience
+          experiences: [...body.experience]
         });
       }
       this.setState({
@@ -787,23 +788,13 @@ class EducationModal extends Component {
       let body = this.props.data;
       if (body.education instanceof Array) {
         this.setState({
-          edu: body.education
+          edu: [...body.education]
         });
       }
       this.setState({
         usersId: this.props.userId
       });
     }
-  }
-  onExited=async()=>{
-    this.setState({
-      usersId: "",
-      location: "",
-      year: "",
-      limit: false,
-      edu: [],
-      show: false
-    })
   }
   handleClose() {
     this.setState({ show: false });
@@ -889,7 +880,7 @@ class EducationModal extends Component {
           <FaRegEdit size={20} id="edit-icon" />
         </button>
 
-        <Modal size="lg" show={this.state.show} onHide={this.handleClose} onExited={this.onExited}>
+        <Modal size="lg" show={this.state.show} onHide={this.handleClose} >
           <Modal.Header className="modalHead" closeButton>
             <ModalTitle>Education</ModalTitle>
           </Modal.Header>
@@ -1259,7 +1250,7 @@ class SkillEditList extends Component {
   }
   handleEdit() {
     if (this.state.skill === "")
-      return alert("pleas fill at least 1 character");
+      return alert("cannot be empty");
     let skill = this.state.skill;
     this.props.onEdit(this.state.index, skill);
     this.toggle();
