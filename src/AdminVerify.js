@@ -101,7 +101,7 @@ class AdminVerify extends React.Component {
   };
 
   banHandler = (id, isBanned) => {
-    var title = "Are you sure to " + isBanned ? "Unban" : "Ban" + "?";
+    var title = "Are you sure to " + (isBanned ? "Unban" : "Ban") + "?";
     swal({
       title: title,
       icon: "warning",
