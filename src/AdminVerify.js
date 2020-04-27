@@ -100,49 +100,6 @@ class AdminVerify extends React.Component {
     });
   };
 
-  banHandler = (id, isBanned) => {
-    var title = "Are you sure to " + (isBanned ? "Unban" : "Ban") + "?";
-    swal({
-      title: title,
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willBan) => {
-      if (willBan) {
-        axios.defaults.headers.common["Authorization"] =
-          "Bearer " + LocalStorageService.getAccessToken();
-        axios
-          .patch(process.env.REACT_APP_BACKEND_URL + "/users/ban", {
-            user: id,
-            isBanned: isBanned === false,
-          })
-          .then((response) => {
-            switch (response.status) {
-              // Created
-              case 201:
-                //console.log("already push");
-                var { userDatas } = this.state;
-                for (let i = 0; i < this.state.userDatas.length; i++) {
-                  if (userDatas.userId === id) {
-                    userDatas.isBanned = isBanned === false;
-                    break;
-                  }
-                }
-                this.setState({ userDatas: userDatas });
-                break;
-
-              // Other case
-              default:
-                //console.log("Status code is " + response.status);
-            }
-          });
-        swal("Success!", {
-          icon: "success",
-        });
-      }
-    });
-  };
-
   headTable = () => {
     return (
       <tr className="text-center background-blue text-light">
