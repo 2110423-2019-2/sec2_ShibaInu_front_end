@@ -44,6 +44,8 @@ class HomeFreelancer extends React.Component {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
         //console.log(this.state.userDatas);
+      }).catch((error) => {
+        console.error(error);
       });
     await axios
       .get(
@@ -55,12 +57,16 @@ class HomeFreelancer extends React.Component {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
         //console.log(this.state.jobDatas);
+      }).catch((error) => {
+        console.error(error);
       });
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/announcement").then((res) => {
         const announce = res.data;
         this.setState({ announce: announce, isAnnounceLoad: true });
         //console.log(this.state.announce);
+      }).catch((error) => {
+        console.error(error);
       });
   };
 
