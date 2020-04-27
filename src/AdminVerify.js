@@ -5,6 +5,7 @@ import swal from "sweetalert";
 
 import LocalStorageService from "./LocalStorageService";
 import "./AdminHome.css";
+import firebase from './firebase';
 
 class AdminVerify extends React.Component {
   constructor(props) {
@@ -32,6 +33,25 @@ class AdminVerify extends React.Component {
     this.fetchDatas();
   };
 
+  addNoti = (userId, topic, detail, link) => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc("notification")
+      .collection(String(userId))
+      .add({
+        topic: topic,
+        detail: detail,
+        link: link,
+        createtime: firebase.firestore.FieldValue.serverTimestamp(),
+        read: false,
+        mode: "",
+      })
+      .catch((error) => {
+        console.error("Error adding noti:", error);
+      });
+  }
+
   disapproveHandler = (id) => {
     swal({
       title: "Are you sure to approve?",
@@ -52,11 +72,12 @@ class AdminVerify extends React.Component {
               // Created
               case 201:
                 //console.log("already push");
+                this.addNoti(id, "Verification", "Your user verification is rejected.", "/profile");
                 break;
 
               // Other case
               default:
-                //console.log("Status code is " + response.status);
+              //console.log("Status code is " + response.status);
             }
           });
         swal("Approved success!", {
@@ -86,11 +107,12 @@ class AdminVerify extends React.Component {
               // Created
               case 201:
                 //console.log("already push");
+                this.addNoti(id, "Verification", "Your user verification is approved.", "/profile");
                 break;
 
               // Other case
               default:
-                //console.log("Status code is " + response.status);
+              //console.log("Status code is " + response.status);
             }
           });
         swal("Approved success!", {
