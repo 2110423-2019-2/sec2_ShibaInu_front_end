@@ -189,7 +189,7 @@ class Dashboard extends React.Component {
         });
       })
       .catch(error => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           ////console.log("Unauthorization");
           alert("Please login first!");
           window.location.href = "/signin";
@@ -232,11 +232,11 @@ class Dashboard extends React.Component {
         }
       })
       .catch(error => {
-        if (error.response.status === 401) {
+        if (error.response && error.response.status === 401) {
           ////console.log("Unauthorization");
           alert("Please login first!");
           window.location.href = "/signin";
-        } else if (error.response.status === 400) {
+        } else if (error.response && error.response.status === 400) {
           ////console.log(this.state.notFound)
           if (this.state.notFound < 2) {
             let i = this.state.notFound + 1

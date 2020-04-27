@@ -12,7 +12,7 @@ class PaymentModal extends React.Component {
             showModal: this.props.show || true,
             mode: this.props.mode || 'card',
             addPay: this.props.addPay || 'add',
-            amount: this.props.amount || '0',
+            amount: this.props.amount || 0,
             payMode: this.props.payMode || 'Deposit',
             formText: '',
             cardData: {
@@ -31,16 +31,15 @@ class PaymentModal extends React.Component {
             isFetching: false,
             reloadPage: false,
         }
+        // console.log("constructor check");
 
-        this.AddCardPayment = this.AddCardPayment.bind(this);
-        this.handleAddCardPaymentChange = this.handleAddCardPaymentChange.bind(this);
-        this.handleSubmitAddCardPayment = this.handleSubmitAddCardPayment.bind(this);
     }
 
     componentDidMount() {
         if (this.state.mode === 'card' && this.state.addPay === 'pay') {
             this.fetchCardData();
         }
+        // console.log("componentdidmount check");
     }
 
     fetchCardData = () => {
@@ -59,7 +58,8 @@ class PaymentModal extends React.Component {
             });
     }
 
-    AddCardPayment() {
+    AddCardPayment = () => {
+        // console.log("add card check");
         return (
             <Form>
                 <Form.Group>
@@ -103,6 +103,7 @@ class PaymentModal extends React.Component {
     }
 
     AddBankAccount = () => {
+        // console.log("add bank check");
         return (
             <Form>
                 <Form.Group>
@@ -160,7 +161,8 @@ class PaymentModal extends React.Component {
         );
     }
 
-    PayCardPayment = (props) => {
+    PayCardPayment = (isLoading) => {
+        console.log("paycard check");
         return (
             <Form>
                 <Form.Group>
@@ -169,7 +171,7 @@ class PaymentModal extends React.Component {
                             Credit Card
                     </Card.Header>
                         <Card.Body>
-                            {props.isLoading ? (<this.renderLoading />) :
+                            {isLoading ? (this.renderLoading()) :
                                 !this.state.cardData.cardNumber ?
                                     (<>
                                         <p>No credit card. Please add at My payment.</p>
@@ -199,7 +201,7 @@ class PaymentModal extends React.Component {
         );
     }
 
-    renderLoading() {
+    renderLoading = () => {
         return (<Spinner animation="border" role="status" className="loading">
             <span className="sr-only">Loading...</span>
         </Spinner>);
@@ -223,7 +225,7 @@ class PaymentModal extends React.Component {
         });
     }
 
-    handleSubmitAddCardPayment() {
+    handleSubmitAddCardPayment = () => {
         const cardData = this.state.cardData;
         if (isNaN(cardData.cardNumber) || cardData.cardNumber.length !== 16) {
             this.setState({
@@ -345,21 +347,27 @@ class PaymentModal extends React.Component {
     }
 
     getModalBody = (isFetching) => {
+        // console.log("get modal body check");
         const isCard = (this.state.mode === 'card');
         const isAdd = (this.state.addPay === 'add');
 
         if (isCard && isAdd) {
-            return <this.AddCardPayment />
+            // console.log("if1 check");
+            return this.AddCardPayment();
         } else if (!isCard && isAdd) {
-            return <this.AddBankAccount />
+            // console.log("if2 check");
+            return this.AddBankAccount();
         } else if (isCard && !isAdd) {
-            return <this.PayCardPayment isLoading={isFetching} />
+            // console.log("if3 check");
+            return this.PayCardPayment(isFetching);
         } else {
+            // console.log("if4 check");
             return ''
         }
     }
 
     render() {
+        // console.log("render check");
         return (
             <Modal
                 // {...props}
