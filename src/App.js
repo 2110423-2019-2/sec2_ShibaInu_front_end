@@ -61,6 +61,7 @@ class App extends React.Component {
             //console.log("Banned user");
             swal("You are banned!", error.response.data.message, "error");
             LocalStorageService.signOut();
+            window.location.href = '/';
           }
         });
     }
