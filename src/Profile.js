@@ -337,7 +337,7 @@ class Profile extends React.Component {
 
               />
             </div>
-            <div className="Exp-content">
+            <Container>
               {this.state.exp.length === 0
                 ? "No information yet"
                 : this.state.exp.map((item, idx) => (
@@ -348,7 +348,7 @@ class Profile extends React.Component {
                     year={item.year}
                   />
                 ))}
-            </div>
+            </Container>
             <div className="Edu">
               <h5>Education</h5>
               <EducationModal
@@ -359,13 +359,13 @@ class Profile extends React.Component {
 
               />
             </div>
-            <div className="Edu-content">
+              <Container>
               {this.state.education.length === 0
                 ? "No information yet"
                 : this.state.education.map((item, idx) => (
                   <EducationListItem key={idx} location={item.location} year={item.year} />
                 ))}
-            </div>
+            </Container>
           </div>
           <div className="row-1 shadow-sm" id="skill">
             <div className="skill">
@@ -379,19 +379,18 @@ class Profile extends React.Component {
               />
             </div>
             <Container>
-            <ul>
+           
             {this.state.skills.length === 0
-              ? "No skill yet"
-              : this.state.skills.map((item, idx) => <li key={idx}>{item.skill}</li>)}
-            </ul>
+              ? "No information yet"
+              :  <ul>{this.state.skills.map((item, idx) => <li key={idx}>{item.skill}</li>)}</ul>}
             </Container>
           </div>
           <div className="row-1 shadow-sm" id="review" >
             <h5>Review by {LocalStorageService.getUserMode().toLowerCase()==="client"?"freelancer":"client"}</h5>
             {/// responsive problem div have more width than html width
-            <div className="review">
+              <Container>
               {this.state.reviewlist.length === 0
-              ? "No review yet"
+              ? "No information yet"
               : this.state.reviewlist
                 .sort((x,y)=>{return y.score-x.score})
                 .map((item,idx) =>
@@ -409,7 +408,7 @@ class Profile extends React.Component {
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show more</p>
               <p hidden={this.state.reviewlist.length<=3||this.state.limitReview<=this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show less</p>
-              </div>}
+             </Container>}
           </div>
         </Container>
       </>
@@ -434,7 +433,6 @@ class ReviewListItem extends React.Component {
           <Row>
             <Col>
             <p>score : <Rating style={{paddingTop:10,marginTop:10,bottom:0}} name="half-rating" value={this.props.score} precision={1} readOnly={true} /></p>
-
             </Col>
             <Col>
             <p align="right" style={{color:"gray"}}>when : {this.props.reviewTime}</p>
