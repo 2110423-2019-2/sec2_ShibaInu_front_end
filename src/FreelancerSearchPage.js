@@ -21,8 +21,6 @@ class Filter extends React.Component {
     var v = e.target.value;
     if (k === "sort") {
       switch (v) {
-        default:
-          v = 2;
         case "Newest Users":
           v = 0;
           break;
@@ -34,6 +32,9 @@ class Filter extends React.Component {
           break;
         case "Rating (Low to High)":
           v = 3;
+          break;
+        default:
+          v = 2;
           break;
       }
     }
@@ -141,7 +142,7 @@ class Result extends React.Component {
 
   render() {
     var emptyMessage = "";
-    if (this.state.freelancerList.length == 0) emptyMessage = "Not Found";
+    if (this.state.freelancerList.length === 0) emptyMessage = "Not Found";
     else emptyMessage = "";
     return (
       <Card className="result">
@@ -154,8 +155,8 @@ class Result extends React.Component {
             var tmp2 = [];
             u.skills.map((s) => tmp.push(s.skill));
             u.interestedCategories.map((c) => tmp2.push(c.interestedCategory));
-            if (tmp.length == 0) tmp.push("-");
-            if (tmp2.length == 0) tmp2.push("-");
+            if (tmp.length === 0) tmp.push("-");
+            if (tmp2.length === 0) tmp2.push("-");
             return (
               <ResultRow
                 key={u.userId}

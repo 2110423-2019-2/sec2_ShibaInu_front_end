@@ -24,12 +24,10 @@ class Filter extends React.Component {
   handleChange = (e) => {
     var k = e.target.name;
     var v = e.target.value;
-    if (k === "w1" || k === "w2" || k == "t1" || k === "t2") {
+    if (k === "w1" || k === "w2" || k === "t1" || k === "t2") {
       v = parseInt(v);
     } else if (k === "sort") {
       switch (v) {
-        default:
-          v = 1;
         case "Newest":
           v = 0;
           break;
@@ -47,6 +45,9 @@ class Filter extends React.Component {
           break;
         case "Shorter duration first":
           v = 5;
+          break;
+        default:
+          v = 1;
           break;
       }
     }
@@ -203,7 +204,7 @@ class Result extends React.Component {
             .map((j) => {
               var tmp = [];
               j.requiredSkills.map((s) => tmp.push(s.skill));
-              if (tmp.length == 0) tmp.push("-");
+              if (tmp.length === 0) tmp.push("-");
               return (
                 <ResultRow
                   key={j.jobId}
