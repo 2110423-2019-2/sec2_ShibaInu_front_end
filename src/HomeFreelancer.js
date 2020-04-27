@@ -2,9 +2,11 @@ import React from "react";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import { FaClock, FaMoneyBill, FaBullhorn, FaInfoCircle } from "react-icons/fa";
 import axios from "axios";
+import swal from 'sweetalert';
 
 import "./HomeFreelancer.css";
 import LocalStorageService from "./LocalStorageService";
+import LoadingSpinner from './utilities/LoadingSpinner';
 
 class HomeFreelancer extends React.Component {
   constructor(props) {
@@ -18,6 +20,7 @@ class HomeFreelancer extends React.Component {
       announce: [],
       isAnnounceLoad: false,
       interest: ["react", "react native", "express", "mysql", "nest.js"],
+      showUnverifiedWarning: false,
     };
   }
 
@@ -71,8 +74,25 @@ class HomeFreelancer extends React.Component {
 
   render() {
     if (!this.state.isUserDataLoad || !this.state.isJobDataLoad) {
-      return null;
+      return <LoadingSpinner />;
     }
+    if (!this.state.userDatas.isVerified && !this.state.showUnverifiedWarning) {
+      this.setState({ showUnverifiedWarning: true });
+      swal({
+        title: "You haven't verify!",
+        text: "Your account is not verified.\n If you wish to verify now, click 'Verify'.",
+        icon: "warning",
+        buttons: [true, "Verify"],
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        dangerMode: false
+      }).then((verify) => {
+        if (verify) {
+          window.location.href = "/profile";
+        }
+      });
+    }
+
     var recentJob = this.state.jobDatas.map((job, index) => (
       <tr key={index} className="text-center">
         <td className="align-middle">{job.name}</td>

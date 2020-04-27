@@ -26,3 +26,7 @@ html, body, .main-background {
     overflow: scroll;
     overflow-x: hidden;
   }
+
+  .swal-text {
+    text-align: center;
+  }
