@@ -13,7 +13,7 @@ class HomeFreelancer extends React.Component {
     super(props);
     this.state = {
       userDatas: "",
-      jobDatas: "",
+      jobDatas: [],
       sumMoney: 0,
       isUserDataLoad: false,
       isJobDataLoad: false,
@@ -42,10 +42,12 @@ class HomeFreelancer extends React.Component {
       )
       .then((res) => {
         const userDatas = res.data;
-        this.setState({ userDatas: userDatas, isUserDataLoad: true });
+        this.setState({ userDatas: userDatas });
         //console.log(this.state.userDatas);
       }).catch((error) => {
         console.error(error);
+      }).finally(() => {
+        this.setState({ isUserDataLoad: true });
       });
     await axios
       .get(
@@ -55,18 +57,22 @@ class HomeFreelancer extends React.Component {
       )
       .then((res) => {
         const jobDatas = res.data;
-        this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
+        this.setState({ jobDatas: jobDatas });
         //console.log(this.state.jobDatas);
       }).catch((error) => {
         console.error(error);
+      }).finally(() => {
+        this.setState({ isJobDataLoad: true });
       });
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/announcement").then((res) => {
         const announce = res.data;
-        this.setState({ announce: announce, isAnnounceLoad: true });
+        this.setState({ announce: announce });
         //console.log(this.state.announce);
       }).catch((error) => {
         console.error(error);
+      }).finally(() => {
+        this.setState({ isAnnounceLoad: true });
       });
   };
 
