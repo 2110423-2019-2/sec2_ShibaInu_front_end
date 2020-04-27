@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Modal, Button, Form, Col, ModalTitle, Table, Spinner } from "react-bootstrap";
+import { Modal, Button, Form, Col, ModalTitle, Table, Spinner, Row } from "react-bootstrap";
 import { FaRegEdit } from "react-icons/fa";
 import ImageUploader from "./ImageUploader"
 import DatePicker from "react-datepicker";
@@ -913,7 +913,7 @@ class EducationModal extends Component {
               </Col>
               <Col md="1" id="Add-btn">
                 <Button
-                  variant="primary"
+                  variant="primary btn-block"
                   onClick={this.handleAdd}
                   hidden={false}
                 >
@@ -1192,11 +1192,13 @@ class SkillModal extends Component {
             <ModalTitle>Skill</ModalTitle>
           </Modal.Header>
           <Modal.Body>
+            <Row>
             <Table>
               <tbody>{this.showEditList()}</tbody>
             </Table>
+            </Row>
             <Form.Row hidden={this.state.limit}>
-              <Col md="3">
+              <Col sm="3">
                 <Form.Label>Skill</Form.Label>
                 <Form.Control
                   placeholder="skill"
@@ -1206,8 +1208,8 @@ class SkillModal extends Component {
                   }}
                 />
               </Col>
-              <Col md="1" id="Add-btn">
-                <Button variant="primary" onClick={() => this.handleAdd()}>
+              <Col sm="1" id="Add-btn">
+                <Button variant="primary btn-block" onClick={() => this.handleAdd()}>
                   Add
                 </Button>
               </Col>
