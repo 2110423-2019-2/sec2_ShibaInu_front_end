@@ -177,7 +177,7 @@ class Contract extends React.Component {
                         .then(res => {
                             status = res.data.status;
                         }).catch(err => {
-                            console.log(err)
+                            //console.log(err)
                         })
                     if (status != null && status === "accepted") {
                         swal("Error occured!", {
@@ -207,7 +207,7 @@ class Contract extends React.Component {
                             this.redirect(3000,"/dashboard/"+this.state.jobId)
                         })
                         .catch(err => {
-                            console.log(err);
+                            //console.log(err);
                             swal("Error occured!", {
                                 icon: "error",
                             });
@@ -234,7 +234,7 @@ class Contract extends React.Component {
                         .then(res => {
                             status = res.data.status;
                         }).catch(err => {
-                            console.log(err)
+                            //console.log(err)
                         })
                     if (status != null && status === "accepted") {
                         swal("Error occured!", {
@@ -264,7 +264,7 @@ class Contract extends React.Component {
                             this.redirect(3000,"/dashboard/"+this.state.jobId)
                         })
                         .catch(err => {
-                            console.log(err);
+                            //console.log(err);
                             swal("Error occured!", {
                                 icon: "error",
                             });
@@ -295,7 +295,7 @@ class Contract extends React.Component {
 
             })
             .catch(err => {
-                console.log(err);
+                //console.log(err);
                 this.setState({ fetchError: { ...this.state.fetchError, loadJob: true } })
             });
     }
@@ -307,7 +307,7 @@ class Contract extends React.Component {
                 this.setState({ clientName: res.data.firstName + " " + res.data.lastName })
             })
             .catch(err => {
-                console.log(err)
+                //console.log(err)
             })
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.freelancerId)
@@ -316,16 +316,16 @@ class Contract extends React.Component {
             })
             .catch(err => {
                 this.setState({ freelancerId: null })
-                console.log(err)
+                //console.log(err)
             })
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/bids/jobuser/" + this.state.jobId + "," + this.state.freelancerId)
             .then(res => {
-                console.log(res)
+                //console.log(res)
                 this.setState({ bidwage: res.data.biddedWage })
             })
             .catch(err => {
-                console.log(err.response.status);
+                //console.log(err.response.status);
                 this.setState({ fetchError: { ...this.state.fetchError, loadUser: true } })
             })
     }
@@ -334,7 +334,7 @@ class Contract extends React.Component {
         await axios
             .get(process.env.REACT_APP_BACKEND_URL + "/contracts/jobId/" + this.state.jobId)
             .then(res => {
-                console.log(res.data)
+                //console.log(res.data)
                 let time;
                 if (res.data.status === "accepted") {
                     time = res.data.acceptedTime;
@@ -347,7 +347,7 @@ class Contract extends React.Component {
                     }
 
                 }
-                console.log(res.data.status)
+                //console.log(res.data.status)
                 this.setState({
                     contractId: res.data.contractId,
                     currData: { price: res.data.price, text: res.data.description || example },
@@ -360,7 +360,7 @@ class Contract extends React.Component {
                 })
             })
             .catch(err => {
-                console.log(err.response.status);
+                //console.log(err.response.status);
                 this.setState({ loadContractData: true, })
             });
     }
@@ -375,11 +375,11 @@ class Contract extends React.Component {
                 description: this.state.editedData.text,
             })
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 ans.result = res.data;
             })
             .catch(err => {
-                console.log(err);
+                //console.log(err);
                 ans.error = err;
             })
         return ans;
@@ -393,7 +393,7 @@ class Contract extends React.Component {
             .then(res => {
                 status = res.data.status;
             }).catch(err => {
-                console.log(err)
+                //console.log(err)
             })
         if (status != null && status === "accepted") {
             ans.error = "error,contact was accepted"
@@ -406,11 +406,11 @@ class Contract extends React.Component {
                 status: "null"
             })
             .then(res => {
-                console.log(res);
+                //console.log(res);
                 ans.result = res.data;
             })
             .catch(err => {
-                console.log(err);
+                //console.log(err);
                 ans.error = err;
             })
         return ans;
@@ -455,13 +455,13 @@ class Contract extends React.Component {
 
         axios.get(process.env.REACT_APP_BACKEND_URL + "/payment/bankAccount")
             .then(res => {
-                console.log(res.status);
+                //console.log(res.status);
                 if (res.status === 201) {
                     this.setState({ checkFreelancerBankAccount: true });
                 }
             }).catch((err) => {
 
-                console.error(err);
+                //console.error(err);
 
                 this.setState({ checkFreelancerBankAccount: false });
             });

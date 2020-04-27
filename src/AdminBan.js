@@ -35,7 +35,7 @@ class AdminBan extends React.Component {
         }
       }
       this.setState({ userDatas: userDatas, isUserDataLoad: true });
-      console.log(this.state.userDatas);
+      //console.log(this.state.userDatas);
     });
   };
 
@@ -65,7 +65,7 @@ class AdminBan extends React.Component {
           })
         }
         else {
-          console.log(val);
+          //console.log(val);
           axios.defaults.headers.common["Authorization"] =
             "Bearer " + LocalStorageService.getAccessToken();
           axios
@@ -78,7 +78,7 @@ class AdminBan extends React.Component {
               switch (response.status) {
                 // Created
                 case 200:
-                  console.log("already push");
+                  //console.log("already push");
                   var { userDatas } = this.state;
                   for (let i = 0; i < userDatas.length; i++) {
                     if (userDatas[i].userId === id) {
@@ -92,7 +92,7 @@ class AdminBan extends React.Component {
 
                 // Other case
                 default:
-                  console.log("Status code is " + response.status);
+                  //console.log("Status code is " + response.status);
               }
             });
           swal("Success!", {

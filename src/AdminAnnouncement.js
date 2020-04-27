@@ -33,12 +33,12 @@ class AdminAnnouncement extends React.Component {
         switch (response.status) {
           // Created
           case 201:
-            console.log("already push");
+            //console.log("already push");
             break;
 
           // Other case
           default:
-            console.log("Status code is " + response.status);
+            //console.log("Status code is " + response.status);
         }
       });
   };

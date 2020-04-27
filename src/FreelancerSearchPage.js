@@ -134,7 +134,7 @@ class Result extends React.Component {
         })
         .catch((error) => {
           this.setState({ freelancerList: [] });
-          console.log(error);
+          //console.log(error);
         });
     }
   }
@@ -290,7 +290,7 @@ class DropDownItem extends React.Component {
             });
           })
           .catch((error) => {
-            console.error(error);
+            //console.error(error);
             swal("Error occured!", {
               icon: "error",
             });

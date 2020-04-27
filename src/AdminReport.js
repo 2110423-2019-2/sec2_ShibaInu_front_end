@@ -30,10 +30,10 @@ class AdminReportList extends React.Component{
         .get(process.env.REACT_APP_BACKEND_URL + "/users/" + LocalStorageService.getUserID())
         .then(res => {
             check = res.data.isAdmin
-            console.log(res.data);
+            //console.log(res.data);
         })
         .catch(err => {
-            console.log(err);
+            //console.log(err);
         })
         await this.setState({isAdmin : check, loadCheck : true})
     }
@@ -60,13 +60,13 @@ class AdminReportList extends React.Component{
             })
         })
         .catch(err=>{
-            console.log(err);
+            //console.log(err);
         })
         await this.setState({
             reports : data,
             loadReports : true,
         })
-        console.log(data)
+        //console.log(data)
     }
 
     showAllReport(){
@@ -311,10 +311,10 @@ class Report extends React.Component{
                 report : {...this.state.report,description : res.data[0].description},
                 loadReport : true
             })
-            console.log(res.data)
+            //console.log(res.data)
         })
         .catch(err=>{
-            console.log(err);
+            //console.log(err);
         })
         await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/reports/messages/"+this.state.report.reportId)
@@ -323,10 +323,10 @@ class Report extends React.Component{
                 messages : res.data,
                 loadMsg : true
             })
-            console.log(res.data)
+            //console.log(res.data)
         })
         .catch(err=>{
-            console.log(err);
+            //console.log(err);
         })
         let userList = this.state.messages
         let map = new Map();
@@ -335,7 +335,7 @@ class Report extends React.Component{
                 await axios
                 .get(process.env.REACT_APP_BACKEND_URL + "/users/"+userList[i].userId)
                 .then(res=>{
-                    console.log(res.data)
+                    //console.log(res.data)
                     if(res.data.isAdmin){
                         map.set(userList[i].userId,"Admin")
                     }else{
@@ -343,12 +343,12 @@ class Report extends React.Component{
                     }
                 })
                 .catch(err=>{
-                    console.log(err)
+                    //console.log(err)
                 })
             }
         }
         await this.setState({tableUserId : map})
-        console.log(map)
+        //console.log(map)
     }
 
     async setReportStatus(){
@@ -357,12 +357,12 @@ class Report extends React.Component{
         await axios
         .patch(process.env.REACT_APP_BACKEND_URL + "/reports/"+this.state.report.reportId+"/1")
         .then(res=>{
-            console.log(res)
+            //console.log(res)
             this.state.refetch();
             this.setState({report : {...this.state.report,status : "closed"}})
         })
         .catch(err=>{
-            console.log(err)
+            //console.log(err)
         })
     }
 
@@ -376,14 +376,14 @@ class Report extends React.Component{
             user : LocalStorageService.getUserID(),
         })
         .then(res=>{
-            console.log(res)
+            //console.log(res)
             this.fetchData()
             this.setState({sendingMessage : ""})
         })
         .catch(err=>{
-            console.log(err)
+            //console.log(err)
         })
-        console.log("send");
+        //console.log("send");
     }
 
     async componentDidMount(){

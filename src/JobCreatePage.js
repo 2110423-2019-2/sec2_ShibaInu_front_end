@@ -64,19 +64,19 @@ class JobCreatePage extends React.Component {
       .then((res) => {
         switch (res.status) {
           case 201:
-            console.log("Created,Logged in. Redirecting to /client/job ...");
+            //console.log("Created,Logged in. Redirecting to /client/job ...");
             window.location.href = "/client/job";
             break;
           default:
-            console.log("Status code is " + res.status);
+            //console.log("Status code is " + res.status);
         }
       })
       .catch((error) => {
         if (error.response.status === 400) {
-          console.log("Error 400");
+          //console.log("Error 400");
           this.setState({ errorMessage: error.response.data.message });
         } else {
-          console.error(error);
+          //console.error(error);
         }
       });
   };

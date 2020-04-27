@@ -39,7 +39,7 @@ class JobOfferClient extends React.Component {
   }
   keywordHandler = (check = false) => {
     let word = document.getElementById("searchbox").value
-    console.log(word)
+    //console.log(word)
     if (check) {
       this.setState({ keyword: word })
     }
@@ -58,7 +58,7 @@ class JobOfferClient extends React.Component {
       .then(res => {
         const userDatas = res.data;
         this.setState({ userDatas: userDatas, isUserDataLoad: true });
-        console.log(this.state.userDatas);
+        //console.log(this.state.userDatas);
       });
     axios
       .get(
@@ -69,7 +69,7 @@ class JobOfferClient extends React.Component {
       .then(res => {
         const jobDatas = res.data;
         this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
-        console.log(this.state.jobDatas);
+        //console.log(this.state.jobDatas);
       });
   };
 

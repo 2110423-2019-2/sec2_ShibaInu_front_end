@@ -33,6 +33,7 @@
   width: 50px;
   height: 50px;
 }
+
 .box-body td {
   text-align: center;
   vertical-align: middle;
@@ -40,10 +41,7 @@
 .box-body thead {
   text-align: center;
 }
-.left-col {
-  /*position: sticky;
-    top:70px;*/
-}
+
 .table-container-f {
   height: 90%;
   overflow: auto;
@@ -61,21 +59,6 @@
 .job-header {
   margin-top: 20px;
   padding-left: 2%;
-}
-.breadcrumb {
-  margin-top: 20px;
-  background-color: #f5f5f5;
-}
-.breadcrumb .breadcrumb-item {
-  /*color: white;*/
-}
-.breadcrumb .breadcrumb-item a {
-  color: gray;
-  font-weight: bold;
-}
-.breadcrumb .breadcrumb-item + .breadcrumb-item:before {
-  content: ">";
-  /*color: honeydew;*/
 }
 
 .dashboard-box {

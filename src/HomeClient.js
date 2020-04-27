@@ -41,24 +41,24 @@ class Home extends React.Component {
         .then(res => {
           const userDatas = res.data;
           this.setState({ userDatas: userDatas, isUserDataLoad: true });
-          console.log(this.state.userDatas);
+          //console.log(this.state.userDatas);
         });
       await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/jobs/recent/" + this.state.userID)
         .then(res => {
           const jobDatas = res.data;
           this.setState({ jobDatas: jobDatas, isJobDataLoad: true });
-          console.log(this.state.jobDatas);
+          //console.log(this.state.jobDatas);
         });
       await axios
         .get(process.env.REACT_APP_BACKEND_URL + "/announcement")
         .then(res => {
           const announce = res.data;
           this.setState({ announce: announce, isAnnounceLoad: true });
-          console.log(this.state.announce);
+          //console.log(this.state.announce);
         });
     } catch (error) {
-      console.error(error);
+      //console.error(error);
     };
   };
 

@@ -61,7 +61,7 @@ class Filter extends React.Component {
       tmp1.push(a.join("="));
     });
     var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs" + "?" + tmp1.join("&");
-    console.log(ApiUrl);
+    //console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
 
@@ -81,7 +81,7 @@ class Filter extends React.Component {
       tmp1.push(a.join("="));
     });
     var ApiUrl = process.env.REACT_APP_BACKEND_URL + "/jobs?status=open&" + tmp1.join("&");
-    console.log(ApiUrl);
+    //console.log(ApiUrl);
     this.props.parentCallback(ApiUrl);
   };
 
@@ -197,7 +197,7 @@ class Result extends React.Component {
         <Card.Body>
           {this.state.jobList
             .filter((job) => {
-              console.log(job);
+              //console.log(job);
               return job.status === 'open';
             })
             .map((j) => {

@@ -9,7 +9,6 @@ import { MdEmail, MdMyLocation } from "react-icons/md";
 import axios from "axios";
 import {
   ProfileModal,
-  SkillListItem,
   SkillModal,
   About,
   EducationListItem,
@@ -61,6 +60,7 @@ class Profile extends React.Component {
       location: "",
       about: "",
       birthdate: "",
+      realBirthDate: "",
       exp: [
         {
           role: "",
@@ -80,7 +80,7 @@ class Profile extends React.Component {
         }
       ],
       skills: [],
-      reviewlist: [{ reviewername: "itthi", description: "awesome!", score: 10, jobname: "Building mobile application" }],
+      reviewlist: [],
       verified: false,
       imageProfileURL: profileimage,
       limitReview : 2,
@@ -129,9 +129,10 @@ class Profile extends React.Component {
     await axios
       .get(process.env.REACT_APP_BACKEND_URL + "/users/" + this.state.userId)
       .then(async (res) => {
-        console.log(res);
+        ////console.log(res);
         let body = res.data;
         let bdate = new Date(body.dateOfBirth);
+        this.setState({realBirthDate : body.dateOfBirth})
         let formatted_date =
           bdate.getDate() +
           " " +
@@ -148,31 +149,32 @@ class Profile extends React.Component {
         }
         await axios.get(process.env.REACT_APP_BACKEND_URL + "/review/reviewee/"+this.state.userId)
           .then(res =>{
-            console.log(res)
+            ////console.log(res)
             this.setState({reviewlist : res.data})
           })
           .catch(err=>{
-            console.log(err);
+            this.setState({reviewlist : []})
+            ////console.log(err);
           })
         await axios.get(process.env.REACT_APP_BACKEND_URL + "/users/profilePicture/" + this.state.userId, { responseType: 'arraybuffer' })
           .then(res => {
             this.setState({ imageProfileURL: "data:;base64," + this.formatJPGtopath(res) });
-            console.log(res);
+            ////console.log(res);
           })
           .catch(err => {
-            console.log(err);
+            ////console.log(err);
           })
         this.setState({
           data: body,
           fname: body.firstName,
           lname: body.lastName,
-          headline: body.headline,
+          headline: body.headline===null?"":body.headline,
           tel: body.phone === null ? "" : body.phone,
           email: body.email === null ? "" : body.email,
           website: body.website === null ? "" : body.website,
           location: body.location === null ? "" : body.location,
           about: body.about === null ? "" : body.about,
-          birthdate: formatted_date === null ? new Date() : formatted_date,
+          birthdate: body.dateOfBirth === null ? "" : formatted_date,
           exp: exp_json === null ? [] : exp_json,
           education: edu_json === null ? [] : edu_json,
           skills: body.skills == null ? [] : body.skills,
@@ -199,7 +201,7 @@ class Profile extends React.Component {
         this.setState({ isLoaded: true });
       })
       .catch(async err => {
-        console.log(this.state.isLoaded,this.state.err_count)
+        ////console.log(this.state.isLoaded,this.state.err_count)
         let count = this.state.err_count+1
         await this.setState({err_count:count})
         if(this.state.err_count<2){
@@ -211,7 +213,7 @@ class Profile extends React.Component {
   }
   handleShowReview=()=>{
       if(this.state.limitReview+3>=this.state.reviewlist.length){
-        console.log(this.state.limitReview+1)
+        ////console.log(this.state.limitReview+1)
         this.setState({limitReview : this.state.reviewlist.length+1})
       }else{
         let prev = this.state.limitReview+3
@@ -274,6 +276,7 @@ class Profile extends React.Component {
                   data={this.state.data}
                   onUpdate={this.fetch}
                   hidden={!this.state.isMyProfile}
+                  dateOfBirth= {this.state.realBirthDate}
                 />
               </div>
             </div>
@@ -374,16 +377,20 @@ class Profile extends React.Component {
 
               />
             </div>
+            <Container>
+            <ul>
             {this.state.skills.length === 0
               ? "No skill yet"
-              : this.state.skills.map((item, idx) => <SkillListItem key={idx} skill={item} />)}
+              : this.state.skills.map((item, idx) => <li key={idx}>{item.skill}</li>)}
+            </ul>
+            </Container>
           </div>
           <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "freelancer"}>
             <h5>Review</h5>
             {/// responsive problem div have more width than html width
             <div className="review">
               {this.state.reviewlist.length === 0
-              ? "No skill yet"
+              ? "No review yet"
               : this.state.reviewlist
                 .sort((x,y)=>{return y.score-x.score})
                 .map((item,idx) =>
@@ -418,7 +425,7 @@ class ReviewListItem extends React.Component {
             <p >Job name : {this.props.jobname}</p>
             </Col>
           </Row>
-          <Row>
+          <Row hidden={this.props.description!==null&&this.props.description===""}>
             <Col>
             <p style={{textIndent:"5vh"}}>{this.props.description}</p>
             </Col>
