@@ -347,7 +347,7 @@ class PaymentModal extends React.Component {
     }
 
     getModalBody = (isFetching) => {
-        console.log("get modal body check");
+        // console.log("get modal body check");
         const isCard = (this.state.mode === 'card');
         const isAdd = (this.state.addPay === 'add');
 
@@ -358,7 +358,7 @@ class PaymentModal extends React.Component {
             // console.log("if2 check");
             return this.AddBankAccount();
         } else if (isCard && !isAdd) {
-            console.log("if3 check");
+            // console.log("if3 check");
             return this.PayCardPayment(isFetching);
         } else {
             // console.log("if4 check");
