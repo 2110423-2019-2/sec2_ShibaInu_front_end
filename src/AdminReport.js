@@ -308,10 +308,10 @@ class Report extends React.Component{
         .then(res=>{
             /// get res.data as array which only have 1 member
             this.setState({
-                report : {...this.state.report,description : res.data[0].description},
+                report : {...this.state.report,description : res.data[0].description,status : res.data[0].status},
                 loadReport : true
             })
-            //console.log(res.data)
+            console.log(res.data)
         })
         .catch(err=>{
             //console.log(err);
@@ -357,9 +357,9 @@ class Report extends React.Component{
         await axios
         .patch(process.env.REACT_APP_BACKEND_URL + "/reports/"+this.state.report.reportId+"/1")
         .then(res=>{
-            //console.log(res)
-            this.state.refetch();
-            this.setState({report : {...this.state.report,status : "closed"}})
+            console.log(res)
+            this.fetchData();
+            //this.setState({report : {...this.state.report,status : "closed"}})
         })
         .catch(err=>{
             //console.log(err)
@@ -369,6 +369,16 @@ class Report extends React.Component{
     async sendMessage(e){
         /// sendMessage api
         e.preventDefault();
+        await this.fetchData()
+        //console.log(this.state.report)
+        if(this.state.report.status==="closed"){
+            alert("this report was solved")
+            return;
+        }
+        if(this.state.sendingMessage===""){
+            alert("message cannot be empty")
+            return;
+        }
         await axios
         .post(process.env.REACT_APP_BACKEND_URL + "/reports/send",{
             detail : this.state.sendingMessage,
