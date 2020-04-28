@@ -59,8 +59,29 @@ class App extends React.Component {
 
           if (error.response && error.response.status === 403) {
             //console.log("Banned user");
-            swal("You are banned!", error.response.data.message, "error");
-            LocalStorageService.signOut();
+            swal("You are banned!", error.response.data.message, "error")
+              .then(() => {
+                LocalStorageService.signOut();
+                window.location.href = '/';
+              });
+          }
+        });
+    }
+
+    if (LocalStorageService.getAccessToken()) {
+      console.log("check token");
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+      axios
+        .get(process.env.REACT_APP_BACKEND_URL + "/users/test/")
+        .then((response) => {
+        }).catch((error) => {
+
+          if (error.response && error.response.status === 401) {
+            swal("Authentication error!", "Please login again.", "error")
+              .then(() => {
+                LocalStorageService.signOut();
+                window.location.href = '/';
+              });
           }
         });
     }
