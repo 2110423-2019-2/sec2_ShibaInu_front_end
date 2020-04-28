@@ -262,7 +262,7 @@ class PaymentPage extends React.Component {
     }
 
     render() {
-        return !this.state.loadedData() ? <this.renderReload /> : (
+        return !this.state.loadedData() ? (this.renderReload()) : (
             <div>
                 {!this.state.showModal ? '' : <PaymentModal mode={this.state.modalMode} addPay='add' callback={this.showHideModalCallback} />}
                 <Container id="homeclient-box">
@@ -291,10 +291,10 @@ class PaymentPage extends React.Component {
                             <Col>
                                 <Table responsive>
                                     <thead className="background-blue text-light">
-                                        <this.getTransactionHead />
+                                        {this.getTransactionHead()}
                                     </thead>
                                     <tbody>
-                                        <this.getTransactionBody />
+                                        {this.getTransactionBody()}
                                     </tbody>
                                 </Table>
                             </Col>
