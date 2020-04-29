@@ -128,7 +128,7 @@ class NavBar extends React.Component {
         .collection("notification")
         .doc("notification")
         .collection(this.state.userID.toString())
-        .orderBy("createtime", "asc");
+        .orderBy("createtime", "desc");
       // Start listening to the query.
       query.onSnapshot((snapshot) => {
         if (this.state.firstLoadNoti) {

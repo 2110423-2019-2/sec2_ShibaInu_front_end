@@ -130,7 +130,7 @@ class HomeFreelancer extends React.Component {
     ));
     var announce;
     if (this.state.isAnnounceLoad) {
-      announce = this.state.announce.map((announce) => (
+      announce = this.state.announce.reverse().map((announce) => (
         <Row>
           <Col className="bg-light shadow pt-2">
             <h5 className="announce-title">
