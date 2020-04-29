@@ -397,7 +397,7 @@ class Profile extends React.Component {
                 idx+1>this.state.limitReview?null:
                 <ReviewListItem
                   key={idx}
-                  reviewTime={item.createdTime}
+                  reviewTime={new Date(item.createdTime).toLocaleString()}
                   description={item.description}
                   score={item.score}
                   jobname={item.jobName}
@@ -435,7 +435,7 @@ class ReviewListItem extends React.Component {
             <p>score : <Rating style={{paddingTop:10,marginTop:10,bottom:0}} name="half-rating" value={this.props.score} precision={1} readOnly={true} /></p>
             </Col>
             <Col>
-            <p align="right" style={{color:"gray"}}>when : {this.props.reviewTime}</p>
+            <p align="right" style={{color:"gray"}}>since : {this.props.reviewTime}</p>
             </Col>
           </Row>
         </Container>
