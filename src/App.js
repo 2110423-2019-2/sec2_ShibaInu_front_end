@@ -36,6 +36,7 @@ import UserReport from './UserReport';
 import AdminVerify from './AdminVerify';
 import AdminBan from "./AdminBan";
 import PageNotFoundNotAllow from "./PageNotFoundNotAllow";
+import SettingPage from './SettingPage';
 
 import LocalStorageService from './LocalStorageService';
 
@@ -145,6 +146,7 @@ class App extends React.Component {
             <PrivateRoute exact path="/report" component={UserReport} />
             <AdminRoute exact path="/admin/verify" component={AdminVerify} />
             <AdminRoute exact path="/admin/ban" component={AdminBan} />
+            <PrivateRoute exact path='/setting' component={SettingPage} />
             <Route path="*" component={PageNotFoundNotAllow} />
           </Switch>
         </Router>

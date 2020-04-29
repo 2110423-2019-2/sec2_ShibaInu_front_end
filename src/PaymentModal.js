@@ -108,7 +108,7 @@ class PaymentModal extends React.Component {
             <Form>
                 <Form.Group>
                     <Form.Label>Account number</Form.Label>
-                    <Form.Control type="text" placeholder="XXXXXXXXXXXXXXXX" name="accountNumber" value={this.state.bankData.accountNumber} onChange={this.handleAddBankAccountChange} />
+                    <Form.Control type="text" placeholder="XXXXXXXXXXXXXXXX" name="accountNumber" value={this.state.bankData.accountNumber} maxLength={15} onChange={this.handleAddBankAccountChange} />
                 </Form.Group>
 
                 <Form.Group>
@@ -271,7 +271,7 @@ class PaymentModal extends React.Component {
 
     handleSubmitAddBankAccount = () => {
         const bankData = this.state.bankData;
-        if (isNaN(bankData.accountNumber)) {
+        if (isNaN(bankData.accountNumber) || bankData.accountNumber.length < 10) {
             this.setState({
                 formText: 'Please enter a valid account number.'
             });

@@ -217,6 +217,7 @@ class SignUp extends React.Component {
                           placeholder="Password"
                           name="password"
                           onChange={this.handleChange}
+                          maxLength={16}
                           required
                         />
                       </Form.Group>
@@ -227,6 +228,7 @@ class SignUp extends React.Component {
                           type="password"
                           placeholder="Confirm password"
                           onChange={this.checkPassword}
+                          maxLength={16}
                           required
                         />
                         <Form.Control.Feedback type="invalid">
