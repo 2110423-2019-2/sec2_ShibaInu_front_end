@@ -60,6 +60,8 @@ class SettingPage extends React.Component {
           //console.error(err);
           if (err.response && err.response.status === 400) {
             swal("Error!", "Your current password is incorrect.", "error");
+          } else if (err.response && err.response.status === 403) {
+            swal("Error!", "You logged in with facebook so you do not have password.", "error");
           } else {
             console.error(err);
           }
