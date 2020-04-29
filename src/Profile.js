@@ -149,8 +149,10 @@ class Profile extends React.Component {
         }
         await axios.get(process.env.REACT_APP_BACKEND_URL + "/review/reviewee/"+this.state.userId)
           .then(res =>{
-            ////console.log(res)
-            this.setState({reviewlist : res.data})
+            console.log(res.data)
+            let arr = res.data
+            .filter((item)=>(LocalStorageService.getUserMode().toLowerCase() !== item.reviewerRole))
+            this.setState({reviewlist : [...arr]})
           })
           .catch(err=>{
             this.setState({reviewlist : []})
@@ -211,10 +213,10 @@ class Profile extends React.Component {
         }
       })
   }
-  handleShowReview=()=>{
+  handleShowReview=async()=>{
       if(this.state.limitReview+3>=this.state.reviewlist.length){
         ////console.log(this.state.limitReview+1)
-        this.setState({limitReview : this.state.reviewlist.length+1})
+        await this.setState({limitReview : this.state.reviewlist.length+1})
       }else{
         let prev = this.state.limitReview+3
         this.setState({limitReview : prev})
@@ -225,7 +227,6 @@ class Profile extends React.Component {
       <span className="sr-only">Loading...</span>
     </Spinner>);
   }
-
   render() {
     if(this.state.err_count>=2){
       return <PageNotFoundNotAllow/>
@@ -336,7 +337,7 @@ class Profile extends React.Component {
 
               />
             </div>
-            <div className="Exp-content">
+            <Container>
               {this.state.exp.length === 0
                 ? "No information yet"
                 : this.state.exp.map((item, idx) => (
@@ -347,7 +348,7 @@ class Profile extends React.Component {
                     year={item.year}
                   />
                 ))}
-            </div>
+            </Container>
             <div className="Edu">
               <h5>Education</h5>
               <EducationModal
@@ -358,13 +359,13 @@ class Profile extends React.Component {
 
               />
             </div>
-            <div className="Edu-content">
+              <Container>
               {this.state.education.length === 0
                 ? "No information yet"
                 : this.state.education.map((item, idx) => (
                   <EducationListItem key={idx} location={item.location} year={item.year} />
                 ))}
-            </div>
+            </Container>
           </div>
           <div className="row-1 shadow-sm" id="skill">
             <div className="skill">
@@ -378,26 +379,25 @@ class Profile extends React.Component {
               />
             </div>
             <Container>
-            <ul>
+           
             {this.state.skills.length === 0
-              ? "No skill yet"
-              : this.state.skills.map((item, idx) => <li key={idx}>{item.skill}</li>)}
-            </ul>
+              ? "No information yet"
+              :  <ul>{this.state.skills.map((item, idx) => <li key={idx}>{item.skill}</li>)}</ul>}
             </Container>
           </div>
-          <div className="row-1 shadow-sm" id="review" hidden={LocalStorageService.getUserMode() === "freelancer"}>
-            <h5>Review</h5>
+          <div className="row-1 shadow-sm" id="review" >
+            <h5>Review by {LocalStorageService.getUserMode().toLowerCase()==="client"?"freelancer":"client"}</h5>
             {/// responsive problem div have more width than html width
-            <div className="review">
+              <Container>
               {this.state.reviewlist.length === 0
-              ? "No review yet"
+              ? "No information yet"
               : this.state.reviewlist
                 .sort((x,y)=>{return y.score-x.score})
                 .map((item,idx) =>
                 idx+1>this.state.limitReview?null:
                 <ReviewListItem
                   key={idx}
-                  reviewername={item.createdTime}
+                  reviewTime={item.createdTime}
                   description={item.description}
                   score={item.score}
                   jobname={item.jobName}
@@ -408,7 +408,7 @@ class Profile extends React.Component {
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show more</p>
               <p hidden={this.state.reviewlist.length<=3||this.state.limitReview<=this.state.reviewlist.length}onClick={()=>{this.setState({limitReview : 2})}}
                align="center" style={{textDecoration:"underline",cursor:"pointer"}}>show less</p>
-              </div>}
+             </Container>}
           </div>
         </Container>
       </>
@@ -433,10 +433,9 @@ class ReviewListItem extends React.Component {
           <Row>
             <Col>
             <p>score : <Rating style={{paddingTop:10,marginTop:10,bottom:0}} name="half-rating" value={this.props.score} precision={1} readOnly={true} /></p>
-
             </Col>
             <Col>
-            <p align="right" style={{color:"gray"}}>when : {this.props.reviewername}</p>
+            <p align="right" style={{color:"gray"}}>when : {this.props.reviewTime}</p>
             </Col>
           </Row>
         </Container>

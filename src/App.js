@@ -36,6 +36,7 @@ import UserReport from './UserReport';
 import AdminVerify from './AdminVerify';
 import AdminBan from "./AdminBan";
 import PageNotFoundNotAllow from "./PageNotFoundNotAllow";
+import SettingPage from './SettingPage';
 
 import LocalStorageService from './LocalStorageService';
 
@@ -59,8 +60,29 @@ class App extends React.Component {
 
           if (error.response && error.response.status === 403) {
             //console.log("Banned user");
-            swal("You are banned!", error.response.data.message, "error");
-            LocalStorageService.signOut();
+            swal("You are banned!", error.response.data.message, "error")
+              .then(() => {
+                LocalStorageService.signOut();
+                window.location.href = '/';
+              });
+          }
+        });
+    }
+
+    if (LocalStorageService.getAccessToken()) {
+      console.log("check token");
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + LocalStorageService.getAccessToken();
+      axios
+        .get(process.env.REACT_APP_BACKEND_URL + "/users/test/")
+        .then((response) => {
+        }).catch((error) => {
+
+          if (error.response && error.response.status === 401) {
+            swal("Authentication error!", "Please login again.", "error")
+              .then(() => {
+                LocalStorageService.signOut();
+                window.location.href = '/';
+              });
           }
         });
     }
@@ -124,6 +146,7 @@ class App extends React.Component {
             <PrivateRoute exact path="/report" component={UserReport} />
             <AdminRoute exact path="/admin/verify" component={AdminVerify} />
             <AdminRoute exact path="/admin/ban" component={AdminBan} />
+            <PrivateRoute exact path='/setting' component={SettingPage} />
             <Route path="*" component={PageNotFoundNotAllow} />
           </Switch>
         </Router>

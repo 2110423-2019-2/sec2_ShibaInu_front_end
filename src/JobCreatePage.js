@@ -17,7 +17,7 @@ class JobCreatePage extends React.Component {
         // "web" / "software" / "mobile" / "game" / "other"
         client: LocalStorageService.getUserID(),
         requiredSkills: [],
-        optianalSkills: [],
+        optionalSkills: [],
       },
       cantCreateMsg: "",
     };
@@ -41,7 +41,7 @@ class JobCreatePage extends React.Component {
       tempData[e.target.name] = parseInt(e.target.value);
     } else if (e.target.name === "catergory") {
       tempData[e.target.name] = e.target.value.toLowerCase();
-    } else if (e.target.name === "requiredSkills" || e.target.name === "optianalSkills") {
+    } else if (e.target.name === "requiredSkills" || e.target.name === "optionalSkills") {
       tempData[e.target.name] = e.target.value.split(",").map((s) => {
         let t = {};
         t["skill"] = s;
@@ -168,7 +168,7 @@ class JobCreatePage extends React.Component {
                   <Form.Label>Optional Skill</Form.Label>
                   <Form.Control
                     placeholder="Ex : English,Photoshop,Illustrator"
-                    name="optianalSkills"
+                    name="optionalSkills"
                     onChange={this.handleChange}
                   />
                 </Form.Group>

@@ -1496,7 +1496,8 @@ class DashBoardReview extends React.Component {
           score: score,
           description: desc,
           reviewee: this.state.client.clientId,
-          reviewer: this.state.freelancer.freelancerId
+          reviewer: this.state.freelancer.freelancerId,
+          reviewerRole : "freelancer"
         })
       await this.notify(
         "Review",
@@ -1522,7 +1523,8 @@ class DashBoardReview extends React.Component {
           score: score,
           description: desc,
           reviewee: this.state.freelancer.freelancerId,
-          reviewer: this.state.client.clientId
+          reviewer: this.state.client.clientId,
+          reviewerRole : "client"
         })
       await this.notify(
         "Review",

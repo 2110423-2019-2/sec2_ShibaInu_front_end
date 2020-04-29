@@ -486,7 +486,7 @@ class CreateReport extends React.Component {
         });
     }
 
-    handleSubmit = () => {
+    handleCreate = () => {
 
         let reportData = this.state.reportData;
 
@@ -594,7 +594,7 @@ class CreateReport extends React.Component {
                     >Cancel</Button>
                     <Button
                         variant='success'
-                        onClick={this.handleSubmit}
+                        onClick={this.handleCreate}
                         disabled={this.state.isSendingData}
                     >
                         <Spinner

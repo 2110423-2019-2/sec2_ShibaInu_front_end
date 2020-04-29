@@ -96,7 +96,7 @@ class JobOfferClient extends React.Component {
             <td className="align-middle">
               {job.name}
             </td>
-            <td className="align-middle"><a href={job.freelanerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullName || '-'}</a></td>
+            <td className="align-middle"><a href={job.freelancerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullname || '-'}</a></td>
             <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button
@@ -117,7 +117,7 @@ class JobOfferClient extends React.Component {
         .map((job, index) => (
           <tr key={index} className="text-center">
             <td className="align-middle">{job.name}</td>
-            <td className="align-middle"><a href={job.freelanerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullName || '-'}</a></td>
+            <td className="align-middle"><a href={job.freelancerId ? ('/profile/' + job.freelancerId) : ''} >{job.freelancerFullname || '-'}</a></td>
             <td className="align-middle"><StatusBadge jobStatus={job.status} /></td>
             <td className="align-middle">
               <button

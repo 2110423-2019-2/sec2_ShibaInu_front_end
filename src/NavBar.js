@@ -431,6 +431,13 @@ class NavBar extends React.Component {
           {switchMode}
         </DropdownItem>
         <DropdownItem divider />
+        <DropdownItem
+          href="/setting"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
+          Setting
+        </DropdownItem>
         <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
           Sign out
         </DropdownItem>
@@ -462,6 +469,13 @@ class NavBar extends React.Component {
             Report list
           </DropdownItem>
           <DropdownItem divider />
+          <DropdownItem
+          href="/setting"
+          id="dropdown-item-balance"
+          className="color-black"
+        >
+          Setting
+        </DropdownItem>
           <DropdownItem id="dropdown-item-signout" onClick={this.signOut}>
             Sign out
           </DropdownItem>
