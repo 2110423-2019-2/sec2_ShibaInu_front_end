@@ -20,7 +20,7 @@ class JobDetail extends React.Component {
   componentDidMount() {
     axios.get(process.env.REACT_APP_BACKEND_URL + "/jobs/" + this.props.jobid.jobid).then((res) => {
       const details = res.data;
-      this.setState({ details });
+      this.setState({ details: details });
     });
   }
 
