@@ -119,6 +119,7 @@ class PaymentModal extends React.Component {
                 <Form.Group>
                     <Form.Label>Bank</Form.Label>
                     <Form.Control as="select" name="bankCode" value={this.state.bankData.bankCode} onChange={this.handleAddBankAccountChange} >
+                        <option hidden>-- Please select --</option>
                         <option>BAY</option>
                         <option>BBL</option>
                         <option>CIMBT</option>
